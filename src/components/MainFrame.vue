@@ -1,11 +1,21 @@
-<script setup lang="ts">
+<script lang="ts">
 
-import { RouterView } from 'vue-router'
+
+import SidebarView from './SidebarView.vue';
+
+export default {
+  components: {SidebarView}
+}
 
 </script>
 
 <template>
-  <div>
-    <RouterView />
+  <div class="d-flex pa-0">
+    <SidebarView />
+    <RouterView class="flex-grow-1" />
   </div>
 </template>
+
+<style scoped>
+
+</style>
