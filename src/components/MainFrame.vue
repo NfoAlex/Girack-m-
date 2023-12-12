@@ -1,6 +1,5 @@
 <script lang="ts">
 
-
 import SidebarView from './SidebarView.vue';
 
 export default {
