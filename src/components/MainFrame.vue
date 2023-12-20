@@ -3,6 +3,8 @@
 import SidebarView from './SidebarView.vue';
 import { socket } from '@socket/socketInit';
 
+socket;
+
 export default {
   components: { SidebarView }
 }
