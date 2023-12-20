@@ -1,6 +1,14 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
+interface MyUserinfo {
+  username: string,
+  userid: number,
+  sessionid: number,
+  role: string,
+  channelJoined: []
+};
+
 //DEMO
 export const demoStore = defineStore('counter', {
 
@@ -8,11 +16,9 @@ export const demoStore = defineStore('counter', {
     count: 3 as number,
   }),
 
-  getters: {
-    increment: (state) => {
-      state.count++;
-      console.log("dataStore :: increment : インクリした");
-      return state.count;
+  actions: {
+    sumUp() {
+      this.count++;
     }
   }
 

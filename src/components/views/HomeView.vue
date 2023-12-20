@@ -1,13 +1,35 @@
 <script lang="ts">
-  export default {
+  import { demoStore } from '../../dataStore/dataStore';
+  import { defineComponent, computed } from 'vue';
+
+  export default defineComponent({
+    name: "HomeView", 
+
+    setup() {
+      const demo = demoStore();
+
+      return {
+        count: computed(() => demo.count),
+        sum: demo.sumUp
+      };
+    },
+
     data() {
       return {
         text: "asdf"
       }
-    }
-  }
+    },
+  });
+
 </script>
 
 <template>
-  <p>ここがホーム</p>
+  <div class="pa-5">
+    <p>ここがホーム : {{ text }} :: {{  count }}</p>
+    <v-btn
+      @click="sum"
+    >
+      インクリ
+    </v-btn>
+  </div>
 </template>
