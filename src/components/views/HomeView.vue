@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { demoStore } from '../../dataStore/dataStore';
+import { demoStore } from '@data/dataStore';
 
 // ストアを使用
 const demo = demoStore();

@@ -10,7 +10,15 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@data': fileURLToPath(new URL('./src/dataStore', import.meta.url))
+    }
+  },
+  server: {
+    proxy: {
+      "/socket.io": {
+        target: "ws://localhost:33333",
+        ws: true,
+      },
     }
   }
 })
