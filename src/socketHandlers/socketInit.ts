@@ -21,6 +21,6 @@ socket.on("connect", () => {
   socket.emit("getInfoServer");
 });
 
-
+//情報受け取り周り
 infoServer(socket);
 infoChannel(socket);
