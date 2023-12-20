@@ -10,11 +10,15 @@ export default {
 
 <template>
   <div class="d-flex pa-0">
-    <SidebarView />
+    <SidebarView class="SIDE" />
     <RouterView class="flex-grow-1" />
   </div>
 </template>
 
-<style scoped>
+<style>
+
+html {
+  background-color: #eee;
+}
 
 </style>

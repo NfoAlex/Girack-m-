@@ -24,7 +24,7 @@
 </script>
 
 <template>
-  <div class="pa-5">
+  <div class="pa-5 MAIN">
     <p>ここがホーム : {{ text }} :: {{  count }}</p>
     <v-btn
       @click="sum"
@@ -33,3 +33,13 @@
     </v-btn>
   </div>
 </template>
+
+<style scoped>
+
+.MAIN {
+  border-top-left-radius: 28px;
+  border-bottom-left-radius: 28px;
+  background-color: #fff;
+}
+
+</style>

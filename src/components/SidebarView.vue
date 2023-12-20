@@ -14,6 +14,7 @@ export default {
 
 .sideBarFrame {
   height: 100vh;
+  background-color: #eee;
 }
 
 </style>
