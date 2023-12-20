@@ -18,7 +18,8 @@ export const demoStore = defineStore('counter', {
 
   actions: {
     sumUp() {
-      this.count++;
+      console.log("dataStore :: sumUp", this.count);
+      this.count = this.count + 1;
     }
   }
 

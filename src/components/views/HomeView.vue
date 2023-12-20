@@ -1,18 +1,15 @@
+<script setup lang="ts">
+import { demoStore } from '../../dataStore/dataStore';
+
+// ストアを使用
+const demo = demoStore();
+</script>
+
 <script lang="ts">
-  import { demoStore } from '../../dataStore/dataStore';
-  import { defineComponent, computed } from 'vue';
+  import { defineComponent } from 'vue';
 
   export default defineComponent({
     name: "HomeView", 
-
-    setup() {
-      const demo = demoStore();
-
-      return {
-        count: computed(() => demo.count),
-        sum: demo.sumUp
-      };
-    },
 
     data() {
       return {
@@ -25,9 +22,9 @@
 
 <template>
   <div class="pa-5 MAIN">
-    <p>ここがホーム : {{ text }} :: {{  count }}</p>
+    <p>ここがホーム : {{ text }} :: {{  demo.count }}</p>
     <v-btn
-      @click="sum"
+      @click="demo.sumUp"
     >
       インクリ
     </v-btn>
