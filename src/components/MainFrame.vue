@@ -1,9 +1,10 @@
 <script lang="ts">
 
 import SidebarView from './SidebarView.vue';
+import { socket } from '../socketHandlers/socketInit';
 
 export default {
-  components: {SidebarView}
+  components: { SidebarView }
 }
 
 </script>
