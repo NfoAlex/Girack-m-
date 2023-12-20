@@ -2,8 +2,8 @@
 
 import { Socket } from "socket.io-client"; //クラス識別用
 
-export function InfoServer(socket: Socket): void {
+export function infoServer(socket: Socket): void {
   socket.on("infoServer", (dat) => {
-    console.log("InfoServer :: dat->", dat);
+    console.log("infoServer :: dat->", dat);
   });
 }
