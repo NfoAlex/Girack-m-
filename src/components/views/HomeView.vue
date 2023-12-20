@@ -34,8 +34,8 @@ const demo = demoStore();
 <style scoped>
 
 .MAIN {
-  border-top-left-radius: 28px;
-  border-bottom-left-radius: 28px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
   background-color: #fff;
 }
 
