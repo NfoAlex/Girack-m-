@@ -1,7 +1,7 @@
 <script lang="ts">
 
 import SidebarView from './SidebarView.vue';
-import { socket } from '../socketHandlers/socketInit';
+import { socket } from '@socket/socketInit';
 
 export default {
   components: { SidebarView }
