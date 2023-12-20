@@ -10,7 +10,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@data': fileURLToPath(new URL('./src/dataStore', import.meta.url))
+      '@data': fileURLToPath(new URL('./src/dataStore', import.meta.url)),
+      '@socket': fileURLToPath(new URL('./src/socketHandlers', import.meta.url)),
     }
   },
   server: {
