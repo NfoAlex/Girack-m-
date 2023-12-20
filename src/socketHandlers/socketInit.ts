@@ -2,6 +2,8 @@
 
 import { io } from "socket.io-client"; //ウェブソケット通信用
 
+console.log("socketInit :: INITIALIZED");
+
 //Socket接続
 export const socket = io(location.origin, {
   transports: ["websocket"],
@@ -11,5 +13,5 @@ export const socket = io(location.origin, {
 });
 
 socket.on("connect", () => {
-  console.log("socketInit :: connect : 接続しました");
+  console.log("socketInit :: connect : 接続しました", socket);
 });
