@@ -1,1 +1,1 @@
-<template>ここページ</template>
+<template>ここチャンネルトップ</template>
