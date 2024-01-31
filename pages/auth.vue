@@ -5,7 +5,24 @@ export default {
     definePageMeta({
       layout: 'plain' //レイアウトを何もないやつに設定
     });
+  },
+
+  data() {
+    return {
+      processingAuth: false as boolean,
+    }
+  },
+
+  methods: {
+    //ログイン認証
+    login() {
+      this.processingAuth = true;
+      setTimeout(() => {
+        this.processingAuth = false;
+      }, 1500);
+    }
   }
+
 }
 
 </script>
@@ -27,6 +44,8 @@ export default {
         <v-text-field variant="outlined"></v-text-field>
 
         <v-btn
+          @click="login"
+          :loading="processingAuth"
           class="mt-5"
           size="large"
           color="primary"
