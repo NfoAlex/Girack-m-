@@ -4,6 +4,8 @@
       <NuxtLink to="/"><v-btn color="primary" class="mx-1">トップ</v-btn></NuxtLink>
       <NuxtLink to="/channel"><v-btn color="secondary" class="mx-1">チャンネルへ行ってみる</v-btn></NuxtLink>
       <NuxtLink to="/channel/1234"><v-btn color="secondary" class="mx-1">適当なチャンネル</v-btn></NuxtLink>
+      <v-divider vertical></v-divider>
+      <NuxtLink to="/auth"><v-btn color="error" class="mx-1">認証ページ</v-btn></NuxtLink>
     </span>
     <div>
       <slot />
