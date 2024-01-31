@@ -9,7 +9,7 @@ export default {
 
   data() {
     return {
-      processingAuth: false as boolean,
+      processingAuth: false as boolean, //ボタンの処理中表示用
     }
   },
 
@@ -29,13 +29,14 @@ export default {
 
 <template>
   <div class="d-flex" style="height:100vh; width:100vw;">
+    <!-- カバー画像 -->
     <div
       class="instanceImage me-auto mr-n5"
     >
       ここが画像になる
     </div>
     <!-- ログイン/登録用パネル -->
-    <v-card class="panel rounded-e-0 d-flex flex-column justify-center">
+    <v-card class="panel pa-6 rounded-e-0 d-flex flex-column justify-center">
       <!-- 真ん中表示部分 -->
       <div class="d-flex flex-column">
         <p class="my-2">ログイン</p>
@@ -43,6 +44,7 @@ export default {
         <p class="my-2">パスワード</p>
         <v-text-field variant="outlined"></v-text-field>
 
+        <!-- ログインボタン -->
         <v-btn
           @click="login"
           :loading="processingAuth"
