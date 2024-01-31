@@ -22,7 +22,9 @@ export default defineNuxtConfig({
           rounded: "xl"
         },
         VCard: {
-          style: 'border-radius: 20px;'
+          style: 'border-radius:20px; border-color:#ccc',
+          variant: 'outlined',
+          elevation: '0'
         }
       }
     }
