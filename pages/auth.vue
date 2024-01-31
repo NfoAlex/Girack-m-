@@ -29,14 +29,21 @@ export default {
 
 <template>
   <div class="d-flex" style="height:100vh; width:100vw;">
+
     <!-- カバー画像 -->
     <div
       class="instanceImage me-auto mr-n5"
     >
       ここが画像になる
     </div>
+
     <!-- ログイン/登録用パネル -->
     <v-card class="panel pa-6 rounded-e-0 d-flex flex-column justify-center">
+      <!-- ログイン/登録ボタン -->
+      <div class="d-flex justify-center py-4">
+        <v-btn class="mx-1" size="large">ログイン</v-btn>
+        <v-btn class="mx-1" size="large">新規登録</v-btn>
+      </div>
       <!-- 真ん中表示部分 -->
       <div class="d-flex flex-column">
         <p class="my-2">ログイン</p>
@@ -57,6 +64,7 @@ export default {
         </v-btn>
       </div>
     </v-card>
+
   </div>
 </template>
 
