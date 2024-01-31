@@ -17,6 +17,14 @@ export default defineNuxtConfig({
     },
     vuetifyOptions: {
       /* vuetify options */
+      defaults: {
+        global: {
+          rounded: "xl"
+        },
+        VCard: {
+          style: 'border-radius: 20px;'
+        }
+      }
     }
   },
   devtools: { enabled: true },
