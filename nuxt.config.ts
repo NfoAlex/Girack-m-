@@ -28,6 +28,9 @@ export default defineNuxtConfig({
         VCard: {
           style: 'border-radius:20px;',
           class: 'pa-4',
+        },
+        VBtn: {
+          class: 'pa-4',
         }
       }
     }

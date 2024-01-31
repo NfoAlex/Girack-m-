@@ -26,7 +26,14 @@ export default {
         <p class="my-2">パスワード</p>
         <v-text-field variant="outlined"></v-text-field>
 
-        <v-btn class="mt-5" color="primary" block>ログイン!</v-btn>
+        <v-btn
+          class="mt-5"
+          size="large"
+          color="primary"
+          block
+        >
+          ログイン!
+        </v-btn>
       </div>
     </v-card>
   </div>
