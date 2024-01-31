@@ -22,8 +22,8 @@ export default defineNuxtConfig({
           rounded: "xl"
         },
         VCard: {
-          style: 'border-radius:20px; border-color:#ccc',
-          variant: 'outlined',
+          style: 'border-radius:20px;',
+          class: 'pa-4',
           elevation: '0'
         }
       }
