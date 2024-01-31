@@ -21,9 +21,9 @@ export default {
     <v-card class="panel rounded-e-0 d-flex flex-column justify-center">
       <!-- 真ん中表示部分 -->
       <div class="d-flex flex-column">
-        <p>ログイン</p>
+        <p class="my-2">ログイン</p>
         <v-text-field variant="outlined"></v-text-field>
-        <p>パスワード</p>
+        <p class="my-2">パスワード</p>
         <v-text-field variant="outlined"></v-text-field>
 
         <v-btn class="mt-5" color="primary" block>ログイン!</v-btn>
