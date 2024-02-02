@@ -1,13 +1,3 @@
-<script lang="ts">
-
-export default {
-  mounted() {
-    console.log("settings[page] :: onMounted : $route->", this.$route);
-  }
-}
-
-</script>
-
 <template>
   <div class="pa-4 d-flex">
 
