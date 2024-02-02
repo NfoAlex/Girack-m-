@@ -1,7 +1,5 @@
 <script lang="ts">
 
-import { useRouter } from "vue";
-
 export default {
   setup() {
     definePageMeta({
