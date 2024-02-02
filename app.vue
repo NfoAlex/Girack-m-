@@ -20,7 +20,7 @@ a:visited {
 }
 
 html {
-  background-color: #efefef
+  background-color: rgb(var(--v-theme-sidebarBackground));
 }
 
 </style>
