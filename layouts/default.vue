@@ -12,6 +12,7 @@ export default {
   <div class="d-flex ma-0 pa-0" style="height:100vh; width:100vw;">
     <!-- サイドバー -->
     <div class="sidebar d-flex flex-column pa-3">
+      <!-- ホームボタン -->
       <span>
         <NuxtLink to="/">
           <v-btn
@@ -27,6 +28,7 @@ export default {
         </NuxtLink>
       </span>
 
+      <!-- チャンネルボタン -->
       <span class="mt-4">
         <NuxtLink to="/channel">
           <v-btn
@@ -45,6 +47,7 @@ export default {
 
       <v-divider class="mt-auto"></v-divider>
 
+      <!-- 設定ボタン -->
       <span class="mt-1">
         <NuxtLink to="/settings">
           <v-btn
@@ -58,6 +61,7 @@ export default {
         </NuxtLink>
       </span>
 
+      <!-- FOR DEBUG :: ログインページへ -->
       <span class="mt-3">
         <NuxtLink to="/auth">
           <v-btn
