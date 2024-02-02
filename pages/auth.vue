@@ -56,7 +56,7 @@ export default {
         >新規登録</v-btn>
       </div>
       <!-- 真ん中表示部分 -->
-      <!-- ログイン部分 -->
+        <!-- ログイン部分 -->
       <div v-if="authMode==='LOGIN'" class="d-flex flex-column">
         <p class="my-2">ログイン</p>
         <v-text-field variant="outlined"></v-text-field>
@@ -75,7 +75,7 @@ export default {
           ログイン!
         </v-btn>
       </div>
-      <!-- ログイン部分 -->
+        <!-- 登録部分 -->
       <div v-else class="d-flex flex-column">
         <p class="my-2">ユーザー名</p>
         <v-text-field variant="outlined"></v-text-field>
