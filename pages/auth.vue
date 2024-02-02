@@ -9,13 +9,14 @@ export default {
 
   data() {
     return {
+      authMode: "LOGIN" as string, // "LOGIN" | "REGISTER"
       processingAuth: false as boolean, //ボタンの処理中表示用
     }
   },
 
   methods: {
     //ログイン認証
-    login() {
+    login():void {
       this.processingAuth = true;
       setTimeout(() => {
         this.processingAuth = false;
@@ -41,11 +42,12 @@ export default {
     <v-card class="panel pa-6 rounded-e-0 d-flex flex-column justify-center">
       <!-- ログイン/登録ボタン -->
       <div class="d-flex justify-center py-4">
-        <v-btn class="mx-1" size="large">ログイン</v-btn>
-        <v-btn class="mx-1" size="large">新規登録</v-btn>
+        <v-btn class="mx-1" size="large" variant="outlined">ログイン</v-btn>
+        <v-btn class="mx-1" size="large" variant="outlined">新規登録</v-btn>
       </div>
       <!-- 真ん中表示部分 -->
-      <div class="d-flex flex-column">
+      <!-- ログイン部分 -->
+      <div v-if="authMode==='LOGIN'" class="d-flex flex-column">
         <p class="my-2">ログイン</p>
         <v-text-field variant="outlined"></v-text-field>
         <p class="my-2">パスワード</p>
@@ -61,6 +63,25 @@ export default {
           block
         >
           ログイン!
+        </v-btn>
+      </div>
+      <!-- ログイン部分 -->
+      <div v-else class="d-flex flex-column">
+        <p class="my-2">ユーザー名</p>
+        <v-text-field variant="outlined"></v-text-field>
+        <p class="my-2">招待コード</p>
+        <v-text-field variant="outlined"></v-text-field>
+
+        <!-- ログインボタン -->
+        <v-btn
+          @click="register"
+          :loading="processingAuth"
+          class="mt-5"
+          size="large"
+          color="primary"
+          block
+        >
+          登録する
         </v-btn>
       </div>
     </v-card>
