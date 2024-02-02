@@ -95,7 +95,7 @@ onMounted(() => {
 .mainContainer {
   height:100vh;
   width: 100%;
-  background: #fff;
+  background: rgb(var(--v-theme-background));
 }
 
 </style>
