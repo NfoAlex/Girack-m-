@@ -1,13 +1,10 @@
-<script setup lang="ts">
+<script lang="ts">
 
-definePageMeta({
-  middleware: [
-    function (to, from) {
-      console.log("settings[page] :: definePageMeta : to->", to);
-    },
-    'settings',
-  ],
-});
+export default {
+  mounted() {
+    console.log("settings[page] :: onMounted : $route->", this.$route);
+  }
+}
 
 </script>
 
