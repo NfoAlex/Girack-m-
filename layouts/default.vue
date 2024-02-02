@@ -42,6 +42,21 @@ export default {
       </span>
 
       <span class="mt-auto">
+
+      <span class="mt-1">
+        <NuxtLink to="/settings">
+          <v-btn
+            icon="mdi:mdi-cog"
+            variant="text"
+            rounded="lg"
+            class=""
+          >
+          </v-btn>
+          <p class="text-caption text-center">設定</p>
+        </NuxtLink>
+      </span>
+
+      <span class="mt-3">
         <NuxtLink to="/auth">
           <v-btn
             icon="mdi:mdi-lock"
