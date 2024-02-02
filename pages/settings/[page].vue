@@ -23,7 +23,7 @@ export default {
     </div>
 
     <!-- 右部分 -->
-    <div style="width:100%;">
+    <div style="width:100%;" class="pa-3">
       <SettingsSync
         v-if="$route.path==='/settings/sync'"
       />
