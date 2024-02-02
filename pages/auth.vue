@@ -46,13 +46,13 @@ export default {
           @click="authMode='LOGIN'"
           class="mx-1"
           size="large"
-          variant="outlined"
+          :variant="authMode==='LOGIN'?'tonal':'text'"
         >ログイン</v-btn>
         <v-btn
           @click="authMode='REGISTER'"
           class="mx-1"
           size="large"
-          variant="outlined"
+          :variant="authMode==='REGISTER'?'tonal':'text'"
         >新規登録</v-btn>
       </div>
       <!-- 真ん中表示部分 -->
