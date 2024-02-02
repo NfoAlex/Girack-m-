@@ -1,10 +1,15 @@
 <script lang="ts">
 
+import { useRouter } from "vue";
+
 export default {
   setup() {
     definePageMeta({
       layout: 'plain' //レイアウトを何もないやつに設定
     });
+
+    const router = useRouter(); //ページ遷移用
+    return { router };
   },
 
   data() {
@@ -28,7 +33,9 @@ export default {
       //FOR DEBUG
       setTimeout(() => {
         this.processingAuth = false;
+        this.router.push("/"); //トップページへ移動
       }, 1500);
+
     },
 
     //新規登録
