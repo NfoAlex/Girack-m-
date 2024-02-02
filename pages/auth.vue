@@ -59,6 +59,8 @@ export default {
 
     <!-- ログイン/登録用パネル -->
     <v-card class="panel pa-6 rounded-e-0 d-flex flex-column justify-center">
+      <!-- Girackタイトル -->
+      <p class="text-h4 text-center my-5">Girack</p>
       <!-- ログイン/登録ボタン -->
       <div class="d-flex justify-center py-4">
         <v-btn
