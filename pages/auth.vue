@@ -17,7 +17,21 @@ export default {
   methods: {
     //ログイン認証
     login():void {
+      //処理中と設定
       this.processingAuth = true;
+
+      //FOR DEBUG
+      setTimeout(() => {
+        this.processingAuth = false;
+      }, 1500);
+    },
+
+    //新規登録
+    register():void {
+      //処理中と設定
+      this.processingAuth = true;
+
+      //FOR DEBUG
       setTimeout(() => {
         this.processingAuth = false;
       }, 1500);
