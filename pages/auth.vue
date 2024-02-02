@@ -42,8 +42,18 @@ export default {
     <v-card class="panel pa-6 rounded-e-0 d-flex flex-column justify-center">
       <!-- ログイン/登録ボタン -->
       <div class="d-flex justify-center py-4">
-        <v-btn class="mx-1" size="large" variant="outlined">ログイン</v-btn>
-        <v-btn class="mx-1" size="large" variant="outlined">新規登録</v-btn>
+        <v-btn
+          @click="authMode='LOGIN'"
+          class="mx-1"
+          size="large"
+          variant="outlined"
+        >ログイン</v-btn>
+        <v-btn
+          @click="authMode='REGISTER'"
+          class="mx-1"
+          size="large"
+          variant="outlined"
+        >新規登録</v-btn>
       </div>
       <!-- 真ん中表示部分 -->
       <!-- ログイン部分 -->
