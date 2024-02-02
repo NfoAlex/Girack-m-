@@ -37,6 +37,20 @@ export default defineNuxtConfig({
           style: 'border-radius:20px;',
           class: 'pa-4',
         },
+      },
+      theme: {
+        themes: {
+          light: {
+            colors: {
+              "sidebarBackground": "#efefef"
+            }
+          },
+          dark: {
+            colors: {
+              "sidebarBackground": "#020202"
+            }
+          }
+        }
       }
     }
   },
