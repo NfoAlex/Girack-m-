@@ -11,6 +11,11 @@ export default {
     return {
       authMode: "LOGIN" as string, // "LOGIN" | "REGISTER"
       processingAuth: false as boolean, //ボタンの処理中表示用
+
+      //text-field用
+      username: "" as string, //ユーザー名
+      password: "" as string, //パスワード
+      invitecode: "" as string //招待コード
     }
   },
 
@@ -76,11 +81,13 @@ export default {
       <div v-if="authMode==='LOGIN'" class="d-flex flex-column">
         <p class="my-2">ユーザー名</p>
         <v-text-field
+          v-model="username"
           variant="outlined"
           prepend-inner-icon="mdi:mdi-account"
         ></v-text-field>
         <p class="my-2">パスワード</p>
         <v-text-field
+          v-model="password"
           variant="outlined"
           prepend-inner-icon="mdi:mdi-key"
           type="password"
@@ -102,11 +109,13 @@ export default {
       <div v-else class="d-flex flex-column">
         <p class="my-2">ユーザー名</p>
         <v-text-field
+          v-model="username"
           variant="outlined"
           prepend-inner-icon="mdi:mdi-account"
         ></v-text-field>
         <p class="my-2">招待コード</p>
         <v-text-field
+          v-model="invitecode"
           variant="outlined"
           prepend-inner-icon="mdi:mdi-email"
         ></v-text-field>
