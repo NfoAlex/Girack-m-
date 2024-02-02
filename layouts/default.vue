@@ -23,7 +23,8 @@ export default {
         <NuxtLink to="/">
           <v-btn
             icon=""
-            variant="text"
+            :variant="$route.path==='/'?'tonal':'text'"
+            :color="$route.path==='/'?'primary':null"
             rounded="lg"
             class="mt-2"
           >
@@ -33,13 +34,13 @@ export default {
         </NuxtLink>
       </span>
 
-      <span>
+      <span class="mt-4">
         <NuxtLink to="/channel">
           <v-btn
             icon=""
-            variant="text"
+            :variant="$route.path==='/channel'?'tonal':'text'"
+            :color="$route.path==='/channel'?'primary':null"
             rounded="lg"
-            class="mt-3"
           >
             <v-icon size="large">mdi:mdi-pound</v-icon>
           </v-btn>
