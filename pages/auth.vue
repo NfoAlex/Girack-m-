@@ -60,10 +60,17 @@ export default {
       <!-- 真ん中表示部分 -->
         <!-- ログイン部分 -->
       <div v-if="authMode==='LOGIN'" class="d-flex flex-column">
-        <p class="my-2">ログイン</p>
-        <v-text-field variant="outlined"></v-text-field>
+        <p class="my-2">ユーザー名</p>
+        <v-text-field
+          variant="outlined"
+          prepend-inner-icon="mdi:mdi-account"
+        ></v-text-field>
         <p class="my-2">パスワード</p>
-        <v-text-field variant="outlined"></v-text-field>
+        <v-text-field
+          variant="outlined"
+          prepend-inner-icon="mdi:mdi-key"
+          type="password"
+        ></v-text-field>
 
         <!-- ログインボタン -->
         <v-btn
@@ -80,11 +87,17 @@ export default {
         <!-- 登録部分 -->
       <div v-else class="d-flex flex-column">
         <p class="my-2">ユーザー名</p>
-        <v-text-field variant="outlined"></v-text-field>
+        <v-text-field
+          variant="outlined"
+          prepend-inner-icon="mdi:mdi-account"
+        ></v-text-field>
         <p class="my-2">招待コード</p>
-        <v-text-field variant="outlined"></v-text-field>
+        <v-text-field
+          variant="outlined"
+          prepend-inner-icon="mdi:mdi-email"
+        ></v-text-field>
 
-        <!-- ログインボタン -->
+        <!-- 登録ボタン -->
         <v-btn
           @click="register"
           :loading="processingAuth"
