@@ -46,12 +46,14 @@ export default {
           @click="authMode='LOGIN'"
           class="mx-1"
           size="large"
+          :color="authMode==='LOGIN'?'primary':null"
           :variant="authMode==='LOGIN'?'tonal':'text'"
         >ログイン</v-btn>
         <v-btn
           @click="authMode='REGISTER'"
           class="mx-1"
           size="large"
+          :color="authMode==='REGISTER'?'primary':null"
           :variant="authMode==='REGISTER'?'tonal':'text'"
         >新規登録</v-btn>
       </div>
