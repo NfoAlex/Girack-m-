@@ -53,9 +53,9 @@ onMounted(() => {
         <NuxtLink to="/settings">
           <v-btn
             icon="mdi:mdi-cog"
-            variant="text"
+            :variant="$route.path.includes('/settings')?'tonal':'text'"
+            :color="$route.path.includes('/settings')?'primary':null"
             rounded="lg"
-            class=""
           >
           </v-btn>
           <p class="text-caption text-center">設定</p>
