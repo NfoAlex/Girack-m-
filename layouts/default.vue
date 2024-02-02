@@ -41,7 +41,9 @@ export default {
         </NuxtLink>
       </span>
 
-      <span class="mt-auto">
+      <!-- ------ ここから下 ----- -->
+
+      <v-divider class="mt-auto"></v-divider>
 
       <span class="mt-1">
         <NuxtLink to="/settings">
