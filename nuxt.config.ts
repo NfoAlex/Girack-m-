@@ -19,11 +19,16 @@ export default defineNuxtConfig({
       /* vuetify options */
       defaults: {
         global: {
-          rounded: "xl"
+          rounded: "xl",
+          elevation: '0'
+        },
+        VTextField: {
+          rounded: 'pill',
         },
         VCard: {
-          style: 'border-radius: 20px;'
-        }
+          style: 'border-radius:20px;',
+          class: 'pa-4',
+        },
       }
     }
   },
