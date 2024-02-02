@@ -1,14 +1,3 @@
-<script setup lang="ts">
-
-import { onMounted } from "vue";
-const router = useRouter();
-
-onMounted(() => {
-  console.log("default :: mounted : router->", router);
-});
-
-</script>
-
 <template>
   <div class="d-flex ma-0 pa-0" style="height:100vh; width:100vw;">
     <!-- サイドバー -->
