@@ -18,8 +18,8 @@ onMounted(() => {
         <NuxtLink to="/">
           <v-btn
             icon=""
-            :variant="$router.path==='/'?'tonal':'text'"
-            :color="$router.path==='/'?'primary':null"
+            :variant="$route.path==='/'?'tonal':'text'"
+            :color="$route.path==='/'?'primary':null"
             rounded="lg"
             class="mt-2"
           >
@@ -34,8 +34,8 @@ onMounted(() => {
         <NuxtLink to="/channel">
           <v-btn
             icon=""
-            :variant="$router.path==='/channel'?'tonal':'text'"
-            :color="$router.path==='/channel'?'primary':null"
+            :variant="$route.path==='/channel'?'tonal':'text'"
+            :color="$route.path==='/channel'?'primary':null"
             rounded="lg"
           >
             <v-icon size="large">mdi:mdi-pound</v-icon>
