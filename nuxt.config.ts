@@ -16,6 +16,11 @@ export default defineNuxtConfig({
       /* module specific options */
     },
     vuetifyOptions: {
+      /* マテリアルデザイン用 */
+      aliases: {
+        MCard: "VCard",
+        MBtn: "VBtn"
+      },
       /* vuetify options */
       defaults: {
         global: {
@@ -25,7 +30,10 @@ export default defineNuxtConfig({
         VTextField: {
           rounded: 'pill',
         },
-        VCard: {
+        MBtn: {
+          rounded: "pill",
+        },
+        MCard: {
           style: 'border-radius:20px;',
           class: 'pa-4',
         },
