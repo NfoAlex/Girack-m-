@@ -7,26 +7,64 @@
       <v-divider vertical></v-divider>
       <NuxtLink to="/auth"><v-btn color="error" class="mx-1">認証ページ</v-btn></NuxtLink>
     </span> -->
+
     <div class="sidebar d-flex flex-column pa-3">
-      <v-btn
-        icon="mdi:mdi-account"
-        variant="text"
-        rounded="lg"
-      >
-      </v-btn>
+      <span>
+        <NuxtLink to="/">
+          <v-btn
+            icon=""
+            variant="text"
+            rounded="lg"
+            class="mt-2"
+          >
+            <v-icon size="large">mdi:mdi-home</v-icon>
+          </v-btn>
+          <p class="text-caption text-center">ホーム</p>
+        </NuxtLink>
+      </span>
+
+      <span>
+        <NuxtLink to="/channel">
+          <v-btn
+            icon=""
+            variant="text"
+            rounded="lg"
+            class="mt-3"
+          >
+            <v-icon size="large">mdi:mdi-pound</v-icon>
+          </v-btn>
+          <p class="text-caption text-center">チャット</p>
+        </NuxtLink>
+      </span>
+
+      <span class="mt-auto">
+        <NuxtLink to="/auth">
+          <v-btn
+            icon="mdi:mdi-lock"
+            variant="text"
+            rounded="lg"
+            class=""
+            color="error"
+          >
+          </v-btn>
+          <p class="text-caption text-center">認証</p>
+        </NuxtLink>
+      </span>
     </div>
+
     <div class="mainContainer rounded-xl align-self-auto">
       <slot />
     </div>
+
   </div>
 </template>
 
 <script setup lang="ts"></script>
 
-<style>
+<style scoped>
 
-html {
-  background-color: #efefef
+.sidebar {
+  height: 100vh;
 }
 
 .mainContainer {
