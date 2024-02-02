@@ -1,10 +1,11 @@
-<script lang="ts">
+<script setup lang="ts">
 
-export default {
-  mounted() {
-    console.log("default :: mounted : $route->", this.$route);
-  }
-}
+import { onMounted } from "vue";
+const router = useRouter();
+
+onMounted(() => {
+  console.log("default :: mounted : router->", router);
+});
 
 </script>
 
