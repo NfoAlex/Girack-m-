@@ -1,3 +1,13 @@
+<script lang="ts">
+
+export default {
+  mounted() {
+    console.log("default :: mounted : $route->", this.$route);
+  }
+}
+
+</script>
+
 <template>
   <div class="d-flex ma-0 pa-0" style="height:100vh; width:100vw;">
     <!-- <span class="ma-3 d-flex flex-column">
@@ -58,8 +68,6 @@
 
   </div>
 </template>
-
-<script setup lang="ts"></script>
 
 <style scoped>
 
