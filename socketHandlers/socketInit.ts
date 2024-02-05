@@ -1,7 +1,7 @@
 //一番最初に認識されて、いろんなSocketハンドラをまとめるところ
 
 import { io } from "socket.io-client"; //ウェブソケット通信用
-import infoServer from "./infoServer";
+import infoServer from "./InfoServer";
 import infoChannel from "./InfoChannel";
 
 console.log("socketInit :: INITIALIZED");
