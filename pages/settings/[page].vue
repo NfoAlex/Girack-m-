@@ -2,12 +2,22 @@
   <div class="pa-4 d-flex">
 
     <!-- 左部分(サイドバー) -->
-    <div class="d-flex flex-column" style="width:20%;">
+    <div class="d-flex flex-column" style="width:30%;">
         <p class="text-h6 pa-2">設定</p>
-        <v-card @click="$router.push('/settings/sync')" class="rounded-pill py-2 px-3">
+        <v-card
+          @click="$router.push('/settings/sync')"
+          class="rounded-pill py-2 px-3"
+          :variant="$route.path==='/settings/sync'?'tonal':'text'"
+          :ripple="false"
+        >
           同期設定
         </v-card>
-        <v-card @click="$router.push('/settings/theme')" class="rounded-pill py-2 px-3">
+        <v-card
+          @click="$router.push('/settings/theme')"
+          class="rounded-pill py-2 px-3"
+          :variant="$route.path==='/settings/theme'?'tonal':'text'"
+          :ripple="false"
+        >
           テーマ
         </v-card>
     </div>
