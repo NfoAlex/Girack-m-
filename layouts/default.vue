@@ -14,7 +14,7 @@
           >
             <v-icon size="large">mdi:mdi-home</v-icon>
           </v-btn>
-          <p class="text-caption text-center">ホーム</p>
+          <p class="text-caption text-center" :class="$route.path==='/'?'text-primary':null">ホーム</p>
         </NuxtLink>
       </span>
 
@@ -29,7 +29,7 @@
           >
             <v-icon size="large">mdi:mdi-pound</v-icon>
           </v-btn>
-          <p class="text-caption text-center">チャット</p>
+          <p class="text-caption text-center" :class="$route.path==='/channel'?'text-primary':null">チャット</p>
         </NuxtLink>
       </span>
 
@@ -47,7 +47,7 @@
             rounded="lg"
           >
           </v-btn>
-          <p class="text-caption text-center">設定</p>
+          <p class="text-caption text-center" :class="$route.path.startsWith('/settings')?'text-primary':null">設定</p>
         </NuxtLink>
       </span>
 
