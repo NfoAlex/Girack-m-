@@ -2,7 +2,7 @@
   <div class="pa-4 d-flex">
 
     <!-- 左部分(サイドバー) -->
-    <div class="d-flex flex-column" style="width:30%;">
+    <div class="d-flex flex-column" style="width:30%; max-width:250px;">
         <p class="text-h6 pa-2">設定</p>
         <v-card
           @click="$router.push('/settings/sync')"
