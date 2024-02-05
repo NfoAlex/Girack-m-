@@ -10,6 +10,7 @@
           :variant="$route.path==='/settings/sync'?'tonal':'text'"
           :ripple="false"
         >
+          <v-icon>mdi:mdi-sync</v-icon>
           同期設定
         </v-card>
         <v-card
@@ -18,6 +19,7 @@
           :variant="$route.path==='/settings/theme'?'tonal':'text'"
           :ripple="false"
         >
+          <v-icon>mdi:mdi-theme-light-dark</v-icon>
           テーマ
         </v-card>
     </div>
