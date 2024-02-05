@@ -6,15 +6,8 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { socket } from "./socketHandlers/socketInit";
-
-onMounted(() => {
-  socket;
-});
-</script>
-
 <style>
+
 a {
   text-decoration: none;
   transition: 0.4s;
@@ -29,4 +22,5 @@ a:visited {
 html {
   background-color: rgb(var(--v-theme-sidebarBackground));
 }
+
 </style>
