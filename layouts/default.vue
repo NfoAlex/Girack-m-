@@ -1,14 +1,3 @@
-<script setup lang="ts">
-
-import { onMounted } from "vue";
-const router = useRouter();
-
-onMounted(() => {
-  console.log("default :: mounted : router->", router);
-});
-
-</script>
-
 <template>
   <div class="d-flex ma-0 pa-0" style="height:100vh; width:100vw;">
     <!-- サイドバー -->
@@ -25,7 +14,7 @@ onMounted(() => {
           >
             <v-icon size="large">mdi:mdi-home</v-icon>
           </v-btn>
-          <p class="text-caption text-center">ホーム</p>
+          <p class="text-caption text-center" :class="$route.path==='/'?'text-primary':null">ホーム</p>
         </NuxtLink>
       </span>
 
@@ -40,7 +29,7 @@ onMounted(() => {
           >
             <v-icon size="large">mdi:mdi-pound</v-icon>
           </v-btn>
-          <p class="text-caption text-center">チャット</p>
+          <p class="text-caption text-center" :class="$route.path==='/channel'?'text-primary':null">チャット</p>
         </NuxtLink>
       </span>
 
@@ -53,12 +42,12 @@ onMounted(() => {
         <NuxtLink to="/settings">
           <v-btn
             icon="mdi:mdi-cog"
-            variant="text"
+            :variant="$route.path.includes('/settings')?'tonal':'text'"
+            :color="$route.path.includes('/settings')?'primary':null"
             rounded="lg"
-            class=""
           >
           </v-btn>
-          <p class="text-caption text-center">設定</p>
+          <p class="text-caption text-center" :class="$route.path.startsWith('/settings')?'text-primary':null">設定</p>
         </NuxtLink>
       </span>
 
@@ -79,7 +68,7 @@ onMounted(() => {
     </div>
 
     <!-- メイン -->
-    <div class="mainContainer rounded-xl align-self-auto">
+    <div class="mainContainer align-self-auto">
       <slot />
     </div>
 
@@ -95,7 +84,9 @@ onMounted(() => {
 .mainContainer {
   height:100vh;
   width: 100%;
-  background: #fff;
+  background: rgb(var(--v-theme-background));
+
+  border-radius: 20px 0 0 20px;
 }
 
 </style>
