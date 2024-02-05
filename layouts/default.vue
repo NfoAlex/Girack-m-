@@ -68,7 +68,7 @@
     </div>
 
     <!-- メイン -->
-    <div class="mainContainer rounded-xl align-self-auto">
+    <div class="mainContainer align-self-auto">
       <slot />
     </div>
 
@@ -85,6 +85,8 @@
   height:100vh;
   width: 100%;
   background: rgb(var(--v-theme-background));
+
+  border-radius: 20px 0 0 20px;
 }
 
 </style>
