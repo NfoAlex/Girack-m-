@@ -7,7 +7,7 @@ import infoChannel from "./InfoChannel";
 console.log("socketInit :: INITIALIZED");
 
 //Socket接続
-export const socket = io(location.origin, {
+export const socket = io("localhost:33333", {
   transports: ["websocket"],
   reconnection: true,
   reconnectionDelay: 100,
