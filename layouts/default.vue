@@ -37,8 +37,22 @@
 
       <v-divider class="mt-auto"></v-divider>
 
+      <!-- プロフィールボタン -->
+      <span class="mt-2">
+        <NuxtLink to="/profile">
+          <v-btn
+            icon="mdi:mdi-account"
+            :variant="$route.path.includes('/profile')?'tonal':'text'"
+            :color="$route.path.includes('/profile')?'primary':null"
+            rounded="lg"
+          >
+          </v-btn>
+          <p class="text-caption text-center" :class="$route.path.startsWith('/profile')?'text-primary':null">あなた</p>
+        </NuxtLink>
+      </span>
+
       <!-- 設定ボタン -->
-      <span class="mt-1">
+      <span class="mt-4">
         <NuxtLink to="/settings">
           <v-btn
             icon="mdi:mdi-cog"
