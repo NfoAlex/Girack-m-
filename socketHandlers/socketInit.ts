@@ -22,5 +22,5 @@ socket.on("connect", () => {
 });
 
 //情報受け取り周り
-infoServer(socket);
-infoChannel(socket);
+infoServer(socket); //サーバー情報
+infoChannel(socket); //チャンネル情報の操作
