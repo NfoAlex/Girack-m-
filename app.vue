@@ -1,3 +1,7 @@
+<script setup>
+import { socket } from './socketHandlers/socketInit';
+</script>
+
 <template>
   <div>
     <NuxtLayout>
