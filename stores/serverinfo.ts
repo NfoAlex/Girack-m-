@@ -1,8 +1,8 @@
 //サーバー情報保存
 import { defineStore } from "pinia";
-import { ServerInfo } from "~/types/serverInfo";
+import type { ServerInfo } from "~/types/serverInfo";
 
-export const useCounterStore = defineStore("serverinfo", {
+export const storeServerinfo = defineStore("serverinfo", {
   state: () => {
     return {
       serverinfo: {} as ServerInfo,
