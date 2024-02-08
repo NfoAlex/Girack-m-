@@ -15,5 +15,8 @@ export const storeServerinfo = defineStore("serverinfo", {
     increment() {
       this.count++
     },
+    updateInfo(data:ServerInfo) {
+      this.serverinfo = data;
+    }
   },
 })
