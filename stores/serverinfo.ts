@@ -19,4 +19,10 @@ export const useServerinfo = defineStore("serverinfo", {
       this.serverinfo = data;
     }
   },
+
+  getters: {
+    getServerinfo():ServerInfo {
+      return this.serverinfo;
+    }
+  }
 })
