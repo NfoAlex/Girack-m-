@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import type { ServerInfo } from "~/types/serverInfo";
 
-export const storeServerinfo = defineStore("serverinfo", {
+export const useServerinfo = defineStore("serverinfo", {
   state: () => {
     return {
       serverinfo: {} as ServerInfo,
