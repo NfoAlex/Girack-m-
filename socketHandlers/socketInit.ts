@@ -18,6 +18,7 @@ export const socket = io("localhost:33333", {
 socket.on("connect", () => {
   console.log("socketInit :: connect : 接続しました", socket);
 
+  //サーバー情報の取得
   socket.emit("getInfoServer");
 });
 
