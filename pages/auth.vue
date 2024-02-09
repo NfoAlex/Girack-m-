@@ -68,7 +68,7 @@ export default {
       //ログインできたらページ移動
       if (dat.result) {
         this.result = "SUCCESS"; //成功
-        setTimeout(() => this.$router.push("/"), 10); //トップページへ移動
+        this.$router.push("/"); //トップページへ移動
       } else {
         this.result = "FAILED"; //エラーを表示
       }
