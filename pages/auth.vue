@@ -41,13 +41,6 @@ export default {
       },
         "alpha_20240206_1"
       );
-
-      //FOR DEBUG
-      // setTimeout(() => {
-      //   this.processingAuth = false;
-      //   this.$router.push("/"); //トップページへ移動
-      // }, 1500);
-
     },
 
     //新規登録
