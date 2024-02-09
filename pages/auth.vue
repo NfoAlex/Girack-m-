@@ -23,7 +23,9 @@ export default {
       invitecode: "" as string, //招待コード
 
       //結果用
-      result: "" as string
+      result: "" as string,
+      resultRegisterDone: false as boolean,
+      passwordRegistered: "" as string
     }
   },
 
@@ -35,6 +37,7 @@ export default {
       //認証結果を初期化
       this.result = "";
 
+      //認証
       socket.emit("auth", {
         username: this.username,
         password: this.password,
@@ -50,10 +53,11 @@ export default {
       //認証結果を初期化
       this.result = "";
 
-      //FOR DEBUG
-      setTimeout(() => {
-        this.processingAuth = false;
-      }, 1500);
+      //登録
+      socket.emit("register", {
+        username: this.username,
+        code: this.invitecode,
+      });
     },
 
     //認証結果の受け取りと処理
@@ -68,16 +72,36 @@ export default {
       //認証状態中を解除
       this.processingAuth = false;
     },
+
+    //登録結果の受け取りと処理
+    SOCKETregisterEnd(dat:any) {
+      console.log("auth :: SOCKETregisterEnd : dat->", dat);
+      //結果処理
+      if (dat.result === "SUCCESS") {
+        this.passwordRegistered = dat.pass; //結果用パスワードを格納
+        this.result = "SUCCESS"; //結果成功ととして表示
+        this.resultRegisterDone = true; //結果成功ととして表示
+      } else {
+        this.result = "FAILED";
+        this.resultRegisterDone = false; //結果成功ととして表示
+      }
+
+      //認証状態中を解除
+      this.processingAuth = false;
+    },
   },
 
   mounted() {
     //認証結果受け取り
     socket.on("authResult", this.SOCKETauthResult);
+    //登録ができたと受信したときの処理
+    socket.on("registerEnd", this.SOCKETregisterEnd);
   },
 
   unmounted() {
     //socketハンドラ解除
     socket.off("authResult");
+    socket.off("registerEnd");
   }
 
 }
@@ -157,32 +181,46 @@ export default {
       </div>
         <!-- 登録部分 -->
       <div v-else class="d-flex flex-column">
-        <p class="my-2">ユーザー名</p>
-        <v-text-field
-          v-model="username"
-          variant="outlined"
-          prepend-inner-icon="mdi:mdi-account"
-        ></v-text-field>
-        <span v-if="Serverinfo.serverinfo.registration.invite.inviteOnly">
-          <p class="my-2">招待コード</p>
+        <!-- 登録前 -->
+        <div v-if="!resultRegisterDone">
+          <p class="my-2">ユーザー名</p>
           <v-text-field
-            v-model="invitecode"
+            v-model="username"
             variant="outlined"
-            prepend-inner-icon="mdi:mdi-email"
+            prepend-inner-icon="mdi:mdi-account"
           ></v-text-field>
-        </span>
+          <span v-if="Serverinfo.serverinfo.registration.invite.inviteOnly">
+            <p class="my-2">招待コード</p>
+            <v-text-field
+              v-model="invitecode"
+              variant="outlined"
+              prepend-inner-icon="mdi:mdi-email"
+            ></v-text-field>
+          </span>
 
-        <!-- 登録ボタン -->
-        <v-btn
-          @click="register"
-          :loading="processingAuth"
-          class="mt-5"
-          size="large"
-          color="primary"
-          block
-        >
-          登録する
-        </v-btn>
+          <!-- 登録ボタン -->
+          <v-btn
+            @click="register"
+            :loading="processingAuth"
+            class="mt-5"
+            size="large"
+            color="primary"
+            block
+          >
+            登録する
+          </v-btn>
+        </div>
+        <!-- 登録完了後 -->
+        <div v-else>
+          <p class="text-center text-h6 my-5">ようこそ!</p>
+          <p>パスワード</p>
+          <v-text-field
+            v-model="passwordRegistered"
+            readonly
+            variant="filled"
+            rounded="lg"
+          ></v-text-field>
+        </div>
       </div>
     </v-card>
 
