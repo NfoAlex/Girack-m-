@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { socket } from "../socketHandlers/socketInit";
 definePageMeta({
   layout: 'plain' //レイアウトを何もないやつに設定
 });
