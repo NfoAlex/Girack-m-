@@ -89,7 +89,6 @@ export default {
 
     //登録結果の受け取りと処理
     SOCKETregisterEnd(dat:any) {
-      console.log("auth :: SOCKETregisterEnd : dat->", dat);
       //結果処理
       if (dat.result === "SUCCESS") {
         this.passwordRegistered = dat.pass; //結果用パスワードを格納
