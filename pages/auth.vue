@@ -64,6 +64,8 @@ export default {
       } else {
         this.result = "FAILED"; //エラーを表示
       }
+      //認証状態中を解除
+      this.processingAuth = false;
     },
   },
 
