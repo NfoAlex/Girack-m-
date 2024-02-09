@@ -14,6 +14,8 @@ export const socket:Socket = io("localhost:33333", {
   reconnectionDelayMax: 1000,
 });
 
+//piniaが構成されるよりも先にsocketHandlerがpiniaを使おうとする前に待たせるため関数化
+//  ->app.vueでonNuxtReadyにて実行される
 export function loadSocket() {
   console.log("socketInit :: loadSocket : 通信設定開始");
   //接続時
