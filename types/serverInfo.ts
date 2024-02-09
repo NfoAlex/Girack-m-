@@ -1,4 +1,4 @@
-export interface ServerInfo {
+export interface Serverinfo {
   servername: string;
   registration: {
     available: boolean;

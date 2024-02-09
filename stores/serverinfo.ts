@@ -1,11 +1,11 @@
 //サーバー情報保存
 import { defineStore } from "pinia";
-import type { ServerInfo } from "~/types/serverInfo";
+import type { Serverinfo } from "~/types/serverInfo";
 
 export const useServerinfo = defineStore("serverinfo", {
   state: () => {
     return {
-      serverinfo: {} as ServerInfo,
+      serverinfo: {} as Serverinfo,
       count: 0 as number
     }
   },
@@ -15,13 +15,13 @@ export const useServerinfo = defineStore("serverinfo", {
     increment() {
       this.count++
     },
-    updateInfo(data:ServerInfo) {
+    updateInfo(data:Serverinfo) {
       this.serverinfo = data;
     }
   },
 
   getters: {
-    getServerinfo():ServerInfo {
+    getServerinfo():Serverinfo {
       return this.serverinfo;
     }
   }
