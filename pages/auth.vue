@@ -16,7 +16,10 @@ export default {
       //text-field用
       username: "" as string, //ユーザー名
       password: "" as string, //パスワード
-      invitecode: "" as string //招待コード
+      invitecode: "" as string, //招待コード
+
+      //結果用
+      result: "" as string
     }
   },
 
@@ -26,11 +29,18 @@ export default {
       //処理中と設定
       this.processingAuth = true;
 
+      socket.emit("auth", {
+        username: this.username,
+        password: this.password,
+      },
+        "20240206"
+      );
+
       //FOR DEBUG
-      setTimeout(() => {
-        this.processingAuth = false;
-        this.$router.push("/"); //トップページへ移動
-      }, 1500);
+      // setTimeout(() => {
+      //   this.processingAuth = false;
+      //   this.$router.push("/"); //トップページへ移動
+      // }, 1500);
 
     },
 
@@ -43,7 +53,23 @@ export default {
       setTimeout(() => {
         this.processingAuth = false;
       }, 1500);
-    }
+    },
+
+    //認証結果の受け取りと処理
+    SOCKETauthResult(dat:any) {
+      //ログインできたらページ移動
+      if (dat.result) {
+        this.result = "SUCCESS"; //成功を表示
+        setTimeout(() => this.$router.push("/"), 10); //トップページへ移動
+      } else {
+        this.result = "FAILED"; //エラーを表示
+      }
+    },
+  },
+
+  mounted() {
+    //認証結果受け取り
+    socket.on("authResult", this.SOCKETauthResult);
   }
 
 }
