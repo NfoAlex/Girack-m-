@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { socket } from "../socketHandlers/socketInit";
 import { useServerinfo } from "../stores/serverinfo";
+import { useMyUserinfo } from "../stores/userinfo";
 
 const Serverinfo = useServerinfo();
+const MyUserinfo = useMyUserinfo();
 
 definePageMeta({
   layout: 'plain' //レイアウトを何もないやつに設定
@@ -64,8 +66,20 @@ export default {
     SOCKETauthResult(dat:any) {
       //ログインできたらページ移動
       if (dat.result) {
-        this.result = "SUCCESS"; //成功
-        this.$router.push("/"); //トップページへ移動
+        //成功
+        this.result = "SUCCESS";
+        //自ユーザー情報更新
+        const MyUserinfo = useMyUserinfo();
+        MyUserinfo.updateInfo({
+          username: dat.username,
+          userid: dat.userid,
+          sessionid: dat.sessionid,
+          role: dat.role,
+          channelJoined: dat.channelJoined
+        });
+
+        //トップページへ移動
+        this.$router.push("/");
       } else {
         this.result = "FAILED"; //エラーを表示
       }
