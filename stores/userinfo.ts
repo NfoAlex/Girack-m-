@@ -5,7 +5,13 @@ import type { MyUserinfo } from "~/types/user";
 export const useMyUserinfo = defineStore("myuserinfo", {
   state: () => {
     return {
-      MyUserinfo: {} as MyUserinfo
+      MyUserinfo: {
+        username: "User",
+        role: "Member",
+        userid: "XXXXXXXX",
+        sessionid: "",
+        channelJoined: ["0001"]
+      } as MyUserinfo
     }
   },
   // could also be defined as
