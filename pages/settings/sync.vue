@@ -1,5 +1,7 @@
 <template>
-  <NuxtLayout name="settings">
-    <p>ここで同期</p>
-  </NuxtLayout>
+  <div>
+    <NuxtLayout name="settings">
+      <p>ここで同期</p>
+    </NuxtLayout>
+  </div>
 </template>

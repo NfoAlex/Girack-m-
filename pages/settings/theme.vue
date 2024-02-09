@@ -12,10 +12,12 @@ function toggleTheme() {
 </script>
 
 <template>
-  <NuxtLayout name="settings">
-    <div>
-      <p>ここがテーマ</p>
-      <v-btn @click="toggleTheme" color="primary">テーマトグルボタン</v-btn>
-    </div>
-  </NuxtLayout>
+  <div>
+    <NuxtLayout name="settings">
+      <div>
+        <p>ここがテーマ</p>
+        <v-btn @click="toggleTheme" color="primary">テーマトグルボタン</v-btn>
+      </div>
+    </NuxtLayout>
+  </div>
 </template>
