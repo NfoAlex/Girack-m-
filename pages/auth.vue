@@ -33,7 +33,7 @@ export default {
         username: this.username,
         password: this.password,
       },
-        "20240206"
+        "alpha_20240206_1"
       );
 
       //FOR DEBUG
