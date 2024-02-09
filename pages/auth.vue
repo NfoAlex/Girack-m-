@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { socket } from "../socketHandlers/socketInit";
+import { useServerinfo } from "../stores/serverinfo";
+
+const Serverinfo = useServerinfo();
+
 definePageMeta({
   layout: 'plain' //レイアウトを何もないやつに設定
 });
@@ -122,6 +126,7 @@ export default {
         >ログイン</v-btn>
         <v-btn
           @click="authMode='REGISTER'"
+          :disabled="!Serverinfo.serverinfo.registration.available"
           class="mx-1"
           size="large"
           :color="authMode==='REGISTER'?'primary':null"
@@ -165,12 +170,14 @@ export default {
           variant="outlined"
           prepend-inner-icon="mdi:mdi-account"
         ></v-text-field>
-        <p class="my-2">招待コード</p>
-        <v-text-field
-          v-model="invitecode"
-          variant="outlined"
-          prepend-inner-icon="mdi:mdi-email"
-        ></v-text-field>
+        <span v-if="Serverinfo.serverinfo.registration.invite.inviteOnly">
+          <p class="my-2">招待コード</p>
+          <v-text-field
+            v-model="invitecode"
+            variant="outlined"
+            prepend-inner-icon="mdi:mdi-email"
+          ></v-text-field>
+        </span>
 
         <!-- 登録ボタン -->
         <v-btn
