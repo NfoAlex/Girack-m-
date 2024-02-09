@@ -1,15 +1,12 @@
+<script setup lang="ts">
+definePageMeta({
+  layout: 'plain' //レイアウトを何もないやつに設定
+});
+</script>
+
 <script lang="ts">
 
 export default {
-  setup() {
-    definePageMeta({
-      layout: 'plain' //レイアウトを何もないやつに設定
-    });
-
-    const router = useRouter(); //ページ遷移用
-    return { router };
-  },
-
   data() {
     return {
       authMode: "LOGIN" as string, // "LOGIN" | "REGISTER"
@@ -31,7 +28,7 @@ export default {
       //FOR DEBUG
       setTimeout(() => {
         this.processingAuth = false;
-        this.router.push("/"); //トップページへ移動
+        this.$router.push("/"); //トップページへ移動
       }, 1500);
 
     },
