@@ -211,7 +211,7 @@ export default {
           </v-btn>
         </div>
         <!-- 登録完了後 -->
-        <div v-else>
+        <div v-if="resultRegisterDone">
           <p class="text-center text-h6 my-5">ようこそ!</p>
           <p>パスワード</p>
           <v-text-field
