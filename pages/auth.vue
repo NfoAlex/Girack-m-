@@ -28,6 +28,8 @@ export default {
     login():void {
       //処理中と設定
       this.processingAuth = true;
+      //認証結果を初期化
+      this.result = "";
 
       socket.emit("auth", {
         username: this.username,
@@ -48,6 +50,8 @@ export default {
     register():void {
       //処理中と設定
       this.processingAuth = true;
+      //認証結果を初期化
+      this.result = "";
 
       //FOR DEBUG
       setTimeout(() => {
@@ -59,7 +63,7 @@ export default {
     SOCKETauthResult(dat:any) {
       //ログインできたらページ移動
       if (dat.result) {
-        this.result = "SUCCESS"; //成功を表示
+        this.result = "SUCCESS"; //成功
         setTimeout(() => this.$router.push("/"), 10); //トップページへ移動
       } else {
         this.result = "FAILED"; //エラーを表示
