@@ -70,6 +70,11 @@ export default {
   mounted() {
     //認証結果受け取り
     socket.on("authResult", this.SOCKETauthResult);
+  },
+
+  unmounted() {
+    //socketハンドラ解除
+    socket.off("authResult");
   }
 
 }
