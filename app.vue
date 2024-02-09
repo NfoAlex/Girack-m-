@@ -1,5 +1,7 @@
 <script setup>
+import { loadSocket } from "../socketHandlers/socketInit";
 import { socket } from './socketHandlers/socketInit';
+onNuxtReady(() => { loadSocket(); })
 </script>
 
 <template>
