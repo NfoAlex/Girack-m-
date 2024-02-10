@@ -27,7 +27,6 @@ export default defineNuxtConfig({
       /* vuetify options */
       defaults: {
         global: {
-          rounded: "xl",
           elevation: '0'
         },
         VTextField: {
