@@ -16,7 +16,7 @@ function toggleTheme() {
     <NuxtLayout name="settings">
       <div>
         <p>ここがテーマ</p>
-        <v-btn @click="toggleTheme" color="primary">テーマトグルボタン</v-btn>
+        <m-btn @click="toggleTheme" color="primary">テーマトグルボタン</m-btn>
       </div>
     </NuxtLayout>
   </div>
