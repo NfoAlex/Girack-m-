@@ -3,7 +3,7 @@
 
     <!-- 左部分(サイドバー) -->
     <div class="d-flex flex-column" style="width:30%; max-width:250px;">
-        <p class="text-h6 pa-2">設定</p>
+        <p class="text-h5 pa-2">設定</p>
         <NuxtLink to="/settings/sync">
           <v-card
             class="rounded-pill py-2 px-3"
