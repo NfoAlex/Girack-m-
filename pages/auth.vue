@@ -257,7 +257,7 @@ export default {
   min-width:400px;
   max-width: 500px;
 
-  border-radius: 20px 0 0 20px !important;
+  border-radius: 28px 0 0 28px !important;
 
   background-color: rgb(var(--v-theme-background));
 
