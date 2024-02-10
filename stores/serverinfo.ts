@@ -40,6 +40,10 @@ export const useServerinfo = defineStore("serverinfo", {
   }),
   
   getters: {
+    getCount():number {
+      return this.count;
+    },
+
     getServerinfo():Serverinfo {
       return this._Serverinfo;
     }
