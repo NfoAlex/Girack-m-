@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
-//const Serverinfo:any = useServerinfo();
-//const MyUserinfo:any = useMyUserinfo();
+
 const { getServerinfo, getCount } = storeToRefs(useServerinfo());
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 </script>

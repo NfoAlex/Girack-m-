@@ -3,9 +3,6 @@ import { socket } from "../socketHandlers/socketInit";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 
-// const Serverinfo = useServerinfo();
-// const MyUserinfo = useMyUserinfo();
-
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 const { getServerinfo } = storeToRefs(useServerinfo());
 
