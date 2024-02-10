@@ -159,7 +159,7 @@ export default {
         >ログイン</v-btn>
         <v-btn
           @click="authMode='REGISTER'"
-          :disabled="!Serverinfo.serverinfo.registration.available"
+          :disabled="!getServerinfo.registration.available"
           class="mx-1"
           size="large"
           :color="authMode==='REGISTER'?'primary':null"
