@@ -13,6 +13,18 @@ export default defineNuxtConfig({
         },
       },
     },
+    server: {
+      proxy: {
+        "/socket.io/": {
+          target: "ws://localhost:33333",
+          ws: true
+        },
+        "/img/": {
+          target: "http://localhost:33333/",
+          changeOrigin: true,
+        }
+      }
+    }
   },
   vuetify: {
     moduleOptions: {
