@@ -2,6 +2,9 @@
 export default defineNuxtConfig({
   css: ["@/assets/styles/main.scss"],
   modules: ["@pinia/nuxt", "vuetify-nuxt-module"],
+  pinia: {
+    storesDirs: ['./stores/**'],
+  },
   vite: {
     css: {
       preprocessorOptions: {

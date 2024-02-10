@@ -100,7 +100,7 @@
   width: 100%;
   background: rgb(var(--v-theme-background));
 
-  border-radius: 20px 0 0 20px;
+  border-radius: 28px 0 0 28px;
 }
 
 </style>
