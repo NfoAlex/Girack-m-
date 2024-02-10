@@ -69,8 +69,8 @@ export default {
         //成功
         this.result = "SUCCESS";
         //自ユーザー情報更新
-        const MyUserinfo = useMyUserinfo();
-        MyUserinfo.updateMyUserinfo({
+        const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
+        updateMyUserinfo({
           username: dat.username,
           userid: dat.userid,
           sessionid: dat.sessionid,
