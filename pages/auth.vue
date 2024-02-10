@@ -64,7 +64,7 @@ export default {
 
     //認証結果の受け取りと処理
     SOCKETauthResult(dat:any) {
-      //ログインできたらページ移動
+      //ログインできたらユーザー情報設定、ページ移動
       if (dat.result) {
         //成功
         this.result = "SUCCESS";
@@ -81,7 +81,8 @@ export default {
         //トップページへ移動
         this.$router.push("/");
       } else {
-        this.result = "FAILED"; //エラーを表示
+        //エラーを表示
+        this.result = "FAILED";
       }
       //認証状態中を解除
       this.processingAuth = false;
