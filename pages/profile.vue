@@ -16,7 +16,7 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
           <v-img
             @click=""
             :alt="getMyUserinfo.userid"
-            :src="'/img/' + getMyUserinfo.userid + '.jpeg'"
+            :src="'/img/' + getMyUserinfo.userid"
             width="100"
           ></v-img>
         </div>
