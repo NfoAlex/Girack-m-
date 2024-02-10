@@ -3,8 +3,11 @@ import { socket } from "../socketHandlers/socketInit";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 
-const Serverinfo = useServerinfo();
-const MyUserinfo = useMyUserinfo();
+// const Serverinfo = useServerinfo();
+// const MyUserinfo = useMyUserinfo();
+
+const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+const { getServerinfo } = storeToRefs(useServerinfo());
 
 definePageMeta({
   layout: 'plain' //レイアウトを何もないやつに設定
@@ -202,7 +205,7 @@ export default {
             variant="outlined"
             prepend-inner-icon="mdi:mdi-account"
           ></v-text-field>
-          <span v-if="Serverinfo.serverinfo.registration.invite.inviteOnly">
+          <span v-if="getServerinfo.registration.invite.inviteOnly">
             <p class="my-2">招待コード</p>
             <v-text-field
               v-model="invitecode"
