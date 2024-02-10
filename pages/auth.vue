@@ -3,7 +3,6 @@ import { socket } from "../socketHandlers/socketInit";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 
-const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 const { getServerinfo } = storeToRefs(useServerinfo());
 
 definePageMeta({
