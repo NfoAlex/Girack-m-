@@ -15,11 +15,11 @@ export default defineNuxtConfig({
     },
     server: {
       proxy: {
-        "/socket.io/": {
+        "/socket.io": {
           target: "ws://localhost:33333",
           ws: true
         },
-        "/img/": {
+        "/img": {
           target: "http://localhost:33333/",
           changeOrigin: true,
         }
