@@ -37,7 +37,7 @@ export default defineNuxtConfig({
           rounded: "pill",
         },
         MCard: {
-          style: 'border-radius:20px;',
+          style: 'border-radius:20px; background-color:rgb(var(--v-theme-sidebarBackground));',
           class: 'pa-4',
         },
       },
