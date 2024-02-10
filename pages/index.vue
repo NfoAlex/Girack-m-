@@ -2,7 +2,8 @@
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 const Serverinfo:any = useServerinfo();
-const MyUserinfo:any = useMyUserinfo();
+//const MyUserinfo:any = useMyUserinfo();
+const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 </script>
 
 <template>
@@ -17,7 +18,7 @@ const MyUserinfo:any = useMyUserinfo();
       </m-card>
       <p>MyUserinfo : </p>
       <m-card variant="outlined">
-        {{ MyUserinfo.MyUserinfo }}
+        {{ getMyUserinfo }}
       </m-card>
     </m-card>
   </div>
