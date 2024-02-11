@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   css: ["@/assets/styles/main.scss"],
-  modules: ["@pinia/nuxt", "vuetify-nuxt-module", "@nuxtus/nuxt-localtunnel"],
+  modules: ["@pinia/nuxt", "vuetify-nuxt-module"],
   pinia: {
     storesDirs: ['./stores/**'],
   },
@@ -38,10 +38,6 @@ export default defineNuxtConfig({
       '/socket.io': { proxy: 'ws://localhost:33333' },
       "/img/**": { proxy: 'http://localhost:33333/img/**' },
     }
-  },
-  localtunnel: {
-    port: 33333,
-    local_host: "ws://localhost:33333"
   },
   vuetify: {
     moduleOptions: {
