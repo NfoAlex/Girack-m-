@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
-    "http-proxy": "^1.18.1",
     "http-proxy-middleware": "^3.0.0-beta.1",
     "nuxt-proxy": "^0.4.1",
     "pinia": "^2.1.7",

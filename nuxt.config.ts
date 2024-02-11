@@ -13,19 +13,18 @@ export default defineNuxtConfig({
         },
       },
     },
-    // server: {
-    //   proxy: {
-    //     "/socket.io": {
-    //       target: "http://localhost:33333",
-    //       changeOrigin: true,
-    //       ws: true
-    //     },
-    //     "/img": {
-    //       target: "http://localhost:33333/",
-    //       changeOrigin: true,
-    //     }
-    //   }
-    // }
+    server: {
+      proxy: {
+        "/socket.io": {
+          target: "ws://localhost:33333",
+          ws: true
+        },
+        "/img": {
+          target: "http://localhost:33333/",
+          changeOrigin: true,
+        }
+      }
+    }
   },
   // nitro: {
   //   devProxy: {
@@ -37,9 +36,6 @@ export default defineNuxtConfig({
   //     "/img/**": { proxy: 'http://localhost:33333/img/**' },
   //   }
   // },
-  serverMiddleware: [
-    { path: '/socket.io', handler: './server/middleware/proxy.ts' },
-  ],
   vuetify: {
     moduleOptions: {
       /* module specific options */
