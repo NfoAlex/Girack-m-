@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   css: ["@/assets/styles/main.scss"],
-  modules: ["@pinia/nuxt", "vuetify-nuxt-module", "nuxt-proxy"],
+  modules: ["@pinia/nuxt", "vuetify-nuxt-module", "@nuxtus/nuxt-localtunnel"],
   pinia: {
     storesDirs: ['./stores/**'],
   },
@@ -14,10 +14,13 @@ export default defineNuxtConfig({
       },
     },
     server: {
+      host: "0.0.0.0",
       proxy: {
-        "/socket.io": {
+        "/socket.io/": {
           target: "ws://localhost:33333",
-          ws: true
+          ws: true,
+          secure: false,
+          changeOrigin: true
         },
         "/img": {
           target: "http://localhost:33333/",
@@ -26,16 +29,20 @@ export default defineNuxtConfig({
       }
     }
   },
-  // nitro: {
-  //   devProxy: {
-  //     '/sss': { target: 'ws://localhost:33333', ws: true },
-  //     "/img/**": { target: 'http://localhost:33333/img/**' },
-  //   },
-  //   routeRules: {
-  //     '/sss': { proxy: 'ws://localhost:33333' },
-  //     "/img/**": { proxy: 'http://localhost:33333/img/**' },
-  //   }
-  // },
+  nitro: {
+    devProxy: {
+      '/socket.io': { target: 'ws://localhost:33333', ws: true },
+      "/img/**": { target: 'http://localhost:33333/img/**' },
+    },
+    routeRules: {
+      '/socket.io': { proxy: 'ws://localhost:33333' },
+      "/img/**": { proxy: 'http://localhost:33333/img/**' },
+    }
+  },
+  localtunnel: {
+    port: 33333,
+    local_host: "ws://localhost:33333"
+  },
   vuetify: {
     moduleOptions: {
       /* module specific options */
