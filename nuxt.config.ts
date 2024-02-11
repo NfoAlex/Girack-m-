@@ -27,16 +27,19 @@ export default defineNuxtConfig({
     //   }
     // }
   },
-  nitro: {
-    devProxy: {
-      '/sss': { target: 'ws://localhost:33333', ws: true },
-      "/img/**": { target: 'http://localhost:33333/img/**' },
-    },
-    routeRules: {
-      '/sss': { proxy: 'ws://localhost:33333' },
-      "/img/**": { proxy: 'http://localhost:33333/img/**' },
-    }
-  },
+  // nitro: {
+  //   devProxy: {
+  //     '/sss': { target: 'ws://localhost:33333', ws: true },
+  //     "/img/**": { target: 'http://localhost:33333/img/**' },
+  //   },
+  //   routeRules: {
+  //     '/sss': { proxy: 'ws://localhost:33333' },
+  //     "/img/**": { proxy: 'http://localhost:33333/img/**' },
+  //   }
+  // },
+  serverMiddleware: [
+    { path: '/socket.io', handler: './server/middleware/proxy.ts' },
+  ],
   vuetify: {
     moduleOptions: {
       /* module specific options */
