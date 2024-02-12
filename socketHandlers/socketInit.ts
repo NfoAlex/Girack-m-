@@ -21,11 +21,9 @@ export function loadSocket() {
   //接続時
   socket.on("connect", () => {
     console.log("socketInit :: connect : 接続しました", socket);
-
-    //サーバー情報の取得
-    socket.emit("getInfoServer");
   });
 
+  //サーバー情報取得する
   socket.emit("getInfoServer");
 
   //情報受け取り周り
