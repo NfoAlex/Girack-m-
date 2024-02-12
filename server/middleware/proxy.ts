@@ -1,16 +1,18 @@
 import { defineEventHandler } from 'h3';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import {EventEmitter} from "events";
+//EventEmitter.defaultMaxListeners = 25; // 15は例です。必要に応じて切な値に設定してください。
 
 export default defineEventHandler(async (event) => {
-  const url = event.node.req.url
+  const url = event.node.req.url;
   // APIパスが複数ある場合
-  const apiPaths = ['/socket.io','/img']
+  const apiPaths = ['/socket.io','/img'];
   // APIのパスと指定したもの以外は処理を止める止めないと他のパスに影響が出る
-  const isContained = typeof url === 'string' && apiPaths.some((apiPath: string) => new RegExp(`^${apiPath}([/?]|$)`).test(url))
+  const isContained = typeof url === 'string' && apiPaths.some((apiPath: string) => new RegExp(`^${apiPath}([/?]|$)`).test(url));
   if (!isContained) {
-    return
+    return;
   }
-  const config = useRuntimeConfig()
+
   // Nuxt configで登録したAPI_URLを設定
   const API_URL = `ws://localhost:33333`
   const myProxy = createProxyMiddleware({
@@ -19,17 +21,17 @@ export default defineEventHandler(async (event) => {
     ws: true,
     logger: console,
     pathFilter: apiPaths
-  })
+  });
+
   await new Promise((resolve, reject) => {
     const next = (err?: unknown) => {
       if (err) {
-        reject(err)
+        reject(err);
       } else {
-        console.log("proxy :: できた");
-        resolve(true)
+        resolve(true);
       }
     }
 
-    myProxy(event.req, event.res, next)
+    myProxy(event.req, event.res, next);
   })
 })
