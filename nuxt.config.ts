@@ -12,8 +12,12 @@ export default defineNuxtConfig({
           additionalData: '@import "@/assets/styles/variables.scss";',
         },
       },
-    },
+    }
   },
+  //ここでプロキシ適用
+  serverMiddleware: [
+    { path: '/socket.io', handler: './server/middleware/proxy.ts' },
+  ],
   vuetify: {
     moduleOptions: {
       /* module specific options */
