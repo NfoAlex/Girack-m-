@@ -39,7 +39,9 @@ export default defineNuxtConfig({
   //     "/img/**": { proxy: 'http://localhost:33333/img/**' },
   //   }
   // },
-  
+  serverMiddleware: [
+    { path: '/socket.io', handler: './server/middleware/proxy.ts' },
+  ],
   vuetify: {
     moduleOptions: {
       /* module specific options */
