@@ -9,7 +9,6 @@ console.log("socketInit :: INITIALIZED");
 //Socket接続
 export const socket:Socket = io({
   path: "/socket.io",
-  transports: ["websocket"],
   reconnection: true,
   reconnectionDelay: 100,
   reconnectionDelayMax: 1000,
