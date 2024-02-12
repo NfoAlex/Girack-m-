@@ -1,7 +1,5 @@
 import { defineEventHandler } from 'h3';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import {EventEmitter} from "events";
-//EventEmitter.defaultMaxListeners = 25; // 15は例です。必要に応じて切な値に設定してください。
 
 export default defineEventHandler(async (event) => {
   const url = event.node.req.url;
