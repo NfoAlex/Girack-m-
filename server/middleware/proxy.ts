@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Nuxt configで登録したAPI_URLを設定
-  const API_URL = `ws://localhost:33333`
+  const API_URL = `ws://localhost:33333`;
   const myProxy = createProxyMiddleware({
     target: API_URL,
     changeOrigin: true,
