@@ -14,6 +14,7 @@ export default defineNuxtConfig({
       },
     }
   },
+  //ここでプロキシ適用
   serverMiddleware: [
     { path: '/socket.io', handler: './server/middleware/proxy.ts' },
   ],

@@ -21,6 +21,7 @@ export default defineEventHandler(async (event) => {
     pathFilter: apiPaths
   });
 
+  //ここでプロキシ適用
   await new Promise((resolve, reject) => {
     const next = (err?: unknown) => {
       if (err) {
