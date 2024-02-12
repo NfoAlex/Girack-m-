@@ -13,32 +13,33 @@ export default defineNuxtConfig({
         },
       },
     },
-    server: {
-      host: "0.0.0.0",
-      proxy: {
-        "/socket.io/": {
-          target: "ws://localhost:33333",
-          ws: true,
-          secure: false,
-          changeOrigin: true
-        },
-        "/img": {
-          target: "http://localhost:33333/",
-          changeOrigin: true,
-        }
-      }
-    }
+    // server: {
+    //   host: "0.0.0.0",
+    //   proxy: {
+    //     "/socket.io/": {
+    //       target: "ws://localhost:33333",
+    //       ws: true,
+    //       secure: false,
+    //       changeOrigin: true
+    //     },
+    //     "/img": {
+    //       target: "http://localhost:33333/",
+    //       changeOrigin: true,
+    //     }
+    //   }
+    // }
   },
-  nitro: {
-    devProxy: {
-      '/socket.io': { target: 'ws://localhost:33333', ws: true },
-      "/img/**": { target: 'http://localhost:33333/img/**' },
-    },
-    routeRules: {
-      '/socket.io': { proxy: 'ws://localhost:33333' },
-      "/img/**": { proxy: 'http://localhost:33333/img/**' },
-    }
-  },
+  // nitro: {
+  //   devProxy: {
+  //     '/socket.io': { target: 'ws://localhost:33333', ws: true },
+  //     "/img/**": { target: 'http://localhost:33333/img/**' },
+  //   },
+  //   routeRules: {
+  //     '/socket.io': { proxy: 'ws://localhost:33333' },
+  //     "/img/**": { proxy: 'http://localhost:33333/img/**' },
+  //   }
+  // },
+  
   vuetify: {
     moduleOptions: {
       /* module specific options */
