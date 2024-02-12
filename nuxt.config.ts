@@ -12,20 +12,12 @@ export default defineNuxtConfig({
           additionalData: '@import "@/assets/styles/variables.scss";',
         },
       },
-    },
-    server: {
-      proxy: {
-        "/socket.io": {
-          target: "ws://localhost:33333",
-          ws: true
-        },
-        "/img": {
-          target: "http://localhost:33333/",
-          changeOrigin: true,
-        }
-      }
     }
   },
+  //ここでプロキシ適用
+  serverMiddleware: [
+    { path: '/socket.io', handler: './server/middleware/proxy.ts' },
+  ],
   vuetify: {
     moduleOptions: {
       /* module specific options */
