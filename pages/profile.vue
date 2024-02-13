@@ -56,6 +56,8 @@ export default {
           sessionid: MyUserinfo.sessionid,
         },
       });
+      //パスワードを変更したと設定
+      this.resultChangePasswordSuccess = true;
     },
   }
 }
@@ -150,9 +152,17 @@ export default {
       <v-card-title>
         確認
       </v-card-title>
+
       <v-card-text>
-        完了しました
+        パスワードの変更が完了しました
       </v-card-text>
+
+      <v-card-actions class="d-flex flex-row-reverse">
+        <m-btn
+          @click="()=>{ dialogChangePassword=false }"
+          variant="text"
+        >閉じる</m-btn>
+      </v-card-actions>
     </m-card>
   </v-dialog>
 
