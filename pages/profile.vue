@@ -315,7 +315,7 @@ export default {
       <v-card-actions class="d-flex flex-row-reverse">
         <m-btn
           @click="changeUsername"
-          :disabled="resultNewUsername==='SUCCESS'||stateUsernameSearching"
+          :disabled="resultNewUsername!=='SUCCESS'||stateUsernameSearching"
           color="primary"
         >変更する</m-btn>
       </v-card-actions>
