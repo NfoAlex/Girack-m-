@@ -205,12 +205,31 @@ export default {
       <v-card-text>
         <v-text-field
           v-model="newUsername"
+          label="新ユーザー名"
         >
         </v-text-field>
+        <!-- 結果表示 -->
+        <v-alert
+          :type="
+            newUsername.length<2
+              &&
+            newUsername.length!==0
+              ||
+            resultNameNotAvailable
+            ?'error':'info'
+          "
+        >
+          <p v-if="newUsername.length===0">ユーザー名を入力してください</p>
+          <p v-if="newUsername.length<2&&newUsername.length!==0">ユーザー名は2文字以上入力してください</p>
+          <p v-if="resultNameNotAvailable">このユーザー名は既に使用されています</p>
+          <p v-if="canUseThisName">使えます</p>
+        </v-alert>
       </v-card-text>
       <v-card-actions class="d-flex flex-row-reverse">
         <m-btn
           @click="changeUsername"
+          :disabled="!canUseThisName"
+          color="primary"
         >変更する</m-btn>
       </v-card-actions>
     </m-card>
