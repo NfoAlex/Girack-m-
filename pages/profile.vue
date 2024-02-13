@@ -142,7 +142,6 @@ export default {
           @click="changePassword"
           :disabled="newPasswordAgain!==newPassword&&newPasswordAgain.length!==0"
           color="primary"
-          size="large"
         >変更する</m-btn>
       </v-card-actions>
 
