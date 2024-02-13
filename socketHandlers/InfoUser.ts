@@ -9,6 +9,7 @@ export default function infoUser(socket:Socket):void {
   socket.on("infoUser", (dat:MyUserinfo) => {
     console.log("InfoUser :: socketon(infoUser) : dat->", dat);
 
+    //自ユーザー情報格納
     const MyUserinfo = useMyUserinfo();
     MyUserinfo.updateMyUserinfo(dat);
   });
