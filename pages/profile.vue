@@ -8,6 +8,9 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
 <script lang="ts">
 
+type resultNewUsername = "SUCCESS" | "SHORT_NAME" | "ALREADY_USED" | "";
+type resultNewUsernameAlertDisplay = "info" | "error" | "success";
+
 export default {
   data() {
     return {
@@ -26,8 +29,9 @@ export default {
       stateUsernameSearching: false as boolean,
 
       //結果受け取り用
-      resultChangePasswordSuccess: false as boolean,
-      resultNameNotAvailable: false as boolean,
+      resultChangePasswordSuccess: false as boolean, //パスワードの変更結果用
+      resultNewUsername: "" as resultNewUsername, //ユーザー名の検索結果
+      resultNewUsernameAlertDisplay: "info" as resultNewUsernameAlertDisplay, //ユーザー名の検索結果表示用
       canUseThisName: false as boolean,
     }
   },
@@ -39,6 +43,8 @@ export default {
         if (this.newUsername.length >= 2) {
           //ユーザー名検索中と設定
           this.stateUsernameSearching = true;
+          this.resultNewUsernameAlertDisplay = "info";
+          this.checkUsernameResult();
           //自ユーザー情報情報取得
           const MyUserinfo = useMyUserinfo().getMyUserinfo;
           //名前検索
@@ -49,12 +55,16 @@ export default {
               sessionid: MyUserinfo.sessionid
             }
           });
+
+        } else if (this.newUsername.length === 0) {
+          this.resultNewUsername = "";
         } else {
           //結果初期化
           this.canUseThisName = false;
-          this.resultNameNotAvailable = false;
+          this.resultNewUsername = "SHORT_NAME";
         }
-        
+        //表示する結果設定
+        this.checkUsernameResult();
       }
     }
   },
@@ -109,6 +119,27 @@ export default {
       });
     },
 
+    //ユーザー名が使えるかどうかのVAlert用の表示ラベルを返す
+    checkUsernameResult():void {
+      switch(this.resultNewUsername) {
+        case "ALREADY_USED":
+          this.resultNewUsernameAlertDisplay = "error";
+          break;
+
+        case "SUCCESS":
+          this.resultNewUsernameAlertDisplay = "success";
+          break;
+
+        case "SHORT_NAME":
+          this.resultNewUsernameAlertDisplay = "error";
+          break;
+
+        default:
+          this.resultNewUsernameAlertDisplay = "info";
+          break;
+      }
+    },
+
     //ユーザー名変更用の名前検索ハンドラ
     SOCKETinfoSearchUser(result:[{userid:string, username:string}]) {
       console.log("profile :: SOCKETinfoSerchUser : result->", result);
@@ -118,9 +149,11 @@ export default {
         if (result[index].username === this.newUsername) {
           //この名前を使えないと設定
           this.canUseThisName = false;
-          this.resultNameNotAvailable = true;
+          this.resultNewUsername = "ALREADY_USED";
           //検索中状態を解除
           this.stateUsernameSearching = false;
+          //表示する結果設定
+          this.checkUsernameResult();
 
           return;
         }
@@ -130,8 +163,10 @@ export default {
       this.stateUsernameSearching = false;
 
       //この名前を使えると設定
-      this.resultNameNotAvailable = false;
+      this.resultNewUsername = "SUCCESS";
       this.canUseThisName = true;
+      //表示する結果設定
+      this.checkUsernameResult();
     }
   },
 
@@ -268,27 +303,22 @@ export default {
         </v-text-field>
         <!-- 結果表示 -->
         <v-alert
-          :type="
-            newUsername.length<2
-              &&
-            newUsername.length!==0
-              ||
-            resultNameNotAvailable
-            ?'error':'info'
-          "
+          :type="resultNewUsernameAlertDisplay"
         >
-          <p v-if="newUsername.length===0">ユーザー名を入力してください</p>
-          <p v-if="newUsername.length<2&&newUsername.length!==0">ユーザー名は2文字以上入力してください</p>
-          <p v-if="resultNameNotAvailable">このユーザー名は既に使用されています</p>
           <p v-if="stateUsernameSearching">検索中...</p>
-          <p v-if="canUseThisName">使えます</p>
+          <span v-else>
+            <p v-if="resultNewUsername===''">ユーザー名を入力してください</p>
+            <p v-if="resultNewUsername==='SHORT_NAME'">ユーザー名は2文字以上入力してください</p>
+            <p v-if="resultNewUsername==='ALREADY_USED'">このユーザー名は既に使用されています</p>
+            <p v-if="resultNewUsername==='SUCCESS'">使えます</p>
+          </span>
         </v-alert>
       </v-card-text>
 
       <v-card-actions class="d-flex flex-row-reverse">
         <m-btn
           @click="changeUsername"
-          :disabled="!canUseThisName||stateUsernameSearching"
+          :disabled="resultNewUsername==='SUCCESS'||stateUsernameSearching"
           color="primary"
         >変更する</m-btn>
       </v-card-actions>
