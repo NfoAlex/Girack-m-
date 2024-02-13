@@ -27,6 +27,7 @@ export default {
   },
 
   methods: {
+    //ログアウト処理
     logout():void {
       const MyUserinfo = useMyUserinfo().getMyUserinfo;
       //クッキー削除
@@ -40,7 +41,22 @@ export default {
         },
       });
       location.reload(); //ページリロード
-    }
+    },
+
+    //パスワードを変更
+    changePassword():void {
+      //自ユーザー情報取得
+      const MyUserinfo = useMyUserinfo().getMyUserinfo;
+      //パスワードを変更申請
+      socket.emit("changePassword", {
+        currentPassword: this.currentPassword,
+        newPassword: this.newPassword,
+        reqSender: {
+          userid: MyUserinfo.userid,
+          sessionid: MyUserinfo.sessionid,
+        },
+      });
+    },
   }
 }
 
