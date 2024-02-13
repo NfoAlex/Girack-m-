@@ -22,6 +22,9 @@ export default {
       dialogChangePassword: false as boolean, //パスワード変更
       dialogChangeUsername: false as boolean, //ユーザー名変更用
 
+      //ユーザー名検索中
+      stateUsernameSearching: false as boolean,
+
       //結果受け取り用
       resultChangePasswordSuccess: false as boolean,
       resultNameNotAvailable: false as boolean,
@@ -35,6 +38,9 @@ export default {
         if (this.newUsername.length >= 2) {
           console.log("profile :: watch(newUsername) : わ");
 
+          //ユーザー名検索中と設定
+          this.stateUsernameSearching = true;
+          //自ユーザー情報情報取得
           const MyUserinfo = useMyUserinfo().getMyUserinfo;
           //名前検索
           socket.emit("searchUserDynamic", {
@@ -114,10 +120,15 @@ export default {
           //この名前を使えないと設定
           this.canUseThisName = false;
           this.resultNameNotAvailable = true;
+          //検索中状態を解除
+          this.stateUsernameSearching = false;
 
           return;
         }
       }
+
+      //検索中状態を解除
+      this.stateUsernameSearching = false;
 
       //この名前を使えると設定
       this.resultNameNotAvailable = false;
@@ -244,10 +255,12 @@ export default {
     v-model="dialogChangeUsername"
     style="max-width: 650px; width: 80vw"
   >
-    <m-card>
+    <m-card :loading="stateUsernameSearching">
+
       <v-card-title>
         ユーザー名の変更
       </v-card-title>
+
       <v-card-text>
         <v-text-field
           v-model="newUsername"
@@ -271,13 +284,15 @@ export default {
           <p v-if="canUseThisName">使えます</p>
         </v-alert>
       </v-card-text>
+
       <v-card-actions class="d-flex flex-row-reverse">
         <m-btn
           @click="changeUsername"
-          :disabled="!canUseThisName"
+          :disabled="!canUseThisName||stateUsernameSearching"
           color="primary"
         >変更する</m-btn>
       </v-card-actions>
+
     </m-card>
   </v-dialog>
 
