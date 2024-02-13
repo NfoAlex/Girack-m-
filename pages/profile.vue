@@ -231,6 +231,7 @@ export default {
           class="mb-4"
           counter
           persistent-counter
+          type="password"
         ></v-text-field>
         <v-text-field
           v-model="newPassword"
@@ -239,11 +240,13 @@ export default {
           prepend-inner-icon="mdi:mdi-key"
           :error-messages="newPassword.length!==0&&newPassword.length<=8?'パスワードは8文字以上にしてください':null"
           class="mb-2"
+          type="password"
         ></v-text-field>
         <v-text-field
           v-model="newPasswordAgain"
           variant="outlined"
           label="新しいパスワード確認"
+          type="password"
         ></v-text-field>
 
         <!-- エラー用アラート -->
