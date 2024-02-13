@@ -20,9 +20,14 @@ export default {
       //ダイアログ
       dialogLogout: false as boolean, //ログアウト確認
       dialogChangePassword: false as boolean, //パスワード変更
+      dialogChangeUsername: false as boolean, //ユーザー名変更用
 
       //結果受け取り用
-      resultChangePasswordSuccess: false as boolean
+      resultChangePasswordSuccess: false as boolean,
+      resultNameNotAvailable: false as boolean,
+      canUseThisName: false as boolean,
+    }
+  },
     }
   },
 
@@ -165,6 +170,29 @@ export default {
     </m-card>
   </v-dialog>
 
+  <!-- ユーザー名変更用ダイアログ -->
+  <v-dialog
+    v-model="dialogChangeUsername"
+    style="max-width: 650px; width: 80vw"
+  >
+    <m-card>
+      <v-card-title>
+        ユーザー名の変更
+      </v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="newUsername"
+        >
+        </v-text-field>
+      </v-card-text>
+      <v-card-actions class="d-flex flex-row-reverse">
+        <m-btn
+          @click="changeUsername"
+        >変更する</m-btn>
+      </v-card-actions>
+    </m-card>
+  </v-dialog>
+
   <div class="pa-4">
     <p class="text-h5 pa-2">あなた</p>
     <v-divider class="my-2"></v-divider>
@@ -191,7 +219,7 @@ export default {
             <p class="text-h4 text-truncate me-auto">
               {{ getMyUserinfo.username }}
             </p>
-            <v-btn rounded="lg" icon="" variant="text">
+            <v-btn @click="()=>{ dialogChangeUsername=true }" rounded="lg" icon="" variant="text">
               <v-icon>mdi:mdi-pencil</v-icon>
             </v-btn>
           </div>
