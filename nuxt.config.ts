@@ -38,6 +38,7 @@ export default defineNuxtConfig({
         },
         MBtn: {
           rounded: "pill",
+          size: "large"
         },
         MCard: {
           style: 'border-radius:20px; background-color:rgb(var(--v-theme-sidebarBackground));',
