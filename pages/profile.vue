@@ -6,6 +6,29 @@ import { socket } from "../socketHandlers/socketInit";
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 </script>
 
+<script lang="ts">
+
+  methods: {
+    logout():void {
+      const MyUserinfo = useMyUserinfo().getMyUserinfo;
+      console.log("profile :: logout : getMyUserinfo->", MyUserinfo);
+      //クッキー削除
+      setCookie("session", "", 0);
+      //ログアウトするとサーバーへ通達
+      socket.emit("logout", {
+        targetSessionid: MyUserinfo.sessionid,
+        reqSender: {
+          userid: MyUserinfo.userid,
+          sessionid: MyUserinfo.sessionid,
+        },
+      });
+      location.reload(); //ページリロード
+    }
+  }
+}
+
+</script>
+
 <template>
   <div class="pa-4">
     <p class="text-h5 pa-2">あなた</p>
