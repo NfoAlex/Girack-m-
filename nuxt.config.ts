@@ -35,7 +35,7 @@ export default defineNuxtConfig({
         },
         VTextField: {
           rounded: 'pill',
-          variant: 'text'
+          variant: 'outlined'
         },
         MBtn: {
           rounded: "pill",
