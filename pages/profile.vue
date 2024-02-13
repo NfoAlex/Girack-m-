@@ -35,9 +35,8 @@ export default {
   watch: {
     newUsername: {
       handler() {
+        //２文字以上ならトリガー
         if (this.newUsername.length >= 2) {
-          console.log("profile :: watch(newUsername) : わ");
-
           //ユーザー名検索中と設定
           this.stateUsernameSearching = true;
           //自ユーザー情報情報取得
