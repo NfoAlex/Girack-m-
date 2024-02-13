@@ -56,11 +56,13 @@ export default {
             }
           });
 
-        } else if (this.newUsername.length === 0) {
+        } else if (this.newUsername.length === 0) { //新ユーザー名が0なら初期化
           this.resultNewUsername = "";
+          this.resultNewUsernameAlertDisplay = "info";
         } else {
-          //結果初期化
+          //エラー設定
           this.resultNewUsername = "SHORT_NAME";
+          this.resultNewUsernameAlertDisplay = "error";
         }
         //表示する結果設定
         this.checkUsernameResultDisplay();
