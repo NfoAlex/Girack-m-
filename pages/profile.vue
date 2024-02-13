@@ -91,9 +91,11 @@ export default {
   <v-dialog v-model="dialogChangePassword">
     <!-- パスワード変更前 -->
     <m-card v-if="!resultChangePasswordSuccess">
+
       <v-card-title>
         パスワード変更
       </v-card-title>
+
       <v-card-text>
         <v-text-field
           v-model="currentPassword"
@@ -112,19 +114,25 @@ export default {
           variant="outlined"
           label="新しいパスワード確認"
         ></v-text-field>
+
+        <!-- エラー用アラート -->
         <v-alert
           v-if="newPasswordAgain!==newPassword&&newPasswordAgain.length!==0"
           type="error"
           rounded="xl"
-        >設定する新パスワードが一致しません</v-alert>
+        >設定する新パスワードが一致しません
+        </v-alert>
       </v-card-text>
+
       <v-card-actions class="d-flex flex-row-reverse">
         <m-btn
-          @click="logout"
+          @click="changePassword"
           :disabled="newPasswordAgain!==newPassword&&newPasswordAgain.length!==0"
           color="primary"
+          size="large"
         >変更する</m-btn>
       </v-card-actions>
+
     </m-card>
     <!-- 完了後 -->
     <m-card v-else>
