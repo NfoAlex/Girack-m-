@@ -28,6 +28,29 @@ export default {
       canUseThisName: false as boolean,
     }
   },
+
+  watch: {
+    newUsername: {
+      handler() {
+        if (this.newUsername.length >= 2) {
+          console.log("profile :: watch(newUsername) : わ");
+
+          const MyUserinfo = useMyUserinfo().getMyUserinfo;
+          //名前検索
+          socket.emit("searchUserDynamic", {
+            query: this.newUsername,
+            reqSender: {
+              userid: MyUserinfo.userid,
+              sessionid: MyUserinfo.sessionid
+            }
+          });
+        } else {
+          //結果初期化
+          this.canUseThisName = false;
+          this.resultNameNotAvailable = false;
+        }
+        
+      }
     }
   },
 
