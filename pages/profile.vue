@@ -87,6 +87,52 @@ export default {
       //パスワードを変更したと設定
       this.resultChangePasswordSuccess = true;
     },
+
+    //ユーザー名を変更する
+    changeUsername():void {
+      //自ユーザー情報取得
+      const MyUserinfo = useMyUserinfo().getMyUserinfo;
+      //名前更新
+      socket.emit("changeProfile", {
+        name: this.newUsername, //更新する名前
+        targetid: MyUserinfo.userid, //対象ユーザーID(自分)
+        reqSender: {
+          //セッション認証に必要な情報送信
+          userid: MyUserinfo.userid,
+          sessionid: MyUserinfo.sessionid,
+        },
+      });
+    },
+
+    //ユーザー名変更用の名前検索ハンドラ
+    SOCKETinfoSearchUser(result:[{userid:string, username:string}]) {
+      console.log("profile :: SOCKETinfoSerchUser : result->", result);
+      //結果を一つずつ調べる
+      for (let index in result) {
+        //名前が検索結果にあったら
+        if (result[index].username === this.newUsername) {
+          //この名前を使えないと設定
+          this.canUseThisName = false;
+          this.resultNameNotAvailable = true;
+
+          return;
+        }
+      }
+
+      //この名前を使えると設定
+      this.resultNameNotAvailable = false;
+      this.canUseThisName = true;
+    }
+  },
+
+  mounted() {
+    //ユーザー検索結果受け取り用
+    socket.on("infoSearchUser", this.SOCKETinfoSearchUser);
+  },
+
+  unmounted() {
+    //ハンドラ解除
+    socket.off("infoSearchUser", this.SOCKETinfoSearchUser);
   }
 }
 
