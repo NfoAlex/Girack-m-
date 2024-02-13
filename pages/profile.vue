@@ -65,7 +65,10 @@ export default {
 <template>
 
   <!-- ログアウト確認用ダイアログ -->
-  <v-dialog v-model="dialogLogout">
+  <v-dialog
+    v-model="dialogLogout"
+    style="max-width: 750px; width: 85vw"
+  >
     <m-card>
       <v-card-title>
         確認
