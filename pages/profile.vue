@@ -8,6 +8,7 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
 <script lang="ts">
 
+//結果用type
 type resultNewUsername = "SUCCESS" | "SHORT_NAME" | "ALREADY_USED" | "";
 type resultNewUsernameAlertDisplay = "info" | "error" | "success";
 
@@ -37,6 +38,7 @@ export default {
   },
 
   watch: {
+    //新ユーザー名の入力監視
     newUsername: {
       handler() {
         //２文字以上ならトリガー
@@ -44,7 +46,6 @@ export default {
           //ユーザー名検索中と設定
           this.stateUsernameSearching = true;
           this.resultNewUsernameAlertDisplay = "info";
-          this.checkUsernameResult();
           //自ユーザー情報情報取得
           const MyUserinfo = useMyUserinfo().getMyUserinfo;
           //名前検索
@@ -64,7 +65,7 @@ export default {
           this.resultNewUsername = "SHORT_NAME";
         }
         //表示する結果設定
-        this.checkUsernameResult();
+        this.checkUsernameResultDisplay();
       }
     }
   },
@@ -120,7 +121,7 @@ export default {
     },
 
     //ユーザー名が使えるかどうかのVAlert用の表示ラベルを返す
-    checkUsernameResult():void {
+    checkUsernameResultDisplay():void {
       switch(this.resultNewUsername) {
         case "ALREADY_USED":
           this.resultNewUsernameAlertDisplay = "error";
@@ -153,7 +154,7 @@ export default {
           //検索中状態を解除
           this.stateUsernameSearching = false;
           //表示する結果設定
-          this.checkUsernameResult();
+          this.checkUsernameResultDisplay();
 
           return;
         }
@@ -166,7 +167,7 @@ export default {
       this.resultNewUsername = "SUCCESS";
       this.canUseThisName = true;
       //表示する結果設定
-      this.checkUsernameResult();
+      this.checkUsernameResultDisplay();
     }
   },
 
