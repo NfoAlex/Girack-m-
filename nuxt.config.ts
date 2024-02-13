@@ -37,6 +37,9 @@ export default defineNuxtConfig({
           rounded: 'pill',
           variant: 'outlined'
         },
+        VAlert: {
+          rouneded: 'xl'
+        },
         MBtn: {
           rounded: "pill",
           size: "large"
