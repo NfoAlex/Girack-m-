@@ -67,8 +67,8 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
       <v-divider class="my-3"></v-divider>
       
       <div>
-        <m-btn color="primary">パスワードを変更</m-btn>
-        <m-btn color="red">ログアウトする</m-btn>
+        <m-btn color="primary" block class="my-2">パスワードを変更</m-btn>
+        <m-btn @click="logout" color="red" block class="mt-2">ログアウトする</m-btn>
       </div>
 
     </m-card>
