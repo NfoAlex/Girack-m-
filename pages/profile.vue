@@ -33,7 +33,6 @@ export default {
       resultChangePasswordSuccess: false as boolean, //パスワードの変更結果用
       resultNewUsername: "" as resultNewUsername, //ユーザー名の検索結果
       resultNewUsernameAlertDisplay: "info" as resultNewUsernameAlertDisplay, //ユーザー名の検索結果表示用
-      canUseThisName: false as boolean,
     }
   },
 
@@ -61,7 +60,6 @@ export default {
           this.resultNewUsername = "";
         } else {
           //結果初期化
-          this.canUseThisName = false;
           this.resultNewUsername = "SHORT_NAME";
         }
         //表示する結果設定
@@ -149,7 +147,6 @@ export default {
         //名前が検索結果にあったら
         if (result[index].username === this.newUsername) {
           //この名前を使えないと設定
-          this.canUseThisName = false;
           this.resultNewUsername = "ALREADY_USED";
           //検索中状態を解除
           this.stateUsernameSearching = false;
@@ -165,7 +162,6 @@ export default {
 
       //この名前を使えると設定
       this.resultNewUsername = "SUCCESS";
-      this.canUseThisName = true;
       //表示する結果設定
       this.checkUsernameResultDisplay();
     }
