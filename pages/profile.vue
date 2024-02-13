@@ -146,7 +146,7 @@ export default {
       </v-card-actions>
 
     </m-card>
-    <!-- 完了後 -->
+    <!-- 変更後 -->
     <m-card v-else>
       <v-card-title>
         確認
