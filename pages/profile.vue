@@ -87,6 +87,56 @@ export default {
     </m-card>
   </v-dialog>
 
+  <!-- パスワード変更用ダイアログ -->
+  <v-dialog v-model="dialogChangePassword">
+    <!-- パスワード変更前 -->
+    <m-card v-if="!resultChangePasswordSuccess">
+      <v-card-title>
+        パスワード変更
+      </v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="currentPassword"
+          variant="outlined"
+          label="現在のパスワード"
+          prepend-inner-icon="mdi:mdi-lock"
+        ></v-text-field>
+        <v-text-field
+          v-model="newPassword"
+          variant="outlined"
+          label="新しいパスワード"
+          prepend-inner-icon="mdi:mdi-key"
+        ></v-text-field>
+        <v-text-field
+          v-model="newPasswordAgain"
+          variant="outlined"
+          label="新しいパスワード確認"
+        ></v-text-field>
+        <v-alert
+          v-if="newPasswordAgain!==newPassword&&newPasswordAgain.length!==0"
+          type="error"
+          rounded="xl"
+        >設定する新パスワードが一致しません</v-alert>
+      </v-card-text>
+      <v-card-actions class="d-flex flex-row-reverse">
+        <m-btn
+          @click="logout"
+          :disabled="newPasswordAgain!==newPassword&&newPasswordAgain.length!==0"
+          color="primary"
+        >変更する</m-btn>
+      </v-card-actions>
+    </m-card>
+    <!-- 完了後 -->
+    <m-card v-else>
+      <v-card-title>
+        確認
+      </v-card-title>
+      <v-card-text>
+        完了しました
+      </v-card-text>
+    </m-card>
+  </v-dialog>
+
   <div class="pa-4">
     <p class="text-h5 pa-2">あなた</p>
     <v-divider class="my-2"></v-divider>
@@ -124,7 +174,7 @@ export default {
       <v-divider class="my-3"></v-divider>
       
       <div>
-        <m-btn color="primary" block class="my-2">パスワードを変更</m-btn>
+        <m-btn @click="()=>{ dialogChangePassword=true }" color="primary" block class="my-2">パスワードを変更</m-btn>
         <m-btn @click="()=>{ dialogLogout=true }" color="red" block class="mt-2">ログアウトする</m-btn>
       </div>
 
