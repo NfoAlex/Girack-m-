@@ -13,9 +13,16 @@ export default {
     return {
       //入力値系
       newUsername: "" as string,
+      currentPassword: "" as string,
+      newPassword: "" as string,
+      newPasswordAgain: "" as string,
       
       //ダイアログ
-      dialogLogout: false as boolean
+      dialogLogout: false as boolean, //ログアウト確認
+      dialogChangePassword: false as boolean, //パスワード変更
+
+      //結果受け取り用
+      resultChangePasswordSuccess: false as boolean
     }
   },
 
