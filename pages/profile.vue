@@ -88,7 +88,10 @@ export default {
   </v-dialog>
 
   <!-- パスワード変更用ダイアログ -->
-  <v-dialog v-model="dialogChangePassword">
+  <v-dialog
+    v-model="dialogChangePassword"
+    style="max-width: 650px; width: 80vw"
+  >
     <!-- パスワード変更前 -->
     <m-card v-if="!resultChangePasswordSuccess">
 
