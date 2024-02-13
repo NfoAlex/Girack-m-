@@ -8,6 +8,17 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
 <script lang="ts">
 
+export default {
+  data() {
+    return {
+      //入力値系
+      newUsername: "" as string,
+      
+      //ダイアログ
+      dialogLogout: false as boolean
+    }
+  },
+
   methods: {
     logout():void {
       const MyUserinfo = useMyUserinfo().getMyUserinfo;
@@ -29,6 +40,30 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 </script>
 
 <template>
+
+  <!-- ログアウト確認用ダイアログ -->
+  <v-dialog v-model="dialogLogout">
+    <m-card>
+      <v-card-title>
+        確認
+      </v-card-title>
+      <v-card-text>
+        ログアウトします。よろしいですか？
+      </v-card-text>
+      <v-card-actions class="d-flex flex-row-reverse">
+        <m-btn
+          @click="logout"
+          color="error"
+        >ログアウトする</m-btn>
+        <m-btn
+          @click="()=>{ dialogLogout=false }"
+          class="mx-1"
+          variant="text"
+        >キャンセル</m-btn>
+      </v-card-actions>
+    </m-card>
+  </v-dialog>
+
   <div class="pa-4">
     <p class="text-h5 pa-2">あなた</p>
     <v-divider class="my-2"></v-divider>
@@ -67,7 +102,7 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
       
       <div>
         <m-btn color="primary" block class="my-2">パスワードを変更</m-btn>
-        <m-btn @click="logout" color="red" block class="mt-2">ログアウトする</m-btn>
+        <m-btn @click="()=>{ dialogLogout=true }" color="red" block class="mt-2">ログアウトする</m-btn>
       </div>
 
     </m-card>
