@@ -11,7 +11,6 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
   methods: {
     logout():void {
       const MyUserinfo = useMyUserinfo().getMyUserinfo;
-      console.log("profile :: logout : getMyUserinfo->", MyUserinfo);
       //クッキー削除
       setCookie("session", "", 0);
       //ログアウトするとサーバーへ通達
