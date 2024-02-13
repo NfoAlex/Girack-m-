@@ -280,6 +280,7 @@ export default {
           <p v-if="newUsername.length===0">ユーザー名を入力してください</p>
           <p v-if="newUsername.length<2&&newUsername.length!==0">ユーザー名は2文字以上入力してください</p>
           <p v-if="resultNameNotAvailable">このユーザー名は既に使用されています</p>
+          <p v-if="stateUsernameSearching">検索中...</p>
           <p v-if="canUseThisName">使えます</p>
         </v-alert>
       </v-card-text>
