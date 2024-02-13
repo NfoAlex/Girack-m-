@@ -117,7 +117,7 @@ export default {
           variant="outlined"
           label="新しいパスワード"
           prepend-inner-icon="mdi:mdi-key"
-          :error-messages="newPassword.length<=8?'パスワードは8文字以上にしてください':null"
+          :error-messages="newPassword.length!==0&&newPassword.length<=8?'パスワードは8文字以上にしてください':null"
           class="mb-2"
         ></v-text-field>
         <v-text-field
