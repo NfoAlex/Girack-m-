@@ -108,6 +108,9 @@ export default {
           variant="outlined"
           label="現在のパスワード"
           prepend-inner-icon="mdi:mdi-lock"
+          class="mb-4"
+          counter
+          persistent-counter
         ></v-text-field>
         <v-text-field
           v-model="newPassword"
