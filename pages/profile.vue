@@ -33,7 +33,7 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
   <div class="pa-4">
     <p class="text-h5 pa-2">あなた</p>
     <v-divider class="my-2"></v-divider>
-    <m-card class="mx-auto" width="80%">
+    <m-card class="mx-auto" width="80%" style="max-width:600px;">
 
       <div class="d-flex justify-start" style="width:100%;">
 
