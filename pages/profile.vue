@@ -117,6 +117,7 @@ export default {
           variant="outlined"
           label="新しいパスワード"
           prepend-inner-icon="mdi:mdi-key"
+          class="mb-2"
         ></v-text-field>
         <v-text-field
           v-model="newPasswordAgain"
