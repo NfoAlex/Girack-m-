@@ -1,16 +1,10 @@
 <script setup lang="ts">
 import { useMyUserinfo } from "../stores/userinfo";
-import { setCookie } from "../composables/setCookie";
-import { socket } from "../socketHandlers/socketInit";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 </script>
 
 <script lang="ts">
-
-//結果用type
-type resultNewUsername = "SUCCESS" | "SHORT_NAME" | "ALREADY_USED" | "";
-type resultNewUsernameAlertDisplay = "info" | "error" | "success";
 
 export default {
   data() {
