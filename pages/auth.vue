@@ -147,21 +147,21 @@ export default {
       </div>
       <!-- ログイン/登録ボタン -->
       <div class="d-flex justify-center py-4">
-        <v-btn
+        <m-btn
           @click="authMode='LOGIN'"
           class="mx-1"
           size="large"
           :color="authMode==='LOGIN'?'primary':null"
           :variant="authMode==='LOGIN'?'tonal':'text'"
-        >ログイン</v-btn>
-        <v-btn
+        >ログイン</m-btn>
+        <m-btn
           @click="authMode='REGISTER'"
           :disabled="!getServerinfo.registration.available"
           class="mx-1"
           size="large"
           :color="authMode==='REGISTER'?'primary':null"
           :variant="authMode==='REGISTER'?'tonal':'text'"
-        >新規登録</v-btn>
+        >新規登録</m-btn>
       </div>
       <!-- 真ん中表示部分 -->
         <!-- ログイン部分 -->
@@ -181,7 +181,7 @@ export default {
         ></v-text-field>
 
         <!-- ログインボタン -->
-        <v-btn
+        <m-btn
           @click="login"
           :loading="processingAuth"
           class="mt-5"
@@ -190,7 +190,7 @@ export default {
           block
         >
           ログイン!
-        </v-btn>
+        </m-btn>
       </div>
         <!-- 登録部分 -->
       <div v-else class="d-flex flex-column">
@@ -212,7 +212,7 @@ export default {
           </span>
 
           <!-- 登録ボタン -->
-          <v-btn
+          <m-btn
             @click="register"
             :loading="processingAuth"
             class="mt-5"
@@ -221,7 +221,7 @@ export default {
             block
           >
             登録する
-          </v-btn>
+          </m-btn>
         </div>
         <!-- 登録完了後 -->
         <div v-if="resultRegisterDone">
