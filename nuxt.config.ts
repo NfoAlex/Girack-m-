@@ -31,17 +31,21 @@ export default defineNuxtConfig({
       /* vuetify options */
       defaults: {
         global: {
-          rounded: "xl",
           elevation: '0'
         },
         VTextField: {
           rounded: 'pill',
+          variant: 'outlined'
+        },
+        VAlert: {
+          rounded: 'xl'
         },
         MBtn: {
           rounded: "pill",
+          size: "large"
         },
         MCard: {
-          style: 'border-radius:20px;',
+          style: 'border-radius:20px; background-color:rgb(var(--v-theme-sidebarBackground));',
           class: 'pa-4',
         },
       },

@@ -3,6 +3,7 @@
 import { Socket, io } from "socket.io-client"; //ウェブソケット通信用
 import infoServer from "./InfoServer";
 import infoChannel from "./InfoChannel";
+import infoUser from "./InfoUser";
 
 console.log("socketInit :: INITIALIZED");
 
@@ -29,4 +30,5 @@ export function loadSocket() {
   //情報受け取り周り
   infoServer(socket); //サーバー情報
   infoChannel(socket); //チャンネル情報の操作
+  infoUser(socket); //自ユーザー情報
 }
