@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useMyUserinfo } from "../stores/userinfo";
-import { setCookie } from "../composables/setCookie";
-import { socket } from "../socketHandlers/socketInit";
+import { useMyUserinfo } from "../../stores/userinfo";
+import { setCookie } from "../../composables/setCookie";
+import { socket } from "../../socketHandlers/socketInit";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 </script>
