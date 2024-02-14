@@ -19,11 +19,6 @@ export default {
       dialogLogout: false as boolean, //ログアウト確認
       dialogChangePassword: false as boolean, //パスワード変更
       dialogChangeUsername: false as boolean, //ユーザー名変更用
-
-      //結果受け取り用
-      resultChangePasswordSuccess: false as boolean, //パスワードの変更結果用
-      resultNewUsername: "" as resultNewUsername, //ユーザー名の検索結果
-      resultNewUsernameAlertDisplay: "info" as resultNewUsernameAlertDisplay, //ユーザー名の検索結果表示用
     }
   },
 }
