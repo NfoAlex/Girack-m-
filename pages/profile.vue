@@ -71,22 +71,6 @@ export default {
   },
 
   methods: {
-    //ログアウト処理
-    logout():void {
-      const MyUserinfo = useMyUserinfo().getMyUserinfo;
-      //クッキー削除
-      setCookie("session", "", 0);
-      //ログアウトするとサーバーへ通達
-      socket.emit("logout", {
-        targetSessionid: MyUserinfo.sessionid,
-        reqSender: {
-          userid: MyUserinfo.userid,
-          sessionid: MyUserinfo.sessionid,
-        },
-      });
-      location.reload(); //ページリロード
-    },
-
     //パスワードを変更
     changePassword():void {
       //自ユーザー情報取得
@@ -185,30 +169,7 @@ export default {
 <template>
 
   <!-- ログアウト確認用ダイアログ -->
-  <v-dialog
-    v-model="dialogLogout"
-    style="max-width: 750px; width: 85vw"
-  >
-    <m-card>
-      <v-card-title>
-        確認
-      </v-card-title>
-      <v-card-text>
-        ログアウトします。よろしいですか？
-      </v-card-text>
-      <v-card-actions class="d-flex flex-row-reverse">
-        <m-btn
-          @click="logout"
-          color="error"
-        >ログアウトする</m-btn>
-        <m-btn
-          @click="()=>{ dialogLogout=false }"
-          class="mx-1"
-          variant="text"
-        >キャンセル</m-btn>
-      </v-card-actions>
-    </m-card>
-  </v-dialog>
+  <AuthLogout v-model="dialogLogout" @closeDialog="()=>{ dialogLogout=false }" />
 
   <!-- パスワード変更用ダイアログ -->
   <v-dialog
