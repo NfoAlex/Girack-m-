@@ -22,13 +22,13 @@ export default {
 <template>
 
   <!-- ログアウト確認用ダイアログ -->
-  <AuthLogout v-model="dialogLogout" @closeDialog="()=>{ dialogLogout=false }" />
+  <ProfileLogout v-model="dialogLogout" @closeDialog="()=>{ dialogLogout=false }" />
 
   <!-- パスワード変更用ダイアログ -->
-  <AuthChangePassword v-model="dialogChangePassword" @closeDialog="()=>{ dialogChangePassword=false }" />
+  <ProfileChangePassword v-model="dialogChangePassword" @closeDialog="()=>{ dialogChangePassword=false }" />
 
   <!-- ユーザー名変更用ダイアログ -->
-  <AuthChangeUsername v-model="dialogChangeUsername" @closeDialog="()=>{ dialogChangeUsername=false }" />
+  <ProfileChangeUsername v-model="dialogChangeUsername" @closeDialog="()=>{ dialogChangeUsername=false }" />
 
   <div class="pa-4">
     <p class="text-h5 pa-2">あなた</p>
