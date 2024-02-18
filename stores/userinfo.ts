@@ -7,9 +7,10 @@ export const useMyUserinfo = defineStore("myuserinfo", {
   ({
     _MyUserinfo: {
       username: "User",
-      role: "Member",
+      role: ["Member"],
       userid: "XXXXXXXX",
       sessionid: "",
+      banned: false,
       channelJoined: ["0001"],
     },
   } as {

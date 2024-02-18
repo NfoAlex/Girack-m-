@@ -75,6 +75,7 @@ export default {
           userid: dat.data.userid,
           sessionid: dat.data.sessionid,
           role: dat.data.role,
+          banned: dat.data.banned,
           channelJoined: dat.data.channelJoined
         });
 
