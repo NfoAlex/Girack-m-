@@ -137,9 +137,10 @@ export default {
     <v-card class="panel pa-6 rounded-e-0 d-flex flex-column justify-center">
       <!-- Girackタイトル -->
       <p class="text-h4 text-center my-5">Girack</p>
+      <!-- 認証結果の表示 -->
       <div>
         <v-alert
-          v-if="result==='FAILED'"
+          v-if="resultDisplay==='FAILED'"
           type="error"
           class="flex-shrink-1 flex-grow-0"
           style="min-height:max-content;"
