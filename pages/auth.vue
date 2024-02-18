@@ -39,7 +39,7 @@ export default {
       this.result = "";
 
       //認証
-      socket.emit("auth", {
+      socket.emit("authLogin", {
         username: this.username,
         password: this.password,
       },
