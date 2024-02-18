@@ -5,9 +5,9 @@ import { useServerinfo } from "../stores/serverinfo";
 
 export default function infoServer(socket: Socket): void {
   //サーバー(インスタンス)情報
-  socket.on("infoServer", (dat) => {
+  socket.on("RESULTfetchServerInfoLimited", (dat) => {
     console.log("infoServer :: dat->", dat);
     const Serverinfo = useServerinfo(); //piniaからインポート
-    Serverinfo.updateInfo(dat); //サーバー情報へ適用
+    Serverinfo.updateInfo(dat.data); //サーバー情報へ適用
   });
 }

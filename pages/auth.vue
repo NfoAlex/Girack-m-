@@ -55,9 +55,9 @@ export default {
       this.result = "";
 
       //登録
-      socket.emit("register", {
+      socket.emit("authRegister", {
         username: this.username,
-        code: this.invitecode,
+        inviteCode: this.invitecode,
       });
     },
 
