@@ -24,7 +24,7 @@ export default {
       invitecode: "" as string, //招待コード
 
       //結果用
-      result: "" as string,
+      resultDisplay: "" as string,
       resultRegisterDone: false as boolean,
       passwordRegistered: "" as string
     }
@@ -36,7 +36,7 @@ export default {
       //処理中と設定
       this.processingAuth = true;
       //認証結果を初期化
-      this.result = "";
+      this.resultDisplay = "";
 
       //認証
       socket.emit("authLogin", {
@@ -52,7 +52,7 @@ export default {
       //処理中と設定
       this.processingAuth = true;
       //認証結果を初期化
-      this.result = "";
+      this.resultDisplay = "";
 
       //登録
       socket.emit("authRegister", {
@@ -93,10 +93,10 @@ export default {
       //結果処理
       if (dat.result === "SUCCESS") {
         this.passwordRegistered = dat.data.password; //結果用パスワードを格納
-        this.result = "SUCCESS"; //結果成功ととして表示
+        this.resultDisplay = "SUCCESS"; //結果成功ととして表示
         this.resultRegisterDone = true; //結果成功ととして表示
       } else {
-        this.result = "FAILED";
+        this.resultDisplay = "FAILED";
         this.resultRegisterDone = false; //結果成功ととして表示
       }
 
