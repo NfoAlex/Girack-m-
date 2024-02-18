@@ -62,26 +62,27 @@ export default {
     },
 
     //認証結果の受け取りと処理
-    SOCKETRESULTauthLogin(dat:any) {
+    SOCKETRESULTauthLogin(dat:{result:string, data:any}) {
+      console.log("auth :: SOCKETRESULTauthLogin : dat->", dat);
       //ログインできたらユーザー情報設定、ページ移動
-      if (dat.result) {
+      if (dat.result === "SUCCESS") {
         //成功
-        this.result = "SUCCESS";
+        this.resultDisplay = "SUCCESS";
         //自ユーザー情報更新
         const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
         updateMyUserinfo({
-          username: dat.username,
-          userid: dat.userid,
-          sessionid: dat.sessionid,
-          role: dat.role,
-          channelJoined: dat.channelJoined
+          username: dat.data.username,
+          userid: dat.data.userid,
+          sessionid: dat.data.sessionid,
+          role: dat.data.role,
+          channelJoined: dat.data.channelJoined
         });
 
         //トップページへ移動
         this.$router.push("/");
       } else {
         //エラーを表示
-        this.result = "FAILED";
+        this.resultDisplay = "FAILED";
       }
       //認証状態中を解除
       this.processingAuth = false;
