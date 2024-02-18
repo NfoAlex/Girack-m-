@@ -92,7 +92,7 @@ export default {
       console.log("auth :: SOCKETRESULTauthRegister : dat->", dat);
       //結果処理
       if (dat.result === "SUCCESS") {
-        this.passwordRegistered = dat.pass; //結果用パスワードを格納
+        this.passwordRegistered = dat.result.password; //結果用パスワードを格納
         this.result = "SUCCESS"; //結果成功ととして表示
         this.resultRegisterDone = true; //結果成功ととして表示
       } else {
