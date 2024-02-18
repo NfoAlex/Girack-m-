@@ -96,7 +96,7 @@ export default {
         this.result = "SUCCESS"; //結果成功ととして表示
         this.resultRegisterDone = true; //結果成功ととして表示
       } else {
-        this.result.startsWith("ERROR");
+        this.result = "FAILED";
         this.resultRegisterDone = false; //結果成功ととして表示
       }
 
