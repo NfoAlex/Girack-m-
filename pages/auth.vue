@@ -62,7 +62,7 @@ export default {
     },
 
     //認証結果の受け取りと処理
-    SOCKETauthResult(dat:any) {
+    SOCKETRESULTauthLogin(dat:any) {
       //ログインできたらユーザー情報設定、ページ移動
       if (dat.result) {
         //成功
@@ -88,7 +88,8 @@ export default {
     },
 
     //登録結果の受け取りと処理
-    SOCKETregisterEnd(dat:any) {
+    SOCKETRESULTauthRegister(dat:any) {
+      console.log("auth :: SOCKETRESULTauthRegister : dat->", dat);
       //結果処理
       if (dat.result === "SUCCESS") {
         this.passwordRegistered = dat.pass; //結果用パスワードを格納
@@ -106,9 +107,9 @@ export default {
 
   mounted() {
     //認証結果受け取り
-    socket.on("authResult", this.SOCKETauthResult);
+    socket.on("RESULTauthLogin", this.SOCKETRESULTauthLogin);
     //登録ができたと受信したときの処理
-    socket.on("registerEnd", this.SOCKETregisterEnd);
+    socket.on("RESULTauthRegister", this.SOCKETRESULTauthRegister);
   },
 
   unmounted() {
