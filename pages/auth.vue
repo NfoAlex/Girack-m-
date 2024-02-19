@@ -74,9 +74,9 @@ export default {
           userName: dat.data.userName,
           userId: dat.data.userId,
           sessionId: dat.data.sessionId,
-          role: dat.data.role,
+          role: dat.data.role.split(","), //文字列で渡されるためここで配列にする
           banned: dat.data.banned,
-          channelJoined: dat.data.channelJoined
+          channelJoined: dat.data.channelJoined.split(",") //文字列で渡されるためここで配列にする
         });
 
         //トップページへ移動
