@@ -71,9 +71,9 @@ export default {
         //自ユーザー情報更新
         const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
         updateMyUserinfo({
-          username: dat.data.username,
-          userid: dat.data.userid,
-          sessionid: dat.data.sessionid,
+          userName: dat.data.userName,
+          userId: dat.data.userId,
+          sessionId: dat.data.sessionId,
           role: dat.data.role,
           banned: dat.data.banned,
           channelJoined: dat.data.channelJoined
