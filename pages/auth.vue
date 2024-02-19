@@ -24,7 +24,7 @@ export default {
       invitecode: "" as string, //招待コード
 
       //結果用
-      result: "" as string,
+      resultDisplay: "" as string,
       resultRegisterDone: false as boolean,
       passwordRegistered: "" as string
     }
@@ -36,10 +36,10 @@ export default {
       //処理中と設定
       this.processingAuth = true;
       //認証結果を初期化
-      this.result = "";
+      this.resultDisplay = "";
 
       //認証
-      socket.emit("auth", {
+      socket.emit("authLogin", {
         username: this.username,
         password: this.password,
       },
@@ -52,50 +52,53 @@ export default {
       //処理中と設定
       this.processingAuth = true;
       //認証結果を初期化
-      this.result = "";
+      this.resultDisplay = "";
 
       //登録
-      socket.emit("register", {
+      socket.emit("authRegister", {
         username: this.username,
-        code: this.invitecode,
+        inviteCode: this.invitecode,
       });
     },
 
     //認証結果の受け取りと処理
-    SOCKETauthResult(dat:any) {
+    SOCKETRESULTauthLogin(dat:{result:string, data:any}) {
+      console.log("auth :: SOCKETRESULTauthLogin : dat->", dat);
       //ログインできたらユーザー情報設定、ページ移動
-      if (dat.result) {
+      if (dat.result === "SUCCESS") {
         //成功
-        this.result = "SUCCESS";
+        this.resultDisplay = "SUCCESS";
         //自ユーザー情報更新
         const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
         updateMyUserinfo({
-          username: dat.username,
-          userid: dat.userid,
-          sessionid: dat.sessionid,
-          role: dat.role,
-          channelJoined: dat.channelJoined
+          userName: dat.data.userName,
+          userId: dat.data.userId,
+          sessionId: dat.data.sessionId,
+          role: dat.data.role.split(","), //文字列で渡されるためここで配列にする
+          banned: dat.data.banned,
+          channelJoined: dat.data.channelJoined.split(",") //文字列で渡されるためここで配列にする
         });
 
         //トップページへ移動
         this.$router.push("/");
       } else {
         //エラーを表示
-        this.result = "FAILED";
+        this.resultDisplay = "FAILED";
       }
       //認証状態中を解除
       this.processingAuth = false;
     },
 
     //登録結果の受け取りと処理
-    SOCKETregisterEnd(dat:any) {
+    SOCKETRESULTauthRegister(dat:{result:string, data:any}) {
+      console.log("auth :: SOCKETRESULTauthRegister : dat->", dat);
       //結果処理
       if (dat.result === "SUCCESS") {
-        this.passwordRegistered = dat.pass; //結果用パスワードを格納
-        this.result = "SUCCESS"; //結果成功ととして表示
+        this.passwordRegistered = dat.data.password; //結果用パスワードを格納
+        this.resultDisplay = "SUCCESS"; //結果成功ととして表示
         this.resultRegisterDone = true; //結果成功ととして表示
       } else {
-        this.result = "FAILED";
+        this.resultDisplay = "FAILED";
         this.resultRegisterDone = false; //結果成功ととして表示
       }
 
@@ -106,9 +109,9 @@ export default {
 
   mounted() {
     //認証結果受け取り
-    socket.on("authResult", this.SOCKETauthResult);
+    socket.on("RESULTauthLogin", this.SOCKETRESULTauthLogin);
     //登録ができたと受信したときの処理
-    socket.on("registerEnd", this.SOCKETregisterEnd);
+    socket.on("RESULTauthRegister", this.SOCKETRESULTauthRegister);
   },
 
   unmounted() {
@@ -135,9 +138,10 @@ export default {
     <v-card class="panel pa-6 rounded-e-0 d-flex flex-column justify-center">
       <!-- Girackタイトル -->
       <p class="text-h4 text-center my-5">Girack</p>
+      <!-- 認証結果の表示 -->
       <div>
         <v-alert
-          v-if="result==='FAILED'"
+          v-if="resultDisplay==='FAILED'"
           type="error"
           class="flex-shrink-1 flex-grow-0"
           style="min-height:max-content;"

@@ -25,7 +25,7 @@ export function loadSocket() {
   });
 
   //サーバー情報取得する
-  socket.emit("getInfoServer");
+  socket.emit("fetchServerInfoLimited");
 
   //情報受け取り周り
   infoServer(socket); //サーバー情報

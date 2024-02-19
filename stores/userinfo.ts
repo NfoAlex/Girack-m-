@@ -6,10 +6,11 @@ export const useMyUserinfo = defineStore("myuserinfo", {
   state: () =>
   ({
     _MyUserinfo: {
-      username: "User",
-      role: "Member",
-      userid: "XXXXXXXX",
-      sessionid: "",
+      userName: "User",
+      role: ["Member"],
+      userId: "XXXXXXXX",
+      sessionId: "",
+      banned: false,
       channelJoined: ["0001"],
     },
   } as {

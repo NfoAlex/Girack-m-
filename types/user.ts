@@ -1,10 +1,10 @@
 export interface MyUserinfo {
-  username: string, //名前
-  role: string, //ロール
-  userid: string, //ユーザーID
+  userName: string, //名前
+  role: string[], //ロール
+  userId: string, //ユーザーID
   banned: boolean, //BANされたかどうか
-  sessionid: string, //セッションID
-  channelJoined: [string], //参加しているチャンネル
+  sessionId: string, //セッションID
+  channelJoined: string[], //参加しているチャンネル
 }
 
 export interface GirakAuthInfo {
