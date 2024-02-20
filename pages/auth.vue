@@ -3,6 +3,7 @@ import { socket } from "../socketHandlers/socketInit";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 import { setCookie } from "~/composables/setCookie";
+import { getCookie } from "~/composables/getCookie";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 
@@ -131,6 +132,20 @@ export default {
     socket.on("RESULTauthLogin", this.SOCKETRESULTauthLogin);
     //登録ができたと受信したときの処理
     socket.on("RESULTauthRegister", this.SOCKETRESULTauthRegister);
+
+    //クッキーがあればそのまま認証
+    if (getCookie("session") !== "") {
+      let session = JSON.parse(getCookie("session"));
+
+      //設定データを取得する
+      socket.emit("fetchUserConfig", {
+        userId: session.userId,
+        sessionId: session.sessionId
+      });
+
+      //トップページへ移動
+      this.$router.push("/");
+    }
   },
 
   unmounted() {
