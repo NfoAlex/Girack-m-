@@ -4,6 +4,7 @@ import { Socket, io } from "socket.io-client"; //ウェブソケット通信用
 import infoServer from "./InfoServer";
 import infoChannel from "./InfoChannel";
 import infoUser from "./InfoUser";
+import UserConfig from "./UserConfig";
 
 console.log("socketInit :: INITIALIZED");
 
@@ -31,4 +32,5 @@ export function loadSocket() {
   infoServer(socket); //サーバー情報
   infoChannel(socket); //チャンネル情報の操作
   infoUser(socket); //自ユーザー情報
+  UserConfig(socket); //設定データ
 }
