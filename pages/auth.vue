@@ -79,6 +79,12 @@ export default {
           channelJoined: dat.data.channelJoined.split(",") //文字列で渡されるためここで配列にする
         });
 
+        //設定データを取得する
+        socket.emit("fetchUserConfig", {
+          userId: dat.data.userId,
+          sessionId: ""
+        });
+
         //トップページへ移動
         this.$router.push("/");
       } else {
