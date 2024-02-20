@@ -1,7 +1,6 @@
 //設定情報受け取り
 
 import { Socket } from "socket.io-client"; //クラス識別用
-import { useServerinfo } from "../stores/serverinfo";
 import { useConfig } from "~/stores/config";
 import type Config from "~/types/config";
 
