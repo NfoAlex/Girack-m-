@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import type Config from "~/types/config";
 
-export const useMyUserinfo = defineStore("myuserinfo", {
+export const useConfig = defineStore("config", {
   state: () =>
   ({
     _Config: {
