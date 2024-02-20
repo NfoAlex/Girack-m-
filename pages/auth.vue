@@ -2,6 +2,7 @@
 import { socket } from "../socketHandlers/socketInit";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
+import { setCookie } from "~/composables/setCookie";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 
@@ -84,6 +85,18 @@ export default {
           userId: dat.data.userId,
           sessionId: ""
         });
+
+        //セッション情報をクッキーへ保存
+        setCookie(
+          "session",
+          JSON.stringify( //文字列として保存する
+            {
+              userId: dat.data.userId,
+              sessionId: dat.data.sessionId
+            }
+          ),
+          15
+        );
 
         //トップページへ移動
         this.$router.push("/");
