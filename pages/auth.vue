@@ -2,6 +2,8 @@
 import { socket } from "../socketHandlers/socketInit";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
+import { setCookie } from "~/composables/setCookie";
+import { getCookie } from "~/composables/getCookie";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 
@@ -62,7 +64,7 @@ export default {
     },
 
     //認証結果の受け取りと処理
-    SOCKETRESULTauthLogin(dat:{result:string, data:any}) {
+    SOCKETRESULTauthLogin(dat:{result:string, data:{UserInfo:any, sessionId:string}}) {
       console.log("auth :: SOCKETRESULTauthLogin : dat->", dat);
       //ログインできたらユーザー情報設定、ページ移動
       if (dat.result === "SUCCESS") {
@@ -71,13 +73,31 @@ export default {
         //自ユーザー情報更新
         const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
         updateMyUserinfo({
-          userName: dat.data.userName,
-          userId: dat.data.userId,
+          userName: dat.data.UserInfo.userName,
+          userId: dat.data.UserInfo.userId,
           sessionId: dat.data.sessionId,
-          role: dat.data.role.split(","), //文字列で渡されるためここで配列にする
-          banned: dat.data.banned,
-          channelJoined: dat.data.channelJoined.split(",") //文字列で渡されるためここで配列にする
+          role: dat.data.UserInfo.role.split(","), //文字列で渡されるためここで配列にする
+          banned: dat.data.UserInfo.banned,
+          channelJoined: dat.data.UserInfo.channelJoined.split(",") //文字列で渡されるためここで配列にする
         });
+
+        //設定データを取得する
+        socket.emit("fetchUserConfig", {
+          userId: dat.data.UserInfo.userId,
+          sessionId: dat.data.sessionId
+        });
+
+        //セッション情報をクッキーへ保存
+        setCookie(
+          "session",
+          JSON.stringify( //文字列として保存する
+            {
+              userId: dat.data.UserInfo.userId,
+              sessionId: dat.data.sessionId
+            }
+          ),
+          15
+        );
 
         //トップページへ移動
         this.$router.push("/");
@@ -112,6 +132,20 @@ export default {
     socket.on("RESULTauthLogin", this.SOCKETRESULTauthLogin);
     //登録ができたと受信したときの処理
     socket.on("RESULTauthRegister", this.SOCKETRESULTauthRegister);
+
+    //クッキーがあればそのまま認証
+    if (getCookie("session") !== "") {
+      let session = JSON.parse(getCookie("session"));
+
+      //設定データを取得する
+      socket.emit("fetchUserConfig", {
+        userId: session.userId,
+        sessionId: session.sessionId
+      });
+
+      //トップページへ移動
+      this.$router.push("/");
+    }
   },
 
   unmounted() {

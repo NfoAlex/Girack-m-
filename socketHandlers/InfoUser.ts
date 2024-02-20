@@ -6,11 +6,11 @@ import type { MyUserinfo } from "../types/user";
 
 export default function infoUser(socket:Socket):void {
   //プロフィール情報の受け取り
-  socket.on("infoUser", (dat:MyUserinfo) => {
+  socket.on("infoUser", (dat:{result:string, data:MyUserinfo}) => {
     console.log("InfoUser :: socketon(infoUser) : dat->", dat);
 
     //自ユーザー情報格納
     const MyUserinfo = useMyUserinfo();
-    MyUserinfo.updateMyUserinfo(dat);
+    MyUserinfo.updateMyUserinfo(dat.data);
   });
 }
