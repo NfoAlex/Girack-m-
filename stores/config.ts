@@ -26,7 +26,7 @@ export const useConfig = defineStore("config", {
   }),
 
   getters: {
-    getMyUserinfo: (state) => {
+    getConfig: (state) => {
       return state._Config;
     },
   },
