@@ -26,19 +26,19 @@ export default defineNuxtConfig({
       /* マテリアルデザイン用 */
       aliases: {
         MCard: "VCard",
-        MBtn: "VBtn"
+        MBtn: "VBtn",
+        MInput: "VInput"
       },
       /* vuetify options */
       defaults: {
         global: {
           elevation: '0'
         },
-        VTextField: {
-          rounded: 'pill',
-          variant: 'outlined'
-        },
         VAlert: {
           rounded: 'xl'
+        },
+        MInput: {
+          rounded: 'pill'
         },
         MBtn: {
           rounded: "pill",
