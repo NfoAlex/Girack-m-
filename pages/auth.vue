@@ -204,16 +204,18 @@ export default {
       <!-- 真ん中表示部分 -->
         <!-- ログイン部分 -->
       <div v-if="authMode==='LOGIN'" class="d-flex flex-column">
-        <p class="my-2">ユーザー名</p>
         <v-text-field
           v-model="username"
           variant="outlined"
+          rounded="lg"
+          label="ユーザー名"
           prepend-inner-icon="mdi:mdi-account"
         ></v-text-field>
-        <p class="my-2">パスワード</p>
         <v-text-field
           v-model="password"
           variant="outlined"
+          rounded="lg"
+          label="パスワード"
           prepend-inner-icon="mdi:mdi-key"
           type="password"
         ></v-text-field>
@@ -234,17 +236,19 @@ export default {
       <div v-else class="d-flex flex-column">
         <!-- 登録前 -->
         <div v-if="!resultRegisterDone">
-          <p class="my-2">ユーザー名</p>
           <v-text-field
             v-model="username"
             variant="outlined"
+            rounded="lg"
+            label="ユーザー名"
             prepend-inner-icon="mdi:mdi-account"
           ></v-text-field>
           <span v-if="getServerinfo.registration.invite.inviteOnly">
-            <p class="my-2">招待コード</p>
             <v-text-field
               v-model="invitecode"
               variant="outlined"
+              rounded="lg"
+              label="招待コード"
               prepend-inner-icon="mdi:mdi-email"
             ></v-text-field>
           </span>
