@@ -142,6 +142,14 @@ export default {
         userId: session.userId,
         sessionId: session.sessionId
       });
+      //ユーザー情報取得
+      socket.emit("fetchUserInfo", {
+        RequestSender: {
+          userId: session.userId,
+          sessionId: session.sessionId
+        },
+        userId: session.userId
+      });
 
       //トップページへ移動
       this.$router.push("/");
