@@ -41,8 +41,8 @@ export default {
           //名前検索
           socket.emit("searchUserInfo", {
             RequestSender: {
-              userid: MyUserinfo.userId,
-              sessionid: sessionId
+              userId: MyUserinfo.userId,
+              sessionId: sessionId
             },
             userName: this.newUsername
           });
