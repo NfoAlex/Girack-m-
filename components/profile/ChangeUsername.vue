@@ -105,12 +105,12 @@ export default {
     },
 
     //ユーザー名変更用の名前検索ハンドラ
-    SOCKETsearchUserInfo(result:[{userid:string, username:string}]):void {
+    SOCKETsearchUserInfo(result:{result:string, data:[any]}):void {
       console.log("profile :: SOCKETsearchUserInfo : result->", result);
       //結果を一つずつ調べる
-      for (let index in result) {
+      for (let index in result.data) {
         //名前が検索結果にあったら
-        if (result[index].username === this.newUsername) {
+        if (result.data[index].userName === this.newUsername) {
           //この名前を使えないと設定
           this.resultNewUsername = "ALREADY_USED";
           //検索中状態を解除
