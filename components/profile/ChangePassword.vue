@@ -29,9 +29,9 @@ export default {
       socket.emit("changePassword", {
         currentPassword: this.currentPassword,
         newPassword: this.newPassword,
-        reqSender: {
-          userid: MyUserinfo.userId,
-          sessionid: sessionId,
+        RequestSender: {
+          userId: MyUserinfo.userId,
+          sessionId: sessionId,
         },
       });
       //パスワードを変更したと設定
