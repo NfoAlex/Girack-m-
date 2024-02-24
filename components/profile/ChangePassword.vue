@@ -23,13 +23,15 @@ export default {
     changePassword():void {
       //自ユーザー情報取得
       const MyUserinfo = useMyUserinfo().getMyUserinfo;
+      //セッションID
+      const sessionId = useMyUserinfo().getSessionId;
       //パスワードを変更申請
       socket.emit("changePassword", {
         currentPassword: this.currentPassword,
         newPassword: this.newPassword,
         reqSender: {
-          userid: MyUserinfo.userid,
-          sessionid: MyUserinfo.sessionid,
+          userid: MyUserinfo.userId,
+          sessionid: sessionId,
         },
       });
       //パスワードを変更したと設定
