@@ -142,6 +142,9 @@ export default {
       //セッションIDをstoreへ登録
       const updateSessionId = useMyUserinfo().updateSessionId;
       updateSessionId(session.sessionId);
+      //ユーザーIDをあらかじめマージ
+      const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
+      updateMyUserinfo({...useMyUserinfo().getMyUserinfo, userId:session.userId});
 
       //設定データを取得する
       socket.emit("fetchUserConfig", {
