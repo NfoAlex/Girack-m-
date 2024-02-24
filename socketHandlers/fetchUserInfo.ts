@@ -9,8 +9,12 @@ export default function fetchUserInfo(socket:Socket):void {
   socket.on("RESULT::fetchUserInfo", (dat:{result:string, data:MyUserinfo}) => {
     console.log("fetchUserInfo :: socketon(infoUser) : dat->", dat);
 
-    //自ユーザー情報格納
-    const MyUserinfo = useMyUserinfo();
-    MyUserinfo.updateMyUserinfo(dat.data);
+    //自分のユーザー情報だったのならStoreを更新
+    const getMyUserinfo = useMyUserinfo().getMyUserinfo;
+    if (getMyUserinfo.userId === dat.data.userId) {
+      //自ユーザー情報格納
+      const MyUserinfo = useMyUserinfo();
+      MyUserinfo.updateMyUserinfo(dat.data);
+    }
   });
 }
