@@ -69,13 +69,12 @@ export default {
       const MyUserinfo = useMyUserinfo().getMyUserinfo;
       const sessionId = useMyUserinfo().getSessionId;
       //名前更新
-      socket.emit("changeProfile", {
-        name: this.newUsername, //更新する名前
-        targetid: MyUserinfo.userId, //対象ユーザーID(自分)
-        reqSender: {
+      socket.emit("changeUserName", {
+        userName: this.newUsername, //更新する名前
+        RequestSender: {
           //セッション認証に必要な情報送信
-          userid: MyUserinfo.userId,
-          sessionid: sessionId,
+          userId: MyUserinfo.userId,
+          sessionId: sessionId,
         },
       });
 
