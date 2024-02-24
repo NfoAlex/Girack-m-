@@ -139,6 +139,10 @@ export default {
     if (getCookie("session") !== "") {
       let session = JSON.parse(getCookie("session"));
 
+      //セッションIDをstoreへ登録
+      const updateSessionId = useMyUserinfo().updateSessionId;
+      updateSessionId(session.sessionId);
+
       //設定データを取得する
       socket.emit("fetchUserConfig", {
         userId: session.userId,
