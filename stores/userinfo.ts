@@ -22,6 +22,9 @@ export const useMyUserinfo = defineStore("myuserinfo", {
     getMyUserinfo: (state) => {
       return state._MyUserinfo;
     },
+    getSessionId: (state) => {
+      return state._sessionId;
+    },
   },
   
   actions: {
