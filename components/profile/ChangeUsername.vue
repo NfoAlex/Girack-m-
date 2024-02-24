@@ -2,7 +2,7 @@
 import { useMyUserinfo } from "../../stores/userinfo";
 import { socket } from "../../socketHandlers/socketInit";
 
-const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 </script>
 
 <script lang="ts">
@@ -37,13 +37,15 @@ export default {
           this.resultNewUsernameAlertDisplay = "info";
           //自ユーザー情報情報取得
           const MyUserinfo = useMyUserinfo().getMyUserinfo;
+          const sessionId = useMyUserinfo().getSessionId;
           //名前検索
-          socket.emit("searchUserDynamic", {
-            query: this.newUsername,
-            reqSender: {
-              userid: MyUserinfo.userid,
-              sessionid: MyUserinfo.sessionid
-            }
+          socket.emit("searchUserInfo", {
+            RequestSender: {
+              userId: MyUserinfo.userId,
+              sessionId: sessionId
+            },
+            userName: this.newUsername,
+            rule: "FULL"
           });
 
         } else if (this.newUsername.length === 0) { //新ユーザー名が0なら初期化
@@ -65,14 +67,14 @@ export default {
     changeUsername():void {
       //自ユーザー情報取得
       const MyUserinfo = useMyUserinfo().getMyUserinfo;
+      const sessionId = useMyUserinfo().getSessionId;
       //名前更新
-      socket.emit("changeProfile", {
-        name: this.newUsername, //更新する名前
-        targetid: MyUserinfo.userid, //対象ユーザーID(自分)
-        reqSender: {
+      socket.emit("changeUserName", {
+        userName: this.newUsername, //更新する名前
+        RequestSender: {
           //セッション認証に必要な情報送信
-          userid: MyUserinfo.userid,
-          sessionid: MyUserinfo.sessionid,
+          userId: MyUserinfo.userId,
+          sessionId: sessionId,
         },
       });
 
@@ -102,12 +104,12 @@ export default {
     },
 
     //ユーザー名変更用の名前検索ハンドラ
-    SOCKETinfoSearchUser(result:[{userid:string, username:string}]):void {
-      console.log("profile :: SOCKETinfoSerchUser : result->", result);
+    SOCKETsearchUserInfo(result:{result:string, data:[any]}):void {
+      console.log("profile :: SOCKETsearchUserInfo : result->", result);
       //結果を一つずつ調べる
-      for (let index in result) {
+      for (let index in result.data) {
         //名前が検索結果にあったら
-        if (result[index].username === this.newUsername) {
+        if (result.data[index].userName === this.newUsername) {
           //この名前を使えないと設定
           this.resultNewUsername = "ALREADY_USED";
           //検索中状態を解除
@@ -131,12 +133,12 @@ export default {
 
   mounted() {
     //ユーザー検索結果受け取り用
-    socket.on("infoSearchUser", this.SOCKETinfoSearchUser);
+    socket.on("RESULT::searchUserInfo", this.SOCKETsearchUserInfo);
   },
 
   unmounted() {
     //ハンドラ解除
-    socket.off("infoSearchUser", this.SOCKETinfoSearchUser);
+    socket.off("RESULT::searchUserInfo", this.SOCKETsearchUserInfo);
   }
 }
 

@@ -75,11 +75,13 @@ export default {
         updateMyUserinfo({
           userName: dat.data.UserInfo.userName,
           userId: dat.data.UserInfo.userId,
-          sessionId: dat.data.sessionId,
           role: dat.data.UserInfo.role.split(","), //文字列で渡されるためここで配列にする
           banned: dat.data.UserInfo.banned,
           channelJoined: dat.data.UserInfo.channelJoined.split(",") //文字列で渡されるためここで配列にする
         });
+        //セッションID更新
+        const updateSessionId = useMyUserinfo().updateSessionId;
+        updateSessionId(dat.data.sessionId);
 
         //設定データを取得する
         socket.emit("fetchUserConfig", {
@@ -137,10 +139,25 @@ export default {
     if (getCookie("session") !== "") {
       let session = JSON.parse(getCookie("session"));
 
+      //セッションIDをstoreへ登録
+      const updateSessionId = useMyUserinfo().updateSessionId;
+      updateSessionId(session.sessionId);
+      //ユーザーIDをあらかじめマージ
+      const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
+      updateMyUserinfo({...useMyUserinfo().getMyUserinfo, userId:session.userId});
+
       //設定データを取得する
       socket.emit("fetchUserConfig", {
         userId: session.userId,
         sessionId: session.sessionId
+      });
+      //ユーザー情報取得
+      socket.emit("fetchUserInfo", {
+        RequestSender: {
+          userId: session.userId,
+          sessionId: session.sessionId
+        },
+        userId: session.userId
       });
 
       //トップページへ移動

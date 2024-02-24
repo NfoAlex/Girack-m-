@@ -9,17 +9,21 @@ export const useMyUserinfo = defineStore("myuserinfo", {
       userName: "User",
       role: ["Member"],
       userId: "XXXXXXXX",
-      sessionId: "",
       banned: false,
       channelJoined: ["0001"],
     },
+    _sessionId: ""
   } as {
     _MyUserinfo: MyUserinfo;
+    _sessionId: string;
   }),
 
   getters: {
     getMyUserinfo: (state) => {
       return state._MyUserinfo;
+    },
+    getSessionId: (state) => {
+      return state._sessionId;
     },
   },
   
@@ -27,6 +31,9 @@ export const useMyUserinfo = defineStore("myuserinfo", {
     updateMyUserinfo(data: MyUserinfo) {
       this._MyUserinfo = data;
     },
+    updateSessionId(sessionId: string) {
+      this._sessionId = sessionId;
+    }
   }
 });
 

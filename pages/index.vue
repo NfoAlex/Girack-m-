@@ -3,7 +3,7 @@ import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 
 const { getServerinfo, getCount } = storeToRefs(useServerinfo());
-const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 </script>
 
 <template>
@@ -19,6 +19,10 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
       <p>MyUserinfo : </p>
       <m-card variant="outlined">
         {{ getMyUserinfo }}
+      </m-card>
+      <p>セッションID : </p>
+      <m-card variant="outlined">
+        {{ getSessionId }}
       </m-card>
     </m-card>
   </div>

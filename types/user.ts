@@ -3,7 +3,6 @@ export interface MyUserinfo {
   role: string[], //ロール
   userId: string, //ユーザーID
   banned: boolean, //BANされたかどうか
-  sessionId: string, //セッションID
   channelJoined: string[], //参加しているチャンネル
 }
 
