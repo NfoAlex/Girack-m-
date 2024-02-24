@@ -44,7 +44,8 @@ export default {
               userId: MyUserinfo.userId,
               sessionId: sessionId
             },
-            userName: this.newUsername
+            userName: this.newUsername,
+            rule: "FULL"
           });
 
         } else if (this.newUsername.length === 0) { //新ユーザー名が0なら初期化
