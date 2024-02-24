@@ -14,7 +14,8 @@ export default {
       newPassword: "" as string,
       newPasswordAgain: "" as string,
 
-      resultChangePasswordSuccess: false as boolean
+      resultChangePasswordSuccess: false as boolean,
+      resultChangePasswordError: false as boolean
     }
   },
 
@@ -34,9 +35,25 @@ export default {
           sessionId: sessionId,
         },
       });
-      //パスワードを変更したと設定
-      this.resultChangePasswordSuccess = true;
     },
+
+    //パスワード変更結果受け取り用
+    SOCKETchangePassword(dat:{result:string, data:any}) {
+      console.log("ChangePassword :: SOCKETchangePassword : dat->", dat);
+      if (dat.result === "SUCCESS") {
+        this.resultChangePasswordSuccess = true;
+      } else if (dat.result === "ERROR_WRONGPASSWORD") {
+        this.resultChangePasswordError = true;
+      }
+    }
+  },
+
+  mounted() {
+    socket.on("RESULT::changePassword", this.SOCKETchangePassword);
+  },
+
+  unmounted() {
+    socket.off("RESULT::changePassword", this.SOCKETchangePassword);
   }
 }
 
@@ -83,8 +100,16 @@ export default {
 
         <!-- エラー用アラート -->
         <v-alert
-          v-if="newPasswordAgain!==newPassword&&newPasswordAgain.length!==0"
+          v-if="resultChangePasswordError"
           type="error"
+          rounded="xl"
+          class="mb-1"
+        >
+          現在のパスワードで認証ができませんでした
+        </v-alert>
+        <v-alert
+          v-if="newPasswordAgain!==newPassword&&newPasswordAgain.length!==0"
+          type="warning"
           rounded="xl"
         >設定する新パスワードが一致しません
         </v-alert>
