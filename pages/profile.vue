@@ -41,8 +41,8 @@ export default {
         <div>
           <v-img
             @click=""
-            :alt="getMyUserinfo.userid"
-            :src="'/img/' + getMyUserinfo.userid"
+            :alt="getMyUserinfo.userId"
+            :src="'/img/' + getMyUserinfo.userId"
             width="100"
           ></v-img>
         </div>
@@ -50,11 +50,11 @@ export default {
         <!-- ユーザー名 -->
         <div class="d-flex flex-column justify-center align-self-stretch px-4" style="width:100%;">
           <p class="text-disabled text-h6">
-            ID : {{ getMyUserinfo.userid }}
+            ID : {{ getMyUserinfo.userId }}
           </p>
           <div class="d-flex align-center align-self-stretch">
             <p class="text-h4 text-truncate me-auto">
-              {{ getMyUserinfo.username }}
+              {{ getMyUserinfo.userName }}
             </p>
             <v-btn @click="()=>{ dialogChangeUsername=true }" rounded="lg" icon="" variant="text">
               <v-icon>mdi:mdi-pencil</v-icon>
