@@ -17,15 +17,8 @@ export default {
       const MyUserinfo = useMyUserinfo().getMyUserinfo;
       //クッキー削除
       setCookie("session", "", 0);
-      //ログアウトするとサーバーへ通達
-      socket.emit("logout", {
-        targetSessionid: MyUserinfo.sessionid,
-        reqSender: {
-          userid: MyUserinfo.userid,
-          sessionid: MyUserinfo.sessionid,
-        },
-      });
-      location.reload(); //ページリロード
+      //ページリロード
+      location.reload();
     },
   }
 }
