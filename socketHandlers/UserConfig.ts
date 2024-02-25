@@ -6,7 +6,7 @@ import type Config from "~/types/config";
 
 export default function UserConfig(socket: Socket): void {
   //サーバー(インスタンス)情報
-  socket.on("RESULTfetchUserConfig", (dat:{
+  socket.on("RESULT::fetchUserConfig", (dat:{
     result: string,
     data: Config
   }) => {

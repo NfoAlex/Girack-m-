@@ -6,7 +6,7 @@ import type { Serverinfo } from "~/types/serverInfo";
 
 export default function infoServer(socket: Socket): void {
   //サーバー(インスタンス)情報
-  socket.on("RESULTfetchServerInfoLimited", (dat:{
+  socket.on("RESULT::fetchServerInfoLimited", (dat:{
     result: string,
     data: Serverinfo
   }) => {

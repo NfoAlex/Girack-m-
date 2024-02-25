@@ -3,59 +3,57 @@ import { useMyUserinfo } from "../../stores/userinfo";
 import { socket } from "../../socketHandlers/socketInit";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
-</script>
 
-<script lang="ts">
+/**
+ * data
+ */
+// text-field用
+const currentPassword = ref<string>("");
+const newPassword = ref<string>("");
+const newPasswordAgain = ref<string>("");
+// 表示する結果用
+const resultChangePasswordSuccess = ref<boolean>(false);
+const resultChangePasswordError = ref<boolean>(false);
 
-export default {
-  data() {
-    return {
-      currentPassword: "" as string,
-      newPassword: "" as string,
-      newPasswordAgain: "" as string,
-
-      resultChangePasswordSuccess: false as boolean,
-      resultChangePasswordError: false as boolean
-    }
-  },
-
-  methods: {
-    //パスワードを変更
-    changePassword():void {
-      //自ユーザー情報取得
-      const MyUserinfo = useMyUserinfo().getMyUserinfo;
-      //セッションID
-      const sessionId = useMyUserinfo().getSessionId;
-      //パスワードを変更申請
-      socket.emit("changePassword", {
-        currentPassword: this.currentPassword,
-        newPassword: this.newPassword,
-        RequestSender: {
-          userId: MyUserinfo.userId,
-          sessionId: sessionId,
-        },
-      });
+/**
+ * パスワードを変更
+ */
+const changePassword = () => {
+  //自ユーザー情報取得
+  const MyUserinfo = useMyUserinfo().getMyUserinfo;
+  //セッションID
+  const sessionId = useMyUserinfo().getSessionId;
+  //パスワードを変更申請
+  socket.emit("changePassword", {
+    currentPassword: currentPassword.value,
+    newPassword: newPassword.value,
+    RequestSender: {
+      userId: MyUserinfo.userId,
+      sessionId: sessionId,
     },
+  });
+}
 
-    //パスワード変更結果受け取り用
-    SOCKETchangePassword(dat:{result:string, data:any}) {
-      console.log("ChangePassword :: SOCKETchangePassword : dat->", dat);
-      if (dat.result === "SUCCESS") {
-        this.resultChangePasswordSuccess = true;
-      } else if (dat.result === "ERROR_WRONGPASSWORD") {
-        this.resultChangePasswordError = true;
-      }
-    }
-  },
-
-  mounted() {
-    socket.on("RESULT::changePassword", this.SOCKETchangePassword);
-  },
-
-  unmounted() {
-    socket.off("RESULT::changePassword", this.SOCKETchangePassword);
+/**
+ * パスワード変更結果受け取り用
+ * @param dat
+ */
+const SOCKETchangePassword = (dat:{result:string, data:any}) => {
+  console.log("ChangePassword :: SOCKETchangePassword : dat->", dat);
+  if (dat.result === "SUCCESS") {
+    resultChangePasswordSuccess.value = true;
+  } else if (dat.result === "ERROR_WRONGPASSWORD") {
+    resultChangePasswordError.value = true;
   }
 }
+
+onMounted(() => {
+  socket.on("RESULT::changePassword", SOCKETchangePassword);
+});
+
+onUnmounted(() => {
+  socket.off("RESULT::changePassword", SOCKETchangePassword);
+})
 
 </script>
 

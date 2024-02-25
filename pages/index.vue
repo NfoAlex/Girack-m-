@@ -9,18 +9,18 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 <template>
   <div class="pa-5">
     <div class="text-h4 my-3">ここがホーム</div>
-    <p>piniaデータ : </p>
+    <p>piniaデータ :</p>
     <m-card>
       <p>カウンタ : {{ getCount }}</p>
-      <p>Serverinfo : </p>
+      <p>Serverinfo :</p>
       <m-card variant="outlined">
         {{ getServerinfo }}
       </m-card>
-      <p>MyUserinfo : </p>
+      <p>MyUserinfo :</p>
       <m-card variant="outlined">
         {{ getMyUserinfo }}
       </m-card>
-      <p>セッションID : </p>
+      <p>セッションID :</p>
       <m-card variant="outlined">
         {{ getSessionId }}
       </m-card>
