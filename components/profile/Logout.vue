@@ -9,11 +9,10 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
  * ログアウト処理
  */
 const logout = () => {
-  const MyUserinfo = useMyUserinfo().getMyUserinfo;
-    //クッキー削除
-    setCookie("session", "", 0);
-    //ページリロード
-    location.reload();
+  //クッキー削除
+  setCookie("session", "", 0);
+  //ページリロード
+  location.reload();
 }
 
 </script>
