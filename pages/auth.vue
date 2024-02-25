@@ -139,9 +139,9 @@ const SOCKETRESULTauthRegister = (dat: { result: string; data: any }) => {
 
 onMounted(() => {
   //認証結果受け取り
-  socket.on("RESULTauthLogin", SOCKETRESULTauthLogin);
+  socket.on("RESULT::authLogin", SOCKETRESULTauthLogin);
   //登録ができたと受信したときの処理
-  socket.on("RESULTauthRegister", SOCKETRESULTauthRegister);
+  socket.on("RESULT::authRegister", SOCKETRESULTauthRegister);
 
   //クッキーがあればそのまま認証
   if (getCookie("session") !== "") {
