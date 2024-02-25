@@ -4,30 +4,16 @@ import { setCookie } from "../../composables/setCookie";
 import { socket } from "../../socketHandlers/socketInit";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
-</script>
 
-<script lang="ts">
-
-export default {
-  props: ["dialogLogout"],
-
-  methods: {
-    //ログアウト処理
-    logout():void {
-      const MyUserinfo = useMyUserinfo().getMyUserinfo;
-      //クッキー削除
-      setCookie("session", "", 0);
-      //ログアウトするとサーバーへ通達
-      socket.emit("logout", {
-        targetSessionid: MyUserinfo.sessionid,
-        reqSender: {
-          userid: MyUserinfo.userid,
-          sessionid: MyUserinfo.sessionid,
-        },
-      });
-      location.reload(); //ページリロード
-    },
-  }
+/**
+ * ログアウト処理
+ */
+const logout = () => {
+  const MyUserinfo = useMyUserinfo().getMyUserinfo;
+    //クッキー削除
+    setCookie("session", "", 0);
+    //ページリロード
+    location.reload();
 }
 
 </script>
