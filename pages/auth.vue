@@ -131,9 +131,9 @@ export default {
 
   mounted() {
     //認証結果受け取り
-    socket.on("RESULTauthLogin", this.SOCKETRESULTauthLogin);
+    socket.on("RESULT::authLogin", this.SOCKETRESULTauthLogin);
     //登録ができたと受信したときの処理
-    socket.on("RESULTauthRegister", this.SOCKETRESULTauthRegister);
+    socket.on("RESULT::authRegister", this.SOCKETRESULTauthRegister);
 
     //クッキーがあればそのまま認証
     if (getCookie("session") !== "") {
