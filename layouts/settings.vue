@@ -34,7 +34,6 @@
         <p class="pl-4">UI</p>
         <v-divider></v-divider>
       </span>
-      <!-- 全般 -->
       <span class="pl-2">
         <NuxtLink to="/settings/channel">
           <v-card
@@ -54,6 +53,24 @@
           >
             <v-icon class="mr-2" size="small">mdi:mdi-format-list-bulleted-square</v-icon>
             <p>サイドバー</p>
+          </v-card>
+        </NuxtLink>
+      </span>
+
+      <!-- その他 -->
+      <span class="pt-5 pb-2">
+        <p class="pl-4">その他</p>
+        <v-divider></v-divider>
+      </span>
+      <span class="pl-2">
+        <NuxtLink to="/settings/privacy">
+          <v-card
+            class="rounded-pill py-2 px-3 d-flex align-center"
+            :variant="$route.path==='/settings/privacy'?'tonal':'text'"
+            :ripple="false"
+          >
+            <v-icon class="mr-2" size="small">mdi:mdi-antenna</v-icon>
+            プライバシー
           </v-card>
         </NuxtLink>
       </span>
