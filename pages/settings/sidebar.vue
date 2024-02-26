@@ -8,7 +8,7 @@ const { getConfig } = storeToRefs(useConfig());
 <template>
   <div>
     <NuxtLayout name="settings">
-      <p class="text-h6 mb-6">チャンネル</p>
+      <p class="text-h6 mb-6">サイドバー</p>
       <v-switch
         v-model="getConfig.sidebar.ReadAllButtonEnabled"
         label="すべて既読に設定するボタンを有効化"
