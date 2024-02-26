@@ -73,6 +73,17 @@
             プライバシー
           </v-card>
         </NuxtLink>
+        <NuxtLink to="/settings/JSONs">
+          <v-card
+            class="rounded-pill py-2 px-3 d-flex align-center"
+            :variant="$route.path==='/settings/JSONs'?'tonal':'text'"
+            :ripple="false"
+            color="orange"
+          >
+            <v-icon class="mr-2" size="small">mdi:mdi-cog</v-icon>
+            DEBUG :: JSON一覧
+          </v-card>
+        </NuxtLink>
       </span>
 
     </div>
