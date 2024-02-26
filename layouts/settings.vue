@@ -9,21 +9,21 @@
       <span class="pl-2">
         <NuxtLink to="/settings/sync">
           <v-card
-            class="rounded-pill py-2 px-3"
+            class="rounded-pill py-2 px-3 d-flex align-center"
             :variant="$route.path==='/settings/sync'?'tonal':'text'"
             :ripple="false"
           >
-            <v-icon>mdi:mdi-sync</v-icon>
+            <v-icon class="mr-2" size="small">mdi:mdi-sync</v-icon>
             同期設定
           </v-card>
         </NuxtLink>
         <NuxtLink to="/settings/theme">
           <v-card
-            class="rounded-pill py-2 px-3"
+            class="rounded-pill py-2 px-3 d-flex align-center"
             :variant="$route.path==='/settings/theme'?'tonal':'text'"
             :ripple="false"
           >
-            <v-icon>mdi:mdi-theme-light-dark</v-icon>
+            <v-icon class="mr-2" size="small">mdi:mdi-theme-light-dark</v-icon>
             テーマ
           </v-card>
         </NuxtLink>
@@ -38,11 +38,11 @@
       <span class="pl-2">
         <NuxtLink to="/settings/channel">
           <v-card
-            class="rounded-pill py-2 px-3"
+            class="rounded-pill py-2 px-3 d-flex align-center"
             :variant="$route.path==='/settings/channel'?'tonal':'text'"
             :ripple="false"
           >
-            <v-icon>mdi:mdi-sync</v-icon>
+            <v-icon class="mr-2" size="small">mdi:mdi-pound</v-icon>
             チャンネル
           </v-card>
         </NuxtLink>
