@@ -37,6 +37,9 @@ export default defineNuxtConfig({
         VAlert: {
           rounded: 'xl'
         },
+        VSwitch: {
+          color: 'primary'
+        },
         MInput: {
           rounded: 'pill'
         },
