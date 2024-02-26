@@ -46,7 +46,18 @@
             チャンネル
           </v-card>
         </NuxtLink>
+        <NuxtLink to="/settings/sidebar">
+          <v-card
+            class="rounded-pill py-2 px-3 d-flex align-center"
+            :variant="$route.path==='/settings/sidebar'?'tonal':'text'"
+            :ripple="false"
+          >
+            <v-icon class="mr-2" size="small">mdi:mdi-format-list-bulleted-square</v-icon>
+            <p>サイドバー</p>
+          </v-card>
+        </NuxtLink>
       </span>
+
     </div>
 
     <!-- 右部分 -->
