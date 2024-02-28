@@ -16,6 +16,13 @@ const { getConfig } = storeToRefs(useConfig());
         </code>
       </m-card>
 
+      <p>通知設定部分 - notification</p>
+      <m-card>
+        <code>
+          {{ getConfig.theme }}
+        </code>
+      </m-card>
+
       <p class="mt-3">チャンネル表示設定 - channel</p>
       <m-card>
         <code>
