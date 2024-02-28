@@ -10,7 +10,7 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 /**
  * emit
  */
-const emit = defineEmits(["closeDialog"]);
+const emit = defineEmits(["closeDialog", "cancel"]);
 
 /**
  * サーバー上の設定を上書きする
@@ -82,7 +82,7 @@ const configFetchAndApply = () => {
           class="my-1"
         >いいえ、クラウド上のサーバーを取得し適用してください</m-btn>
         <m-btn
-          @click="$emit('closeDialog')"
+          @click="$emit('cancel')"
           class="my-1"
           variant="text"
           block

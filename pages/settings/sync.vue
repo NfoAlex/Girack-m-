@@ -34,6 +34,7 @@ onMounted(() => {
   <SyncConfirm
     v-model="displayConfirmSync"
     @closeDialog="()=>{ displayConfirmSync=false; }"
+    @cancel="()=>{ displayConfirmSync=false; syncSwitch=false; }"
   />
   <div>
     <NuxtLayout name="settings">
