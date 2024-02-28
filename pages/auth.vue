@@ -2,8 +2,10 @@
 import { socket } from "../socketHandlers/socketInit";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
+import { useConfig } from "../stores/config";
 import { setCookie } from "~/composables/setCookie";
 import { getCookie } from "~/composables/getCookie";
+import type Config from "~/types/config";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const router = useRouter();
@@ -43,6 +45,47 @@ const login = () => {
       password: password.value,
     }
   );
+};
+
+/**
+ * ログイン後のGirack-m-準備処理
+ */
+const initialize = (userId:string, sessionId:string) => {
+  //ユーザー情報取得
+  socket.emit("fetchUserInfo", {
+    RequestSender: {
+      userId: userId,
+      sessionId: sessionId,
+    },
+    userId: userId,
+  });
+
+  //localStorageから設定を読み込む
+  const datConfigLocal = getConfigLocal();
+  if (datConfigLocal !== null) {
+    //同期設定がONなら設定取得
+    if (datConfigLocal.sync) {
+      //設定データを取得する
+      socket.emit("fetchUserConfig", {
+        userId: userId,
+        sessionId: sessionId,
+      });
+    } else {
+      //localStorageにある設定データをそのまま適用
+      useConfig().updateConfig(datConfigLocal.config);
+      //同期設定をオフとして設定
+      useConfig().updateConfigSyncStatus(false);
+    }
+  } else { //設定データがないなら絶対取得
+    //設定データを取得する
+    socket.emit("fetchUserConfig", {
+      userId: userId,
+      sessionId: sessionId,
+    });
+  }
+
+  //トップページへ移動
+  router.push("/");
 };
 
 /**
@@ -87,12 +130,6 @@ const SOCKETRESULTauthLogin = (dat: {
     const updateSessionId = useMyUserinfo().updateSessionId;
     updateSessionId(dat.data.sessionId);
 
-    //設定データを取得する
-    socket.emit("fetchUserConfig", {
-      userId: dat.data.UserInfo.userId,
-      sessionId: dat.data.sessionId,
-    });
-
     //セッション情報をクッキーへ保存
     setCookie(
       "session",
@@ -106,8 +143,8 @@ const SOCKETRESULTauthLogin = (dat: {
       15
     );
 
-    //トップページへ移動
-    router.push("/");
+    //準備処理開始
+    initialize(dat.data.UserInfo.userId, dat.data.sessionId);
   } else {
     //エラーを表示
     resultDisplay.value = "FAILED";
@@ -156,22 +193,8 @@ onMounted(() => {
       userId: session.userId,
     });
 
-    //設定データを取得する
-    socket.emit("fetchUserConfig", {
-      userId: session.userId,
-      sessionId: session.sessionId,
-    });
-    //ユーザー情報取得
-    socket.emit("fetchUserInfo", {
-      RequestSender: {
-        userId: session.userId,
-        sessionId: session.sessionId,
-      },
-      userId: session.userId,
-    });
-
-    //トップページへ移動
-    router.push("/");
+    //準備処理開始
+    initialize(session.userId, session.sessionId);
   }
 });
 
