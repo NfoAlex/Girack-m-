@@ -23,6 +23,9 @@ export default defineNuxtConfig({
       /* module specific options */
     },
     vuetifyOptions: {
+      icons: {
+        defaultSet: 'md'
+      },
       /* マテリアルデザイン用 */
       aliases: {
         MCard: "VCard",

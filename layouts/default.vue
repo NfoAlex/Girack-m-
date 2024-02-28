@@ -12,7 +12,7 @@
             rounded="lg"
             class="mt-2"
           >
-            <v-icon size="large">mdi:mdi-home</v-icon>
+            <v-icon size="large" icon="home"></v-icon>
           </v-btn>
           <p
             class="text-caption text-center"
@@ -32,7 +32,7 @@
             :color="$route.path === '/channel' ? 'primary' : ''"
             rounded="lg"
           >
-            <v-icon size="large">mdi:mdi-pound</v-icon>
+            <v-icon size="large" icon="tag"></v-icon>
           </v-btn>
           <p
             class="text-caption text-center"
@@ -51,7 +51,7 @@
       <span class="mt-2">
         <NuxtLink to="/profile">
           <v-btn
-            icon="mdi:mdi-account"
+            icon="person"
             :variant="$route.path.includes('/profile') ? 'tonal' : 'text'"
             :color="$route.path.includes('/profile') ? 'primary' : ''"
             rounded="lg"
@@ -70,7 +70,7 @@
       <span class="mt-4">
         <NuxtLink to="/settings">
           <v-btn
-            icon="mdi:mdi-cog"
+            icon="settings"
             :variant="$route.path.includes('/settings') ? 'tonal' : 'text'"
             :color="$route.path.includes('/settings') ? 'primary' : ''"
             rounded="lg"
@@ -89,7 +89,7 @@
       <span class="mt-3">
         <NuxtLink to="/auth">
           <v-btn
-            icon="mdi:mdi-lock"
+            icon="lock"
             variant="text"
             rounded="lg"
             class=""

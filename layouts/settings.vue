@@ -40,7 +40,7 @@ watch(getConfig.value, () => {
             :variant="$route.path==='/settings/sync'?'tonal':'text'"
             :ripple="false"
           >
-            <v-icon class="mr-2" size="small">mdi:mdi-sync</v-icon>
+            <v-icon class="mr-2" size="small">sync</v-icon>
             同期設定
           </v-card>
         </NuxtLink>
@@ -50,7 +50,7 @@ watch(getConfig.value, () => {
             :variant="$route.path==='/settings/theme'?'tonal':'text'"
             :ripple="false"
           >
-            <v-icon class="mr-2" size="small">mdi:mdi-theme-light-dark</v-icon>
+            <v-icon class="mr-2" size="small">contrast</v-icon>
             テーマ
           </v-card>
         </NuxtLink>
@@ -68,7 +68,7 @@ watch(getConfig.value, () => {
             :variant="$route.path==='/settings/channel'?'tonal':'text'"
             :ripple="false"
           >
-            <v-icon class="mr-2" size="small">mdi:mdi-pound</v-icon>
+            <v-icon class="mr-2" size="small">list</v-icon>
             チャンネル
           </v-card>
         </NuxtLink>
@@ -78,7 +78,7 @@ watch(getConfig.value, () => {
             :variant="$route.path==='/settings/sidebar'?'tonal':'text'"
             :ripple="false"
           >
-            <v-icon class="mr-2" size="small">mdi:mdi-format-list-bulleted-square</v-icon>
+            <v-icon class="mr-2" size="small">dock_to_right</v-icon>
             <p>サイドバー</p>
           </v-card>
         </NuxtLink>
@@ -96,7 +96,7 @@ watch(getConfig.value, () => {
             :variant="$route.path==='/settings/privacy'?'tonal':'text'"
             :ripple="false"
           >
-            <v-icon class="mr-2" size="small">mdi:mdi-antenna</v-icon>
+            <v-icon class="mr-2" size="small">admin_panel_settings</v-icon>
             プライバシー
           </v-card>
         </NuxtLink>
@@ -107,7 +107,7 @@ watch(getConfig.value, () => {
             :ripple="false"
             color="orange"
           >
-            <v-icon class="mr-2" size="small">mdi:mdi-cog</v-icon>
+            <v-icon class="mr-2" size="small">bug_report</v-icon>
             DEBUG :: 設定用JSON一覧
           </v-card>
         </NuxtLink>
