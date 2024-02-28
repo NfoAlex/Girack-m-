@@ -1,3 +1,23 @@
+<script setup lang="ts">
+import { useConfig } from '~/stores/config';
+import { useMyUserinfo } from '~/stores/userinfo';
+import { socket } from '~/socketHandlers/socketInit';
+
+const { getConfig } = storeToRefs(useConfig());
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+
+watch(getConfig.value, () => {
+  console.log("layout(settings) :: 設定変更の検知 getConfig -> ", getConfig.value);
+  socket.emit("saveUserConfig", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    config: getConfig.value
+  });
+});
+</script>
+
 <template>
   <div class="py-4 d-flex">
 
