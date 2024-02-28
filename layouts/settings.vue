@@ -7,7 +7,6 @@ const { getConfig } = storeToRefs(useConfig());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 watch(getConfig.value, () => {
-  console.log("layout(settings) :: 設定変更の検知 getConfig -> ", getConfig.value);
   socket.emit("saveUserConfig", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
