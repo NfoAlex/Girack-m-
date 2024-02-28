@@ -40,6 +40,9 @@ export const useConfig = defineStore("config", {
     updateConfig(data:Config) {
       this._Config = data;
     },
+    updateConfigSyncStatus(syncSwitch:boolean) {
+      this._SyncConfig = syncSwitch;
+    },
   }
 });
 
