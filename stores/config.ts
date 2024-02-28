@@ -5,7 +5,7 @@ import type Config from "~/types/config";
 export const useConfig = defineStore("config", {
   state: () =>
   ({
-    _SyncConfig: false,
+    _SyncConfig: true,
     _Config: {
       notification: {
         enabled: true,
