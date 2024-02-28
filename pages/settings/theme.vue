@@ -2,7 +2,6 @@
 import { useConfig } from '~/stores/config';
 
 const { getConfig } = storeToRefs(useConfig());
-const { updateTheme } = useConfig();
 
 /**
  * data
