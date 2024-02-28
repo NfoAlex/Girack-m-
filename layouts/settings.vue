@@ -78,7 +78,7 @@ watch(getConfig.value, () => {
             :variant="$route.path==='/settings/sidebar'?'tonal':'text'"
             :ripple="false"
           >
-            <v-icon class="mr-2" size="small">dock_to_right</v-icon>
+            <v-icon class="mr-2" size="small">view_sidebar</v-icon>
             <p>サイドバー</p>
           </v-card>
         </NuxtLink>
