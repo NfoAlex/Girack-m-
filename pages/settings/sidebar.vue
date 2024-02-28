@@ -4,7 +4,6 @@ import { useConfig } from '~/stores/config';
 const { getConfig } = storeToRefs(useConfig());
 </script>
 
-
 <template>
   <div>
     <NuxtLayout name="settings">

@@ -17,7 +17,7 @@ watch(getConfig.value, () => {
     config: getConfig.value
   });
   //localStorageで設定データを書き込む
-  setConfigLocal(getConfigSyncStatus.value, getConfig.value);
+  setConfigLocal(getConfig.value);
 });
 </script>
 
