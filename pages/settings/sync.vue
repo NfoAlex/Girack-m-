@@ -40,12 +40,9 @@ onMounted(() => {
   <div>
     <NuxtLayout name="settings">
       <p class="text-h6 mb-6">同期設定</p>
-      <p>カウンタ : {{ Serverinfo.count }}</p>
-      <m-btn @click="Serverinfo.increment">加算</m-btn>
-
       <m-card>
-        設定を同期する
-        <v-switch v-model="syncSwitch" />
+        <v-switch v-model="syncSwitch" label="設定を同期する" density="compact" />
+        <p class="text-disabled">ONにするとクラウド上の設定を上書きするか確認されます</p>
       </m-card>
     </NuxtLayout>
   </div>
