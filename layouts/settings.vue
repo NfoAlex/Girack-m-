@@ -8,14 +8,18 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 //設定データを監視する
 watch(getConfig.value, () => {
-  //設定データを送信、更新させる
-  socket.emit("saveUserConfig", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    config: getConfig.value
-  });
+  //同期がONならサーバーと同期する
+  if (getConfigSyncStatus) {
+    //設定データを送信、更新させる
+    socket.emit("saveUserConfig", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      config: getConfig.value
+    });
+  }
+
   //localStorageで設定データを書き込む
   setConfigLocal(getConfig.value);
 });
