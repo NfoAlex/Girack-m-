@@ -14,7 +14,7 @@ const { getConfig } = storeToRefs(useConfig());
           label="メッセージ送信者名の横にロールを表示する"
         />
 
-        <p class="text-medium-emphasis">プレビューとして表示する最高画像容量</p>
+        <p class="text-medium-emphasis">プレビューとして表示する最高画像容量(Byte単位)</p>
         <v-text-field
           v-model="getConfig.channel.displayAttatchmentSizeLimit"
           rouned="xl"
