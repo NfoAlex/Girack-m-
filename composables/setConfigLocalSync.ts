@@ -1,4 +1,4 @@
-//設定データをlocalStorageへ書き込むだけ
+//設定を同期するかをlocalStorageへ書き込むだけ
 export default function setConfigLocalSync(syncConfig:boolean) { //objectとあるがref型のJSON
   try {
     //設定を同期するのかどうか
