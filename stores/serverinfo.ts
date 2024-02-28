@@ -28,26 +28,17 @@ export const useServerinfo = defineStore("serverinfo", {
         },
       }
     },
-    count: 0
   } as {
     _Serverinfo: Serverinfo,
-    count: number
   }),
   
   getters: {
-    getCount():number {
-      return this.count;
-    },
-
     getServerinfo():Serverinfo {
       return this._Serverinfo;
     }
   },
 
   actions: {
-    increment() {
-      this.count++
-    },
     updateInfo(data:Serverinfo) {
       this._Serverinfo = data;
     }

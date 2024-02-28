@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { useServerinfo } from '~/stores/serverinfo';
 import { useConfig } from '~/stores/config';
 
 const { getConfigSyncStatus } = storeToRefs(useConfig());
-const Serverinfo = useServerinfo();
 
 /**
  * data
