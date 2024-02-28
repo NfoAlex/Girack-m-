@@ -41,8 +41,7 @@ const login = () => {
     {
       username: username.value,
       password: password.value,
-    },
-    "alpha_20240206_1"
+    }
   );
 };
 
