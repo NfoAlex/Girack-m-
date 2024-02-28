@@ -8,16 +8,18 @@ const { getConfig } = storeToRefs(useConfig());
   <div>
     <NuxtLayout name="settings">
       <p class="text-h6 mb-6">チャンネル</p>
-      <v-switch
-        v-model="getConfig.channel.displayRole"
-        label="メッセージ送信者名の横にロールを表示する"
-       />
+      <m-card>
+        <v-switch
+          v-model="getConfig.channel.displayRole"
+          label="メッセージ送信者名の横にロールを表示する"
+        />
 
-      <p class="text-medium-emphasis">プレビューとして表示する最高画像容量</p>
-      <v-text-field
-        v-model="getConfig.channel.displayAttatchmentSizeLimit"
-        rouned="xl"
-      />
+        <p class="text-medium-emphasis">プレビューとして表示する最高画像容量</p>
+        <v-text-field
+          v-model="getConfig.channel.displayAttatchmentSizeLimit"
+          rouned="xl"
+        />
+      </m-card>
     </NuxtLayout>
   </div>
 </template>
