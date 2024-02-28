@@ -81,7 +81,7 @@
             color="orange"
           >
             <v-icon class="mr-2" size="small">mdi:mdi-cog</v-icon>
-            DEBUG :: JSON一覧
+            DEBUG :: 設定用JSON一覧
           </v-card>
         </NuxtLink>
       </span>
