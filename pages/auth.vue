@@ -64,7 +64,7 @@ const initialize = (userId:string, sessionId:string) => {
   const datConfigLocal = getConfigLocal();
   if (datConfigLocal !== null) {
     //同期設定がONなら設定取得
-    if (datConfigLocal.sync) {
+    if (datConfigLocal.sync || datConfigLocal.config === null) {
       //設定データを取得する
       socket.emit("fetchUserConfig", {
         userId: userId,
