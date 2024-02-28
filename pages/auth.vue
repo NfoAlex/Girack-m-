@@ -57,8 +57,8 @@ const register = () => {
 
   //登録
   socket.emit("authRegister", {
-    username: username,
-    inviteCode: invitecode,
+    username: username.value,
+    inviteCode: invitecode.value,
   });
 };
 
