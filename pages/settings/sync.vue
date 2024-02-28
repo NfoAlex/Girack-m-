@@ -10,6 +10,7 @@ const Serverinfo = useServerinfo();
  */
 const syncSwitch = ref<boolean>(true);
 
+//同期スイッチを監視
 watch(syncSwitch, () => {
   //同期スイッチの値を設定Storeの同期設定へ適用
   useConfig().updateConfigSyncStatus(syncSwitch.value);
