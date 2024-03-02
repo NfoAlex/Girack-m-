@@ -6,6 +6,7 @@ import { useConfig } from "../stores/config";
 import { setCookie } from "~/composables/setCookie";
 import { getCookie } from "~/composables/getCookie";
 import type Config from "~/types/config";
+import type { MyUserinfo } from "~/types/user";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const router = useRouter();
@@ -157,7 +158,7 @@ const SOCKETRESULTauthLogin = (dat: {
  * 登録結果の受け取りと処理
  * @param dat
  */
-const SOCKETRESULTauthRegister = (dat: { result: string; data: any }) => {
+const SOCKETRESULTauthRegister = (dat: { result: string; data:{datUser:MyUserinfo, password:string} }) => {
   console.log("auth :: SOCKETRESULTauthRegister : dat->", dat);
   //結果処理
   if (dat.result === "SUCCESS") {
