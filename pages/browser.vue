@@ -39,7 +39,10 @@ onUnmounted(() => {
 
 <template>
   <!-- チャンネル作成ダイアログ -->
-  <BrowserCreateChannel v-model="displayCreateChannel" />
+  <BrowserCreateChannel
+    v-model="displayCreateChannel"
+    @closeDialog="displayCreateChannel = false"
+  />
 
   <div class="pa-5">
     ここがチャンネルブラウザ

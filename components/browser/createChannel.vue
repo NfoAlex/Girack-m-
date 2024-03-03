@@ -14,6 +14,8 @@ const channelCreationData = ref<any>({
   isPrivate: false,
 });
 
+const channelCreateResult = ref<"SUCCESS"|"ERROR"|null>(null);
+
 /**
  * チャンネルを作成する
  */
@@ -35,6 +37,11 @@ const createChannel = () => {
  */
 const SOCKETcreateChannel = (dat:{result:string, data:boolean|null}) => {
   console.log("createChannel :: SOCKETcreateChannel : dat->", dat);
+  if (dat.result !== "SUCCESS") {
+    channelCreateResult.value = "ERROR";
+  } else {
+    channelCreateResult.value = "SUCCESS";
+  }
 };
 
 onMounted(() => {
@@ -51,7 +58,7 @@ onUnmounted(() => {
   <v-dialog
     style="max-width: 750px; width: 85vw"
   >
-    <m-card>
+    <m-card v-if="channelCreateResult!=='SUCCESS'">
       <v-card-title>
         チャンネルの作成
       </v-card-title>
@@ -77,12 +84,26 @@ onUnmounted(() => {
           hint="招待からでしか参加できなくなります"
           density="compact"
         />
+        <v-alert
+          v-if="channelCreateResult==='ERROR'"
+          type="error"
+          class="mt-5"
+        >内部エラー。後でもう一度試してください。</v-alert>
       </v-card-text>
 
       <v-card-actions class="d-flex flex-row-reverse">
-        <m-btn @click="createChannel()">作成!</m-btn>
+        <m-btn @click="createChannel()" color="primary">作成!</m-btn>
       </v-card-actions>
       
+    </m-card>
+    <m-card v-if="channelCreateResult==='SUCCESS'">
+      <v-card-title>チャンネルの作成</v-card-title>
+      <v-card-text class="text-center">
+        チャンネルを作成しました!
+      </v-card-text>
+      <v-card-actions  class="d-flex flex-row-reverse">
+        <m-btn @click="$emit('closeDialog')">閉じる</m-btn>
+      </v-card-actions>
     </m-card>
   </v-dialog>
 </template>
