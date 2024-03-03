@@ -123,9 +123,9 @@ const SOCKETRESULTauthLogin = (dat: {
     updateMyUserinfo({
       userName: dat.data.UserInfo.userName,
       userId: dat.data.UserInfo.userId,
-      role: dat.data.UserInfo.role.split(","), //文字列で渡されるためここで配列にする
+      role: dat.data.UserInfo.role, //文字列で渡されるためここで配列にする
       banned: dat.data.UserInfo.banned,
-      channelJoined: dat.data.UserInfo.channelJoined.split(","), //文字列で渡されるためここで配列にする
+      channelJoined: dat.data.UserInfo.channelJoined, //文字列で渡されるためここで配列にする
     });
     //セッションID更新
     const updateSessionId = useMyUserinfo().updateSessionId;
