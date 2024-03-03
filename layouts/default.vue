@@ -23,6 +23,29 @@
         </NuxtLink>
       </span>
 
+      <!-- チャンネルブラウザボタン -->
+      <span class="mt-4">
+        <NuxtLink to="/browser">
+          <v-btn
+            icon=""
+            :variant="$route.path === '/browser' ? 'tonal' : 'text'"
+            :color="$route.path === '/browser' ? 'primary' : ''"
+            rounded="lg"
+            class="mt-2"
+          >
+            <v-icon size="large">mdi:mdi-format-list-bulleted-square</v-icon>
+          </v-btn>
+          <p
+            class="text-caption text-center"
+            :class="$route.path === '/browser' ? 'text-primary' : null"
+          >
+            リスト
+          </p>
+        </NuxtLink>
+      </span>
+
+      <v-divider class="mt-4"></v-divider>
+
       <!-- チャンネルボタン -->
       <span class="mt-4">
         <NuxtLink to="/channel">
