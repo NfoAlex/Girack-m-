@@ -59,6 +59,7 @@ onUnmounted(() => {
         <div class="py-2 px-1">
           {{ channel.description }}
         </div>
+        <p class="text-disabled text-caption">作成者 : {{ channel.createdBy }}</p>
 
       </m-card>
     </div>
