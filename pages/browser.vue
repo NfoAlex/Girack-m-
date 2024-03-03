@@ -9,6 +9,7 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
  * data
  */
 const channelList = ref<channel[]>(); //チャンネル情報格納用
+const displayCreateChannel = ref<boolean>(false); //チャンネル作成画面表示
 
 /**
  * チャンネルリストを受信
@@ -22,6 +23,7 @@ const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
 onMounted(() => {
   socket.on("RESULT::fetchChannelList", SOCKETRfetchChannelList);
 
+  //チャンネルリストの取得
   socket.emit("fetchChannelList", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
@@ -36,8 +38,22 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <!-- チャンネル作成ダイアログ -->
+  <BrowserCreateChannel v-model="displayCreateChannel" />
+
   <div class="pa-5">
     ここがチャンネルブラウザ
     {{ channelList }}
+    
   </div>
+
+  <!-- チャンネル作成ボタン -->
+  <v-btn
+    @click="displayCreateChannel = true"
+    position="absolute"
+    style="right:5%; bottom: 5%;"
+    icon="mdi:mdi-plus"
+  >
+    
+  </v-btn>
 </template>
