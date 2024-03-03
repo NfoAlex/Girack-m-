@@ -39,7 +39,7 @@
             class="text-caption text-center"
             :class="$route.path === '/browser' ? 'text-primary' : null"
           >
-            リスト
+            一覧
           </p>
         </NuxtLink>
       </span>
