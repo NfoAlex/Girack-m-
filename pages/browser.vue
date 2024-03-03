@@ -44,9 +44,23 @@ onUnmounted(() => {
     @closeDialog="displayCreateChannel = false"
   />
 
-  <div class="pa-5">
-    ここがチャンネルブラウザ
-    {{ channelList }}
+  <div class="pt-5 px-5 d-flex flex-column" style="height:100%;">
+    
+    <p class="text-h5">ここがチャンネルブラウザ</p>
+    <div class="pb-5 my-3 px-2" style="overflow-y:auto;">
+      <m-card v-for="channel of channelList" class="mb-2 d-flex-column">
+        
+        <span class="d-flex align-center py-1">
+          <v-icon v-if="channel.isPrivate">mdi-lock</v-icon>
+          <p class="text-h6">{{ channel.channelName }}</p>
+        </span>
+        <v-divider />
+        <div class="py-2 px-1">
+          {{ channel.description }}
+        </div>
+
+      </m-card>
+    </div>
     
   </div>
 
