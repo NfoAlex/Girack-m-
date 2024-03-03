@@ -42,7 +42,7 @@ export default defineNuxtConfig({
         },
         VDivider: {
           style: 'border-radius: 8px',
-          thickness: '3'
+          thickness: '2'
         },
         MInput: {
           rounded: 'pill'
