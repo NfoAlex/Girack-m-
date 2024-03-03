@@ -61,7 +61,7 @@
             class="text-caption text-center"
             :class="$route.path === '/channel' ? 'text-primary' : null"
           >
-            チャット
+            会話
           </p>
         </NuxtLink>
       </span>
