@@ -47,7 +47,8 @@ onUnmounted(() => {
   <div class="pt-5 px-5 d-flex flex-column" style="height:100%;">
     
     <p class="text-h5">ここがチャンネルブラウザ</p>
-    <div class="pb-5 my-3 px-2" style="overflow-y:auto;">
+    <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
+    <div class="pb-5 pt-3 px-2" style="overflow-y:auto;">
       <m-card v-for="channel of channelList" class="mb-2 d-flex-column">
         
         <span class="d-flex align-center py-1">
