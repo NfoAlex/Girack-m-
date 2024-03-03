@@ -141,6 +141,8 @@
   width: 100%;
   background: rgb(var(--v-theme-background));
 
+  overflow-y: auto;
+
   border-radius: 28px 0 0 28px;
 }
 </style>
