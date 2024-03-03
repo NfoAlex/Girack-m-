@@ -17,7 +17,7 @@ const displayCreateChannel = ref<boolean>(false); //チャンネル作成画面�
  */
 const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
   console.log("auth :: SOCKETRfetchChannelList : dat->", dat);
-  channelList.value = dat.data;
+  channelList.value = dat.data; //格納
 }
 
 onMounted(() => {
@@ -56,7 +56,6 @@ onUnmounted(() => {
     position="absolute"
     style="right:5%; bottom: 5%;"
     icon="mdi:mdi-plus"
-  >
-    
-  </v-btn>
+    size="x-large"
+  />
 </template>
