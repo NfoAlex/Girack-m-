@@ -91,7 +91,7 @@ onUnmounted(() => {
           <p class="text-h6">{{ channel.channelName }}</p>
           <v-divider vertical class="mx-2 my-1" />
           <p class="text-truncate">{{ channel.description }}</p>
-          <m-btn class="ml-auto" size="small" @click="joinChannel(channel.channelId)">参加</m-btn>
+          <m-btn class="ml-auto" size="default" @click="joinChannel(channel.channelId)">参加</m-btn>
         </span>
         <v-divider />
         <p class="text-disabled text-caption">作成者 : {{ channel.createdBy }}</p>
