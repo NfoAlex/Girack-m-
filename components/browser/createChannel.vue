@@ -6,14 +6,20 @@ import type { channel } from '~/types/channel';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 /**
+ * emit
+ */
+ const emit = defineEmits(["closeDialog"]);
+
+/**
  * data
  */
+//チャンネル作成用に使うデータ
 const channelCreationData = ref<any>({
   channelName: '',
   description: '',
   isPrivate: false,
 });
-
+//チャンネル作成結果用変数
 const channelCreateResult = ref<"SUCCESS"|"ERROR"|null>(null);
 
 /**
@@ -28,6 +34,24 @@ const createChannel = () => {
     channelName: channelCreationData.value.channelName,
     description: channelCreationData.value.description,
     isPrivate: channelCreationData.value.isPrivate,
+  });
+};
+
+/**
+ * ダイアログ閉じる処理
+ */
+const closeProcess = () => {
+  //ダイアログを閉じさせる
+  emit("closeDialog");
+  //チャンネル作成用データを初期化
+  channelCreationData.value = {
+    channelName: '',
+    description: '',
+    isPrivate: false,
+  };
+  //チャンネル作成結果を初期化
+  nextTick(() => {
+    channelCreateResult.value = null;
   });
 };
 
@@ -54,17 +78,20 @@ const SOCKETcreateChannel = (dat:{result:string, data:boolean|null}) => {
 
 onMounted(() => {
   socket.on("RESULT::createChannel", SOCKETcreateChannel);
+  //チャンネル作成結果を初期化
+  channelCreateResult.value = null;
 });
 
 onUnmounted(() => {
   socket.off("RESULT::createChannel", SOCKETcreateChannel);
-})
+});
 
 </script>
 
 <template>
   <v-dialog
     style="max-width: 750px; width: 85vw"
+    transition="blank"
   >
     <m-card v-if="channelCreateResult!=='SUCCESS'">
       <v-card-title>
@@ -110,7 +137,7 @@ onUnmounted(() => {
         チャンネルを作成しました!
       </v-card-text>
       <v-card-actions  class="d-flex flex-row-reverse">
-        <m-btn @click="$emit('closeDialog')">閉じる</m-btn>
+        <m-btn @click="closeProcess">閉じる</m-btn>
       </v-card-actions>
     </m-card>
   </v-dialog>
