@@ -28,7 +28,7 @@ const createChannel = () => {
     channelName: channelCreationData.value.channelName,
     description: channelCreationData.value.description,
     isPrivate: channelCreationData.value.isPrivate,
-  })
+  });
 };
 
 /**
@@ -37,10 +37,18 @@ const createChannel = () => {
  */
 const SOCKETcreateChannel = (dat:{result:string, data:boolean|null}) => {
   console.log("createChannel :: SOCKETcreateChannel : dat->", dat);
+  //結果に応じて表示を変更
   if (dat.result !== "SUCCESS") {
     channelCreateResult.value = "ERROR";
   } else {
     channelCreateResult.value = "SUCCESS";
+    //更新させるためにチャンネルリストを取得する
+    socket.emit("fetchChannelList", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      }
+    });
   }
 };
 
