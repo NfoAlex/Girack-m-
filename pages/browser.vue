@@ -51,14 +51,13 @@ onUnmounted(() => {
     <div class="pb-5 pt-3 px-2" style="overflow-y:auto;">
       <m-card v-for="channel of channelList" class="mb-2 d-flex-column">
         
-        <span class="d-flex align-center py-1">
+        <span class="d-flex align-center py-1" style="width:100%;">
           <v-icon v-if="channel.isPrivate">mdi-lock</v-icon>
           <p class="text-h6">{{ channel.channelName }}</p>
+          <v-divider vertical class="mx-2 my-1" />
+          <p class="text-truncate">{{ channel.description }}</p>
         </span>
         <v-divider />
-        <div class="py-2 px-1">
-          {{ channel.description }}
-        </div>
         <p class="text-disabled text-caption">作成者 : {{ channel.createdBy }}</p>
 
       </m-card>
