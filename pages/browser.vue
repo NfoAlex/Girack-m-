@@ -92,10 +92,19 @@ onUnmounted(() => {
           <v-divider vertical class="mx-2 my-1" />
           <p class="text-truncate">{{ channel.description }}</p>
           <m-btn
+            v-if="!getMyUserinfo.channelJoined.includes(channel.channelId)"
             @click="joinChannel(channel.channelId)"
             class="ml-auto"
           >
             参加
+          </m-btn>
+          <m-btn
+            v-else
+            @click=""
+            class="ml-auto"
+            variant="outlined"
+          >
+            参加済み
           </m-btn>
         </span>
         <v-divider />
