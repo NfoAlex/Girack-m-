@@ -34,7 +34,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::fetchChannelList", SOCKETRfetchChannelList);
-})
+});
 </script>
 
 <template>
