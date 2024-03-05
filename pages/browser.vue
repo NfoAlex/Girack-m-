@@ -12,6 +12,19 @@ const channelList = ref<channel[]>(); //チャンネル情報格納用
 const displayCreateChannel = ref<boolean>(false); //チャンネル作成画面表示
 
 /**
+ * チャンネル参加
+ */
+const joinChannel = (channelIdJoining:string) => {
+  socket.emit("joinChannel", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    channelId: channelIdJoining
+  });
+}
+
+/**
  * チャンネルリストを受信
  * @param dat
  */
@@ -20,8 +33,28 @@ const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
   channelList.value = dat.data; //格納
 }
 
+/**
+ * チャンネルリストを受信
+ * @param dat
+ */
+const SOCKETjoinChannel = (dat:{result:string, data:boolean}) => {
+  console.log("auth :: SOCKETjoinChannel : dat->", dat);
+  //成功なら自分のユーザー情報を取得して更新する
+  if (dat.result === "SUCCESS") {
+    //取得
+    socket.emit("fetchUserInfo", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      userId: getMyUserinfo.value.userId
+    });
+  }
+}
+
 onMounted(() => {
   socket.on("RESULT::fetchChannelList", SOCKETRfetchChannelList);
+  socket.on("RESULT::joinChannel", SOCKETjoinChannel);
 
   //チャンネルリストの取得
   socket.emit("fetchChannelList", {
@@ -34,6 +67,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::fetchChannelList", SOCKETRfetchChannelList);
+  socket.off("RESULT::joinChannel", SOCKETjoinChannel);
 });
 </script>
 
@@ -56,6 +90,7 @@ onUnmounted(() => {
           <p class="text-h6">{{ channel.channelName }}</p>
           <v-divider vertical class="mx-2 my-1" />
           <p class="text-truncate">{{ channel.description }}</p>
+          <m-btn class="ml-auto" size="small" @click="joinChannel(channel.channelId)">参加</m-btn>
         </span>
         <v-divider />
         <p class="text-disabled text-caption">作成者 : {{ channel.createdBy }}</p>
