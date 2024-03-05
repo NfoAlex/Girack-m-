@@ -83,7 +83,8 @@ onUnmounted(() => {
     <p class="text-h5">チャンネルブラウザ</p>
     <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
     <div class="pt-3 px-2" style="overflow-y:auto; padding-bottom:15vh;">
-      <m-card v-for="channel of channelList" class="mb-2 d-flex-column">
+      <!-- チャンネルカード -->
+      <m-card v-for="channel of channelList" class="mb-2 pb-3 pt-2 d-flex-column">
         
         <span class="d-flex align-center py-1" style="width:100%;">
           <v-icon v-if="channel.isPrivate">mdi-lock</v-icon>
