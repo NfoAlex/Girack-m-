@@ -25,6 +25,19 @@ const joinChannel = (channelIdJoining:string) => {
 }
 
 /**
+ * チャンネル脱退
+ */
+const leaveChannel = (channelIdLeaving:string) => {
+  socket.emit("leaveChannel", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    channelId: channelIdLeaving
+  });
+}
+
+/**
  * チャンネルリストを受信
  * @param dat
  */
@@ -34,7 +47,7 @@ const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
 }
 
 /**
- * チャンネルリストを受信
+ * チャンネル参加結果受け取り
  * @param dat
  */
 const SOCKETjoinChannel = (dat:{result:string, data:boolean}) => {
@@ -52,9 +65,29 @@ const SOCKETjoinChannel = (dat:{result:string, data:boolean}) => {
   }
 }
 
+/**
+ * チャンネル脱退結果受け取り
+ * @param dat
+ */
+ const SOCKETleaveChannel = (dat:{result:string, data:boolean}) => {
+  console.log("auth :: SOCKETleaveChannel : dat->", dat);
+  //成功なら自分のユーザー情報を取得して更新する
+  if (dat.result === "SUCCESS") {
+    //取得
+    socket.emit("fetchUserInfo", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      userId: getMyUserinfo.value.userId
+    });
+  }
+}
+
 onMounted(() => {
   socket.on("RESULT::fetchChannelList", SOCKETRfetchChannelList);
   socket.on("RESULT::joinChannel", SOCKETjoinChannel);
+  socket.on("RESULT::leaveChannel", SOCKETleaveChannel);
 
   //チャンネルリストの取得
   socket.emit("fetchChannelList", {
@@ -68,6 +101,7 @@ onMounted(() => {
 onUnmounted(() => {
   socket.off("RESULT::fetchChannelList", SOCKETRfetchChannelList);
   socket.off("RESULT::joinChannel", SOCKETjoinChannel);
+  socket.off("RESULT::leaveChannel", SOCKETleaveChannel);
 });
 </script>
 
@@ -86,7 +120,7 @@ onUnmounted(() => {
       <!-- チャンネルカード -->
       <m-card v-for="channel of channelList" class="mb-2 pb-3 pt-2 d-flex-column">
         
-        <span class="d-flex align-center py-1" style="width:100%;">
+        <span class="d-flex align-center py-2" style="width:100%;">
           <v-icon v-if="channel.isPrivate">mdi-lock</v-icon>
           <p class="text-h6">{{ channel.channelName }}</p>
           <v-divider vertical class="mx-2 my-1" />
@@ -100,7 +134,7 @@ onUnmounted(() => {
           </m-btn>
           <m-btn
             v-else
-            @click=""
+            @click="leaveChannel(channel.channelId)"
             class="ml-auto"
             variant="outlined"
           >
