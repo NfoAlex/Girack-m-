@@ -136,7 +136,7 @@ onUnmounted(() => {
       <v-card-text class="text-center">
         チャンネルを作成しました!
       </v-card-text>
-      <v-card-actions  class="d-flex flex-row-reverse">
+      <v-card-actions class="d-flex flex-row-reverse">
         <m-btn @click="closeProcess">閉じる</m-btn>
       </v-card-actions>
     </m-card>
