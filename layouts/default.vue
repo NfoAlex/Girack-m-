@@ -116,7 +116,7 @@
             variant="text"
             rounded="lg"
             class=""
-            color="error"
+            color="orange"
           >
           </v-btn>
           <p class="text-caption text-center">認証</p>
