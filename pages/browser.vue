@@ -9,7 +9,15 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
  * data
  */
 const channelList = ref<channel[]>(); //チャンネル情報格納用
+const channelInfoDeleting = ref<{ //削除する予定のチャンネルの基本情報
+  channelId:string, channelName:string
+}>({
+  channelId: "",
+  channelName: ""
+});
+
 const displayCreateChannel = ref<boolean>(false); //チャンネル作成画面表示
+const displayDeleteChannel = ref<boolean>(false); //チャンネル削除画面表示
 
 /**
  * チャンネル参加
@@ -35,6 +43,26 @@ const leaveChannel = (channelIdLeaving:string) => {
     },
     channelId: channelIdLeaving
   });
+}
+
+/**
+ * チャンネル削除
+ */
+ const deleteChannel = (channelIdDeleting:string) => {
+  socket.emit("deleteChannel", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    channelId: channelIdDeleting
+  });
+  //チャンネル削除確認ダイアログを非表示に
+  displayDeleteChannel.value = false;
+  //チャンネル削除確認用の情報変数を初期化
+  channelInfoDeleting.value = {
+    channelId: "",
+    channelName: ""
+  };
 }
 
 /**
@@ -112,6 +140,31 @@ onUnmounted(() => {
     @closeDialog="displayCreateChannel = false"
   />
 
+  <!-- チャンネル削除ダイアログ -->
+  <v-dialog
+    v-model="displayDeleteChannel"
+    style="max-width: 750px; width: 85vw"
+    transition="blank"
+  >
+    <m-card>
+      <v-card-title>
+        チャンネルの削除確認
+      </v-card-title>
+      <v-card-text>
+        次のチャンネルを削除します
+        <p class="text-center text-h5 my-4">{{ channelInfoDeleting.channelName }}</p>
+      </v-card-text>
+      <v-card-actions class="d-flex flex-row-reverse">
+        <m-btn
+          @click="deleteChannel(channelInfoDeleting.channelId)"
+          color="error"
+        >
+          削除する
+        </m-btn>
+      </v-card-actions>
+    </m-card>
+  </v-dialog>
+
   <div class="pt-5 px-5 d-flex flex-column" style="height:100%;">
     
     <p class="text-h5">チャンネルブラウザ</p>
@@ -125,21 +178,36 @@ onUnmounted(() => {
           <p class="text-h6">{{ channel.channelName }}</p>
           <v-divider vertical class="mx-2 my-1" />
           <p class="text-truncate">{{ channel.description }}</p>
-          <m-btn
-            v-if="!getMyUserinfo.channelJoined.includes(channel.channelId)"
-            @click="joinChannel(channel.channelId)"
-            class="ml-auto"
-          >
-            参加
-          </m-btn>
-          <m-btn
-            v-else
-            @click="leaveChannel(channel.channelId)"
-            class="ml-auto"
-            variant="outlined"
-          >
-            退出
-          </m-btn>
+          <span class="ml-auto">
+            <m-btn
+              v-if="getMyUserinfo.role.includes('HOST')"
+              @click="
+                displayDeleteChannel = true;
+                channelInfoDeleting = {
+                  channelName:channel.channelName,
+                  channelId: channel.channelId
+                };
+              "
+              icon="mdi-delete"
+              size="small"
+              color="error"
+              class="mx-2"
+            />
+            <m-btn
+              v-if="!getMyUserinfo.channelJoined.includes(channel.channelId)"
+              @click="joinChannel(channel.channelId)"
+              
+            >
+              参加
+            </m-btn>
+            <m-btn
+              v-else
+              @click="leaveChannel(channel.channelId)"
+              variant="outlined"
+            >
+              退出
+            </m-btn>
+          </span>
         </span>
         <v-divider />
         <p class="text-disabled text-caption">作成者 : {{ channel.createdBy }}</p>
