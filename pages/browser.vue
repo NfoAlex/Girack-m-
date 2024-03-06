@@ -42,7 +42,7 @@ const leaveChannel = (channelIdLeaving:string) => {
  * @param dat
  */
 const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
-  console.log("auth :: SOCKETRfetchChannelList : dat->", dat);
+  console.log("browser :: SOCKETRfetchChannelList : dat->", dat);
   channelList.value = dat.data; //格納
 }
 
@@ -51,7 +51,7 @@ const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
  * @param dat
  */
 const SOCKETjoinChannel = (dat:{result:string, data:boolean}) => {
-  console.log("auth :: SOCKETjoinChannel : dat->", dat);
+  console.log("browser :: SOCKETjoinChannel : dat->", dat);
   //成功なら自分のユーザー情報を取得して更新する
   if (dat.result === "SUCCESS") {
     //取得
@@ -70,7 +70,7 @@ const SOCKETjoinChannel = (dat:{result:string, data:boolean}) => {
  * @param dat
  */
  const SOCKETleaveChannel = (dat:{result:string, data:boolean}) => {
-  console.log("auth :: SOCKETleaveChannel : dat->", dat);
+  console.log("browser :: SOCKETleaveChannel : dat->", dat);
   //成功なら自分のユーザー情報を取得して更新する
   if (dat.result === "SUCCESS") {
     //取得
