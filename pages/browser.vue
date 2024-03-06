@@ -138,7 +138,7 @@ onUnmounted(() => {
             class="ml-auto"
             variant="outlined"
           >
-            参加済み
+            退出
           </m-btn>
         </span>
         <v-divider />
