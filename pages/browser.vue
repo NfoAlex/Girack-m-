@@ -48,7 +48,7 @@ const leaveChannel = (channelIdLeaving:string) => {
 /**
  * チャンネル削除
  */
- const deleteChannel = (channelIdDeleting:string) => {
+const deleteChannel = (channelIdDeleting:string) => {
   socket.emit("deleteChannel", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
