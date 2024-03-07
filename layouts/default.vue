@@ -1,7 +1,7 @@
 <template>
-  <div class="d-flex ma-0 pa-0" style="height: 100vh; width: 100vw">
+  <div class="d-flex ma-0 pa-0" style="height: 100vh; width: 100vw;">
     <!-- サイドバー -->
-    <div class="sidebar d-flex flex-column pa-3">
+    <div class="sidebar d-flex flex-column pa-3" style="overflow-y: auto;">
       <!-- ホームボタン -->
       <span>
         <NuxtLink to="/">
