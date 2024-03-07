@@ -80,7 +80,15 @@ onMounted(() => {
         <p class="mt-3 text-h6">プロフィール</p>
         <m-card>
           <p>
-            ユーザー名の最大文字数 : {{ getServerinfo.config.PROFILE.usernameMaxLength }}
+            ユーザー名の最大文字数 : {{ ServerinfoCloned.config.PROFILE.usernameMaxLength }}
+            <v-slider
+              v-model="ServerinfoCloned.config.PROFILE.usernameMaxLength"
+              max="32"
+              min="2"
+              step="1"
+              :ticks="{2:'2', 16:'16', 32:'32'}"
+              show-ticks="always"
+            />
           </p>
           <p>
             アイコン用画像ファイルの最大サイズ : {{ ServerinfoCloned.config.PROFILE.iconMaxSize }}
