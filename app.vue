@@ -41,4 +41,13 @@ html {
   overflow-y: hidden;
 }
 
+::-webkit-scrollbar {
+  background: #000;
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: grey;
+}
+
 </style>
