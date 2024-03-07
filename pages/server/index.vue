@@ -8,10 +8,10 @@ const { getServerinfo } = storeToRefs(useServerinfo());
 <template>
   <div>
     <NuxtLayout name="server" style="height:100%;">
-      <p class="text-h5">チャンネルブラウザ</p>
+      <p class="text-h5">インスタンス設定</p>
       <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
       <div class="py-3" style="overflow-y:auto; height:100%;">
-        <p>チャンネル</p>
+        <p class="text-h6">チャンネル</p>
         <m-card>
           <p>
             新規登録者を通知するチャンネル : {{ getServerinfo.config.CHANNEL.channelIdAnnounceRegistration }}
@@ -21,7 +21,7 @@ const { getServerinfo } = storeToRefs(useServerinfo());
           </p>
         </m-card>
 
-        <p class="mt-2">メッセージ</p>
+        <p class="mt-3 text-h6">メッセージ</p>
         <m-card>
           <p>
             メッセージの最大文字数 : {{ getServerinfo.config.MESSAGE.TxtMaxLength }}
@@ -31,7 +31,7 @@ const { getServerinfo } = storeToRefs(useServerinfo());
           </p>
         </m-card>
 
-        <p class="mt-2">プロフィール</p>
+        <p class="mt-3 text-h6">プロフィール</p>
         <m-card>
           <p>
             ユーザー名の最大文字数 : {{ getServerinfo.config.PROFILE.usernameMaxLength }}
