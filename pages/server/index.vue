@@ -3,6 +3,7 @@ import { socket } from '~/socketHandlers/socketInit';
 import { useServerinfo } from '~/stores/serverinfo';
 import { useMyUserinfo } from '~/stores/userinfo';
 import type { Serverinfo } from '~/types/serverInfo';
+import type { channel } from '~/types/channel';
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
