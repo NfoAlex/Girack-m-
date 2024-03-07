@@ -1,7 +1,7 @@
 <template>
-  <div class="d-flex ma-0 pa-0" style="height: 100vh; width: 100vw">
+  <div class="d-flex ma-0 pa-0" style="height: 100vh; width: 100vw;">
     <!-- サイドバー -->
-    <div class="sidebar d-flex flex-column pa-3">
+    <div class="sidebar d-flex flex-column pa-3" style="overflow-y: auto;">
       <!-- ホームボタン -->
       <span>
         <NuxtLink to="/">
@@ -85,6 +85,25 @@
             :class="$route.path.startsWith('/profile') ? 'text-primary' : null"
           >
             あなた
+          </p>
+        </NuxtLink>
+      </span>
+
+      <!-- サーバー管理ボタン -->
+      <span class="mt-4">
+        <NuxtLink to="/server">
+          <v-btn
+            icon="mdi:mdi-server-security"
+            :variant="$route.path.includes('/server') ? 'tonal' : 'text'"
+            :color="$route.path.includes('/server') ? 'primary' : ''"
+            rounded="lg"
+          >
+          </v-btn>
+          <p
+            class="text-caption text-center"
+            :class="$route.path.startsWith('/server') ? 'text-primary' : null"
+          >
+            管理
           </p>
         </NuxtLink>
       </span>

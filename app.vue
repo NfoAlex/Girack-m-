@@ -38,7 +38,16 @@ a:visited {
 
 html {
   background-color: rgb(var(--v-theme-sidebarBackground));
-  overflow-y: auto;
+  overflow-y: hidden;
+}
+
+::-webkit-scrollbar {
+  background: #000;
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: grey;
 }
 
 </style>
