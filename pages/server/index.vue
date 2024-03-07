@@ -52,48 +52,57 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div style="height:100%;">
     <NuxtLayout name="server" style="height:100%;">
-      <p class="text-h5">インスタンス設定</p>
-      <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
-      <div class="py-3" style="overflow-y:auto; height:100%;">
-        <p class="text-h6">チャンネル</p>
-        <m-card>
-          <p>
-            新規登録者を通知するチャンネル : {{ ServerinfoCloned.config.CHANNEL.channelIdAnnounceRegistration }}
-          </p>
-          <p>
-            最初に参加するチャンネル : {{ ServerinfoCloned.config.CHANNEL.defaultJoinOnRegister }}
-          </p>
-        </m-card>
+      <div class="d-flex flex-column" style="height:100%;">
 
-        <p class="mt-3 text-h6">メッセージ</p>
-        <m-card>
-          <p>
-            メッセージの最大文字数 : {{ ServerinfoCloned.config.MESSAGE.TxtMaxLength }}
-          </p>
-          <p>
-            ユーザーが添付できるファイルの最大サイズ : {{ ServerinfoCloned.config.MESSAGE.FileMaxSize }}
-          </p>
-        </m-card>
+        <p class="text-h5">インスタンス設定</p>
+        <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
+        <div class="py-3" style="overflow-y:auto;">
+          {{ ServerinfoEdited }}
+          <p class="text-h6">チャンネル</p>
+          <m-card>
+            <p>
+              新規登録者を通知するチャンネル : {{ ServerinfoCloned.config.CHANNEL.channelIdAnnounceRegistration }}
+            </p>
+            <p>
+              最初に参加するチャンネル : {{ ServerinfoCloned.config.CHANNEL.defaultJoinOnRegister }}
+            </p>
+          </m-card>
 
-        <p class="mt-3 text-h6">プロフィール</p>
-        <m-card>
-          <p>
-            ユーザー名の最大文字数 : {{ ServerinfoCloned.config.PROFILE.usernameMaxLength }}
-            <v-slider
-              v-model="ServerinfoCloned.config.PROFILE.usernameMaxLength"
-              max="32"
-              min="2"
-              step="1"
-              :ticks="{2:'2', 16:'16', 32:'32'}"
-              show-ticks="always"
-            />
-          </p>
-          <p>
-            アイコン用画像ファイルの最大サイズ : {{ ServerinfoCloned.config.PROFILE.iconMaxSize }}
-          </p>
-        </m-card>
+          <p class="mt-3 text-h6">メッセージ</p>
+          <m-card>
+            <p>
+              メッセージの最大文字数 : {{ ServerinfoCloned.config.MESSAGE.TxtMaxLength }}
+            </p>
+            <p>
+              ユーザーが添付できるファイルの最大サイズ : {{ ServerinfoCloned.config.MESSAGE.FileMaxSize }}
+            </p>
+          </m-card>
+
+          <p class="mt-3 text-h6">プロフィール</p>
+          <m-card>
+            <p>
+              ユーザー名の最大文字数 : {{ ServerinfoCloned.config.PROFILE.usernameMaxLength }}
+              <v-slider
+                v-model="ServerinfoCloned.config.PROFILE.usernameMaxLength"
+                max="32"
+                min="2"
+                step="1"
+                :ticks="{2:'2', 16:'16', 32:'32'}"
+                show-ticks="always"
+              />
+            </p>
+            <p>
+              アイコン用画像ファイルの最大サイズ : {{ ServerinfoCloned.config.PROFILE.iconMaxSize }}
+            </p>
+          </m-card>
+        </div>
+        <div v-if="ServerinfoEdited" class="mt-auto py-2 d-flex justify-end">
+          <m-btn>元に戻す</m-btn>
+          <m-btn class="ml-2" color="success">変更を適用</m-btn>
+        </div>
+
       </div>
     </NuxtLayout>
   </div>
