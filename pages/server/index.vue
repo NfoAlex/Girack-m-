@@ -34,6 +34,13 @@ const ServerinfoCloned = ref<Serverinfo>({
 });
 const ServerinfoEdited = ref<boolean>(false);
 
+/**
+ * 編集用サーバー情報変数を復元
+ */
+const restoreServerinfoClone = () => {
+  ServerinfoCloned.value = structuredClone(toRaw(getServerinfo.value));
+};
+
 onMounted(() => {
   //サーバー情報をクローン
   ServerinfoCloned.value = structuredClone(toRaw(getServerinfo.value));
@@ -151,7 +158,7 @@ onMounted(() => {
           </m-card>
         </div>
         <div v-if="ServerinfoEdited" class="mt-auto py-2 d-flex justify-end">
-          <m-btn>元に戻す</m-btn>
+          <m-btn @click="restoreServerinfoClone">元に戻す</m-btn>
           <m-btn class="ml-2" color="success">変更を適用</m-btn>
         </div>
 
