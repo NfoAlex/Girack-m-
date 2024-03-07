@@ -23,6 +23,29 @@
         </NuxtLink>
       </span>
 
+      <!-- チャンネルブラウザボタン -->
+      <span class="mt-4">
+        <NuxtLink to="/browser">
+          <v-btn
+            icon=""
+            :variant="$route.path === '/browser' ? 'tonal' : 'text'"
+            :color="$route.path === '/browser' ? 'primary' : ''"
+            rounded="lg"
+            class="mt-2"
+          >
+            <v-icon size="large">mdi:mdi-format-list-bulleted-square</v-icon>
+          </v-btn>
+          <p
+            class="text-caption text-center"
+            :class="$route.path === '/browser' ? 'text-primary' : null"
+          >
+            一覧
+          </p>
+        </NuxtLink>
+      </span>
+
+      <v-divider class="mt-4"></v-divider>
+
       <!-- チャンネルボタン -->
       <span class="mt-4">
         <NuxtLink to="/channel">
@@ -38,7 +61,7 @@
             class="text-caption text-center"
             :class="$route.path === '/channel' ? 'text-primary' : null"
           >
-            チャット
+            会話
           </p>
         </NuxtLink>
       </span>
@@ -93,7 +116,7 @@
             variant="text"
             rounded="lg"
             class=""
-            color="error"
+            color="orange"
           >
           </v-btn>
           <p class="text-caption text-center">認証</p>
@@ -117,6 +140,8 @@
   height: 100vh;
   width: 100%;
   background: rgb(var(--v-theme-background));
+
+  overflow-y: auto;
 
   border-radius: 28px 0 0 28px;
 }

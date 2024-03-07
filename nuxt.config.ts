@@ -40,6 +40,10 @@ export default defineNuxtConfig({
         VSwitch: {
           color: 'primary'
         },
+        VDivider: {
+          style: 'border-radius: 8px',
+          thickness: '2'
+        },
         MInput: {
           rounded: 'pill'
         },
