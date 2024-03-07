@@ -96,9 +96,20 @@ onMounted(() => {
 
             <v-divider class="my-8" />
 
-            <p>
-              ユーザーが添付できるファイルの最大サイズ : {{ ServerinfoCloned.config.MESSAGE.FileMaxSize }}
-            </p>
+            <div>
+              <p>
+                ユーザーが添付できるファイルの最大サイズ :
+              </p>
+              <v-select
+                v-model="ServerinfoCloned.config.MESSAGE.FileMaxSize"
+                label="添付ファイルサイズ"
+                :items="[{'size':5e7, 'display':'50MB'}, {'size':1e8, 'display':'100MB'}, {'size':3e8, 'display':'300MB'}, {'size':5e8, 'display':'500MB'}, {'size':1e9, 'display':'1GB'}]"
+                :item-props="(item)=>{
+                  return {title: item.display, value:item.size}
+                }"
+                class="mr-3 mt-3"
+              />
+            </div>
           </m-card>
 
           <span class="mt-5 mb-1 text-h6 d-flex align-center">
