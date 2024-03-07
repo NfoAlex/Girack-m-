@@ -79,9 +79,20 @@ onMounted(() => {
             <p>メッセージ</p>
           </span>
           <m-card>
-            <p>
-              メッセージの最大文字数 : {{ ServerinfoCloned.config.MESSAGE.TxtMaxLength }}
-            </p>
+            <div>
+              <p>
+                メッセージの最大文字数 : {{ ServerinfoCloned.config.MESSAGE.TxtMaxLength }}
+              </p>
+              <v-slider
+                v-model="ServerinfoCloned.config.MESSAGE.TxtMaxLength"
+                class="mt-3"
+                max="5000"
+                min="10"
+                step="100"
+                :ticks="{10:'10', 1000:'1000', 2000:'2k', 3000:'3k', 4000:'4K', 5000:'5k'}"
+                show-ticks="always"
+              />
+            </div>
 
             <v-divider class="my-8" />
 
