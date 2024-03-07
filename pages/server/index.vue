@@ -59,10 +59,16 @@ const restoreServerConfigClone = () => {
 };
 
 /**
- * サーバー設定を適用
+ * サーバー設定を適用する
  */
 const applyServerConfig = () => {
-
+  socket.emit("updateServerConfig", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    ServerConfig: ServerConfigCloned.value.config
+  });
 };
 
 /**
@@ -74,8 +80,24 @@ const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
   channelList.value = dat.data; //格納
 }
 
+/**
+ * サーバー情報の更新を受信したら変更状態をチェックする
+ * @param dat
+ */
+const SOCKETfetchServerInfoLimited = () => {
+  //サーバー設定の監視用処理をここで実行する
+  if (JSON.stringify(ServerConfigCloned.value) === JSON.stringify(getServerinfo.value)) {
+    ServerinfoEdited.value = false;
+  } else {
+    ServerinfoEdited.value = true;
+  }
+}
+
 onMounted(() => {
+  //チャンネル情報とサーバー情報の更新受け取り
   socket.on("RESULT::fetchChannelList", SOCKETRfetchChannelList);
+  socket.on("RESULT::fetchServerInfoLimited", SOCKETfetchServerInfoLimited);
+
   //チャンネルリストの取得
   socket.emit("fetchChannelList", {
     RequestSender: {
@@ -101,6 +123,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::fetchChannelList", SOCKETRfetchChannelList);
+  socket.off("RESULT::fetchServerInfoLimited", SOCKETupdateServerConfig);
 });
 </script>
 
@@ -214,7 +237,7 @@ onUnmounted(() => {
         </div>
         <div v-if="ServerinfoEdited" class="mt-auto py-2 d-flex justify-end">
           <m-btn @click="restoreServerConfigClone">元に戻す</m-btn>
-          <m-btn class="ml-2" color="success">変更を適用</m-btn>
+          <m-btn @click="applyServerConfig" class="ml-2" color="success">変更を適用</m-btn>
         </div>
 
       </div>
