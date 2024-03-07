@@ -92,8 +92,10 @@ onMounted(() => {
             <p>プロフィール</p>
           </span>
           <m-card>
-            <p>
-              ユーザー名の最大文字数 : {{ ServerinfoCloned.config.PROFILE.usernameMaxLength }}
+            <div class="my-3">
+              <p>
+                ユーザー名の最大文字数 : {{ ServerinfoCloned.config.PROFILE.usernameMaxLength }}
+              </p>
               <v-slider
                 v-model="ServerinfoCloned.config.PROFILE.usernameMaxLength"
                 max="32"
@@ -102,10 +104,25 @@ onMounted(() => {
                 :ticks="{2:'2', 16:'16', 32:'32'}"
                 show-ticks="always"
               />
-            </p>
-            <p>
-              アイコン用画像ファイルの最大サイズ : {{ ServerinfoCloned.config.PROFILE.iconMaxSize }}
-            </p>
+            </div>
+
+            <div class="my-3">
+              <p>
+                アイコン用画像ファイルの最大サイズ :
+              </p>
+              <span class="d-flex align-center mt-2">
+                <v-select
+                  v-model="ServerinfoCloned.config.PROFILE.iconMaxSize"
+                  label="画像サイズ"
+                  :items="[{'size':1e6, 'display':'1MB'}, {'size':5e6, 'display':'5MB'}, {'size':1e7, 'display':'10MB'}, ]"
+                  :item-props="(item)=>{
+                    return {title: item.display, value:item.size}
+                  }"
+                  class="mr-3"
+                />
+                <p>MB</p>
+              </span>
+            </div>
           </m-card>
         </div>
         <div v-if="ServerinfoEdited" class="mt-auto py-2 d-flex justify-end">
