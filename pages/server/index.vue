@@ -152,11 +152,28 @@ onUnmounted(() => {
                   return {title: item.channelName, value:item.channelId}
                 }"
                 class="mr-3 mt-3"
+                variant="outlined"
               />
             </div>
-            <p>
-              最初に参加するチャンネル : {{ ServerConfigCloned.config.CHANNEL.defaultJoinOnRegister }}
-            </p>
+
+            <v-divider class="my-8" />
+
+            <div>
+              <p>
+                新規登録者を最初に参加させるチャンネル :
+              </p>
+              <v-select
+                v-model="ServerConfigCloned.config.CHANNEL.defaultJoinOnRegister"
+                :items="channelList"
+                :item-props="(item)=>{
+                  return {title: item.channelName, value:item.channelId}
+                }"
+                class="mr-3 mt-3"
+                variant="outlined"
+                multiple
+                chips
+              />
+            </div>
           </m-card>
 
           <span class="mt-5 mb-1 text-h6 d-flex align-center">
