@@ -89,6 +89,25 @@
         </NuxtLink>
       </span>
 
+      <!-- プロフィールボタン -->
+      <span class="mt-4">
+        <NuxtLink to="/server">
+          <v-btn
+            icon="mdi:mdi-server-security"
+            :variant="$route.path.includes('/server') ? 'tonal' : 'text'"
+            :color="$route.path.includes('/server') ? 'primary' : ''"
+            rounded="lg"
+          >
+          </v-btn>
+          <p
+            class="text-caption text-center"
+            :class="$route.path.startsWith('/server') ? 'text-primary' : null"
+          >
+            管理
+          </p>
+        </NuxtLink>
+      </span>
+
       <!-- 設定ボタン -->
       <span class="mt-4">
         <NuxtLink to="/settings">
