@@ -38,7 +38,7 @@ a:visited {
 
 html {
   background-color: rgb(var(--v-theme-sidebarBackground));
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 </style>
