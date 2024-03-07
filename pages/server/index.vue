@@ -9,7 +9,7 @@ const { getServerinfo } = storeToRefs(useServerinfo());
  * data
  */
 //自由に編集できるように
-const ServerinfoCloned = ref<Serverinfo>({
+const ServerConfigCloned = ref<Serverinfo>({
   servername: '',
   registration: {
     available: false,
@@ -37,25 +37,32 @@ const ServerinfoEdited = ref<boolean>(false);
 /**
  * 編集用サーバー情報変数を復元
  */
-const restoreServerinfoClone = () => {
-  ServerinfoCloned.value = structuredClone(toRaw(getServerinfo.value));
+const restoreServerConfigClone = () => {
+  ServerConfigCloned.value = structuredClone(toRaw(getServerinfo.value));
+};
+
+/**
+ * サーバー設定を適用
+ */
+const applyServerConfig = () => {
+
 };
 
 onMounted(() => {
   //サーバー情報をクローン
-  ServerinfoCloned.value = structuredClone(toRaw(getServerinfo.value));
+  ServerConfigCloned.value = structuredClone(toRaw(getServerinfo.value));
 
   //クローンしたサーバー情報の編集を監視
-  watch(ServerinfoCloned.value, () => {
+  watch(ServerConfigCloned.value, () => {
     console.log("server(index) :: watch(mounted) : 変更検知");
     //console.log("server(index) :: watch(mounted) : data->", JSON.stringify(ServerinfoCloned.value), JSON.stringify(getServerinfo.value));
-    if (JSON.stringify(ServerinfoCloned.value) === JSON.stringify(getServerinfo.value)) {
+    if (JSON.stringify(ServerConfigCloned.value) === JSON.stringify(getServerinfo.value)) {
       ServerinfoEdited.value = false;
     } else {
       ServerinfoEdited.value = true;
     }
   });
-})
+});
 </script>
 
 <template>
@@ -66,18 +73,19 @@ onMounted(() => {
         <p class="text-h5">インスタンス設定</p>
         <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
         <div class="py-3" style="overflow-y:auto;">
-          {{ ServerinfoEdited }}
 
           <span class="mt-5 mb-1 text-h6 d-flex align-center">
             <v-icon class="mr-2">mdi-pound</v-icon>
             <p>チャンネル</p>
           </span>
           <m-card>
+            <div>
+              <p>
+                新規登録者を通知するチャンネル : {{ ServerConfigCloned.config.CHANNEL.channelIdAnnounceRegistration }}
+              </p>
+            </div>
             <p>
-              新規登録者を通知するチャンネル : {{ ServerinfoCloned.config.CHANNEL.channelIdAnnounceRegistration }}
-            </p>
-            <p>
-              最初に参加するチャンネル : {{ ServerinfoCloned.config.CHANNEL.defaultJoinOnRegister }}
+              最初に参加するチャンネル : {{ ServerConfigCloned.config.CHANNEL.defaultJoinOnRegister }}
             </p>
           </m-card>
 
@@ -88,10 +96,10 @@ onMounted(() => {
           <m-card>
             <div>
               <p>
-                メッセージの最大文字数 : {{ ServerinfoCloned.config.MESSAGE.TxtMaxLength }}
+                メッセージの最大文字数 : {{ ServerConfigCloned.config.MESSAGE.TxtMaxLength }}
               </p>
               <v-slider
-                v-model="ServerinfoCloned.config.MESSAGE.TxtMaxLength"
+                v-model="ServerConfigCloned.config.MESSAGE.TxtMaxLength"
                 class="mt-3"
                 max="5000"
                 min="10"
@@ -108,7 +116,7 @@ onMounted(() => {
                 ユーザーが添付できるファイルの最大サイズ :
               </p>
               <v-select
-                v-model="ServerinfoCloned.config.MESSAGE.FileMaxSize"
+                v-model="ServerConfigCloned.config.MESSAGE.FileMaxSize"
                 label="添付ファイルサイズ"
                 :items="[{'size':5e7, 'display':'50MB'}, {'size':1e8, 'display':'100MB'}, {'size':3e8, 'display':'300MB'}, {'size':5e8, 'display':'500MB'}, {'size':1e9, 'display':'1GB'}]"
                 :item-props="(item)=>{
@@ -126,10 +134,10 @@ onMounted(() => {
           <m-card>
             <div class="my-3">
               <p>
-                ユーザー名の最大文字数 : {{ ServerinfoCloned.config.PROFILE.usernameMaxLength }}
+                ユーザー名の最大文字数 : {{ ServerConfigCloned.config.PROFILE.usernameMaxLength }}
               </p>
               <v-slider
-                v-model="ServerinfoCloned.config.PROFILE.usernameMaxLength"
+                v-model="ServerConfigCloned.config.PROFILE.usernameMaxLength"
                 class="mt-3"
                 max="32"
                 min="2"
@@ -146,7 +154,7 @@ onMounted(() => {
                 アイコン用画像ファイルの最大サイズ :
               </p>
               <v-select
-                v-model="ServerinfoCloned.config.PROFILE.iconMaxSize"
+                v-model="ServerConfigCloned.config.PROFILE.iconMaxSize"
                 label="画像サイズ"
                 :items="[{'size':1e6, 'display':'1MB'}, {'size':5e6, 'display':'5MB'}, {'size':1e7, 'display':'10MB'}, ]"
                 :item-props="(item)=>{
@@ -158,7 +166,7 @@ onMounted(() => {
           </m-card>
         </div>
         <div v-if="ServerinfoEdited" class="mt-auto py-2 d-flex justify-end">
-          <m-btn @click="restoreServerinfoClone">元に戻す</m-btn>
+          <m-btn @click="restoreServerConfigClone">元に戻す</m-btn>
           <m-btn class="ml-2" color="success">変更を適用</m-btn>
         </div>
 
