@@ -89,7 +89,7 @@
         </NuxtLink>
       </span>
 
-      <!-- プロフィールボタン -->
+      <!-- サーバー管理ボタン -->
       <span class="mt-4">
         <NuxtLink to="/server">
           <v-btn
