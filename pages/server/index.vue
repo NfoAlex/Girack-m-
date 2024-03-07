@@ -82,6 +82,9 @@ onMounted(() => {
             <p>
               メッセージの最大文字数 : {{ ServerinfoCloned.config.MESSAGE.TxtMaxLength }}
             </p>
+
+            <v-divider class="my-8" />
+
             <p>
               ユーザーが添付できるファイルの最大サイズ : {{ ServerinfoCloned.config.MESSAGE.FileMaxSize }}
             </p>
@@ -105,6 +108,8 @@ onMounted(() => {
                 show-ticks="always"
               />
             </div>
+
+            <v-divider class="my-8" />
 
             <div class="my-3">
               <p>
