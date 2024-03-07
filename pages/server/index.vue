@@ -42,6 +42,19 @@ const channelList = ref<channel[]>(); //チャンネル情報格納用
  */
 const restoreServerConfigClone = () => {
   ServerConfigCloned.value = structuredClone(toRaw(getServerinfo.value));
+
+  //サーバー設定の編集した状態を初期化
+  ServerinfoEdited.value = false;
+  //監視処理が初期化されるからまた監視処理開始
+  watch(ServerConfigCloned.value, () => {
+    console.log("server(index) :: watch(mounted) : 変更検知");
+    //console.log("server(index) :: watch(mounted) : data->", JSON.stringify(ServerinfoCloned.value), JSON.stringify(getServerinfo.value));
+    if (JSON.stringify(ServerConfigCloned.value) === JSON.stringify(getServerinfo.value)) {
+      ServerinfoEdited.value = false;
+    } else {
+      ServerinfoEdited.value = true;
+    }
+  });
 };
 
 /**
