@@ -60,7 +60,11 @@ onMounted(() => {
         <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
         <div class="py-3" style="overflow-y:auto;">
           {{ ServerinfoEdited }}
-          <p class="text-h6">チャンネル</p>
+
+          <span class="mt-5 mb-1 text-h6 d-flex align-center">
+            <v-icon class="mr-2">mdi-pound</v-icon>
+            <p>チャンネル</p>
+          </span>
           <m-card>
             <p>
               新規登録者を通知するチャンネル : {{ ServerinfoCloned.config.CHANNEL.channelIdAnnounceRegistration }}
@@ -70,7 +74,10 @@ onMounted(() => {
             </p>
           </m-card>
 
-          <p class="mt-3 text-h6">メッセージ</p>
+          <span class="mt-5 mb-1 text-h6 d-flex align-center">
+            <v-icon class="mr-2">mdi-message-cog-outline</v-icon>
+            <p>メッセージ</p>
+          </span>
           <m-card>
             <p>
               メッセージの最大文字数 : {{ ServerinfoCloned.config.MESSAGE.TxtMaxLength }}
@@ -80,7 +87,10 @@ onMounted(() => {
             </p>
           </m-card>
 
-          <p class="mt-3 text-h6">プロフィール</p>
+          <span class="mt-5 mb-1 text-h6 d-flex align-center">
+            <v-icon class="mr-2">mdi-account</v-icon>
+            <p>プロフィール</p>
+          </span>
           <m-card>
             <p>
               ユーザー名の最大文字数 : {{ ServerinfoCloned.config.PROFILE.usernameMaxLength }}
