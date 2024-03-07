@@ -38,9 +38,10 @@ const ServerinfoEdited = ref<boolean>(false); //サーバー設定を変えた�
 const channelList = ref<channel[]>(); //チャンネル情報格納用
 
 /**
- * 編集用サーバー情報変数を復元
+ * 編集用サーバー設定を復元
  */
 const restoreServerConfigClone = () => {
+  //現在のサーバー設定からまたクローンして初期化
   ServerConfigCloned.value = structuredClone(toRaw(getServerinfo.value));
 
   //サーバー設定の編集した状態を初期化
