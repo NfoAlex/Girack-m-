@@ -49,10 +49,10 @@ const applyServerConfig = () => {
 };
 
 onMounted(() => {
-  //サーバー情報をクローン
+  //サーバー設定をクローン
   ServerConfigCloned.value = structuredClone(toRaw(getServerinfo.value));
 
-  //クローンしたサーバー情報の編集を監視
+  //クローンしたサーバー設定の編集を監視
   watch(ServerConfigCloned.value, () => {
     console.log("server(index) :: watch(mounted) : 変更検知");
     //console.log("server(index) :: watch(mounted) : data->", JSON.stringify(ServerinfoCloned.value), JSON.stringify(getServerinfo.value));
