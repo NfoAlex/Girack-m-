@@ -101,6 +101,7 @@ onMounted(() => {
               </p>
               <v-slider
                 v-model="ServerinfoCloned.config.PROFILE.usernameMaxLength"
+                class="mt-3"
                 max="32"
                 min="2"
                 step="1"
@@ -115,7 +116,7 @@ onMounted(() => {
               <p>
                 アイコン用画像ファイルの最大サイズ :
               </p>
-              <span class="d-flex align-center mt-2">
+              <span class="d-flex align-center mt-3">
                 <v-select
                   v-model="ServerinfoCloned.config.PROFILE.iconMaxSize"
                   label="画像サイズ"
