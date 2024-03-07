@@ -1,7 +1,3 @@
-<script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-</script>
-
 <template>
   <div class="py-4 d-flex">
 
@@ -9,7 +5,6 @@ import { socket } from '~/socketHandlers/socketInit';
     <div class="d-flex flex-column" style="width:30%; max-width:250px;">
       <p class="text-h5 py-4 px-8">サーバー管理</p>
 
-      <!-- 全般 -->
       <span class="pl-2">
         <NuxtLink to="/server">
           <v-card
@@ -18,7 +13,7 @@ import { socket } from '~/socketHandlers/socketInit';
             :ripple="false"
           >
             <v-icon class="mr-2" size="small">mdi:mdi-server</v-icon>
-            トップ
+            インスタンス設定
           </v-card>
         </NuxtLink>
 
