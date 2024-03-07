@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import { useServerinfo } from '~/stores/serverinfo';
+import { useMyUserinfo } from '~/stores/userinfo';
 import type { Serverinfo } from '~/types/serverInfo';
 
 const { getServerinfo } = storeToRefs(useServerinfo());
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 /**
  * data
  */
-//自由に編集できるように
+//自由に編集できるようにコピーしたサーバー設定
 const ServerConfigCloned = ref<Serverinfo>({
   servername: '',
   registration: {
@@ -32,7 +34,8 @@ const ServerConfigCloned = ref<Serverinfo>({
     }
   }
 });
-const ServerinfoEdited = ref<boolean>(false);
+const ServerinfoEdited = ref<boolean>(false); //サーバー設定を変えたかどうか
+const channelList = ref<channel[]>(); //チャンネル情報格納用
 
 /**
  * 編集用サーバー情報変数を復元
@@ -48,7 +51,25 @@ const applyServerConfig = () => {
 
 };
 
+/**
+ * チャンネルリストを受信
+ * @param dat
+ */
+ const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
+  console.log("server(index)  :: SOCKETRfetchChannelList : dat->", dat);
+  channelList.value = dat.data; //格納
+}
+
 onMounted(() => {
+  socket.on("RESULT::fetchChannelList", SOCKETRfetchChannelList);
+  //チャンネルリストの取得
+  socket.emit("fetchChannelList", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    }
+  });
+
   //サーバー設定をクローン
   ServerConfigCloned.value = structuredClone(toRaw(getServerinfo.value));
 
@@ -62,6 +83,10 @@ onMounted(() => {
       ServerinfoEdited.value = true;
     }
   });
+});
+
+onUnmounted(() => {
+  socket.off("RESULT::fetchChannelList", SOCKETRfetchChannelList);
 });
 </script>
 
@@ -81,8 +106,16 @@ onMounted(() => {
           <m-card>
             <div>
               <p>
-                新規登録者を通知するチャンネル : {{ ServerConfigCloned.config.CHANNEL.channelIdAnnounceRegistration }}
+                新規登録者を通知するチャンネル :
               </p>
+              <v-select
+                v-model="ServerConfigCloned.config.CHANNEL.channelIdAnnounceRegistration"
+                :items="channelList"
+                :item-props="(item)=>{
+                  return {title: item.channelName, value:item.channelId}
+                }"
+                class="mr-3 mt-3"
+              />
             </div>
             <p>
               最初に参加するチャンネル : {{ ServerConfigCloned.config.CHANNEL.defaultJoinOnRegister }}
