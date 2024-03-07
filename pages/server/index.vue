@@ -55,7 +55,7 @@ const applyServerConfig = () => {
  * チャンネルリストを受信
  * @param dat
  */
- const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
+const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
   console.log("server(index)  :: SOCKETRfetchChannelList : dat->", dat);
   channelList.value = dat.data; //格納
 }
