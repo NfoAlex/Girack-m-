@@ -138,18 +138,15 @@ onMounted(() => {
               <p>
                 アイコン用画像ファイルの最大サイズ :
               </p>
-              <span class="d-flex align-center mt-3">
-                <v-select
-                  v-model="ServerinfoCloned.config.PROFILE.iconMaxSize"
-                  label="画像サイズ"
-                  :items="[{'size':1e6, 'display':'1MB'}, {'size':5e6, 'display':'5MB'}, {'size':1e7, 'display':'10MB'}, ]"
-                  :item-props="(item)=>{
-                    return {title: item.display, value:item.size}
-                  }"
-                  class="mr-3"
-                />
-                <p>MB</p>
-              </span>
+              <v-select
+                v-model="ServerinfoCloned.config.PROFILE.iconMaxSize"
+                label="画像サイズ"
+                :items="[{'size':1e6, 'display':'1MB'}, {'size':5e6, 'display':'5MB'}, {'size':1e7, 'display':'10MB'}, ]"
+                :item-props="(item)=>{
+                  return {title: item.display, value:item.size}
+                }"
+                class="mr-3 mt-3"
+              />
             </div>
           </m-card>
         </div>
