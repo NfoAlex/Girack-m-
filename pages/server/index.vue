@@ -123,7 +123,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::fetchChannelList", SOCKETRfetchChannelList);
-  socket.off("RESULT::fetchServerInfoLimited", SOCKETupdateServerConfig);
+  socket.off("RESULT::fetchServerInfoLimited", SOCKETfetchServerInfoLimited);
 });
 </script>
 
