@@ -113,6 +113,7 @@ onMounted(() => {
   watch(ServerConfigCloned.value, () => {
     console.log("server(index) :: watch(mounted) : 変更検知");
     //console.log("server(index) :: watch(mounted) : data->", JSON.stringify(ServerinfoCloned.value), JSON.stringify(getServerinfo.value));
+    //設定データとクローンデータを比較
     if (JSON.stringify(ServerConfigCloned.value) === JSON.stringify(getServerinfo.value)) {
       ServerinfoEdited.value = false;
     } else {
