@@ -23,12 +23,15 @@ const roleEditing = ref<role>({ //編集用のロールデータ
 });
 
 /**
- * ロールデータの受信
+ * ロールデータの受信、格納
  * @param dat
  */
 const SOCKETfetchRoles = (dat:{result:string, data:role[]}) => {
   console.log("role :: SOCKETfetchRoles : dat->", dat);
+  //格納
   roleData.value = dat.data;
+  //編集中のロールを最初のやつに設定
+  roleEditing.value = dat.data[0];
 }
 
 onMounted(() => {
