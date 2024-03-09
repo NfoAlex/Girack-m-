@@ -42,6 +42,10 @@ onMounted(() => {
     }
   });
 });
+
+onUnmounted(() => {
+  socket.off("RESULT::fetchRoles", SOCKETfetchRoles);
+});
 </script>
 
 <template>
