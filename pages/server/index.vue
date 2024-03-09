@@ -114,6 +114,7 @@ onMounted(() => {
   watch(ServerConfigCloned.value, () => {
     console.log("server(index) :: watch(mounted) : 変更検知");
     //console.log("server(index) :: watch(mounted) : data->", JSON.stringify(ServerinfoCloned.value), JSON.stringify(getServerinfo.value));
+    //設定データとクローンデータを比較
     if (JSON.stringify(ServerConfigCloned.value) === JSON.stringify(getServerinfo.value)) {
       ServerinfoEdited.value = false;
     } else {
@@ -206,7 +207,13 @@ onUnmounted(() => {
               <v-select
                 v-model="ServerConfigCloned.config.MESSAGE.FileMaxSize"
                 label="添付ファイルサイズ"
-                :items="[{'size':5e7, 'display':'50MB'}, {'size':1e8, 'display':'100MB'}, {'size':3e8, 'display':'300MB'}, {'size':5e8, 'display':'500MB'}, {'size':1e9, 'display':'1GB'}]"
+                :items="[
+                  {'size':5e7, 'display':'50MB'},
+                  {'size':1e8, 'display':'100MB'},
+                  {'size':3e8, 'display':'300MB'},
+                  {'size':5e8, 'display':'500MB'},
+                  {'size':1e9, 'display':'1GB'}
+                ]"
                 :item-props="(item)=>{
                   return {title: item.display, value:item.size}
                 }"
