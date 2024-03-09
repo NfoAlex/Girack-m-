@@ -56,7 +56,7 @@ onUnmounted(() => {
         <p class="text-h5">ロール管理</p>
         <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
 
-        <p>ロールリスト</p>
+        <p class="text-h6 py-2">ロールリスト</p>
         <div style="max-height:30vh; overflow-y:auto;" class="py-3">
           <v-chip
             v-for="role in roleData"
@@ -68,6 +68,7 @@ onUnmounted(() => {
 
         <v-divider class="py-0 mb-3" style="border-radius:8px;" thickness="3" />
 
+        <p class="text-h6 py-2">設定管理</p>
         <ServerRoleManager :roleEditing="roleEditing" />
 
       </div>
