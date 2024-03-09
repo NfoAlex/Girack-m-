@@ -32,7 +32,7 @@
     </div>
 
     <!-- 右部分 -->
-    <div style="width:70%;" class="px-3 flex-shrink-1">
+    <div style="width:70%;" class="px-3 flex-shrink-1 mx-auto">
       <slot />
     </div>
 
