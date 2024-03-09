@@ -253,9 +253,12 @@ onUnmounted(() => {
             </div>
           </m-card>
         </div>
-        <div v-if="ServerinfoEdited" class="mt-auto py-2 d-flex justify-end">
-          <m-btn @click="restoreServerConfigClone">元に戻す</m-btn>
-          <m-btn @click="applyServerConfig" class="ml-2" color="success">変更を適用</m-btn>
+        <div v-if="ServerinfoEdited" class="mt-auto pb-2">
+          <v-divider class="mb-3" />
+          <span class="d-flex justify-end">
+            <m-btn @click="restoreServerConfigClone">元に戻す</m-btn>
+            <m-btn @click="applyServerConfig" class="ml-2" color="success">変更を適用</m-btn>
+        </span>
         </div>
 
       </div>
