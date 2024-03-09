@@ -44,6 +44,9 @@ watch(props, () => {
   });
 
   console.log("roleManager :: watch(roleEditing) : ", roleEditingClone.value);
+  //propが変わったら一旦編集状態を解除
+  stateEdited.value = false;
+
 });
 </script>
 
