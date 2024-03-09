@@ -8,7 +8,19 @@ import type role from '~/types/role';
 /**
  * data
  */
-const roleData = ref<role[]>([]);
+const roleData = ref<role[]>([]); //ロールデータの配列
+const roleEditing = ref<role>({ //編集用のロールデータ
+  roleId: '',
+  name: '',
+  ServerManage: false,
+  RoleManage: false,
+  ChannelRename: false,
+  ChannelViewPrivate: false,
+  ChannelCreateAndDelete: false,
+  UserManage: false,
+  MessageDelete: false,
+  MessageAttatchFile: false
+});
 
 /**
  * ロールデータの受信
@@ -51,6 +63,8 @@ onMounted(() => {
         </div>
 
         <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
+
+        <ServerRoleManager :roleEditing="roleEditing" />
 
       </div>
     </NuxtLayout>
