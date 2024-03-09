@@ -26,6 +26,25 @@ const roleEditingClone = ref<role>({ //編集用のロールデータ
 const stateEdited = ref<boolean>(false); //編集済み
 
 /**
+ * ロールデータを復元
+ */
+const restoreRoleData = () => {
+  roleEditingClone.value = structuredClone(toRaw(props.roleEditing));
+  //編集状態を解除
+  stateEdited.value = false;
+
+  //ロール編集データの監視しなおす
+  watch(roleEditingClone.value, () => {
+    //console.log("roleManager :: restoreRoleData : データ変わったな");
+    if (JSON.stringify(roleEditingClone.value) === JSON.stringify(props.roleEditing)) {
+      stateEdited.value = false;
+    } else {
+      stateEdited.value = true;
+    }
+  });
+}
+
+/**
  * watch
  */
 //propのロールデータの変更監視
@@ -93,6 +112,7 @@ watch(props, () => {
           変更を適用
         </m-btn>
         <m-btn
+          @click="restoreRoleData"
           variant="text" 
           class="mx-1"
         >
