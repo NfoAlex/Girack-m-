@@ -60,6 +60,7 @@ onUnmounted(() => {
         <div style="max-height:30vh; overflow-y:auto;" class="py-3">
           <v-chip
             v-for="role in roleData"
+            @click="roleEditing = role"
             class="ma-1"
           >
             {{ role.name }}
