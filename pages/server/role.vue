@@ -49,7 +49,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div>
+  <div style="height:100%;">
     <NuxtLayout name="server" style="height:100%;">
       <div class="d-flex flex-column" style="height:100%;">
 
