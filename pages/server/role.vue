@@ -69,6 +69,7 @@ onUnmounted(() => {
           >
             {{ role.name }}
           </v-chip>
+          <v-chip @click="" class="ma-1" variant="text">+</v-chip>
         </div>
 
         <v-divider class="py-0 mb-3" />
