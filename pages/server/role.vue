@@ -62,6 +62,7 @@ onUnmounted(() => {
             v-for="role in roleData"
             @click="roleEditing = role"
             class="ma-1"
+            :variant="roleEditing.roleId === role.roleId ? 'outlined' : 'tonal'"
           >
             {{ role.name }}
           </v-chip>
