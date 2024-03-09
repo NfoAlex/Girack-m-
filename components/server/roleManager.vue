@@ -23,6 +23,7 @@ const roleEditingClone = ref<role>({ //編集用のロールデータ
   MessageDelete: false,
   MessageAttatchFile: false
 });
+const stateEdited = ref<boolean>(false); //編集済み
 
 /**
  * watch
@@ -32,12 +33,22 @@ watch(props, () => {
   //編集用ロール変数へロール情報をクローン
   roleEditingClone.value = structuredClone(toRaw(props.roleEditing));
 
+  //ロール編集データの監視
+  watch(roleEditingClone.value, () => {
+    console.log("roleManager :: watch(roleEditingClone) : データ変わったな");
+    if (JSON.stringify(roleEditingClone.value) === JSON.stringify(props.roleEditing)) {
+      stateEdited.value = false;
+    } else {
+      stateEdited.value = true;
+    }
+  });
+
   console.log("roleManager :: watch(roleEditing) : ", roleEditingClone.value);
 });
 </script>
 
 <template>
-  <div style="overflow-y: auto;">
+  <div style="overflow-y:auto;">
 
     <m-card>
       <p>ロール名</p>
@@ -69,6 +80,23 @@ watch(props, () => {
       <v-checkbox v-model="roleEditingClone.MessageDelete" label="メッセージへのファイル添付" />
 
     </m-card>
+
+    <div v-if="stateEdited" class="my-3" style="position:sticky; bottom:10px;">
+      <m-card class="d-flex flex-row justify-center">
+        <m-btn
+          class="mx-2"
+          color="success"
+        >
+          変更を適用
+        </m-btn>
+        <m-btn
+          variant="text" 
+          class="mx-2"
+        >
+          元に戻す
+        </m-btn>
+      </m-card>
+    </div>
 
   </div>
 </template>
