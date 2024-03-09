@@ -2,7 +2,7 @@
   <div class="py-4 d-flex">
 
     <!-- 左部分(サイドバー) -->
-    <div class="d-flex flex-column" style="width:30%; max-width:250px;">
+    <div class="d-flex flex-column flex-grow-1 flex-shrink-0" style="width:30%; max-width:250px;">
       <p class="text-h5 py-4 px-8">サーバー管理</p>
 
       <span class="pl-2">
@@ -32,7 +32,7 @@
     </div>
 
     <!-- 右部分 -->
-    <div style="width:100%;" class="px-3">
+    <div style="width:70%;" class="px-3 flex-shrink-1">
       <slot />
     </div>
 

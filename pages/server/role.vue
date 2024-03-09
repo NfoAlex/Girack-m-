@@ -50,7 +50,7 @@ onUnmounted(() => {
 
 <template>
   <div style="height:100%;">
-    <NuxtLayout name="server" style="height:100%;">
+    <NuxtLayout name="server" style="height:100%; width:100%;">
       <div class="d-flex flex-column" style="height:100%;">
 
         <p class="text-h5">ロール管理</p>
@@ -70,7 +70,10 @@ onUnmounted(() => {
 
         <v-divider class="py-0 mb-3" />
 
-        <p class="text-h6 py-2">設定管理</p>
+        <span class="text-h6 py-2 d-flex">
+          <p class="flex-grow-0 flex-shrink-0">設定管理</p>
+          <v-chip class="mx-2 flex-shrink-1 flex-grow-0 text-truncate" style="max-width:fit-content;">{{ roleEditing.name }}</v-chip>
+        </span>
         <ServerRoleManager :roleEditing="roleEditing" />
 
       </div>
