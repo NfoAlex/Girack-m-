@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type role from '~/types/role';
 
+/**
+ * prop
+ */
 const props = defineProps<{
   roleEditing: role
 }>();
