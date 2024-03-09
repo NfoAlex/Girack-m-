@@ -57,7 +57,7 @@ onUnmounted(() => {
         <v-divider class="pb-0 mt-3" thickness="3" />
 
         <p class="text-h6 py-2">ロールリスト</p>
-        <div style="max-height:30vh; overflow-y:auto;" class="py-3">
+        <div style="max-height:25vh; overflow-y:auto;" class="py-3">
           <v-chip
             v-for="role in roleData"
             @click="roleEditing = role"
