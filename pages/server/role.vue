@@ -57,7 +57,7 @@ onUnmounted(() => {
         <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
 
         <p>ロールリスト</p>
-        <div style="max-height:40vh; overflow-y:scroll;" class="py-3">
+        <div style="max-height:30vh; overflow-y:auto;" class="py-3">
           <v-chip
             v-for="role in roleData"
             class="ma-1"
