@@ -84,17 +84,17 @@ watch(props, () => {
 
     </m-card>
 
-    <div v-if="stateEdited" class="my-3" style="position:sticky; bottom:10px;">
-      <m-card class="d-flex flex-row justify-center">
+    <div v-if="stateEdited" class="my-3 mx-auto" style="position:sticky; bottom:10px; width:75%;">
+      <m-card color="surface" class="d-flex flex-row justify-center">
         <m-btn
-          class="mx-2"
+          class="mx-1"
           color="success"
         >
           変更を適用
         </m-btn>
         <m-btn
           variant="text" 
-          class="mx-2"
+          class="mx-1"
         >
           元に戻す
         </m-btn>
