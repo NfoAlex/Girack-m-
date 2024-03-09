@@ -52,8 +52,8 @@ onMounted(() => {
         <p class="text-h5">ロール管理</p>
         <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
 
-        <div>
-          <p>ロールリスト</p>
+        <p>ロールリスト</p>
+        <div style="max-height:40vh; overflow-y:scroll;" class="py-3">
           <v-chip
             v-for="role in roleData"
             class="ma-1"
@@ -62,7 +62,7 @@ onMounted(() => {
           </v-chip>
         </div>
 
-        <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
+        <v-divider class="py-0 mb-3" style="border-radius:8px;" thickness="3" />
 
         <ServerRoleManager :roleEditing="roleEditing" />
 
