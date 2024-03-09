@@ -35,7 +35,7 @@ watch(props, () => {
 
   //ロール編集データの監視
   watch(roleEditingClone.value, () => {
-    console.log("roleManager :: watch(roleEditingClone) : データ変わったな");
+    //console.log("roleManager :: watch(roleEditingClone) : データ変わったな");
     if (JSON.stringify(roleEditingClone.value) === JSON.stringify(props.roleEditing)) {
       stateEdited.value = false;
     } else {
@@ -43,10 +43,10 @@ watch(props, () => {
     }
   });
 
-  console.log("roleManager :: watch(roleEditing) : ", roleEditingClone.value);
   //propが変わったら一旦編集状態を解除
   stateEdited.value = false;
 
+  //console.log("roleManager :: watch(roleEditing) : ", roleEditingClone.value);
 });
 </script>
 
