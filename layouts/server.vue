@@ -32,7 +32,7 @@
     </div>
 
     <!-- 右部分 -->
-    <div style="width:100%;" class="pa-3">
+    <div style="width:100%;" class="px-3">
       <slot />
     </div>
 
