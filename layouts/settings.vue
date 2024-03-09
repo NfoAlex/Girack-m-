@@ -29,7 +29,7 @@ watch(getConfig.value, () => {
   <div class="py-4 d-flex">
 
     <!-- 左部分(サイドバー) -->
-    <div class="d-flex flex-column" style="width:30%; max-width:250px;">
+    <div class="d-flex flex-column" style="width:20%; max-width:250px;">
       <p class="text-h5 py-4 px-8">設定</p>
 
       <!-- 全般 -->
@@ -116,7 +116,7 @@ watch(getConfig.value, () => {
     </div>
 
     <!-- 右部分 -->
-    <div style="width:100%;" class="pa-3">
+    <div style="width:80%;" class="pa-3 mx-auto">
       <slot />
     </div>
 
