@@ -27,7 +27,7 @@ const roleEditing = ref<role>({ //編集用のロールデータ
  * @param dat
  */
 const SOCKETfetchRoles = (dat:{result:string, data:role[]}) => {
-  console.log("role :: SOCKETfetchRoles : dat->", dat);
+  //console.log("role :: SOCKETfetchRoles : dat->", dat);
   //格納
   roleData.value = dat.data;
   //編集中のロールを最初のやつに設定
