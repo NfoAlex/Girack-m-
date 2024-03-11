@@ -55,7 +55,10 @@ onUnmounted(() => {
 
 <template>
 
-  <ServerCreateRole v-model="displayCreateRole" />
+  <ServerCreateRole
+    v-model="displayCreateRole"
+    @closeDialog="displayCreateRole = false"
+  />
 
   <div style="height:100%;">
     <NuxtLayout name="server" style="height:100%; width:100%;">

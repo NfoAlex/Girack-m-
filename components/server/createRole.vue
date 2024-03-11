@@ -38,7 +38,7 @@ const createRole = () => {
 /**
  * ダイアログ閉じる処理
  */
-const closeProcess = () => {
+const closeDialog = () => {
   //ダイアログを閉じさせる
   emit("closeDialog");
   //ロール作成用変数を初期化
@@ -67,6 +67,8 @@ const SOCKETcreateRole = (dat:{result:string, data:boolean|null}) => {
         sessionId: getSessionId.value
       }
     });
+    //ダイアログを閉じる
+    closeDialog();
   }
 };
 
