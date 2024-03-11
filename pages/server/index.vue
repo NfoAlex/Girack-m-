@@ -155,6 +155,7 @@ onUnmounted(() => {
                 }"
                 class="mr-3 mt-3"
                 variant="outlined"
+                prepend-inner-icon="mdi-pound"
               />
             </div>
 
