@@ -157,6 +157,18 @@ onUnmounted(() => {
   <div style="overflow-y:auto;">
 
     <m-card>
+      <v-alert
+        v-if="
+          roleEditingClone.roleId==='MEMBER'
+            ||
+          roleEditingClone.roleId==='HOST'
+        "
+        type="info"
+        class="my-5"
+      >
+        MemberとHostロールは変更できません。
+      </v-alert>
+
       <p class="mb-1">ロール名</p>
       <v-text-field v-model="roleEditingClone.name" />
       <p class="mb-1">ロールの色</p>
@@ -197,6 +209,11 @@ onUnmounted(() => {
       <div class="mx-auto" style="width:fit-content">
         <m-btn
           @click="displayDeleteConfirm = true"
+          :disabled="
+            roleEditingClone.roleId==='MEMBER'
+              ||
+            roleEditingClone.roleId==='HOST'
+          "
           color="error"
           class="my-2"
         >
