@@ -44,6 +44,9 @@ export default defineNuxtConfig({
           style: 'border-radius: 8px',
           thickness: '2'
         },
+        VTextField: {
+          rounded: 'lg'
+        },
         VCheckbox: {
           hideDetails: true
         },
