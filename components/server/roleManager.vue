@@ -14,6 +14,7 @@ const props = defineProps<{
 const roleEditingClone = ref<role>({ //編集用のロールデータ
   roleId: '',
   name: '',
+  color: '',
   ServerManage: false,
   RoleManage: false,
   ChannelRename: false,
@@ -75,6 +76,10 @@ watch(props, () => {
     <m-card>
       <p>ロール名</p>
       <v-text-field v-model="roleEditingClone.name" />
+      <v-color-picker
+        v-model="roleEditingClone.color"
+        width="100%"
+      />
 
       <v-divider class="my-2" />
 
