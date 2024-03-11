@@ -140,7 +140,7 @@ onUnmounted(() => {
         <m-btn
           @click="createRole()"
           color="primary"
-          :disabled="roleCreationData.name.length > 32"
+          :disabled="roleCreationData.name.length>32 || roleCreationData.name.length===0"
         >
           作成!
         </m-btn>
