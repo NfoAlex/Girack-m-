@@ -94,10 +94,12 @@ onUnmounted(() => {
 
       <v-card-text>
         <p>プレビュー :</p>
-        <v-chip class="mx-auto mt-5" size="large" style="width:fit-content">
-          <v-icon :color="roleCreationData.color" class="mr-2">mdi-circle</v-icon>
-          <p>{{ roleCreationData.name }}</p>
-        </v-chip>
+        <div class="mx-auto mt-5" style="width:fit-content">
+          <v-chip  size="large" >
+            <v-icon :color="roleCreationData.color" class="mr-2">mdi-circle</v-icon>
+            <p>{{ roleCreationData.name }}</p>
+          </v-chip>
+        </div>
 
         <v-divider class="my-5" />
 
