@@ -249,7 +249,7 @@ onUnmounted(() => {
           color="error"
           class="my-2"
         >
-          {{ roleEditingClone.name }}を削除
+          {{ roleEditing.name }}を削除
         </m-btn>
       </div>
 
