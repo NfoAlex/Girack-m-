@@ -118,15 +118,32 @@ onUnmounted(() => {
           width="100%"
         />
 
+        <!-- 作成エラー -->
         <v-alert
           v-if="roleCreationError"
           type="error"
           class="mt-5"
-        >内部エラー。後でもう一度試してください。</v-alert>
+        >
+          内部エラー。後でもう一度試してください。
+        </v-alert>
+        <!-- 文字数エラー -->
+        <v-alert
+          v-if="roleCreationData.name.length > 32"
+          type="error"
+          class="mt-5"
+        >
+          ロール名は32文字までです。(現在{{ roleCreationData.name.length }}文字)
+        </v-alert>
       </v-card-text>
 
       <v-card-actions class="d-flex flex-row-reverse">
-        <m-btn @click="createRole()" color="primary">作成!</m-btn>
+        <m-btn
+          @click="createRole()"
+          color="primary"
+          :disabled="roleCreationData.name.length > 32"
+        >
+          作成!
+        </m-btn>
       </v-card-actions>
       
     </m-card>
