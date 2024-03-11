@@ -105,11 +105,12 @@ onUnmounted(() => {
 
         <v-text-field
           v-model="roleCreationData.name"
+          class="my-2"
           label="ロール名"
           variant="outlined"
           prepend-inner-icon="mdi-tag"
         />
-        <p class="text-disabled">ロールの色</p>
+        <p class="text-disabled mb-1">ロールの色</p>
         <v-color-picker
           v-model="roleCreationData.color"
           width="100%"
