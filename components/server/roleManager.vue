@@ -193,6 +193,7 @@ onUnmounted(() => {
         label="ロール名"
         variant="outlined"
         prepend-inner-icon="mdi-tag"
+        :error-messages="roleEditingClone.name.length > 32 ? 'ロール名は32文字までです。' : null"
       />
 
       <p class="mb-1">ロールの色</p>
@@ -258,6 +259,7 @@ onUnmounted(() => {
       <m-card color="surface" class="d-flex flex-row justify-center">
         <m-btn
           @click="updateRole"
+          :disabled="roleEditingClone.name.length > 32"
           class="mx-1"
           color="success"
         >
