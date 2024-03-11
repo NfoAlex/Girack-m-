@@ -74,8 +74,9 @@ watch(props, () => {
   <div style="overflow-y:auto;">
 
     <m-card>
-      <p>ロール名</p>
+      <p class="mb-1">ロール名</p>
       <v-text-field v-model="roleEditingClone.name" />
+      <p class="mb-1">ロールの色</p>
       <v-color-picker
         v-model="roleEditingClone.color"
         width="100%"
