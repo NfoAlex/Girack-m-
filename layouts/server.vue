@@ -12,6 +12,17 @@
             :variant="$route.path==='/server'?'tonal':'text'"
             :ripple="false"
           >
+            <v-icon class="mr-2" size="small">mdi:mdi-information</v-icon>
+            基本情報
+          </v-card>
+        </NuxtLink>
+
+        <NuxtLink to="/server/config">
+          <v-card
+            class="rounded-pill py-2 px-3 d-flex align-center"
+            :variant="$route.path==='/server/config'?'tonal':'text'"
+            :ripple="false"
+          >
             <v-icon class="mr-2" size="small">mdi:mdi-server</v-icon>
             インスタンス設定
           </v-card>
