@@ -29,6 +29,7 @@ const roleEditingClone = ref<role>({ //編集用のロールデータ
   MessageAttatchFile: false
 });
 const stateEdited = ref<boolean>(false); //編集済み
+const displayDeleteConfirm = ref<boolean>(false); //削除確認ダイアログ
 
 /**
  * ロールデータを復元
@@ -60,6 +61,29 @@ const updateRole = () => {
     },
     roleData: roleEditingClone.value
   });
+}
+
+/**
+ * ロールの削除
+ */
+const deleteRole = () => {
+  //削除
+  socket.emit("deleteRole", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    roleId: roleEditingClone.value.roleId
+  });
+  //ロールリストの再取得
+  socket.emit("fetchRoles", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    }
+  });
+  //削除ダイアログの非表示
+  displayDeleteConfirm.value = false;
 }
 
 /**
@@ -112,6 +136,21 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <v-dialog v-model="displayDeleteConfirm">
+    <m-card>
+      <v-card-title>
+        削除の確認
+      </v-card-title>
+      <v-card-text>
+        <p>次のロールを削除してよろしいですか？</p>
+        <p class="text-center text-h5 pa-5">{{ roleEditingClone.name }}</p>
+      </v-card-text>
+      <v-card-action class="d-flex flex-row-reverse">
+        <m-btn @click="deleteRole" color="error">削除する</m-btn>
+      </v-card-action>
+    </m-card>
+  </v-dialog>
+
   <div style="overflow-y:auto;">
 
     <m-card>
@@ -147,6 +186,18 @@ onUnmounted(() => {
       <p>メッセージの管理</p>
       <v-checkbox v-model="roleEditingClone.MessageDelete" label="他人のメッセージの削除" />
       <v-checkbox v-model="roleEditingClone.MessageAttatchFile" label="メッセージへのファイル添付" />
+
+      <v-divider class="my-2" />
+
+      <div class="mx-auto" style="width:fit-content">
+        <m-btn
+          @click="displayDeleteConfirm = true"
+          color="error"
+          class="my-2"
+        >
+          {{ roleEditingClone.name }}を削除
+        </m-btn>
+      </div>
 
     </m-card>
 
