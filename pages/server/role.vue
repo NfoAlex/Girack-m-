@@ -85,7 +85,13 @@ onUnmounted(() => {
 
         <span class="text-h6 py-2 d-flex">
           <p class="flex-grow-0 flex-shrink-0">設定管理</p>
-          <v-chip class="mx-2 flex-shrink-1 flex-grow-0 text-truncate" style="max-width:fit-content;">{{ roleEditing.name }}</v-chip>
+          <v-chip
+            class="mx-2 flex-shrink-1 flex-grow-0 text-truncate"
+            style="max-width:fit-content;"
+          >
+            <v-icon :color="roleEditing.color" class="mr-2">mdi-circle</v-icon>
+            {{ roleEditing.name }}
+          </v-chip>
         </span>
         <ServerRoleManager :roleEditing="roleEditing" />
 
