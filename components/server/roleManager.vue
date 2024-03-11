@@ -188,9 +188,13 @@ onUnmounted(() => {
         MemberとHostロールは変更できません。
       </v-alert>
 
-      <p class="mb-1">ロール名</p>
-      <v-text-field v-model="roleEditingClone.name" />
-      
+      <v-text-field
+        v-model="roleEditingClone.name"
+        label="ロール名"
+        variant="outlined"
+        prepend-inner-icon="mdi-tag"
+      />
+
       <p class="mb-1">ロールの色</p>
       <span
         id="colorChoosingArea"
