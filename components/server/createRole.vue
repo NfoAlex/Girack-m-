@@ -91,7 +91,7 @@ onUnmounted(() => {
   >
     <m-card>
       <v-card-title>
-        チャンネルの作成
+        ロールの作成
       </v-card-title>
 
       <v-card-text>
