@@ -223,7 +223,7 @@ onUnmounted(() => {
 
     </m-card>
 
-    <div v-if="stateEdited" class="my-3 mx-auto" style="position:sticky; bottom:10px; width:75%;">
+    <div v-if="stateEdited" class="my-3 mx-auto" style="position:sticky; bottom:10px; width:fit-content;">
       <m-card color="surface" class="d-flex flex-row justify-center">
         <m-btn
           @click="updateRole"
