@@ -30,6 +30,7 @@ const roleEditingClone = ref<role>({ //編集用のロールデータ
 });
 const stateEdited = ref<boolean>(false); //編集済み
 const displayDeleteConfirm = ref<boolean>(false); //削除確認ダイアログ
+const choosingColor = ref<boolean>(false); //カラーピッカー表示
 
 /**
  * ロールデータを復元
@@ -154,6 +155,24 @@ onUnmounted(() => {
     </m-card>
   </v-dialog>
 
+  <!-- ロール色の設定用 -->
+  <Teleport
+    v-if="choosingColor"
+    to="#colorChoosingArea"
+    style="z-index:999; height:fit-content; width:fit-content;"
+  >
+      <v-color-picker
+        v-model="roleEditingClone.color"
+        v-click-outside="() => {if(choosingColor) choosingColor = false}"
+        width="40%"
+        max-width="300px"
+        position="absolute"
+        style="top:0px; z-index:999;"
+        class="mx-auto mt-2 mb-5"
+        hide-inputs
+      />
+  </Teleport>
+
   <div style="overflow-y:auto;">
 
     <m-card>
@@ -171,13 +190,21 @@ onUnmounted(() => {
 
       <p class="mb-1">ロール名</p>
       <v-text-field v-model="roleEditingClone.name" />
+      
       <p class="mb-1">ロールの色</p>
-      <v-color-picker
-        v-model="roleEditingClone.color"
-        width="95%"
-        style="max-width:650px;"
-        class="mx-auto mt-2 mb-5"
-      />
+      <span
+        id="colorChoosingArea"
+        class="d-flex align-center mb-5"
+      >
+        <m-btn
+          @click="choosingColor = true"
+          size="small"
+          icon="mdi-eyedropper-variant"
+        />
+        <v-divider vertical class="mx-3" />
+        <v-icon :color="roleEditingClone.color" class="mr-2">mdi-circle</v-icon>
+        <p>{{ roleEditingClone.color }}</p>
+      </span>
 
       <v-divider class="my-2" />
 
