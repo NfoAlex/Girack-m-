@@ -44,6 +44,18 @@ export default defineNuxtConfig({
           style: 'border-radius: 8px',
           thickness: '2'
         },
+        VTextField: {
+          rounded: 'lg'
+        },
+        VTextarea: {
+          rounded: 'lg'
+        },
+        VCheckbox: {
+          hideDetails: true
+        },
+        VColorPicker: {
+          rounded: 'xl'
+        },
         MInput: {
           rounded: 'pill'
         },
