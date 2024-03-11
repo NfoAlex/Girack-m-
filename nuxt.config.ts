@@ -47,6 +47,9 @@ export default defineNuxtConfig({
         VCheckbox: {
           hideDetails: true
         },
+        VColorPicker: {
+          rounded: 'xl'
+        },
         MInput: {
           rounded: 'pill'
         },

@@ -162,7 +162,9 @@ onUnmounted(() => {
       <p class="mb-1">ロールの色</p>
       <v-color-picker
         v-model="roleEditingClone.color"
-        width="100%"
+        width="95%"
+        style="max-width:650px;"
+        class="mx-auto mt-2 mb-5"
       />
 
       <v-divider class="my-2" />
