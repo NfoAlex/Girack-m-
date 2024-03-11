@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { socket } from '~/socketHandlers/socketInit';
+import { useMyUserinfo } from '~/stores/userinfo';
 import type role from '~/types/role';
+
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 /**
  * prop
@@ -46,6 +50,19 @@ const restoreRoleData = () => {
 }
 
 /**
+ * ロールデータの更新
+ */
+const updateRole = () => {
+  socket.emit("updateRole", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    roleData: roleEditingClone.value
+  });
+}
+
+/**
  * watch
  */
 //propのロールデータの変更監視
@@ -67,6 +84,30 @@ watch(props, () => {
   stateEdited.value = false;
 
   //console.log("roleManager :: watch(roleEditing) : ", roleEditingClone.value);
+});
+
+
+/**
+ * ロール更新結果の受け取り
+ * @param dat
+ */
+const SOCKETupdateRole = (dat:any) => {
+  console.log("roleManager :: SOCKETupdateRole : dat->", dat);
+  //現在のロール情報を取得する
+  socket.emit("fetchRoles", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    }
+  });
+}
+
+onMounted(() => {
+  socket.on("RESULT::updateRole", SOCKETupdateRole);
+});
+
+onUnmounted(() => {
+  socket.off("RESULT::updateRole", SOCKETupdateRole);
 });
 </script>
 
@@ -112,6 +153,7 @@ watch(props, () => {
     <div v-if="stateEdited" class="my-3 mx-auto" style="position:sticky; bottom:10px; width:75%;">
       <m-card color="surface" class="d-flex flex-row justify-center">
         <m-btn
+          @click="updateRole"
           class="mx-1"
           color="success"
         >
