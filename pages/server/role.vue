@@ -75,6 +75,12 @@ onUnmounted(() => {
             class="ma-1"
             :variant="roleEditing.roleId === role.roleId ? 'outlined' : 'tonal'"
           >
+            <v-icon
+              v-if="role.roleId==='MEMBER' || role.roleId==='HOST'"
+              class="mr-1"
+            >
+              mdi-lock
+            </v-icon>
             <v-icon :color="role.color" class="mr-2">mdi-circle</v-icon>
             {{ role.name }}
           </v-chip>
@@ -89,6 +95,12 @@ onUnmounted(() => {
             class="mx-2 flex-shrink-1 flex-grow-0 text-truncate"
             style="max-width:fit-content;"
           >
+            <v-icon
+              v-if="roleEditing.roleId==='MEMBER' || roleEditing.roleId==='HOST'"
+              class="mr-1"
+            >
+              mdi-lock
+            </v-icon>
             <v-icon :color="roleEditing.color" class="mr-2">mdi-circle</v-icon>
             {{ roleEditing.name }}
           </v-chip>
