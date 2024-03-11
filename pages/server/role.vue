@@ -68,7 +68,7 @@ onUnmounted(() => {
         <v-divider class="pb-0 mt-3" thickness="3" />
 
         <p class="text-h6 py-2">ロールリスト</p>
-        <div style="max-height:25vh; overflow-y:auto;" class="py-3">
+        <div style="max-height:25vh; overflow-y:auto;" class="py-6 flex-grow-1">
           <v-chip
             v-for="role in roleData"
             @click="roleEditing = role"
@@ -89,7 +89,7 @@ onUnmounted(() => {
 
         <v-divider class="py-0 mb-3" />
 
-        <span class="text-h6 py-2 d-flex">
+        <span class="text-h6 py-2 flex-grow-0 flex-shrink-1 d-flex">
           <p class="flex-grow-0 flex-shrink-0">設定管理</p>
           <v-chip
             class="mx-2 flex-shrink-1 flex-grow-0 text-truncate"
