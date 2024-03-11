@@ -115,7 +115,7 @@ watch(props, () => {
  * ロール更新結果の受け取り
  * @param dat
  */
-const SOCKETupdateRole = (dat:any) => {
+const SOCKETupdateRole = (dat:{result:string, dat:null}) => {
   console.log("roleManager :: SOCKETupdateRole : dat->", dat);
   //現在のロール情報を取得する
   socket.emit("fetchRoles", {
