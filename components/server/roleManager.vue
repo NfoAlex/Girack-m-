@@ -145,8 +145,8 @@ onUnmounted(() => {
       <v-divider class="my-2" />
 
       <p>メッセージの管理</p>
-      <v-checkbox v-model="roleEditingClone.MessageDelete" label="メッセージの削除" />
-      <v-checkbox v-model="roleEditingClone.MessageDelete" label="メッセージへのファイル添付" />
+      <v-checkbox v-model="roleEditingClone.MessageDelete" label="他人のメッセージの削除" />
+      <v-checkbox v-model="roleEditingClone.MessageAttatchFile" label="メッセージへのファイル添付" />
 
     </m-card>
 
