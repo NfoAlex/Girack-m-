@@ -12,6 +12,7 @@ const roleData = ref<role[]>([]); //ロールデータの配列
 const roleEditing = ref<role>({ //編集用のロールデータ
   roleId: '',
   name: '',
+  color: '',
   ServerManage: false,
   RoleManage: false,
   ChannelRename: false,
@@ -71,6 +72,7 @@ onUnmounted(() => {
             class="ma-1"
             :variant="roleEditing.roleId === role.roleId ? 'outlined' : 'tonal'"
           >
+            <v-icon :color="role.color" class="mr-2">mdi-circle</v-icon>
             {{ role.name }}
           </v-chip>
           <v-chip @click="displayCreateRole = true" class="ma-1" variant="text">+</v-chip>
