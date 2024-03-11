@@ -99,7 +99,15 @@ onUnmounted(() => {
         <div class="mx-auto mt-5" style="width:fit-content">
           <v-chip  size="large" >
             <v-icon :color="roleCreationData.color" class="mr-2">mdi-circle</v-icon>
-            <p>{{ roleCreationData.name }}</p>
+            <p>
+              {{
+              roleCreationData.name.length !==0 
+                ?
+                  roleCreationData.name
+                :
+                  'ロール'
+              }}
+            </p>
           </v-chip>
         </div>
 
