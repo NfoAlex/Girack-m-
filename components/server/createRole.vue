@@ -86,7 +86,6 @@ onUnmounted(() => {
 <template>
   <v-dialog
     style="max-width: 750px; width: 85vw"
-    transition="blank"
   >
     <m-card>
       <v-card-title>
