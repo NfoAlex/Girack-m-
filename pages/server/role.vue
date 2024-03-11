@@ -21,6 +21,7 @@ const roleEditing = ref<role>({ //編集用のロールデータ
   MessageDelete: false,
   MessageAttatchFile: false
 });
+const displayCreateRole = ref<boolean>(false); //ロール作成画面表示用
 
 /**
  * ロールデータの受信、格納
@@ -52,6 +53,9 @@ onUnmounted(() => {
 </script>
 
 <template>
+
+  <ServerCreateRole v-model="displayCreateRole" />
+
   <div style="height:100%;">
     <NuxtLayout name="server" style="height:100%; width:100%;">
       <div class="d-flex flex-column" style="height:100%;">
@@ -69,7 +73,7 @@ onUnmounted(() => {
           >
             {{ role.name }}
           </v-chip>
-          <v-chip @click="" class="ma-1" variant="text">+</v-chip>
+          <v-chip @click="displayCreateRole = true" class="ma-1" variant="text">+</v-chip>
         </div>
 
         <v-divider class="py-0 mb-3" />
