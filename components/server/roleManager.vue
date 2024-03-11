@@ -136,7 +136,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <v-dialog v-model="displayDeleteConfirm">
+  <v-dialog
+    v-model="displayDeleteConfirm"
+    style="max-width: 650px; width: 80vw"
+  >
     <m-card>
       <v-card-title>
         削除の確認
