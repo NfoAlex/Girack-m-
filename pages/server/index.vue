@@ -151,7 +151,7 @@ onUnmounted(() => {
 
           <v-switch
             v-model="ServerinfoCloned.registration.available"
-            label="登録を有効化"
+            label="新規登録を有効化"
           />
 
           <v-divider class="my-5" />
