@@ -38,7 +38,8 @@ export default defineNuxtConfig({
           rounded: 'xl'
         },
         VSwitch: {
-          color: 'primary'
+          color: 'primary',
+          inset: true
         },
         VDivider: {
           style: 'border-radius: 8px',
