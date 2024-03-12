@@ -206,7 +206,7 @@ onUnmounted(() => {
             v-if="stateEdited"
             position="sticky"
             class="mx-auto"
-            style="position:sticky; bottom:10px; width:fit-content;"
+            style="position:sticky; bottom:0px; width:fit-content;"
           >
             <m-btn
               @click="updateServerinfo"
