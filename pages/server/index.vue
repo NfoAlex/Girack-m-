@@ -105,6 +105,8 @@ const SOCKETfetchServerInfoFull = (dat:{result:string, data:Serverinfo}) => {
 
   //編集用JSON変数へクローン
   ServerinfoCloned.value = structuredClone(toRaw(dat.data));
+  //編集状態を初期化
+  stateEdited.value = false;
 
   //編集用JSONの変更を監視する
   watch(ServerinfoCloned.value, () => {
