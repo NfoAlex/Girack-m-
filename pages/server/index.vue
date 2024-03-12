@@ -142,73 +142,65 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div>
+  <div style="height:100%;">
     <NuxtLayout name="server" style="height:100%;">
       <div class="d-flex flex-column" style="height:100%;">
         <p class="text-h5">基本情報</p>
         <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
 
-        <m-card class="my-3">
-          <p class="mb-2 text-h6">
-            {{ 
-              ServerinfoCloned.servername!==ServerinfoFull.servername
-              ?
-                '*インスタンス名'
-                :
-                'インスタンス名'
-            }}
-          </p>
-          <v-text-field
-            v-model="ServerinfoCloned.servername"
-            variant="outlined"
-            hide-details
-          />
-        </m-card>
+        <div style="overflow-y:auto;">
+          <m-card class="my-3">
+            <p class="mb-2 text-h6">
+              {{ 
+                ServerinfoCloned.servername!==ServerinfoFull.servername
+                ?
+                  '*インスタンス名'
+                  :
+                  'インスタンス名'
+              }}
+            </p>
+            <v-text-field
+              v-model="ServerinfoCloned.servername"
+              variant="outlined"
+              hide-details
+            />
+          </m-card>
 
-        <m-card class="my-3">
-          <p class="mb-2 text-h6">新規登録</p>
+          <m-card class="my-3">
+            <p class="mb-2 text-h6">新規登録</p>
 
-          <v-switch
-            v-model="ServerinfoCloned.registration.available"
-            label="新規登録を有効化"
-          />
+            <v-switch
+              v-model="ServerinfoCloned.registration.available"
+              label="新規登録を有効化"
+            />
 
-          <v-divider class="my-5" />
+            <v-divider class="my-5" />
 
-          <v-switch
-            v-model="ServerinfoCloned.registration.invite.inviteOnly"
-            :disabled="!ServerinfoCloned.registration.available"
-            label="新規登録を招待制にする"
-            class="my-3"
-          />
+            <v-switch
+              v-model="ServerinfoCloned.registration.invite.inviteOnly"
+              :disabled="!ServerinfoCloned.registration.available"
+              label="新規登録を招待制にする"
+              class="my-3"
+            />
 
-          <v-text-field
-            v-model="ServerinfoCloned.registration.invite.inviteCode"
-            :disabled="
-              !ServerinfoCloned.registration.invite.inviteOnly
-              ||
-              !ServerinfoCloned.registration.available
-            "
-            :label="
-              ServerinfoCloned.registration.invite.inviteCode!==ServerinfoFull.registration.invite.inviteCode
-              ?
-                '*招待コード'
-                :
-                '招待コード'
-            "
-            variant="outlined"
-            hide-details
-          />
-        </m-card>
-
-        <m-card v-if="stateEdited" position="absolute" style="bottom:10px;">
-          <m-btn
-            @click="updateServerinfo"
-            color="primary"
-          >変更を適用</m-btn>
-          <m-btn
-            @click="restoreServerinfoCloned"
-            variant="text"
+            <v-text-field
+              v-model="ServerinfoCloned.registration.invite.inviteCode"
+              :disabled="
+                !ServerinfoCloned.registration.invite.inviteOnly
+                ||
+                !ServerinfoCloned.registration.available
+              "
+              :label="
+                ServerinfoCloned.registration.invite.inviteCode!==ServerinfoFull.registration.invite.inviteCode
+                ?
+                  '*招待コード'
+                  :
+                  '招待コード'
+              "
+              variant="outlined"
+              hide-details
+            />
+          </m-card>
 
           <m-card
             v-if="stateEdited"
