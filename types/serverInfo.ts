@@ -4,6 +4,7 @@ export interface Serverinfo {
     available: boolean,
     invite: {
       inviteOnly: boolean,
+      inviteCode?: string
     },
   },
   config: {
