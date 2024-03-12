@@ -39,7 +39,8 @@ export default defineNuxtConfig({
         },
         VSwitch: {
           color: 'primary',
-          inset: true
+          inset: true,
+          hideDetails: true
         },
         VDivider: {
           style: 'border-radius: 8px',
