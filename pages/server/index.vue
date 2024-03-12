@@ -209,10 +209,27 @@ onUnmounted(() => {
           <m-btn
             @click="restoreServerinfoCloned"
             variant="text"
+
+          <m-card
+            v-if="stateEdited"
+            position="sticky"
+            class="mx-auto"
+            style="position:sticky; bottom:10px; width:fit-content;"
           >
-            復元
-          </m-btn>
-        </m-card>
+            <m-btn
+              @click="updateServerinfo"
+              color="primary"
+            >
+              変更を適用
+            </m-btn>
+            <m-btn
+              @click="restoreServerinfoCloned"
+              variant="text"
+            >
+              復元
+            </m-btn>
+          </m-card>
+        </div>
       </div>
     </NuxtLayout>
   </div>
