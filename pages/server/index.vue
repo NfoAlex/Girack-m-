@@ -82,6 +82,20 @@ const restoreServerinfoCloned = () => {
 }
 
 /**
+ * サーバー情報を更新させる
+ */
+const updateServerinfo = () => {
+  socket.emit("updateServerInfo", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    servername: ServerinfoCloned.value.servername,
+    registration: ServerinfoCloned.value.registration
+  });
+}
+
+/**
  * サーバー情報取得
  * @param dat
  */
@@ -101,8 +115,6 @@ const SOCKETfetchServerInfoFull = (dat:{result:string, data:Serverinfo}) => {
     }
   });
 }
-
-
 
 onMounted(() => {
   //サーバーFull情報受け取り用
@@ -183,7 +195,10 @@ onUnmounted(() => {
         </m-card>
 
         <m-card v-if="stateEdited" position="absolute" style="bottom:10px;">
-          <m-btn color="primary">変更を適用</m-btn>
+          <m-btn
+            @click="updateServerinfo"
+            color="primary"
+          >変更を適用</m-btn>
           <m-btn
             @click="restoreServerinfoCloned"
             variant="text"
