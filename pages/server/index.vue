@@ -101,6 +101,11 @@ const updateServerinfo = () => {
  */
 const SOCKETfetchServerInfoFull = (dat:{result:string, data:Serverinfo}) => {
   console.log("/server :: SOCKETfetchServerInfoFull : dat->", dat);
+
+  //結果が成功以外なら停止
+  if (dat.result !== "SUCCESS") return;
+  
+  //サーバー情報を格納
   ServerinfoFull.value = dat.data;
 
   //編集用JSON変数へクローン
