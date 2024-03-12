@@ -38,7 +38,9 @@ export default defineNuxtConfig({
           rounded: 'xl'
         },
         VSwitch: {
-          color: 'primary'
+          color: 'primary',
+          inset: true,
+          hideDetails: true
         },
         VDivider: {
           style: 'border-radius: 8px',
@@ -61,7 +63,8 @@ export default defineNuxtConfig({
         },
         MBtn: {
           rounded: "pill",
-          size: "large"
+          size: "large",
+          class: "mx-1"
         },
         MCard: {
           style: 'border-radius:20px; background-color:rgb(var(--v-theme-sidebarBackground));',
