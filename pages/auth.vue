@@ -104,6 +104,33 @@ const register = () => {
 };
 
 /**
+ * Cookieからセッションデータを取得
+ */
+const getSessionFromCookie = ():{
+  userId:string,
+  sessionId:string
+}|undefined => {
+  //取得
+  const tempCookie = useCookie("session").value;
+
+  //無効な値ならundefuned
+  if (
+    tempCookie === undefined || tempCookie === null || typeof(tempCookie) !== "object"
+  ) return undefined;
+  //値を確認してあるならそれを返す
+    //ここで型エラーが出るが結果はきちんとJSONを返すためこのまま
+  if (
+    tempCookie.userId !== undefined
+    &&
+    tempCookie.sessionId != undefined
+  ) {
+    return tempCookie;
+  } else {
+    return undefined;
+  }
+}
+
+/**
  * 認証結果の受け取りと処理
  * @param dat
  */
@@ -181,13 +208,10 @@ onMounted(() => {
   console.log("/auth :: onMounted : session->", useCookie("session").value);
 
   //クッキーからセッションデータを取得、格納
-  const sessionData:{
-    userId: string,
-    sessionId: string
-  } | undefined = useCookie("session").value;
+  const sessionData = getSessionFromCookie();
 
   //クッキーがあればそのまま認証
-  if (sessionData !== undefined && sessionData !== null) {
+  if (sessionData !== undefined) {
     //セッションIDをstoreへ登録
     const updateSessionId = useMyUserinfo().updateSessionId;
     updateSessionId(sessionData.sessionId);
