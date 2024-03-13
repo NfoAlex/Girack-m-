@@ -6,6 +6,7 @@ import { useConfig } from "../stores/config";
 import type { MyUserinfo } from "~/types/user";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
+const { updateSessionId } = useMyUserinfo();
 const router = useRouter();
 
 definePageMeta({
@@ -154,7 +155,6 @@ const SOCKETRESULTauthLogin = (
       channelJoined: dat.data.UserInfo.channelJoined, //文字列で渡されるためここで配列にする
     });
     //セッションID更新
-    const updateSessionId = useMyUserinfo().updateSessionId;
     updateSessionId(dat.data.sessionId);
 
     //セッション情報をクッキーへ保存
@@ -212,7 +212,6 @@ onMounted(() => {
   //クッキーがあればそのまま認証
   if (sessionData !== undefined) {
     //セッションIDをstoreへ登録
-    const updateSessionId = useMyUserinfo().updateSessionId;
     updateSessionId(sessionData.sessionId);
     //ユーザーIDをあらかじめマージ
     const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
