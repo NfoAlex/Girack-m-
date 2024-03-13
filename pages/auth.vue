@@ -3,9 +3,6 @@ import { socket } from "../socketHandlers/socketInit";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 import { useConfig } from "../stores/config";
-import { setCookie } from "~/composables/setCookie";
-import { getCookie } from "~/composables/getCookie";
-import type Config from "~/types/config";
 import type { MyUserinfo } from "~/types/user";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
@@ -106,13 +103,42 @@ const register = () => {
 };
 
 /**
+ * Cookieからセッションデータを取得
+ */
+const getSessionFromCookie = ():{
+  userId:string,
+  sessionId:string
+}|undefined => {
+  //取得
+  const tempCookie = useCookie("session").value;
+
+  //無効な値ならundefuned
+  if (
+    tempCookie === undefined || tempCookie === null || typeof(tempCookie) !== "object"
+  ) return undefined;
+  //値を確認してあるならそれを返す
+    //ここで型エラーが出るが結果はきちんとJSONを返すためこのまま
+  if (
+    tempCookie.userId !== undefined
+    &&
+    tempCookie.sessionId != undefined
+  ) {
+    return tempCookie;
+  } else {
+    return undefined;
+  }
+}
+
+/**
  * 認証結果の受け取りと処理
  * @param dat
  */
-const SOCKETRESULTauthLogin = (dat: {
-  result: string;
-  data: { UserInfo: any; sessionId: string };
-}) => {
+const SOCKETRESULTauthLogin = (
+  dat: {
+    result: string;
+    data: { UserInfo: any; sessionId: string };
+  }
+) => {
   console.log("auth :: SOCKETRESULTauthLogin : dat->", dat);
   //ログインできたらユーザー情報設定、ページ移動
   if (dat.result === "SUCCESS") {
@@ -132,17 +158,10 @@ const SOCKETRESULTauthLogin = (dat: {
     updateSessionId(dat.data.sessionId);
 
     //セッション情報をクッキーへ保存
-    setCookie(
-      "session",
-      JSON.stringify(
-        //文字列として保存する
-        {
-          userId: dat.data.UserInfo.userId,
-          sessionId: dat.data.sessionId,
-        }
-      ),
-      15
-    );
+    useCookie("session", {maxAge:1.296e+6}).value = JSON.stringify({
+      userId: dat.data.UserInfo.userId,
+      sessionId: dat.data.sessionId,
+    });
 
     //準備処理開始
     initialize(dat.data.UserInfo.userId, dat.data.sessionId);
@@ -158,7 +177,12 @@ const SOCKETRESULTauthLogin = (dat: {
  * 登録結果の受け取りと処理
  * @param dat
  */
-const SOCKETRESULTauthRegister = (dat: { result: string; data:{datUser:MyUserinfo, password:string} }) => {
+const SOCKETRESULTauthRegister = (
+  dat: {
+    result: string;
+    data:{datUser:MyUserinfo, password:string}
+  }
+) => {
   console.log("auth :: SOCKETRESULTauthRegister : dat->", dat);
   //結果処理
   if (dat.result === "SUCCESS") {
@@ -180,22 +204,25 @@ onMounted(() => {
   //登録ができたと受信したときの処理
   socket.on("RESULT::authRegister", SOCKETRESULTauthRegister);
 
-  //クッキーがあればそのまま認証
-  if (getCookie("session") !== "") {
-    let session = JSON.parse(getCookie("session"));
+  console.log("/auth :: onMounted : session->", useCookie("session").value);
 
+  //クッキーからセッションデータを取得、格納
+  const sessionData = getSessionFromCookie();
+
+  //クッキーがあればそのまま認証
+  if (sessionData !== undefined) {
     //セッションIDをstoreへ登録
     const updateSessionId = useMyUserinfo().updateSessionId;
-    updateSessionId(session.sessionId);
+    updateSessionId(sessionData.sessionId);
     //ユーザーIDをあらかじめマージ
     const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
     updateMyUserinfo({
       ...useMyUserinfo().getMyUserinfo,
-      userId: session.userId,
+      userId: sessionData.userId,
     });
 
     //準備処理開始
-    initialize(session.userId, session.sessionId);
+    initialize(sessionData.userId, sessionData.sessionId);
   }
 });
 
