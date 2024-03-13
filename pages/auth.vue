@@ -134,10 +134,12 @@ const getSessionFromCookie = ():{
  * 認証結果の受け取りと処理
  * @param dat
  */
-const SOCKETRESULTauthLogin = (dat: {
-  result: string;
-  data: { UserInfo: any; sessionId: string };
-}) => {
+const SOCKETRESULTauthLogin = (
+  dat: {
+    result: string;
+    data: { UserInfo: any; sessionId: string };
+  }
+) => {
   console.log("auth :: SOCKETRESULTauthLogin : dat->", dat);
   //ログインできたらユーザー情報設定、ページ移動
   if (dat.result === "SUCCESS") {
@@ -183,7 +185,12 @@ const SOCKETRESULTauthLogin = (dat: {
  * 登録結果の受け取りと処理
  * @param dat
  */
-const SOCKETRESULTauthRegister = (dat: { result: string; data:{datUser:MyUserinfo, password:string} }) => {
+const SOCKETRESULTauthRegister = (
+  dat: {
+    result: string;
+    data:{datUser:MyUserinfo, password:string}
+  }
+) => {
   console.log("auth :: SOCKETRESULTauthRegister : dat->", dat);
   //結果処理
   if (dat.result === "SUCCESS") {
