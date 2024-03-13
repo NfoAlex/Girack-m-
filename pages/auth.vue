@@ -3,7 +3,6 @@ import { socket } from "../socketHandlers/socketInit";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 import { useConfig } from "../stores/config";
-import { setCookie } from "~/composables/setCookie";
 import type { MyUserinfo } from "~/types/user";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
@@ -159,17 +158,10 @@ const SOCKETRESULTauthLogin = (
     updateSessionId(dat.data.sessionId);
 
     //セッション情報をクッキーへ保存
-    setCookie(
-      "session",
-      JSON.stringify(
-        //文字列として保存する
-        {
-          userId: dat.data.UserInfo.userId,
-          sessionId: dat.data.sessionId,
-        }
-      ),
-      15
-    );
+    useCookie("session", {maxAge:1.296e+6}).value = JSON.stringify({
+      userId: dat.data.UserInfo.userId,
+      sessionId: dat.data.sessionId,
+    });
 
     //準備処理開始
     initialize(dat.data.UserInfo.userId, dat.data.sessionId);
