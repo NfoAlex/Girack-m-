@@ -4,8 +4,6 @@ import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 import { useConfig } from "../stores/config";
 import { setCookie } from "~/composables/setCookie";
-import { getCookie } from "~/composables/getCookie";
-import type Config from "~/types/config";
 import type { MyUserinfo } from "~/types/user";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
@@ -180,22 +178,28 @@ onMounted(() => {
   //登録ができたと受信したときの処理
   socket.on("RESULT::authRegister", SOCKETRESULTauthRegister);
 
-  //クッキーがあればそのまま認証
-  if (getCookie("session") !== "") {
-    let session = JSON.parse(getCookie("session"));
+  console.log("/auth :: onMounted : session->", useCookie("session").value);
 
+  //クッキーからセッションデータを取得、格納
+  const sessionData:{
+    userId: string,
+    sessionId: string
+  } | undefined = useCookie("session").value;
+
+  //クッキーがあればそのまま認証
+  if (sessionData !== undefined && sessionData !== null) {
     //セッションIDをstoreへ登録
     const updateSessionId = useMyUserinfo().updateSessionId;
-    updateSessionId(session.sessionId);
+    updateSessionId(sessionData.sessionId);
     //ユーザーIDをあらかじめマージ
     const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
     updateMyUserinfo({
       ...useMyUserinfo().getMyUserinfo,
-      userId: session.userId,
+      userId: sessionData.userId,
     });
 
     //準備処理開始
-    initialize(session.userId, session.sessionId);
+    initialize(sessionData.userId, sessionData.sessionId);
   }
 });
 
