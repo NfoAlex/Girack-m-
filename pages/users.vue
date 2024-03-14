@@ -72,7 +72,7 @@ onUnmounted(() => {
     <m-card class="mx-auto" :loading="stateLoading">
       ユーザー数 : {{ userCount }}
       <v-divider class="my-2"></v-divider>
-      <v-table>
+      <v-table hover>
         <thead>
           <tr>
             <th class="text-left">
