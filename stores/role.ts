@@ -66,5 +66,12 @@ export const useRole = defineStore("role", {
         return state._Roles[roleId];
       }
     }
+  },
+
+  actions: {
+    //ロール情報を格納する
+    bindRoles(roles:any) {
+      this._Roles = roles;
+    }
   }
 });
