@@ -6,6 +6,7 @@ import infoChannel from "./InfoChannel";
 import fetchUserInfo from "./fetchUserInfo";
 import fetchUserConfig from "./fetchUserConfig";
 import saveUserConfig from "./saveUserConfig";
+import fetchRoles from "./fetchRoles";
 
 console.log("socketInit :: INITIALIZED");
 
@@ -35,4 +36,5 @@ export function loadSocket() {
   fetchUserInfo(socket); //自ユーザー情報
   fetchUserConfig(socket); //設定データ
   saveUserConfig(socket); //設定データの保存結果
+  fetchRoles(socket); //ロール受け取り
 }
