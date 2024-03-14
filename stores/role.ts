@@ -50,10 +50,10 @@ export const useRole = defineStore("role", {
       if (state._Roles[roleId] !== undefined) {
         return state._Roles[roleId];
       } else {
-        state._Roles[roleId] = {
+        return {
           roleId: roleId,
-          name: "Loading...",
-          color: "#ffffff",
+          name: "エラー",
+          color: "#f00",
           ServerManage: false,
           RoleManage: false,
           ChannelRename: false,
@@ -63,7 +63,6 @@ export const useRole = defineStore("role", {
           MessageDelete: false,
           MessageAttatchFile: false
         };
-        return state._Roles[roleId];
       }
     }
   },
