@@ -9,6 +9,7 @@ import type { MyUserinfo } from '~/types/user';
 /**
  * data
  */
+const userCount = ref<number>(0);
 const users = ref<
   {
     [key:string]: MyUserinfo
@@ -32,6 +33,7 @@ const SOCKETfetchUserAll = (dat:{
 
   //ユーザー情報格納
   users.value = dat.data.datUser;
+  userCount.value = dat.data.countUser;
 }
 
 onMounted(() => {
@@ -58,6 +60,11 @@ onUnmounted(() => {
     <p class="text-h5 pa-2">ユーザーリスト</p>
     <v-divider class="my-2"></v-divider>
     <m-card class="mx-auto">
+      ユーザー数 : {{ userCount }}
+      <v-divider class="my-2"></v-divider>
+      <div v-for="user of users" class="px-1 py-2">
+        {{ user.userName }}
+      </div>
     </m-card>
   </div>
 </template>
