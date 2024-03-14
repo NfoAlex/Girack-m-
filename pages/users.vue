@@ -62,9 +62,27 @@ onUnmounted(() => {
     <m-card class="mx-auto">
       ユーザー数 : {{ userCount }}
       <v-divider class="my-2"></v-divider>
-      <div v-for="user of users" class="px-1 py-2">
-        {{ user.userName }}
-      </div>
+      <v-table>
+        <thead>
+          <tr>
+            <th class="text-left">
+              ユーザー名
+            </th>
+            <th class="text-left">
+              ロール
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(user,index) of users"
+            :key="index"
+          >
+            <td>{{ user.userName }}</td>
+            <td>{{ user.role }}</td>
+          </tr>
+        </tbody>
+      </v-table>
     </m-card>
   </div>
 </template>
