@@ -21,6 +21,9 @@ const users = ref<
     [key:string]: MyUserinfo
   }
 >({});
+//ユーザーダイアログ表示用
+const userIdForDialog = ref<string>(""); //表示するユーザーのID
+const displayUserpage = ref<boolean>(false); //ダイアログ制御用
 
 /**
  * ユーザーを取得
@@ -66,6 +69,8 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <Userinfo v-model="displayUserpage" :userId="userIdForDialog" />
+
   <div class="pa-4 mx-auto" style="max-width:1200px;">
     <p class="text-h5 pa-2">ユーザーリスト</p>
     <v-divider class="my-2"></v-divider>
@@ -86,6 +91,7 @@ onUnmounted(() => {
         <tbody>
           <tr
             v-for="(user,index) of users"
+            @click="userIdForDialog=user.userId; displayUserpage=true;"
             :key="index"
           >
             <td>{{ user.userName }}</td>
