@@ -44,8 +44,6 @@
         </NuxtLink>
       </span>
 
-      <v-divider class="mt-4"></v-divider>
-
       <!-- チャンネルボタン -->
       <span class="mt-4">
         <NuxtLink to="/channel">
