@@ -9,7 +9,11 @@ import type { MyUserinfo } from '~/types/user';
 /**
  * data
  */
+//ロード中であるかどうか
+const stateLoading = ref<boolean>(true);
+//ユーザー数格納用
 const userCount = ref<number>(0);
+//ユーザー情報格納用
 const users = ref<
   {
     [key:string]: MyUserinfo
@@ -34,6 +38,8 @@ const SOCKETfetchUserAll = (dat:{
   //ユーザー情報格納
   users.value = dat.data.datUser;
   userCount.value = dat.data.countUser;
+  //ロード中状態を解除
+  stateLoading.value = false;
 }
 
 onMounted(() => {
@@ -47,6 +53,8 @@ onMounted(() => {
     },
     indexPage: 1
   });
+  //ロード中と設定
+  stateLoading.value = true;
 });
 
 onUnmounted(() => {
@@ -56,10 +64,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="pa-4">
+  <div class="pa-4 mx-auto" style="max-width:1200px;">
     <p class="text-h5 pa-2">ユーザーリスト</p>
     <v-divider class="my-2"></v-divider>
-    <m-card class="mx-auto">
+    <m-card class="mx-auto" :loading="stateLoading">
       ユーザー数 : {{ userCount }}
       <v-divider class="my-2"></v-divider>
       <v-table>
