@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
+import { useRole } from '~/stores/role';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+const { getRoleSingle } = storeToRefs(useRole());
 
 import type { MyUserinfo } from '~/types/user';
 
@@ -87,7 +89,15 @@ onUnmounted(() => {
             :key="index"
           >
             <td>{{ user.userName }}</td>
-            <td>{{ user.role }}</td>
+            <td>
+              <v-chip v-for="roleId of user.role">
+                <v-icon
+                  :color="getRoleSingle(roleId).color"
+                  class="mr-2"
+                >mdi-circle</v-icon>
+                {{ getRoleSingle(roleId).name }}
+              </v-chip>
+            </td>
           </tr>
         </tbody>
       </v-table>

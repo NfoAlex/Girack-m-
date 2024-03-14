@@ -50,6 +50,14 @@ const login = () => {
  * ログイン後のGirack-m-準備処理
  */
 const initialize = (userId:string, sessionId:string) => {
+  //全ロールを取得
+  socket.emit("fetchRoles", {
+    RequestSender: {
+      userId: userId,
+      sessionId: sessionId,
+    },
+  });
+
   //ユーザー情報取得
   socket.emit("fetchUserInfo", {
     RequestSender: {
