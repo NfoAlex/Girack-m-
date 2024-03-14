@@ -89,6 +89,25 @@
 
       <!-- サーバー管理ボタン -->
       <span class="mt-4">
+        <NuxtLink to="/users">
+          <v-btn
+            icon="mdi:mdi-account-group"
+            :variant="$route.path.includes('/users') ? 'tonal' : 'text'"
+            :color="$route.path.includes('/users') ? 'primary' : ''"
+            rounded="lg"
+          >
+          </v-btn>
+          <p
+            class="text-caption text-center"
+            :class="$route.path.startsWith('/users') ? 'text-primary' : null"
+          >
+            仲間
+          </p>
+        </NuxtLink>
+      </span>
+
+      <!-- サーバー管理ボタン -->
+      <span class="mt-4">
         <NuxtLink to="/server">
           <v-btn
             icon="mdi:mdi-server-security"
