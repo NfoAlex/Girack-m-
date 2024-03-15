@@ -13,7 +13,9 @@ const props = defineProps<{
     <v-icon
       :color="getRoleSingle(props.roleId).color"
       class="mr-2"
-    >mdi-circle</v-icon>
+    >
+      mdi-circle
+    </v-icon>
     {{ getRoleSingle(props.roleId).name }}
   </v-chip>
 </template>
