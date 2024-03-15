@@ -52,7 +52,7 @@ const fetchUsers = (page:number) => {
 }
 
 /**
- * ユーザーを取得
+ * ユーザーリストを取得
  * @param dat
  */
 const SOCKETfetchUserAll = (dat:{
@@ -73,14 +73,29 @@ const SOCKETfetchUserAll = (dat:{
   stateLoading.value = false;
 }
 
+/**
+ * ユーザー情報を受信したらそのユーザー分データを更新
+ * @param dat
+ */
+const SOCKETfetchUserInfo = (dat:{result:string, data:MyUserinfo}) => {
+  console.log("/users :: SOCKETfetchUserInfo : dat->", dat);
+
+  //ユーザー格納用変数に該当するユーザーIDがあれば更新する
+  if (users.value[dat.data.userId] !== undefined) {
+    users.value[dat.data.userId] = dat.data;
+  }
+}
+
 onMounted(() => {
   socket.on("RESULT::fetchUserAll", SOCKETfetchUserAll);
+  socket.on("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
 
   fetchUsers(1);
 });
 
 onUnmounted(() => {
   socket.off("RESULT::fetchUserAll", SOCKETfetchUserAll);
+  socket.off("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
 });
 
 </script>
