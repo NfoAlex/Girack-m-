@@ -23,7 +23,7 @@ const Userinfo = ref<MyUserinfo>({
   banned: false,
   channelJoined: []
 });
-const displayPage = ref<"joinedChannel"|"manage">("joinedChannel");
+const displayPage = ref<"joinedChannel"|"manage"|"JSON">("joinedChannel");
 
 /**
  * ユーザー情報受け取り
@@ -79,6 +79,13 @@ onUnmounted(() => {
               >mdi-circle</v-icon>
               {{ getRoleSingle(roleId).name }}
             </v-chip>
+            <v-chip
+              size="small"
+              class="mx-1"
+              variant=text
+            >
+              +
+            </v-chip>
           </div>
         </span>
       </div>
@@ -98,6 +105,14 @@ onUnmounted(() => {
           <v-icon>mdi:mdi-shield-account</v-icon>
           管理
         </m-btn>
+        <m-btn
+          @click="displayPage = 'JSON'"
+          :variant="displayPage==='JSON'?'tonal':'text'"
+          color="orange"
+        >
+          <v-icon>mdi:mdi-bug</v-icon>
+          JSON
+        </m-btn>
       </span>
 
       <m-card v-if="displayPage==='joinedChannel'" color="surface" class="mt-2">
@@ -107,6 +122,10 @@ onUnmounted(() => {
 
       <m-card v-if="displayPage==='manage'" color="surface" class="mt-2">
         <p>ToDo :: ここで管理</p>
+      </m-card>
+
+      <m-card v-if="displayPage==='JSON'" color="surface" class="mt-2">
+        {{ Userinfo }}
       </m-card>
     </m-card>
   </v-dialog>
