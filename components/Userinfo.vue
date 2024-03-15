@@ -61,8 +61,8 @@ onUnmounted(() => {
     <m-card style="width:100%; height:100%;">
       {{ Userinfo }}
       <v-divider />
-      <div class="d-flex">
-        <v-avatar class="mr-3">
+      <div class="d-flex align-center my-3">
+        <v-avatar class="mr-3" size="64">
           {{ Userinfo.userName }}
         </v-avatar>
         <span>
