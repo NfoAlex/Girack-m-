@@ -67,7 +67,7 @@ export default defineNuxtConfig({
           class: "mx-1"
         },
         MCard: {
-          style: 'border-radius:20px; background-color:rgb(var(--v-theme-sidebarBackground));',
+          style: 'border-radius:28px; background-color:rgb(var(--v-theme-sidebarBackground));',
           class: 'pa-4',
         },
       },
@@ -75,12 +75,14 @@ export default defineNuxtConfig({
         themes: {
           light: {
             colors: {
-              "sidebarBackground": "#efefef"
+              "sidebarBackground": "#efefef",
+              "cardInner": "#f9f9f9"
             }
           },
           dark: {
             colors: {
-              "sidebarBackground": "#020202"
+              "sidebarBackground": "#020202",
+              "cardInner": "#121212"
             }
           }
         }
