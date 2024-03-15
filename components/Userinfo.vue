@@ -65,9 +65,12 @@ onUnmounted(() => {
         <v-avatar class="mr-3">
           {{ Userinfo.userName }}
         </v-avatar>
-        <p class="text-h5">
-          {{ Userinfo.userName }}
-        </p>
+        <span>
+          <p class="text-disabled text-caption">#{{ Userinfo.userId }}</p>
+          <p class="text-h5">
+            {{ Userinfo.userName }}
+          </p>
+        </span>
       </div>
 
       <div class="d-flex my-1">
