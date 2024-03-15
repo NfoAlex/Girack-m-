@@ -59,9 +59,9 @@ onUnmounted(() => {
 
 <template>
   <v-dialog width="65vw" max-width="800px" height="75vh" max-height="900px">
-    <m-card style="height:100%;">
+    <m-card class="d-flex flex-column" style="height:100%; padding: 0 !important;">
       <div
-        class="d-flex align-center my-3 text-truncate"
+        class="d-flex align-center mt-3 pa-5 text-truncate"
         style="width:100%;"
       >
         <v-avatar class="mr-3" size="84">
@@ -72,7 +72,7 @@ onUnmounted(() => {
           <p class="text-h4 text-truncate">
             {{ Userinfo.userName }}
           </p>
-          <div class="my-1 d-flex flex-wrap">
+          <div class="my-1 d-flex align-center flex-wrap">
             <RoleChip
               v-for="roleId of Userinfo.role"
               :roleId="roleId"
@@ -83,7 +83,7 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <span class="d-flex flex-wrap">
+      <span class="px-5 d-flex flex-wrap">
         <m-btn
           @click="displayPage = 'joinedChannel'"
           :variant="displayPage==='joinedChannel'?'tonal':'text'"
@@ -108,16 +108,16 @@ onUnmounted(() => {
         </m-btn>
       </span>
 
-      <m-card v-if="displayPage==='joinedChannel'" color="surface" class="mt-2">
+      <m-card v-if="displayPage==='joinedChannel'" color="cardInner" class="mt-2 flex-grow-1">
         <p>参加チャンネル</p>
         {{ Userinfo.channelJoined }}
       </m-card>
 
-      <m-card v-if="displayPage==='manage'" color="surface" class="mt-2">
+      <m-card v-if="displayPage==='manage'" color="cardInner" class="mt-2 flex-grow-1">
         <p>ToDo :: ここで管理</p>
       </m-card>
 
-      <m-card v-if="displayPage==='JSON'" color="surface" class="mt-2">
+      <m-card v-if="displayPage==='JSON'" color="cardInner" class="mt-2 flex-grow-1">
         {{ Userinfo }}
       </m-card>
     </m-card>
