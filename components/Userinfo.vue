@@ -70,7 +70,11 @@ onUnmounted(() => {
             {{ Userinfo.userName }}
           </p>
           <div class="my-1">
-            <RoleChip v-for="roleId of Userinfo.role" :roleId="roleId" />
+            <RoleChip
+              v-for="roleId of Userinfo.role"
+              :roleId="roleId"
+              :userId="Userinfo.userId"
+            />
             <RoleAdd :userId="props.userId" />
           </div>
         </span>
