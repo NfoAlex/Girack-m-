@@ -8,7 +8,7 @@ const { getRoleSingle } = storeToRefs(useRole());
 
 const props = defineProps<{
   roleId: string,
-  userId: string
+  userId?: string
 }>();
 
 /**
@@ -37,9 +37,12 @@ const unlinkRole = () => {
 <template>
   <v-chip size="small" class="mr-1 mt-1">
     <v-icon
-      @click="unlinkRole"
+      @click="() => {
+        if (props.roleId !== 'MEMBER' && props.roleId !== 'HOST' && props.userId !== undefined) 
+          unlinkRole()
+      }"
       @mouseover="() => {
-        if (props.roleId !== 'MEMBER' && props.roleId !== 'HOST') 
+        if (props.roleId !== 'MEMBER' && props.roleId !== 'HOST' && props.userId !== undefined) 
           mouseHoveredOnDot = true
       }"
       @mouseleave="mouseHoveredOnDot = false"
