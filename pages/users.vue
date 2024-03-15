@@ -15,6 +15,8 @@ import type { MyUserinfo } from '~/types/user';
 const stateLoading = ref<boolean>(true);
 //今いるページ
 const currentPage = ref<number>(1);
+//ユーザーリスト用のページ数
+const lengthPage = ref<number>(1);
 
 //ユーザー数格納用
 const userCount = ref<number>(0);
@@ -71,6 +73,14 @@ const SOCKETfetchUserAll = (dat:{
   userCount.value = dat.data.countUser;
   //ロード中状態を解除
   stateLoading.value = false;
+
+  //ユーザー数を30で割って必要なページ数を計算
+  if (userCount.value / 30 > 1) {
+    //それに設定
+    lengthPage.value = userCount.value / 30;
+    //もし30での除算で1以上いればもう1ページ追加
+    if (userCount.value % 30 >= 1) lengthPage.value++;
+  }
 }
 
 /**
@@ -118,7 +128,7 @@ onUnmounted(() => {
         style="overflow-y:auto;"
         class="flex-grow-1"
       >
-        <thead>
+        <thead style="position:sticky; top:0px; z-index:1; background-color:rgb(var(--v-theme-surface))">
           <tr>
             <th class="text-left">
               ユーザー名
@@ -146,7 +156,7 @@ onUnmounted(() => {
       </v-table>
       <v-pagination
         v-model="currentPage"
-        :length="4"
+        :length="lengthPage"
         rounded="xl"
         class="mt-2"
       />
