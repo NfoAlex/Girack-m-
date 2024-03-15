@@ -86,7 +86,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Userinfo v-model="displayUserpage" :userId="userIdForDialog" />
+  <Userinfo
+    v-model="displayUserpage"
+    v-if="displayUserpage"
+    :userId="userIdForDialog"
+  />
 
   <div class="pa-4 mx-auto d-flex flex-column" style="max-width:1200px; height:100%;">
     <p class="text-h5 pa-2">ユーザーリスト</p>

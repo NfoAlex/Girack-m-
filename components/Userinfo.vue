@@ -21,22 +21,6 @@ const Userinfo = ref<MyUserinfo>({
 });
 
 /**
- * propの変更を監視
- */
-watch(props, () => {
-  console.log("Userinfo :: watch(props) : propが変わった->", props.userId);
-
-  //ユーザー情報取得
-  socket.emit("fetchUserInfo", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    userId: props.userId
-  });
-});
-
-/**
  * ユーザー情報受け取り
  * @param dat
  */
@@ -49,6 +33,17 @@ const SOCKETfetchUserInfo = (dat:{result:string, data:MyUserinfo}) => {
 
 onMounted(() => {
   socket.on("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
+
+  //console.log("Userinfo :: onMounted : マウントされた");
+
+  //ユーザー情報取得
+  socket.emit("fetchUserInfo", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    userId: props.userId
+  });
 });
 
 onUnmounted(() => {
