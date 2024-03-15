@@ -70,13 +70,7 @@ onUnmounted(() => {
             {{ Userinfo.userName }}
           </p>
           <div class="d-flex my-1">
-            <v-chip v-for="roleId of Userinfo.role" size="small">
-              <v-icon
-                :color="getRoleSingle(roleId).color"
-                class="mr-2"
-              >mdi-circle</v-icon>
-              {{ getRoleSingle(roleId).name }}
-            </v-chip>
+            <RoleChip v-for="roleId of Userinfo.role" :roleId="roleId" />
             <v-chip
               size="small"
               class="mx-1"
