@@ -121,8 +121,7 @@ onUnmounted(() => {
     <p class="text-h5 pa-2">ユーザーリスト</p>
     <v-divider class="my-2"></v-divider>
     <m-card class="mx-auto d-flex flex-column" :loading="stateLoading" style="width:100%; height:100%;">
-      ユーザー数 : {{ userCount }}
-      <v-divider class="my-2"></v-divider>
+      <p class="mb-2">ユーザー数 : {{ userCount }}</p>
       <v-table
         hover
         style="overflow-y:auto;"
