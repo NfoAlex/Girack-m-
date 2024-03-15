@@ -83,7 +83,7 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <span class="d-flex">
+      <span class="d-flex" style="flex-wrap: wrap">
         <m-btn
           @click="displayPage = 'joinedChannel'"
           :variant="displayPage==='joinedChannel'?'tonal':'text'"
