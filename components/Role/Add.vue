@@ -41,12 +41,14 @@ const addRole = (roleIdAdding:string) => {
   >
   
     <v-menu activator="parent" class="rounded-lg">
-      <v-list>
-        <div
+      <v-list class="px-2 rounded-xl">
+        <v-card
           v-for="(role, index) in getRoles()"
           @click="addRole(role.roleId)"
           :key="index"
-          class="py-2 px-3 d-flex align-center"
+          rounded="pill"
+          style="width:100%;"
+          class="py-2 px-3 d-flex align-center justify-left text-left"
         >
           <v-icon
             :color="role.color"
@@ -58,7 +60,7 @@ const addRole = (roleIdAdding:string) => {
           <v-list-item-title>
             {{ role.name }}
           </v-list-item-title>
-        </div>
+        </v-card>
       </v-list>
     </v-menu>
 
