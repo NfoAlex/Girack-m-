@@ -41,7 +41,7 @@ const addRole = (roleIdAdding:string) => {
   >
   
     <v-menu activator="parent" class="rounded-lg">
-      <v-list class="px-2 rounded-xl">
+      <v-list class="px-2 rounded-xl" elevation="1">
         <v-card
           v-for="(role, index) in getRoles()"
           @click="addRole(role.roleId)"
