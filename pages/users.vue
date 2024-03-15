@@ -13,6 +13,9 @@ import type { MyUserinfo } from '~/types/user';
  */
 //ロード中であるかどうか
 const stateLoading = ref<boolean>(true);
+//今いるページ
+const currentPage = ref<number>(1);
+
 //ユーザー数格納用
 const userCount = ref<number>(0);
 //ユーザー情報格納用
@@ -24,6 +27,29 @@ const users = ref<
 //ユーザーダイアログ表示用
 const userIdForDialog = ref<string>(""); //表示するユーザーのID
 const displayUserpage = ref<boolean>(false); //ダイアログ制御用
+
+/**
+ * ページの移動を監視してまたユーザーリストをフェッチ
+ */
+watch(currentPage, () => {
+  fetchUsers(currentPage.value);
+});
+
+/**
+ * 指定するページ部分にあたるユーザー取得(30人ごと)
+ */
+const fetchUsers = (page:number) => {
+  //ユーザーを取得
+  socket.emit("fetchUserAll", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    indexPage: page
+  });
+  //ロード中と設定
+  stateLoading.value = true;
+}
 
 /**
  * ユーザーを取得
@@ -50,16 +76,7 @@ const SOCKETfetchUserAll = (dat:{
 onMounted(() => {
   socket.on("RESULT::fetchUserAll", SOCKETfetchUserAll);
 
-  //ユーザーを取得
-  socket.emit("fetchUserAll", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    indexPage: 1
-  });
-  //ロード中と設定
-  stateLoading.value = true;
+  fetchUsers(1);
 });
 
 onUnmounted(() => {
