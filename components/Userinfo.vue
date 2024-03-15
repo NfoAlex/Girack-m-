@@ -59,17 +59,20 @@ onUnmounted(() => {
 
 <template>
   <v-dialog width="65vw" max-width="800px" height="75vh" max-height="900px">
-    <m-card style="width:100%; height:100%;">
-      <div class="d-flex align-center my-3">
+    <m-card style="height:100%;">
+      <div
+        class="d-flex align-center my-3 text-truncate"
+        style="width:100%;"
+      >
         <v-avatar class="mr-3" size="84">
           {{ Userinfo.userName }}
         </v-avatar>
-        <span>
+        <div class="text-truncate">
           <p class="text-disabled text-caption">#{{ Userinfo.userId }}</p>
-          <p class="text-h4">
+          <p class="text-h4 text-truncate">
             {{ Userinfo.userName }}
           </p>
-          <div class="my-1">
+          <div class="my-1 d-flex" style="flex-wrap: wrap">
             <RoleChip
               v-for="roleId of Userinfo.role"
               :roleId="roleId"
@@ -77,7 +80,7 @@ onUnmounted(() => {
             />
             <RoleAdd :userId="props.userId" />
           </div>
-        </span>
+        </div>
       </div>
 
       <span class="d-flex">
