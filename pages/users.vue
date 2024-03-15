@@ -121,13 +121,10 @@ onUnmounted(() => {
           >
             <td>{{ user.userName }}</td>
             <td>
-              <v-chip v-for="roleId of user.role">
-                <v-icon
-                  :color="getRoleSingle(roleId).color"
-                  class="mr-2"
-                >mdi-circle</v-icon>
-                {{ getRoleSingle(roleId).name }}
-              </v-chip>
+              <RoleChip
+                v-for="roleId of user.role"
+                :roleId="roleId"
+              />
             </td>
           </tr>
         </tbody>
