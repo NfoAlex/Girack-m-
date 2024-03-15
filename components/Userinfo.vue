@@ -1,7 +1,59 @@
 <script setup lang="ts">
+import { socket } from '~/socketHandlers/socketInit';
+import { useMyUserinfo } from '~/stores/userinfo';
+import type { MyUserinfo } from '~/types/user';
+
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+
 const props = defineProps<{
   userId: string
 }>();
+
+/**
+ * data
+ */
+const Userinfo = ref<MyUserinfo>({
+  userName: '',
+  role: [],
+  userId: '',
+  banned: false,
+  channelJoined: []
+});
+
+/**
+ * propの変更を監視
+ */
+watch(props, () => {
+  console.log("Userinfo :: watch(props) : propが変わった->", props.userId);
+
+  //ユーザー情報取得
+  socket.emit("fetchUserInfo", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    userId: props.userId
+  });
+});
+
+/**
+ * ユーザー情報受け取り
+ * @param dat
+ */
+const SOCKETfetchUserInfo = (dat:{result:string, data:MyUserinfo}) => {
+  console.log("Userinfo :: SOCKETfetchUserInfo : dat->", dat);
+
+  //ユーザー情報を格納
+  Userinfo.value = dat.data;
+};
+
+onMounted(() => {
+  socket.on("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
+});
+
+onUnmounted(() => {
+  socket.off("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
+});
 
 </script>
 
@@ -9,6 +61,8 @@ const props = defineProps<{
   <v-dialog>
     <m-card>
       {{ props.userId }}
+      <v-divider />
+      {{ Userinfo }}
     </m-card>
   </v-dialog>
 </template>
