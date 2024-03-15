@@ -37,7 +37,7 @@ const addRole = (roleIdAdding:string) => {
     @click="displayRoleSelect = true"
     variant="text"
     size="small"
-    class="mx-1"
+    class="mx-1 mt-1"
   >
   
     <v-menu activator="parent" class="rounded-lg">
