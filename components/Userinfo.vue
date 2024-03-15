@@ -72,7 +72,7 @@ onUnmounted(() => {
           <p class="text-h4 text-truncate">
             {{ Userinfo.userName }}
           </p>
-          <div class="my-1 d-flex" style="flex-wrap: wrap">
+          <div class="my-1 d-flex flex-wrap">
             <RoleChip
               v-for="roleId of Userinfo.role"
               :roleId="roleId"
@@ -83,7 +83,7 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <span class="d-flex" style="flex-wrap: wrap">
+      <span class="d-flex flex-wrap">
         <m-btn
           @click="displayPage = 'joinedChannel'"
           :variant="displayPage==='joinedChannel'?'tonal':'text'"
