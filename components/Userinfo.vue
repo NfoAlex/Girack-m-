@@ -58,7 +58,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <v-dialog width="85vw" max-width="800px">
+  <v-dialog width="65vw" max-width="800px" height="75vh" max-height="900px">
     <m-card style="width:100%; height:100%;">
       {{ Userinfo }}
       <v-divider />
@@ -103,9 +103,13 @@ onUnmounted(() => {
         </m-btn>
       </span>
 
-      <m-card color="surface" class="mt-2">
+      <m-card v-if="displayPage==='joinedChannel'" color="surface" class="mt-2">
         <p>参加チャンネル</p>
         {{ Userinfo.channelJoined }}
+      </m-card>
+
+      <m-card v-if="displayPage==='manage'" color="surface" class="mt-2">
+        <p>ToDo :: ここで管理</p>
       </m-card>
     </m-card>
   </v-dialog>
