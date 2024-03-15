@@ -88,13 +88,17 @@ onUnmounted(() => {
 <template>
   <Userinfo v-model="displayUserpage" :userId="userIdForDialog" />
 
-  <div class="pa-4 mx-auto" style="max-width:1200px;">
+  <div class="pa-4 mx-auto d-flex flex-column" style="max-width:1200px; height:100%;">
     <p class="text-h5 pa-2">ユーザーリスト</p>
     <v-divider class="my-2"></v-divider>
-    <m-card class="mx-auto" :loading="stateLoading">
+    <m-card class="mx-auto d-flex flex-column" :loading="stateLoading" style="width:100%; height:100%;">
       ユーザー数 : {{ userCount }}
       <v-divider class="my-2"></v-divider>
-      <v-table hover>
+      <v-table
+        hover
+        style="overflow-y:auto;"
+        class="flex-grow-1"
+      >
         <thead>
           <tr>
             <th class="text-left">
@@ -124,6 +128,12 @@ onUnmounted(() => {
           </tr>
         </tbody>
       </v-table>
+      <v-pagination
+        v-model="currentPage"
+        :length="4"
+        rounded="xl"
+        class="mt-2"
+      />
     </m-card>
   </div>
 </template>
