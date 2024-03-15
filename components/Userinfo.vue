@@ -69,7 +69,7 @@ onUnmounted(() => {
           <p class="text-h4">
             {{ Userinfo.userName }}
           </p>
-          <div class="d-flex my-1">
+          <div class="my-1">
             <RoleChip v-for="roleId of Userinfo.role" :roleId="roleId" />
             <RoleAdd :userId="props.userId" />
           </div>
