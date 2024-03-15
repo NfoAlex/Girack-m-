@@ -136,6 +136,9 @@ onUnmounted(() => {
             <th class="text-left">
               ロール
             </th>
+            <th class="text-left">
+              BAN状態
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -150,6 +153,9 @@ onUnmounted(() => {
                 v-for="roleId of user.role"
                 :roleId="roleId"
               />
+            </td>
+            <td>
+              {{ user.banned }}
             </td>
           </tr>
         </tbody>
