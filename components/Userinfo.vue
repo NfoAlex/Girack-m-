@@ -71,7 +71,7 @@ onUnmounted(() => {
           </p>
           <div class="d-flex my-1">
             <RoleChip v-for="roleId of Userinfo.role" :roleId="roleId" />
-            <RoleAdd />
+            <RoleAdd :userId="props.userId" />
           </div>
         </span>
       </div>
