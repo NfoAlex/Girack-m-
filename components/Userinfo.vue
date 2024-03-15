@@ -89,6 +89,7 @@ onUnmounted(() => {
           size="small"
           :variant="displayPage==='joinedChannel'?'tonal':'text'"
         >
+          <v-icon>mdi:mdi-pound</v-icon>
           参加チャンネル
         </m-btn>
         <m-btn
@@ -96,6 +97,7 @@ onUnmounted(() => {
           size="small"
           :variant="displayPage==='manage'?'tonal':'text'"
         >
+          <v-icon>mdi:mdi-shield-account</v-icon>
           管理
         </m-btn>
       </span>
