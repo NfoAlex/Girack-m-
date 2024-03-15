@@ -60,15 +60,13 @@ onUnmounted(() => {
 <template>
   <v-dialog width="65vw" max-width="800px" height="75vh" max-height="900px">
     <m-card style="width:100%; height:100%;">
-      {{ Userinfo }}
-      <v-divider />
       <div class="d-flex align-center my-3">
-        <v-avatar class="mr-3" size="64">
+        <v-avatar class="mr-3" size="84">
           {{ Userinfo.userName }}
         </v-avatar>
         <span>
           <p class="text-disabled text-caption">#{{ Userinfo.userId }}</p>
-          <p class="text-h5">
+          <p class="text-h4">
             {{ Userinfo.userName }}
           </p>
           <div class="d-flex my-1">
