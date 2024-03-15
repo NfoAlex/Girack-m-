@@ -48,18 +48,22 @@ const addRole = (roleIdAdding:string) => {
           :key="index"
           rounded="pill"
           style="width:100%;"
-          class="py-2 px-3 d-flex align-center justify-left text-left"
         >
-          <v-icon
-            :color="role.color"
-            size="small"
-            class="mr-2"
+          <span
+            v-if="(role.roleId!=='HOST'&&role.roleId!=='MEMBER')"
+            class="py-2 px-3 d-flex align-center justify-left text-left"
           >
-            mdi-circle
-          </v-icon>
-          <v-list-item-title>
-            {{ role.name }}
-          </v-list-item-title>
+            <v-icon
+              :color="role.color"
+              size="small"
+              class="mr-2"
+            >
+              mdi-circle
+            </v-icon>
+            <v-list-item-title>
+              {{ role.name }}
+            </v-list-item-title>
+          </span>
         </v-card>
       </v-list>
     </v-menu>
