@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
+import { useRole } from '~/stores/role';
+
+const { getRoleSingle } = storeToRefs(useRole());
+
 import type { MyUserinfo } from '~/types/user';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -53,11 +57,33 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <v-dialog>
-    <m-card>
-      {{ props.userId }}
-      <v-divider />
+  <v-dialog width="85vw" max-width="800px">
+    <m-card style="width:100%; height:100%;">
       {{ Userinfo }}
+      <v-divider />
+      <div class="d-flex">
+        <v-avatar class="mr-3">
+          {{ Userinfo.userName }}
+        </v-avatar>
+        <p class="text-h5">
+          {{ Userinfo.userName }}
+        </p>
+      </div>
+
+      <div class="d-flex my-1">
+        <v-chip v-for="roleId of Userinfo.role" size="small">
+          <v-icon
+            :color="getRoleSingle(roleId).color"
+            class="mr-2"
+          >mdi-circle</v-icon>
+          {{ getRoleSingle(roleId).name }}
+        </v-chip>
+      </div>
+
+      <m-card color="surface">
+        <p>参加チャンネル</p>
+        {{ Userinfo.channelJoined }}
+      </m-card>
     </m-card>
   </v-dialog>
 </template>
