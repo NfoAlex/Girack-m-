@@ -23,6 +23,7 @@ const Userinfo = ref<MyUserinfo>({
   banned: false,
   channelJoined: []
 });
+const displayPage = ref<"joinedChannel"|"manage">("joinedChannel");
 
 /**
  * ユーザー情報受け取り
@@ -83,7 +84,26 @@ onUnmounted(() => {
         </v-chip>
       </div>
 
-      <m-card color="surface">
+      <v-divider class="mt-2 mb-4" />
+
+      <span class="d-flex">
+        <m-btn
+          @click="displayPage = 'joinedChannel'"
+          size="small"
+          :variant="displayPage==='joinedChannel'?'tonal':'text'"
+        >
+          参加チャンネル
+        </m-btn>
+        <m-btn
+          @click="displayPage = 'manage'"
+          size="small"
+          :variant="displayPage==='manage'?'tonal':'text'"
+        >
+          管理
+        </m-btn>
+      </span>
+
+      <m-card color="surface" class="mt-2">
         <p>参加チャンネル</p>
         {{ Userinfo.channelJoined }}
       </m-card>
