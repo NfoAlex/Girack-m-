@@ -9,7 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <v-chip size="small">
+  <v-chip size="small" class="mr-1">
     <v-icon
       :color="getRoleSingle(props.roleId).color"
       class="mr-2"
