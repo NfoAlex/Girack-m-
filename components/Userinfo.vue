@@ -39,6 +39,19 @@ const banUser = () => {
 };
 
 /**
+ * ユーザーのBANを解除する
+ */
+const pardonUser = () => {
+  socket.emit("pardonUser", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    targetUserId: props.userId
+  });
+};
+
+/**
  * ユーザー情報受け取り
  * @param dat
  */
@@ -145,9 +158,14 @@ onUnmounted(() => {
       </m-card>
 
       <m-card v-if="displayPage==='manage'" color="cardInner" class="mt-2 flex-grow-1">
-        <p class="py-2 px-1">BANする</p>
-        <p class="text-caption text-disabled text-center">ダブルクリックでBAN</p>
-        <m-btn @dblclick="banUser" color="error" block>BAN</m-btn>
+        <span v-if="!Userinfo.banned">
+          <p class="text-caption text-disabled text-center">ダブルクリックでBAN</p>
+          <m-btn @dblclick="banUser" color="error" block>BAN</m-btn>
+        </span>
+        <span v-else>
+          <p class="text-caption text-disabled text-center">ダブルクリックで解除</p>
+          <m-btn @dblclick="pardonUser" color="info" block>BANを解除する</m-btn>
+        </span>
       </m-card>
 
       <m-card v-if="displayPage==='JSON'" color="cardInner" class="mt-2 flex-grow-1">
