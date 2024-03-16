@@ -62,18 +62,8 @@ const SOCKETfetchUserInfo = (dat:{result:string, data:MyUserinfo}) => {
   Userinfo.value = dat.data;
 };
 
-/**
- * @param dat
- */
-const SOCKETbanUser = (dat:any) => {
-  console.log("Userinfo :: SOCKETbanUser : dat->", dat);
-}
-
 onMounted(() => {
   socket.on("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
-  socket.on("RESULT::banUser", SOCKETbanUser);
-
-  //console.log("Userinfo :: onMounted : マウントされた");
 
   //ユーザー情報取得
   socket.emit("fetchUserInfo", {
@@ -87,7 +77,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
-  socket.off("RESULT::banUser", SOCKETbanUser);
 });
 
 </script>
