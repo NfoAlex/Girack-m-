@@ -26,6 +26,19 @@ const Userinfo = ref<MyUserinfo>({
 const displayPage = ref<"joinedChannel"|"manage"|"JSON">("joinedChannel");
 
 /**
+ * ユーザーをBANする
+ */
+const banUser = () => {
+  socket.emit("banUser", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    targetUserId: props.userId
+  });
+};
+
+/**
  * ユーザー情報受け取り
  * @param dat
  */
@@ -36,8 +49,16 @@ const SOCKETfetchUserInfo = (dat:{result:string, data:MyUserinfo}) => {
   Userinfo.value = dat.data;
 };
 
+/**
+ * @param dat
+ */
+const SOCKETbanUser = (dat:any) => {
+  console.log("Userinfo :: SOCKETbanUser : dat->", dat);
+}
+
 onMounted(() => {
   socket.on("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
+  socket.on("RESULT::banUser", SOCKETbanUser);
 
   //console.log("Userinfo :: onMounted : マウントされた");
 
@@ -53,6 +74,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
+  socket.off("RESULT::banUser", SOCKETbanUser);
 });
 
 </script>
@@ -60,6 +82,15 @@ onUnmounted(() => {
 <template>
   <v-dialog width="65vw" max-width="800px" height="75vh" max-height="900px">
     <m-card class="d-flex flex-column" style="height:100%; padding: 0 !important;">
+      <v-alert
+        v-if="Userinfo.banned"
+        class="mx-auto flex-shrink-0 flex-grow-0 py-8 mt-5 d-flex align-center"
+        color="error"
+      >
+        <v-icon class="mx-1">mdi-lock</v-icon>
+        <span>このユーザーはBANされています。</span>
+      </v-alert>
+      
       <div
         class="d-flex align-center mt-3 pa-5 text-truncate"
         style="width:100%;"
@@ -114,7 +145,9 @@ onUnmounted(() => {
       </m-card>
 
       <m-card v-if="displayPage==='manage'" color="cardInner" class="mt-2 flex-grow-1">
-        <p>ToDo :: ここで管理</p>
+        <p class="py-2 px-1">BANする</p>
+        <p class="text-caption text-disabled text-center">ダブルクリックでBAN</p>
+        <m-btn @dblclick="banUser" color="error" block>BAN</m-btn>
       </m-card>
 
       <m-card v-if="displayPage==='JSON'" color="cardInner" class="mt-2 flex-grow-1">
