@@ -154,7 +154,8 @@ onUnmounted(() => {
               />
             </td>
             <td>
-              {{ user.banned }}
+              <p v-if="user.banned" class="text-red">BAN</p>
+              <p v-else color="success" class="text-indigo-lighten-1">健康</p>
             </td>
           </tr>
         </tbody>
