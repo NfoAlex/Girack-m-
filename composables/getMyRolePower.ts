@@ -31,8 +31,17 @@ export default function getMyRolePower():{
   for (let roleIdChecking of myRoleArr) {
     const rolePowerForThis = useRole().getRoleSingle(roleIdChecking);
 
-    //JSON結合
-    rolePower = Object.assign(rolePower, rolePowerForThis);
+    //trueならtrueにする、falseなら変更無し
+    rolePower = {
+      ServerManage: rolePowerForThis.ServerManage?true:rolePower.ServerManage,
+      RoleManage: rolePowerForThis.RoleManage?true:rolePower.RoleManage,
+      ChannelRename: rolePowerForThis.ChannelRename?true:rolePower.ChannelRename,
+      ChannelViewPrivate: rolePowerForThis.ChannelViewPrivate?true:rolePower.ChannelViewPrivate,
+      ChannelCreateAndDelete: rolePowerForThis.ChannelCreateAndDelete?true:rolePower.ChannelCreateAndDelete,
+      UserManage: rolePowerForThis.UserManage?true:rolePower.UserManage,
+      MessageDelete: rolePowerForThis.MessageDelete?true:rolePower.MessageDelete,
+      MessageAttatchFile: rolePowerForThis.MessageAttatchFile?true:rolePower.MessageAttatchFile
+    };
   }
 
   //名前とかも記録されるため必要じゃないものを削除
