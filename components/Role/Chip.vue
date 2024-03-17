@@ -2,6 +2,7 @@
 import { socket } from '~/socketHandlers/socketInit';
 import calcRole from '~/composables/calcRole';
 import calcMyRole from '~/composables/calcMyRole';
+import getMyRolePower from '~/composables/getMyRolePower';
 import { useMyUserinfo } from '~/stores/userinfo';
 import { useRole } from '~/stores/role';
 
@@ -46,7 +47,7 @@ onMounted(() => {
     const MyRoleLevel = calcMyRole();
     
     //レベル比較して外せるかどうか設定
-    if (roleLevel < MyRoleLevel) canUnlinkThis.value = true;
+    if (roleLevel <= MyRoleLevel && getMyRolePower().RoleManage) canUnlinkThis.value = true;
   }
 })
 </script>
