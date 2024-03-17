@@ -1,6 +1,5 @@
 import { useRole } from "~/stores/role";
 import { useMyUserinfo } from "~/stores/userinfo";
-import type role from "~/types/role";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
