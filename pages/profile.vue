@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import getMyRolePower from "~/composables/getMyRolePower";
 import { useMyUserinfo } from "../stores/userinfo";
-import { useRole } from "~/stores/role";
+import calcMyRole from "~/composables/calcMyRole";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
-const { getRoleLevel } = storeToRefs(useRole());
 
 /**
  * data
@@ -123,7 +122,7 @@ onMounted(() => {
       <div class="d-flex flex-column">
         <p class="text-h6 mb-1">あなたの権限</p>
         <m-card color="cardInner">
-          あなたの権限レベル : <b> {{ getRoleLevel() }} </b>
+          あなたの権限レベル : <b> {{ calcMyRole() }} </b>
         </m-card>
         <m-card class="d-flex flex-column my-1" color="cardInner">
 
