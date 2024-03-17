@@ -18,10 +18,11 @@ export default function getMyRolePower() {
   };
   //自分が持っているロールのID配列
   const myRoleArr:string[] = getMyUserinfo.value.role;
-
-  for (let roleId of myRoleArr) {
+  //ロールIDの数分調べて権限割り当て
+  for (let roleIdChecking of myRoleArr) {
+    const rolePowerForThis = getRoleSingle(roleIdChecking).value;
     rolePower = {
-      ...rolePower, getRoleSingle(roleId)
+      ...rolePower, rolePowerForThis
     };
   }
 
