@@ -1,5 +1,6 @@
 //ロールのレベルを計算する
 import type role from "~/types/role";
+import getMyRolePower from "./getMyRolePower";
 
 /*
 //権限それぞれの持つレベル(数値)
@@ -18,7 +19,9 @@ const roleLevel:{
 */
 
 export default function calcMyRole() {
+  //自分が持っている権限データ取得
   const roleDataChecking = getMyRolePower();
+  
   try {
 
     //権限をそれぞれ調べてレベルを返す
