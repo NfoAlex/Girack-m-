@@ -6,7 +6,6 @@ import type role from "~/types/role";
 export const useRole = defineStore("role", {
   state: () => 
   ({
-    _RoleLevel: 0,
     _Roles: {
       "MEMBER": {
         roleId: "MEMBER",
@@ -36,17 +35,12 @@ export const useRole = defineStore("role", {
       }
     }
   } as {
-    _RoleLevel: number,
     _Roles: {
       [key: string]: role
     }
   }),
   
   getters: {
-    getRoleLevel:(state) => ():number => {
-      return state._RoleLevel;
-    },
-
     //全ロールを取得
     getRoles:(state) => ():{[key: string]: role} => {
       return state._Roles;
@@ -78,51 +72,11 @@ export const useRole = defineStore("role", {
     //ロール情報を格納する
     bindRoles(roles:any) {
       this._Roles = roles;
-
-      this._RoleLevel = calcMyRole();
     },
 
     //単一ロールの設定
     bindRoleSingle(role:role) {
       this._Roles[role.roleId] = role;
-
-      this._RoleLevel = calcMyRole();
     }
   }
 });
-
-//自分のロールレベルを計算
-function calcMyRole() {
-  const roleDataChecking:role = useRole().getRoleSingle("MEMBER");
-
-  try {
-
-    //権限をそれぞれ調べてレベルを返す
-    if (roleDataChecking.ServerManage) {
-      return 5;
-    } else if (roleDataChecking.RoleManage) {
-      return 4;
-    } else if (
-      roleDataChecking.ChannelViewPrivate
-      ||
-      roleDataChecking.UserManage
-    ) {
-      return 3;
-    } else if (
-      roleDataChecking.ChannelRename
-      ||
-      roleDataChecking.MessageDelete
-    ) {
-      return 2;
-    }
-
-    //2以下はもう1として返す
-    return 1;
-
-  } catch(e) {
-
-    console.log("calcRole :: エラー ->", e);
-    return 0;
-
-  }
-}
