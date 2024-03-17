@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import getMyRolePower from "~/composables/getMyRolePower";
+</script>
+
 <template>
   <div class="py-4 d-flex">
 
@@ -6,7 +10,7 @@
       <p class="text-h5 py-4 px-8">サーバー管理</p>
 
       <span class="pl-2">
-        <NuxtLink to="/server">
+        <NuxtLink v-if="getMyRolePower().ServerManage" to="/server">
           <v-card
             class="rounded-pill py-2 px-3 d-flex align-center"
             :variant="$route.path==='/server'?'tonal':'text'"
@@ -17,7 +21,7 @@
           </v-card>
         </NuxtLink>
 
-        <NuxtLink to="/server/config">
+        <NuxtLink v-if="getMyRolePower().ServerManage" to="/server/config">
           <v-card
             class="rounded-pill py-2 px-3 d-flex align-center"
             :variant="$route.path==='/server/config'?'tonal':'text'"
@@ -28,7 +32,7 @@
           </v-card>
         </NuxtLink>
 
-        <NuxtLink to="/server/role">
+        <NuxtLink  v-if="getMyRolePower().RoleManage" to="/server/role">
           <v-card
             class="rounded-pill py-2 px-3 d-flex align-center"
             :variant="$route.path==='/server/role'?'tonal':'text'"
