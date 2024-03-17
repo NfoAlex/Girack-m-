@@ -42,7 +42,7 @@ onMounted(() => {
   //権限レベル計算
   const roleLevel = calcRole(roleInfo);
   const MyRoleLevel = calcMyRole();
-  console.log("Chip :: onMounted : 自レベ->", MyRoleLevel, " ロールレベ->", roleLevel);
+  
   //レベル比較して外せるかどうか設定
   if (roleLevel < MyRoleLevel) canUnlinkThis.value = true;
 })
