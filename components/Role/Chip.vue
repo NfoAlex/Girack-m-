@@ -46,7 +46,7 @@ onMounted(() => {
     const MyRoleLevel = calcMyRole();
     
     //レベル比較して外せるかどうか設定
-    if (roleLevel <= MyRoleLevel) canUnlinkThis.value = true;
+    if (roleLevel < MyRoleLevel) canUnlinkThis.value = true;
   }
 })
 </script>
