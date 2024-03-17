@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
+import getMyRolePower from "~/composables/getMyRolePower";
 import { useMyUserinfo } from '~/stores/userinfo';
+const router = useRouter();
 
 import type { Serverinfo } from '~/types/serverInfo';
 
@@ -122,6 +124,11 @@ const SOCKETfetchServerInfoFull = (dat:{result:string, data:Serverinfo}) => {
     }
   });
 }
+
+onBeforeMount(() => {
+  //サーバー管理の権限を持っていないならロール管理ページへ
+  if (!getMyRolePower().ServerManage) router.push("/server/role");
+});
 
 onMounted(() => {
   //サーバーFull情報受け取り用

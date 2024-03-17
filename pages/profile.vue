@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import getMyRolePower from "~/composables/getMyRolePower";
 import { useMyUserinfo } from "../stores/userinfo";
+import getMyRolePower from "~/composables/getMyRolePower";
 import calcMyRole from "~/composables/calcMyRole";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
