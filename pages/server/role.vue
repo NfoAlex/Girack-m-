@@ -104,6 +104,7 @@ onUnmounted(() => {
             <v-icon :color="roleEditing.color" class="mr-2">mdi-circle</v-icon>
             {{ roleEditing.name }}
           </v-chip>
+          <p class="flex-grow-1 flex-shrink-0">レベル : {{ calcRole(roleEditing) }}</p>
         </span>
         <ServerRoleManager :roleEditing="roleEditing" />
 
