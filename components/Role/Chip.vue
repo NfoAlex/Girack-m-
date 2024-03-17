@@ -37,14 +37,17 @@ const unlinkRole = () => {
 }
 
 onMounted(() => {
-  //ロール情報取得
-  const roleInfo = useRole().getRoleSingle(props.roleId);
-  //権限レベル計算
-  const roleLevel = calcRole(roleInfo);
-  const MyRoleLevel = calcMyRole();
-  
-  //レベル比較して外せるかどうか設定
-  if (roleLevel <= MyRoleLevel) canUnlinkThis.value = true;
+  //ユーザーIDが渡されているならレベル比較処理
+  if (props.userId !== undefined) {
+    //ロール情報取得
+    const roleInfo = useRole().getRoleSingle(props.roleId);
+    //権限レベル計算
+    const roleLevel = calcRole(roleInfo);
+    const MyRoleLevel = calcMyRole();
+    
+    //レベル比較して外せるかどうか設定
+    if (roleLevel <= MyRoleLevel) canUnlinkThis.value = true;
+  }
 })
 </script>
 
