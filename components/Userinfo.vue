@@ -56,7 +56,7 @@ const pardonUser = () => {
  * @param dat
  */
 const SOCKETfetchUserInfo = (dat:{result:string, data:MyUserinfo}) => {
-  console.log("Userinfo :: SOCKETfetchUserInfo : dat->", dat);
+  //console.log("Userinfo :: SOCKETfetchUserInfo : dat->", dat);
 
   //ユーザー情報を格納
   Userinfo.value = dat.data;
