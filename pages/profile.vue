@@ -11,7 +11,7 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 const dialogLogout = ref<boolean>(false); //ログアウト確認
 const dialogChangePassword = ref<boolean>(false); //パスワード変更
 const dialogChangeUsername = ref<boolean>(false); //ユーザー名変更用
-const myRolePower = ref<{ //自分の権限力用
+const myRolePower = ref<{ //自分の権力用
   ServerManage: boolean,
   RoleManage: boolean,
   ChannelRename: boolean,
