@@ -78,7 +78,14 @@ const dialogChangeUsername = ref<boolean>(false); //ユーザー名変更用
               <v-icon>mdi:mdi-pencil</v-icon>
             </v-btn>
           </div>
+          <div>
+            <RoleChip
+              v-for="roleId of getMyUserinfo.role"
+              :roleId="roleId"
+            />
+          </div>
         </div>
+        
       </div>
 
       <v-divider class="my-3"></v-divider>

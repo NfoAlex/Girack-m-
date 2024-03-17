@@ -13,8 +13,6 @@ export default function fetchUserConfig(socket: Socket): void {
     console.log("UserConfig :: dat->", dat);
     const Config = useConfig(); //piniaからインポート
 
-    /* TODO :: テーマ設定を検知してVuetifyからテーマを適用する */
-
     Config.updateConfig(dat.data); //設定データを適用
   });
 }
