@@ -1,12 +1,21 @@
 import { useRole } from "~/stores/role";
 import { useMyUserinfo } from "~/stores/userinfo";
+import type role from "~/types/role";
 
-const { getRoleSingle } = storeToRefs(useRole());
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
-export default function getMyRolePower() {
+export default function getMyRolePower():{
+  ServerManage: boolean,
+  RoleManage: boolean,
+  ChannelRename: boolean,
+  ChannelViewPrivate: boolean,
+  ChannelCreateAndDelete: boolean,
+  UserManage: boolean,
+  MessageDelete: boolean,
+  MessageAttatchFile: boolean
+} {
   //持っている権限力
-  let rolePower = {
+  let rolePower:any = {
     ServerManage: false,
     RoleManage: false,
     ChannelRename: false,
@@ -20,12 +29,18 @@ export default function getMyRolePower() {
   const myRoleArr:string[] = getMyUserinfo.value.role;
   //ロールIDの数分調べて権限割り当て
   for (let roleIdChecking of myRoleArr) {
-    const rolePowerForThis = getRoleSingle(roleIdChecking).value;
-    rolePower = {
-      ...rolePower, rolePowerForThis
-    };
+    const rolePowerForThis = useRole().getRoleSingle(roleIdChecking);
+
+    //JSON結合
+    rolePower = Object.assign(rolePower, rolePowerForThis);
   }
 
   console.log("getMyRolePower :: 権限力->", rolePower);
+
+  //名前とかも記録されるため必要じゃないものを削除
+  delete rolePower.name;
+  delete rolePower.color;
+  delete rolePower.roleId;
+
   return rolePower;
 }
