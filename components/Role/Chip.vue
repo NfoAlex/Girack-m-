@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
+import calcRole from '~/composables/calcRole';
+import calcMyRole from '~/composables/calcMyRole';
 import { useMyUserinfo } from '~/stores/userinfo';
 import { useRole } from '~/stores/role';
 
@@ -14,7 +16,8 @@ const props = defineProps<{
 /**
  * data
  */
-const mouseHoveredOnDot = ref<boolean>(false);
+const mouseHoveredOnDot = ref<boolean>(false); //ホバーしたかどうか
+const canUnlinkThis = ref<boolean>(false); //外せるかどうか
 
 /**
  * ロールを外す
@@ -32,6 +35,17 @@ const unlinkRole = () => {
     });
   }
 }
+
+onMounted(() => {
+  //ロール情報取得
+  const roleInfo = useRole().getRoleSingle(props.roleId);
+  //権限レベル計算
+  const roleLevel = calcRole(roleInfo);
+  const MyRoleLevel = calcMyRole();
+  console.log("Chip :: onMounted : 自レベ->", MyRoleLevel, " ロールレベ->", roleLevel);
+  //レベル比較して外せるかどうか設定
+  if (roleLevel < MyRoleLevel) canUnlinkThis.value = true;
+})
 </script>
 
 <template>
@@ -42,8 +56,12 @@ const unlinkRole = () => {
           unlinkRole()
       }"
       @mouseover="() => {
-        if (props.roleId !== 'MEMBER' && props.roleId !== 'HOST' && props.userId !== undefined) 
-          mouseHoveredOnDot = true
+        if (
+          props.roleId !== 'MEMBER' && 
+          props.roleId !== 'HOST' &&
+          props.userId !== undefined &&
+          canUnlinkThis
+          ) mouseHoveredOnDot = true
       }"
       @mouseleave="mouseHoveredOnDot = false"
       :color="getRoleSingle(props.roleId).color"
