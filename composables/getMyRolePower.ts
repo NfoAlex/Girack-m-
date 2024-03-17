@@ -35,8 +35,6 @@ export default function getMyRolePower():{
     rolePower = Object.assign(rolePower, rolePowerForThis);
   }
 
-  console.log("getMyRolePower :: 権限力->", rolePower);
-
   //名前とかも記録されるため必要じゃないものを削除
   delete rolePower.name;
   delete rolePower.color;
