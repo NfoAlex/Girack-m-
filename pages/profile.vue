@@ -32,8 +32,13 @@ const myRolePower = ref<{ //自分の権力用
 });
 
 onMounted(() => {
-  //現在の自分の権限を調べて格納
+  //現在の自分の権力を調べて格納
   myRolePower.value = getMyRolePower();
+
+  //自分の情報の更新があったら権力をまた調べる
+  watch(getMyUserinfo, () => {
+    myRolePower.value = getMyRolePower();
+  });
 });
 
 </script>
