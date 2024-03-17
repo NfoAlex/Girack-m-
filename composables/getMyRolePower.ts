@@ -3,7 +3,10 @@ import { useMyUserinfo } from "~/stores/userinfo";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
-export default function getMyRolePower():{
+interface onlyRolePower {
+  name?: string,
+  color?: string,
+  roleId?: string,
   ServerManage: boolean,
   RoleManage: boolean,
   ChannelRename: boolean,
@@ -12,9 +15,11 @@ export default function getMyRolePower():{
   UserManage: boolean,
   MessageDelete: boolean,
   MessageAttatchFile: boolean
-} {
+};
+
+export default function getMyRolePower():onlyRolePower {
   //持っている権限力
-  let rolePower:any = {
+  let rolePower:onlyRolePower = {
     ServerManage: false,
     RoleManage: false,
     ChannelRename: false,
