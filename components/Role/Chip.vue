@@ -35,7 +35,7 @@ const unlinkRole = () => {
 </script>
 
 <template>
-  <v-chip size="small" class="mr-1 mt-1">
+  <v-chip size="small" class="ma-1">
     <v-icon
       @click="() => {
         if (props.roleId !== 'MEMBER' && props.roleId !== 'HOST' && props.userId !== undefined) 
