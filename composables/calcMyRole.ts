@@ -21,26 +21,30 @@ const roleLevel:{
 export default function calcMyRole() {
   //自分が持っている権限データ取得
   const roleDataChecking = getMyRolePower();
-  
+
   try {
 
     //権限をそれぞれ調べてレベルを返す
     if (roleDataChecking.ServerManage) {
       return 5;
+
     } else if (roleDataChecking.RoleManage) {
       return 4;
+
     } else if (
       roleDataChecking.ChannelViewPrivate
       ||
       roleDataChecking.UserManage
     ) {
       return 3;
+
     } else if (
       roleDataChecking.ChannelRename
       ||
       roleDataChecking.MessageDelete
     ) {
       return 2;
+      
     }
 
     //2以下はもう1として返す
