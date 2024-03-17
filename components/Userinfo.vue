@@ -88,6 +88,7 @@ onUnmounted(() => {
         v-if="Userinfo.banned"
         class="mx-auto flex-shrink-0 flex-grow-0 py-8 mt-5 d-flex align-center"
         color="error"
+        width="95%"
       >
         <v-icon class="mx-1">mdi-lock</v-icon>
         <span>このユーザーはBANされています。</span>
