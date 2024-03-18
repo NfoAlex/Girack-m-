@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import getMyRolePower from "~/composables/getMyRolePower";
+</script>
+
 <template>
   <div class="d-flex ma-0 pa-0" style="height: 100vh; width: 100vw;">
     <!-- サイドバー -->
@@ -107,7 +111,7 @@
       </span>
 
       <!-- サーバー管理ボタン -->
-      <span class="mt-4">
+      <span v-if="getMyRolePower().ServerManage||getMyRolePower().RoleManage" class="mt-4">
         <NuxtLink to="/server">
           <v-btn
             icon="mdi:mdi-server-security"

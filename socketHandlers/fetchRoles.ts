@@ -1,4 +1,4 @@
-//設定情報受け取り
+//全ロール情報受け取り用
 
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useRole } from "~/stores/role";

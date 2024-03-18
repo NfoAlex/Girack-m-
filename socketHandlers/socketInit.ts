@@ -7,6 +7,7 @@ import fetchUserInfo from "./fetchUserInfo";
 import fetchUserConfig from "./fetchUserConfig";
 import saveUserConfig from "./saveUserConfig";
 import fetchRoles from "./fetchRoles";
+import fetchRoleSingle from "./fetchRoleSingle";
 
 console.log("socketInit :: INITIALIZED");
 
@@ -36,5 +37,6 @@ export function loadSocket() {
   fetchUserInfo(socket); //自ユーザー情報
   fetchUserConfig(socket); //設定データ
   saveUserConfig(socket); //設定データの保存結果
-  fetchRoles(socket); //ロール受け取り
+  fetchRoles(socket); //全ロール受け取り
+  fetchRoleSingle(socket); //単一ロール受け取り
 }
