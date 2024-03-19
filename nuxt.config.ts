@@ -12,6 +12,11 @@ export default defineNuxtConfig({
           additionalData: '@import "@/assets/styles/variables.scss";',
         },
       },
+    },
+    server: {
+      proxy: {
+        "/uploadProfileIcon": "http://localhost:33333/"
+      }
     }
   },
   //ここでプロキシ適用(なぜかエラー扱い)
