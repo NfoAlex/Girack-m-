@@ -42,8 +42,8 @@ const submit = async () => {
       <v-card-text>
         <v-file-input v-model="file" label="File input"></v-file-input>
       </v-card-text>
-      <v-card-actions>
-        <m-btn @click="submit">アップロード</m-btn>
+      <v-card-actions class="d-flex flex-row-reverse">
+        <m-btn @click="submit" color="primary">アップロード</m-btn>
       </v-card-actions>
     </m-card>
   </v-dialog>
