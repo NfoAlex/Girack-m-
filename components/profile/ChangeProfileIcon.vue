@@ -41,7 +41,11 @@ const submit = async () => {
         プロフィール画像を変更
       </v-card-title>
       <v-card-text>
-        <v-file-input v-model="file" label="File input"></v-file-input>
+        <v-file-input
+          v-model="file"
+          accept="image/*"
+          label="プロフィール画像"
+        />
       </v-card-text>
       <v-card-actions class="d-flex flex-row-reverse">
         <m-btn @click="submit" color="primary">アップロード</m-btn>
