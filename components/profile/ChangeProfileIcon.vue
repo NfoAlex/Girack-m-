@@ -17,7 +17,7 @@ const submit = async () => {
     // JSONデータを文字列に変換して追加
     formData.append('metadata', JSON.stringify(metadata.value));
 
-    fetch('http://localhost:33333/uploadProfileIcon', {
+    fetch('/uploadProfileIcon', {
       method: 'POST',
       body: formData
     }).finally(() => {
