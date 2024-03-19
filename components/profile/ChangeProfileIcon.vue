@@ -9,6 +9,7 @@ const metadata = ref<{userId:string}>({
   userId: ''
 });
 
+//プロフィール画像をあっぷ
 const submit = async () => {
   if (file.value) {
     const formData = new FormData();
