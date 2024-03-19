@@ -1,0 +1,50 @@
+<script setup lang="ts">
+import { socket } from '~/socketHandlers/socketInit';
+
+/**
+ * data
+ */
+const file = ref<any>();
+const metadata = ref<{userId:string}>({
+  userId: ''
+});
+
+const submit = async () => {
+  if (file.value) {
+    const formData = new FormData();
+    formData.append('file', file.value);
+    // JSONデータを文字列に変換して追加
+    formData.append('metadata', JSON.stringify(metadata.value));
+
+    fetch('http://localhost:33333/uploadProfileIcon', {
+      method: 'POST',
+      body: formData
+    }).finally(() => {
+      console.log("/profile :: submit : アップロードが完了");
+    })
+    .catch((err:Error) => {
+      console.log("/profile :: submit : アップロードエラー->", err);
+    });
+
+    //console.log("/profile :: submit : r->", r);
+  }
+}
+</script>
+
+<template>
+  <v-dialog
+    style="max-width: 650px; width: 80vw"
+  >
+    <m-card>
+      <v-card-title>
+        プロフィール画像を変更
+      </v-card-title>
+      <v-card-text>
+        <v-file-input v-model="file" label="File input"></v-file-input>
+      </v-card-text>
+      <v-card-actions>
+        <m-btn @click="submit">アップロード</m-btn>
+      </v-card-actions>
+    </m-card>
+  </v-dialog>
+</template>

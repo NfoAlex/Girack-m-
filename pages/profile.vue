@@ -11,6 +11,7 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 const dialogLogout = ref<boolean>(false); //ログアウト確認
 const dialogChangePassword = ref<boolean>(false); //パスワード変更
 const dialogChangeUsername = ref<boolean>(false); //ユーザー名変更用
+const dialogChangeProfileIcon = ref<boolean>(false); //プロフィール画像変更用
 const myRolePower = ref<{ //自分の権力用
   ServerManage: boolean,
   RoleManage: boolean,
@@ -74,15 +75,23 @@ onMounted(() => {
     "
   />
 
+  <ProfileChangeProfileIcon
+    v-model="dialogChangeProfileIcon"
+    @closeDialog="
+      () => {
+        dialogChangeUsername = false;
+      }
+    "
+  />
+
   <div class="pa-4">
     <p class="text-h5 pa-2">あなた</p>
     <v-divider class="my-2"></v-divider>
     <m-card class="mx-auto" width="80%" style="max-width: 600px">
       <div class="d-flex justify-start" style="width: 100%">
         <!-- アイコン -->
-        <div>
+        <div @click="dialogChangeProfileIcon = true">
           <v-img
-            @click=""
             :alt="getMyUserinfo.userId"
             :src="'/img/' + getMyUserinfo.userId"
             width="100"
