@@ -68,19 +68,17 @@ const submit = async () => {
       method: 'POST',
       body: formData
     }).finally(() => {
-      console.log("/profile :: submit : アップロードが完了");
+      //console.log("/profile :: submit : アップロードが完了");
     })
     .catch((err:Error) => {
       console.log("/profile :: submit : アップロードエラー->", err);
     });
 
-    //const resultJSON = await result.json();
-
     if (result.status === 200) {
-      console.log("/profile :: submit : result->", result);
+      //console.log("/profile :: submit : result->", result);
       uploadResult.value = "SUCCESS";
     } else {
-      console.log("無理だったわ");
+      //console.log("無理だったわ");
       uploadResult.value = "ERROR";
     }
     //console.log("/profile :: submit : resultJSON->", resultJSON);
