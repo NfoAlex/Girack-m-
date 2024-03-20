@@ -80,7 +80,7 @@ onMounted(() => {
     v-model="dialogChangeProfileIcon"
     @closeDialog="
       () => {
-        dialogChangeUsername = false;
+        dialogChangeProfileIcon = false;
       }
     "
   />
