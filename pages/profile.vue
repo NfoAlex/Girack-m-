@@ -75,6 +75,7 @@ onMounted(() => {
     "
   />
 
+  <!-- アバター画像変更用ダイアログ -->
   <ProfileChangeProfileIcon
     v-model="dialogChangeProfileIcon"
     @closeDialog="
@@ -90,11 +91,12 @@ onMounted(() => {
     <m-card class="mx-auto" width="80%" style="max-width: 600px">
       <div class="d-flex justify-start" style="width: 100%">
         <!-- アイコン -->
-        <div @click="dialogChangeProfileIcon = true">
+        <div @click="dialogChangeProfileIcon = true" style="width: 30%;">
           <v-img
             :alt="getMyUserinfo.userId"
-            :src="'/img/' + getMyUserinfo.userId"
-            width="100"
+            :src="'/icon/' + getMyUserinfo.userId"
+            width="auto"
+            height="auto"
           ></v-img>
         </div>
 
