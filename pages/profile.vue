@@ -91,10 +91,15 @@ onMounted(() => {
     <m-card class="mx-auto" width="80%" style="max-width: 600px">
       <div class="d-flex justify-start" style="width: 100%">
         <!-- アイコン -->
-        <div @click="dialogChangeProfileIcon = true" style="width: 30%;">
+        <div
+          @click="dialogChangeProfileIcon = true"
+          style="width: 30%;"
+          class="d-flex flex-column justify-center"
+        >
           <v-img
             :alt="getMyUserinfo.userId"
             :src="'/icon/' + getMyUserinfo.userId"
+            rounded
             width="auto"
             height="auto"
           ></v-img>
