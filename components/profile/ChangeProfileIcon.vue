@@ -111,7 +111,10 @@ const submit = async () => {
       <v-card-actions class="d-flex flex-row-reverse">
         <m-btn
           @click="submit"
-          
+          :disabled="
+            file.length === 0 ||
+            file[0].size > getServerinfo.config.PROFILE.iconMaxSize
+          "
           color="primary"
         >アップロード</m-btn>
       </v-card-actions>
