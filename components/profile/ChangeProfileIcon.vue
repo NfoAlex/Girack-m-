@@ -10,6 +10,7 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
  * data
  */
 const file = ref<File[]>([]); //プロフィール画像ファイル入力用
+const uploadResult = ref<"SUCCESS"|"ERROR"|null>(null);
 const metadata = ref<{userId:string}>({ //ユーザーIDとか格納用
   userId: getMyUserinfo.value.userId
 });
@@ -62,8 +63,8 @@ const submit = async () => {
     // JSONデータを文字列に変換して追加
     formData.append('metadata', JSON.stringify(metadata.value));
 
-    //画像アップロード
-    fetch('/uploadProfileIcon', {
+    //画像アップロード(結果はHTTPリスポンス)
+    const result:any = await fetch('/uploadProfileIcon', {
       method: 'POST',
       body: formData
     }).finally(() => {
@@ -73,7 +74,16 @@ const submit = async () => {
       console.log("/profile :: submit : アップロードエラー->", err);
     });
 
-    //console.log("/profile :: submit : r->", r);
+    //const resultJSON = await result.json();
+
+    if (result.status === 200) {
+      console.log("/profile :: submit : result->", result);
+      uploadResult.value = "SUCCESS";
+    } else {
+      console.log("無理だったわ");
+      uploadResult.value = "ERROR";
+    }
+    //console.log("/profile :: submit : resultJSON->", resultJSON);
   }
 }
 </script>
@@ -82,7 +92,8 @@ const submit = async () => {
   <v-dialog
     style="max-width: 650px; width: 80vw"
   >
-    <m-card>
+
+    <m-card v-if="uploadResult!=='SUCCESS'">
       <v-card-title>
         プロフィール画像を変更
       </v-card-title>
@@ -93,13 +104,30 @@ const submit = async () => {
           :rules="uploadRule"
           :label="'プロフィール画像(' + avatarLimitSizeHumanDisplay() + ' Byte)'"
         />
+        <v-alert v-if="uploadResult==='ERROR'" type="error">
+          ファイルアップロードがうまくいきませんでした
+        </v-alert>
       </v-card-text>
       <v-card-actions class="d-flex flex-row-reverse">
         <m-btn
           @click="submit"
+          
           color="primary"
         >アップロード</m-btn>
       </v-card-actions>
     </m-card>
+
+    <m-card v-if="uploadResult==='SUCCESS'">
+      <v-card-title>
+        プロフィール画像を変更
+      </v-card-title>
+      <v-card-text>
+        <p>成功しました!</p>
+      </v-card-text>
+      <v-card-actions class="d-flex flex-row-reverse">
+        <m-btn @click="$emit('closeDialog')">閉じる</m-btn>
+      </v-card-actions>
+    </m-card>
+
   </v-dialog>
 </template>
