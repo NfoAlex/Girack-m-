@@ -13,7 +13,7 @@ const metadata = ref<{userId:string}>({
 const submit = async () => {
   if (file.value) {
     const formData = new FormData();
-    formData.append('file', file.value);
+    formData.append('file', file.value[0]);
     // JSONデータを文字列に変換して追加
     formData.append('metadata', JSON.stringify(metadata.value));
 
