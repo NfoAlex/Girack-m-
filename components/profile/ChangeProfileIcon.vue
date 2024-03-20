@@ -128,7 +128,7 @@ const submit = async () => {
         <p>成功しました!</p>
       </v-card-text>
       <v-card-actions class="d-flex flex-row-reverse">
-        <m-btn @click="$emit('closeDialog')">閉じる</m-btn>
+        <m-btn @click="$emit('close-dialog')">閉じる</m-btn>
       </v-card-actions>
     </m-card>
 
