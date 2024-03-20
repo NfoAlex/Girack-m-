@@ -102,7 +102,7 @@ const submit = async () => {
           v-model="file"
           accept="image/png, image/jpeg, image/gif"
           :rules="uploadRule"
-          :label="'プロフィール画像(' + avatarLimitSizeHumanDisplay() + ' Byte)'"
+          :label="'プロフィール画像(' + avatarLimitSizeHumanDisplay() + ')'"
         />
         <v-alert v-if="uploadResult==='ERROR'" type="error">
           ファイルアップロードがうまくいきませんでした
