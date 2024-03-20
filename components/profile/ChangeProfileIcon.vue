@@ -9,15 +9,27 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 /**
  * data
  */
-const file = ref<any>();
-const metadata = ref<{userId:string}>({
+const file = ref<File[]>([]); //プロフィール画像ファイル入力用
+const metadata = ref<{userId:string}>({ //ユーザーIDとか格納用
   userId: getMyUserinfo.value.userId
 });
+const uploadRule = ref<any>([ //アップロードするファイルのサイズ制限確認
+  (fileInput:File[]) => {
+    try {
+    console.log("fileInput->", fileInput[0]);
+    return fileInput[0].size < getServerinfo.value.config.PROFILE.iconMaxSize ||
+      "画像サイズを" + avatarLimitSizeHumanDisplay() + "以下にしてください!";
+    } catch(e) {
+      return true;
+    }
+  }
+]
+);
 
 /**
  * アイコンサイズの制限を読みやすい単位に変換
  */
-const avatarLimitSizeHumanDisplay = computed(() => {
+const avatarLimitSizeHumanDisplay = () => {
   let realSize = getServerinfo.value.config.PROFILE.iconMaxSize;
   let countLevel = 0;
   const sizeDisplayLevel:{
@@ -38,7 +50,7 @@ const avatarLimitSizeHumanDisplay = computed(() => {
   //表示結果を返す
   return realSize + sizeDisplayLevel[countLevel];
 
-});
+};
 
 /**
  * プロフィール画像をアップロード
@@ -77,8 +89,9 @@ const submit = async () => {
       <v-card-text>
         <v-file-input
           v-model="file"
-          accept="image/*"
-          :label="'プロフィール画像(' + avatarLimitSizeHumanDisplay + ' Byte)'"
+          accept="image/png, image/jpeg, image/gif"
+          :rules="uploadRule"
+          :label="'プロフィール画像(' + avatarLimitSizeHumanDisplay() + ' Byte)'"
         />
       </v-card-text>
       <v-card-actions class="d-flex flex-row-reverse">
