@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
+import { useMyUserinfo } from '~/stores/userinfo';
+
+const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
 /**
  * data
  */
 const file = ref<any>();
 const metadata = ref<{userId:string}>({
-  userId: ''
+  userId: getMyUserinfo.value.userId
 });
 
 //プロフィール画像をあっぷ
