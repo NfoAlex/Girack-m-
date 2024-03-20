@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
+import { useServerinfo } from "~/stores/serverinfo";
 
+const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
 /**
@@ -12,7 +14,35 @@ const metadata = ref<{userId:string}>({
   userId: getMyUserinfo.value.userId
 });
 
-//プロフィール画像をあっぷ
+/**
+ * アイコンサイズの制限を読みやすい単位に変換
+ */
+const avatarLimitSizeHumanDisplay = computed(() => {
+  let realSize = getServerinfo.value.config.PROFILE.iconMaxSize;
+  let countLevel = 0;
+  const sizeDisplayLevel:{
+    [key:number]: string
+  } = {
+    0: "Byte",
+    1: "KB",
+    2: "MB",
+    3: "GB",
+    4: "TB"
+  };
+  //100で割っていって単位を割り出す
+  while (realSize > 100) {
+    countLevel++;
+    realSize = realSize / 1000;
+  }
+
+  //表示結果を返す
+  return realSize + sizeDisplayLevel[countLevel];
+
+});
+
+/**
+ * プロフィール画像をアップロード
+ */
 const submit = async () => {
   if (file.value) {
     const formData = new FormData();
@@ -48,7 +78,7 @@ const submit = async () => {
         <v-file-input
           v-model="file"
           accept="image/*"
-          label="プロフィール画像"
+          :label="'プロフィール画像(' + avatarLimitSizeHumanDisplay + ' Byte)'"
         />
       </v-card-text>
       <v-card-actions class="d-flex flex-row-reverse">
