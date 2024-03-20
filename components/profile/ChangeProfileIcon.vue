@@ -20,6 +20,7 @@ const submit = async () => {
     // JSONデータを文字列に変換して追加
     formData.append('metadata', JSON.stringify(metadata.value));
 
+    //画像アップロード
     fetch('/uploadProfileIcon', {
       method: 'POST',
       body: formData
