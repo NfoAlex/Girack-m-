@@ -48,7 +48,10 @@ const submit = async () => {
         />
       </v-card-text>
       <v-card-actions class="d-flex flex-row-reverse">
-        <m-btn @click="submit" color="primary">アップロード</m-btn>
+        <m-btn
+          @click="submit"
+          color="primary"
+        >アップロード</m-btn>
       </v-card-actions>
     </m-card>
   </v-dialog>
