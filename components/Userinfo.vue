@@ -98,8 +98,9 @@ onUnmounted(() => {
         class="d-flex align-center mt-3 pa-5 text-truncate"
         style="width:100%;"
       >
-        <v-avatar class="mr-3" size="84">
-          {{ Userinfo.userName }}
+        <v-avatar class="mr-5" size="104">
+          <v-img :src="'/icon/' + Userinfo.userId" :alt="Userinfo.userId">
+          </v-img>
         </v-avatar>
         <div class="text-truncate">
           <p class="text-disabled text-caption">#{{ Userinfo.userId }}</p>
