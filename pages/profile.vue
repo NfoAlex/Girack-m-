@@ -95,16 +95,16 @@ onMounted(() => {
           @click="dialogChangeProfileIcon = true"
           class="d-flex flex-column justify-center"
         >
-        <v-tooltip text="クリックでアバターを変更">
-          <template v-slot:activator="{ props }">
-            <v-avatar v-bind="props" size="105" class="mr-3">
-              <v-img
-                :alt="getMyUserinfo.userId"
-                :src="'/icon/' + getMyUserinfo.userId"
-              ></v-img>
-            </v-avatar>
-          </template>
-        </v-tooltip>
+          <v-tooltip text="クリックでアバターを変更">
+            <template v-slot:activator="{ props }">
+              <v-avatar v-bind="props" size="105" class="mr-3">
+                <v-img
+                  :alt="getMyUserinfo.userId"
+                  :src="'/icon/' + getMyUserinfo.userId"
+                ></v-img>
+              </v-avatar>
+            </template>
+          </v-tooltip>
         </div>
 
         <!-- ユーザー名 -->
