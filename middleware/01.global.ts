@@ -1,7 +1,10 @@
+import { useAppStatus } from "~/stores/AppStatus";
+
 export default defineNuxtRouteMiddleware(to => {
   const nuxtApp = useNuxtApp();
   if (process.client && nuxtApp.isHydrating && nuxtApp.payload.serverRendered) return;
 
-  console.log("01.global(middle) :: ミドルウェアあ");
-
+  //ログインが済んでいないなら認証画面へ飛ばす
+  const { getAppStatus } = storeToRefs(useAppStatus());
+  if (to.path !== "/auth" && !getAppStatus.value.profile.authDone) return navigateTo('/auth');
 });

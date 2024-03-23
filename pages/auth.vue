@@ -8,6 +8,7 @@ import type { MyUserinfo } from "~/types/user";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+const { getAppStatus } = storeToRefs(useAppStatus());
 const { updateSessionId } = useMyUserinfo();
 
 const router = useRouter();
@@ -193,6 +194,9 @@ const SOCKEtauthSession = (dat:{result:string, dat:boolean}) => {
 
   //成功なら初期ロード開始
   if (dat.result === "SUCCESS") {
+    //ログイン状態を完了と設定
+    getAppStatus.value.profile.authDone = true;
+    //ロード開始
     initialize(getMyUserinfo.value.userId, getSessionId.value);
   }
 };
