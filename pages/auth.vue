@@ -3,10 +3,14 @@ import { socket } from "../socketHandlers/socketInit";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 import { useConfig } from "../stores/config";
+import { useAppStatus } from "../stores/AppStatus";
 import type { MyUserinfo } from "~/types/user";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+const { getAppStatus } = storeToRefs(useAppStatus());
 const { updateSessionId } = useMyUserinfo();
+
 const router = useRouter();
 
 definePageMeta({
@@ -187,6 +191,11 @@ const SOCKETRESULTauthLogin = (
  */
 const SOCKEtauthSession = (dat:{result:string, dat:boolean}) => {
   console.log("/auth :: SOCKETauthSession : dat->", dat);
+
+  //成功なら初期ロード開始
+  if (dat.result === "SUCCESS") {
+    initialize(getMyUserinfo.value.userId, getSessionId.value);
+  }
 };
 
 /**
@@ -237,8 +246,11 @@ onMounted(() => {
       userId: sessionData.userId,
     });
 
-    //準備処理開始
-    initialize(sessionData.userId, sessionData.sessionId);
+    //セッション認証
+    socket.emit("authSession", {
+      userId: sessionData.userId,
+      sessionId: sessionData.sessionId
+    });
   }
 });
 
