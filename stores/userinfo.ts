@@ -1,6 +1,7 @@
 //サーバー情報保存
 import { defineStore } from "pinia";
 import type { MyUserinfo } from "~/types/user";
+import type { channel } from "~/types/channel";
 
 export const useMyUserinfo = defineStore("myuserinfo", {
   state: () =>
@@ -12,9 +13,19 @@ export const useMyUserinfo = defineStore("myuserinfo", {
       banned: false,
       channelJoined: ["0001"],
     },
+    _ActiveChannelinfo: {
+      /*
+      "0001": {
+        ...
+      }
+      */
+    },
     _sessionId: ""
   } as {
     _MyUserinfo: MyUserinfo;
+    _ActiveChannelinfo: {
+      [key: string]: channel
+    },
     _sessionId: string;
   }),
 
