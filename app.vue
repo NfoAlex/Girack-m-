@@ -1,12 +1,15 @@
 <script setup>
 import { loadSocket } from "../socketHandlers/socketInit";
 import { useConfig } from "../stores/config";
-import { socket } from './socketHandlers/socketInit';
+import { useAppStatus } from "../stores/AppStatus";
+
+
 //サービスの準備ができてからSocketの設定開始
 onNuxtReady(() => { loadSocket(); })
 
 //設定の値監視してテーマを切り替え
 const { getConfig } = storeToRefs(useConfig());
+const { getAppStatus } = storeToRefs(useAppStatus());
 //テーマ切り替え用
 const theme = useTheme();
 //監視開始
@@ -17,6 +20,10 @@ watch(getConfig, async () => {
 
 <template>
   <div>
+    <div>
+      接続状況 :
+      {{ getAppStatus.connected }}
+    </div>
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
