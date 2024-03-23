@@ -1,11 +1,10 @@
 <script setup>
-import { socket } from "./socketHandlers/socketInit";
 import { loadSocket } from "../socketHandlers/socketInit";
 import { useConfig } from "../stores/config";
 import { useAppStatus } from "../stores/AppStatus";
 
 //サービスの準備ができてからSocketの設定開始
-onNuxtReady(() => { loadSocket(); })
+onNuxtReady(() => { loadSocket() });
 
 //設定の値監視してテーマを切り替え
 const { getConfig } = storeToRefs(useConfig());
@@ -20,13 +19,6 @@ const theme = useTheme();
  */
 watch(getConfig, async () => {
   theme.global.name.value = getConfig.value.theme; //テーマを設定で設定されているものへ設定
-});
-
-/**
- * WSサーバーへの接続の監視、そしてAppStatusの更新
- */
-socket.on("connect", () => {
-  getAppStatus.value.connected = true;
 });
 </script>
 

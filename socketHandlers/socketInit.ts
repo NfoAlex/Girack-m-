@@ -1,6 +1,7 @@
 //一番最初に認識されて、いろんなSocketハンドラをまとめるところ
 
 import { Socket, io } from "socket.io-client"; //ウェブソケット通信用
+import connect from "./connect";
 import infoServer from "./InfoServer";
 import infoChannel from "./InfoChannel";
 import fetchUserInfo from "./fetchUserInfo";
@@ -23,15 +24,12 @@ export const socket:Socket = io({
 //  ->app.vueでonNuxtReadyにて実行される
 export function loadSocket() {
   console.log("socketInit :: loadSocket : 通信設定開始");
-  //接続時
-  socket.on("connect", () => {
-    console.log("socketInit :: connect : 接続しました", socket);
-  });
 
   //サーバー情報取得する
   socket.emit("fetchServerInfoLimited");
 
   //情報受け取り周り
+  connect(socket); //接続検知用
   infoServer(socket); //サーバー情報
   infoChannel(socket); //チャンネル情報の操作
   fetchUserInfo(socket); //自ユーザー情報
