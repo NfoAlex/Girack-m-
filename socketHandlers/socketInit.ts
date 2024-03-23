@@ -2,6 +2,7 @@
 
 import { Socket, io } from "socket.io-client"; //ウェブソケット通信用
 import connect from "./connect";
+import disconnect from "./disconnect";
 import infoServer from "./InfoServer";
 import infoChannel from "./InfoChannel";
 import fetchUserInfo from "./fetchUserInfo";
@@ -30,6 +31,7 @@ export function loadSocket() {
 
   //情報受け取り周り
   connect(socket); //接続検知用
+  disconnect(socket); //切断検知用
   infoServer(socket); //サーバー情報
   infoChannel(socket); //チャンネル情報の操作
   fetchUserInfo(socket); //自ユーザー情報
