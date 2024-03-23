@@ -24,9 +24,10 @@ watch(getConfig, async () => {
 
 <template>
   <div class="d-flex flex-column" style="height:100vh; width:100vw;">
-    <div style="max-height:10%;">
-      接続状況 :
-      {{ getAppStatus.connected }}
+    <div v-if="!getAppStatus.connected" style="max-height:10%;">
+      <v-alert type="error" density="compact" class="ma-1">
+        サーバーへ接続できていません
+      </v-alert>
     </div>
     <NuxtLayout class="flex-grow-1" style="height:90%;">
       <NuxtPage />
