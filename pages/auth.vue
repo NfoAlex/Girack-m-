@@ -8,7 +8,6 @@ import type { MyUserinfo } from "~/types/user";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-const { getAppStatus } = storeToRefs(useAppStatus());
 const { updateSessionId } = useMyUserinfo();
 
 const router = useRouter();
