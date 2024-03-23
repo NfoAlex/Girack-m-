@@ -147,21 +147,7 @@ import getMyRolePower from "~/composables/getMyRolePower";
           </p>
         </NuxtLink>
       </span>
-
-      <!-- FOR DEBUG :: ログインページへ -->
-      <span class="mt-3">
-        <NuxtLink to="/auth">
-          <v-btn
-            icon="mdi:mdi-lock"
-            variant="text"
-            rounded="lg"
-            class=""
-            color="orange"
-          >
-          </v-btn>
-          <p class="text-caption text-center">認証</p>
-        </NuxtLink>
-      </span>
+      
     </div>
 
     <!-- メイン -->
