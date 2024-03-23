@@ -32,11 +32,11 @@ socket.on("connect", () => {
 
 <template>
   <div class="d-flex flex-column" style="height:100vh; width:100vw;">
-    <div>
+    <div style="max-height:10%;">
       接続状況 :
       {{ getAppStatus.connected }}
     </div>
-    <NuxtLayout class="flex-grow-1">
+    <NuxtLayout class="flex-grow-1" style="height:90%;">
       <NuxtPage />
     </NuxtLayout>
   </div>

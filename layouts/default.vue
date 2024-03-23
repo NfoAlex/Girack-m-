@@ -175,6 +175,7 @@ import getMyRolePower from "~/composables/getMyRolePower";
 
 .mainContainer {
   width: 100%;
+  
   background: rgb(var(--v-theme-background));
 
   overflow-y: auto;
