@@ -244,8 +244,9 @@ onMounted(() => {
 
 onUnmounted(() => {
   //socketハンドラ解除
-  socket.off("authResult");
-  socket.off("registerEnd");
+  socket.off("RESULT::authLogin", SOCKETRESULTauthLogin);
+  socket.off("RESULT::authSession", SOCKEtauthSession);
+  socket.off("RESULT::authRegister", SOCKETRESULTauthRegister);
 });
 </script>
 
