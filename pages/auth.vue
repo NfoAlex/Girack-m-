@@ -241,7 +241,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="d-flex" style="height: 100vh; width: 100vw">
+  <div class="d-flex" style="height: 100%; width: 100vw">
     <!-- カバー画像 -->
     <div class="instanceImage me-auto mr-n5">ここが画像になる</div>
 
