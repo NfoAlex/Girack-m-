@@ -1,14 +1,16 @@
-<script lang="ts">
-import { useRoute } from 'vue-router';
-
-export default {
-  setup() {
-    const route = useRoute();
-
-    return { route };
-  }
-}
-
-</script>
-
-<template>あなたは今 {{ route.params.id }} にいます</template>
+<template>
+  <div class="pa-4 d-flex">
+    <div class="d-flex flex-column">
+      チャンネルバー
+      <div>
+        1
+      </div>
+      <div>
+        2
+      </div>
+    </div>
+    <div class="px-2">
+      ここでチャット
+    </div>
+  </div>
+</template>
