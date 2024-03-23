@@ -1,9 +1,7 @@
-//設定情報受け取り
+//接続を検知、状態の設定
 
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useAppStatus } from "~/stores/AppStatus";
-
-
 
 export default function connect(socket: Socket): void {
   //接続状態更新用
