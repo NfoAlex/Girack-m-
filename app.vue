@@ -15,7 +15,9 @@ const { getAppStatus } = storeToRefs(useAppStatus());
 //テーマ切り替え用
 const theme = useTheme();
 
-//監視開始
+/**
+ * 設定を監視してテーマを適用
+ */
 watch(getConfig, async () => {
   theme.global.name.value = getConfig.value.theme; //テーマを設定で設定されているものへ設定
 });
@@ -29,12 +31,12 @@ socket.on("connect", () => {
 </script>
 
 <template>
-  <div>
+  <div class="d-flex flex-column" style="height:100vh; width:100vw;">
     <div>
       接続状況 :
       {{ getAppStatus.connected }}
     </div>
-    <NuxtLayout>
+    <NuxtLayout class="flex-grow-1">
       <NuxtPage />
     </NuxtLayout>
   </div>

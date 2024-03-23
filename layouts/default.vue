@@ -3,9 +3,9 @@ import getMyRolePower from "~/composables/getMyRolePower";
 </script>
 
 <template>
-  <div class="d-flex ma-0 pa-0" style="height: 100vh; width: 100vw;">
+  <div class="d-flex ma-0 pa-0">
     <!-- サイドバー -->
-    <div class="sidebar d-flex flex-column pa-3" style="overflow-y: auto;">
+    <div class="d-flex flex-column pa-3 flex-grow-1 flex-shrink-0" style="overflow-y: auto;">
       <!-- ホームボタン -->
       <span>
         <NuxtLink to="/">
@@ -165,19 +165,15 @@ import getMyRolePower from "~/composables/getMyRolePower";
     </div>
 
     <!-- メイン -->
-    <div class="mainContainer align-self-auto">
+    <div class="mainContainer flex-grow-1">
       <slot />
     </div>
   </div>
 </template>
 
 <style scoped>
-.sidebar {
-  height: 100vh;
-}
 
 .mainContainer {
-  height: 100vh;
   width: 100%;
   background: rgb(var(--v-theme-background));
 
