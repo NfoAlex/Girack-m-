@@ -24,8 +24,8 @@ watch(getConfig, async () => {
 
 <template>
   <div class="d-flex flex-column" style="height:100vh; width:100vw;">
-    <div v-if="!getAppStatus.connected" style="max-height:10%;">
-      <v-alert type="error" density="compact" class="ma-1">
+    <div style="max-height:10%; overflow-y:auto">
+      <v-alert v-if="!getAppStatus.connected" type="error" density="compact" class="ma-1">
         サーバーへ接続できていません
       </v-alert>
     </div>
