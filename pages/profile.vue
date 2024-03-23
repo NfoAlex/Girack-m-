@@ -93,16 +93,14 @@ onMounted(() => {
         <!-- アイコン -->
         <div
           @click="dialogChangeProfileIcon = true"
-          style="width: 30%;"
           class="d-flex flex-column justify-center"
         >
-          <v-img
-            :alt="getMyUserinfo.userId"
-            :src="'/icon/' + getMyUserinfo.userId"
-            rounded
-            width="auto"
-            height="auto"
-          ></v-img>
+          <v-avatar size="105" class="mr-3">
+            <v-img
+              :alt="getMyUserinfo.userId"
+              :src="'/icon/' + getMyUserinfo.userId"
+            ></v-img>
+          </v-avatar>
         </div>
 
         <!-- ユーザー名 -->
