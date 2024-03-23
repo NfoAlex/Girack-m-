@@ -23,7 +23,7 @@ watch(getConfig, async () => {
 /**
  * WSサーバーへの接続の監視、そしてAppStatusの更新
  */
-socket.on("connected", () => {
+socket.on("connect", () => {
   getAppStatus.value.connected = true;
 });
 </script>
