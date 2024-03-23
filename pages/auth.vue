@@ -182,6 +182,14 @@ const SOCKETRESULTauthLogin = (
 };
 
 /**
+ * セッション認証結果の受け取り
+ * @param dat
+ */
+const SOCKEtauthSession = (dat:{result:string, dat:boolean}) => {
+  console.log("/auth :: SOCKETauthSession : dat->", dat);
+};
+
+/**
  * 登録結果の受け取りと処理
  * @param dat
  */
@@ -209,6 +217,7 @@ const SOCKETRESULTauthRegister = (
 onMounted(() => {
   //認証結果受け取り
   socket.on("RESULT::authLogin", SOCKETRESULTauthLogin);
+  socket.on("RESULT::authSession", SOCKEtauthSession);
   //登録ができたと受信したときの処理
   socket.on("RESULT::authRegister", SOCKETRESULTauthRegister);
 
