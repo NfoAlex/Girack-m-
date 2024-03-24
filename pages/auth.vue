@@ -95,6 +95,9 @@ const initialize = (userId:string, sessionId:string) => {
     });
   }
 
+  //ログイン状態を完了と設定
+  getAppStatus.value.profile.authDone = true;
+
   //トップページへ移動
   router.push("/");
 };
@@ -194,8 +197,6 @@ const SOCKEtauthSession = (dat:{result:string, dat:boolean}) => {
 
   //成功なら初期ロード開始
   if (dat.result === "SUCCESS") {
-    //ログイン状態を完了と設定
-    getAppStatus.value.profile.authDone = true;
     //ロード開始
     initialize(getMyUserinfo.value.userId, getSessionId.value);
   }
