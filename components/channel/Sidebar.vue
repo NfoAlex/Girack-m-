@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useMyUserinfo } from '~/stores/userinfo';
-
+import { useServerinfo } from '~/stores/serverinfo';
+const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
 const router = useRouter();
@@ -23,7 +24,7 @@ onMounted(() => {
 
 <template>
   <div class="d-flex flex-column">
-    <p class="mt-2 text-h5">さいどばー</p>
+    <p class="mt-2 text-h5 text-truncate">{{ getServerinfo.servername }}</p>
     <v-divider class="my-2" />
     <m-card-compact
       v-for="channelId of getMyUserinfo.channelJoined"
