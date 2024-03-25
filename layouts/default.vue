@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import getMyRolePower from "~/composables/getMyRolePower";
+import { useMyUserinfo } from "~/stores/userinfo";
+const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 </script>
 
 <template>
@@ -74,14 +76,13 @@ import getMyRolePower from "~/composables/getMyRolePower";
 
       <!-- プロフィールボタン -->
       <span class="mt-2">
-        <NuxtLink to="/profile">
-          <v-btn
-            icon="mdi:mdi-account"
-            :variant="$route.path.includes('/profile') ? 'tonal' : 'text'"
-            :color="$route.path.includes('/profile') ? 'primary' : ''"
-            rounded="lg"
+        <NuxtLink to="/profile" class="d-flex flex-column align-center">
+          <v-avatar
+            class="rounded-lg"
+            :style="$route.path.startsWith('/profile')?'border:solid 3px rgba(var(--v-theme-primary))':null"
           >
-          </v-btn>
+            <v-img :src="'/icon/' + getMyUserinfo.userId" :alt="getMyUserinfo.userId" />
+          </v-avatar>
           <p
             class="text-caption text-center"
             :class="$route.path.startsWith('/profile') ? 'text-primary' : null"
