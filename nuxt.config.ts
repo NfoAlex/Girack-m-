@@ -20,6 +20,10 @@ export default defineNuxtConfig({
       }
     }
   },
+  routeRules: {
+    '/uploadProfileIcon': { cors:true },
+    '/server/**': { ssr:false }
+  },
   //ここでプロキシ適用(なぜかエラー扱い)
   serverMiddleware: [
     { path: '/socket.io', handler: './server/middleware/proxy.ts' },
