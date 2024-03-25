@@ -53,15 +53,15 @@ import getMyRolePower from "~/composables/getMyRolePower";
         <NuxtLink to="/channel">
           <v-btn
             icon=""
-            :variant="$route.path === '/channel' ? 'tonal' : 'text'"
-            :color="$route.path === '/channel' ? 'primary' : ''"
+            :variant="$route.path.startsWith('/channel') ? 'tonal' : 'text'"
+            :color="$route.path.startsWith('/channel') ? 'primary' : ''"
             rounded="lg"
           >
             <v-icon size="large">mdi:mdi-pound</v-icon>
           </v-btn>
           <p
             class="text-caption text-center"
-            :class="$route.path === '/channel' ? 'text-primary' : null"
+            :class="$route.path.startsWith('/channel') ? 'text-primary' : null"
           >
             会話
           </p>
