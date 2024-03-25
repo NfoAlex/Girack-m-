@@ -23,10 +23,6 @@ onMounted(() => {
 
 <template>
   <div class="d-flex flex-column">
-    チャンネルバー
-    <div>
-      {{ $route.params.id }}
-    </div>
     <m-card-compact
       v-for="channelId of getMyUserinfo.channelJoined"
       @click="router.push('/channel/' + channelId)"
