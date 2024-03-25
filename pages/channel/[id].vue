@@ -1,7 +1,7 @@
 <template>
-  <div class="pa-4 d-flex">
-    <ChannelSidebar />
-    <div class="px-2">
+  <div class="px-3 py-4 d-flex align-stretch" style="height:100%;">
+    <ChannelSidebar class="mr-2" style="width:25%; max-width:250px;" />
+    <div class="px-2 flex-grow-1">
       ここでチャット
     </div>
   </div>
