@@ -28,7 +28,7 @@ onMounted(() => {
       @click="router.push('/channel/' + channelId)"
       :variant="currentPath===channelId?'tonal':'text'"
       :color="currentPath===channelId?'primary':null"
-      class="d-flex align-center px-3 py-2"
+      class="d-flex align-center px-3 py-2 mb-1"
       :ripple="false"
       width="100%"
     >
