@@ -29,6 +29,7 @@ onMounted(() => {
       :variant="currentPath===channelId?'tonal':'text'"
       :color="currentPath===channelId?'primary':null"
       class="d-flex align-center px-3 py-2"
+      :ripple="false"
       width="100%"
     >
       <v-icon class="mr-1" size="small">mdi-pound</v-icon>
