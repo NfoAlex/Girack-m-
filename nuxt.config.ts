@@ -32,6 +32,7 @@ export default defineNuxtConfig({
       /* マテリアルデザイン用 */
       aliases: {
         MCard: "VCard",
+        MCardCompact: "VCard",
         MBtn: "VBtn",
         MInput: "VInput"
       },
@@ -76,6 +77,9 @@ export default defineNuxtConfig({
           style: 'border-radius:28px; background-color:rgb(var(--v-theme-sidebarBackground));',
           class: 'pa-4',
         },
+        MCardCompact: {
+          style: 'border-radius:28px;'
+        }
       },
       theme: {
         themes: {
