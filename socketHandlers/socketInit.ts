@@ -4,7 +4,7 @@ import { Socket, io } from "socket.io-client"; //ウェブソケット通信用
 import connect from "./connect";
 import disconnect from "./disconnect";
 import infoServer from "./InfoServer";
-import infoChannel from "./InfoChannel";
+import fetchChannelInfo from "./fetchChannelInfo";
 import fetchUserInfo from "./fetchUserInfo";
 import fetchUserConfig from "./fetchUserConfig";
 import saveUserConfig from "./saveUserConfig";
@@ -33,7 +33,7 @@ export function loadSocket() {
   connect(socket); //接続検知用
   disconnect(socket); //切断検知用
   infoServer(socket); //サーバー情報
-  infoChannel(socket); //チャンネル情報の操作
+  fetchChannelInfo(socket); //チャンネル情報の受け取り
   fetchUserInfo(socket); //自ユーザー情報
   fetchUserConfig(socket); //設定データ
   saveUserConfig(socket); //設定データの保存結果
