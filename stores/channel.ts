@@ -34,7 +34,7 @@ export const useChannelinfo = defineStore("channelinfo", {
         //ホルダー
         state._Channelinfo[channelId] = {
           channelId: channelId,
-          channelName: "Loading...",
+          channelName: channelId,
           createdBy: "xxxxx",
           description: "...",
           isPrivate: false,
