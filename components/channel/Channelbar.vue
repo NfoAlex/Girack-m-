@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useMyUserinfo } from '~/stores/userinfo';
 import { useServerinfo } from '~/stores/serverinfo';
+import { useChannelinfo } from "~/stores/channel";
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
 
 const router = useRouter();
 const route = useRoute();
@@ -36,7 +38,7 @@ onMounted(() => {
       width="100%"
     >
       <v-icon class="mr-1" size="small">mdi-pound</v-icon>
-      <p>{{ channelId }}</p>
+      <p>{{ getChannelinfoSingle(channelId)?.channelName }}</p>
     </m-card-compact>
   </div>
 </template>
