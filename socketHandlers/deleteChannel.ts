@@ -2,13 +2,26 @@
 
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useChannelinfo } from "~/stores/channel";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 export default function deleteChannel(socket: Socket): void {
+  const { getMyUserinfo } = storeToRefs(useMyUserinfo());
   //チャンネル情報更新関数を取得
   const { deleteChannelinfo } = useChannelinfo();
+  const { updateMyUserinfo } = useMyUserinfo();
 
   //チャンネル削除通知
   socket.on("RESULT::deleteChannel", (dat:{result:string, data:string}) => {
+    //参加チャンネル配列を抽出
+    const channelJoined:string[] = getMyUserinfo.value.channelJoined;
+    //チャンネルIDを削除した配列を作成
+    const channelJoinedSpliced = channelJoined.splice(channelJoined.indexOf(dat.data), 1);
+    //チャンネル参加配列を更新させる
+    updateMyUserinfo({
+      ...getMyUserinfo.value,
+      channelJoined: channelJoinedSpliced
+    });
+    
     //Storeからチャンネル情報を削除する
     deleteChannelinfo(dat.data);
   });
