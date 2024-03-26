@@ -64,6 +64,11 @@ export const useChannelinfo = defineStore("channelinfo", {
     //チャンネル情報を更新
     updateChannelinfo(channelId:string, data: channel) {
       this._Channelinfo[channelId] = data;
+    },
+
+    //チャンネル情報を削除
+    deleteChannelinfo(channeId:string) {
+      delete this._Channelinfo[channeId];
     }
   }
 });
