@@ -12,7 +12,10 @@ export default function fetchChannelInfo(socket: Socket): void {
   socket.on("RESULT::fetchChannelInfo", (dat:{result:string, data:channel}) => {
     //console.log("infoChannel :: dat->", dat);
 
-    //チャンネル情報の更新
-    updateChannelinfo(dat.data.channelId, dat.data);
+    //データがnull、かつ参加していたのなら削除
+    if (dat.data !== null) {
+      //チャンネル情報の更新
+      updateChannelinfo(dat.data.channelId, dat.data);
+    }
   });
 }
