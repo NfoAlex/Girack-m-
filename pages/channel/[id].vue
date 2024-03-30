@@ -1,14 +1,6 @@
-<script lang="ts">
-import { useRoute } from 'vue-router';
-
-export default {
-  setup() {
-    const route = useRoute();
-
-    return { route };
-  }
-}
-
-</script>
-
-<template>あなたは今 {{ route.params.id }} にいます</template>
+<template>
+  <div class="px-4 pt-4 d-flex align-stretch" style="height:100%;">
+    <ChannelChannelbar class="mr-2" style="width:25%; max-width:250px;" />
+    <ChannelContainer class="px-2 py-2 flex-grow-1" />
+  </div>
+</template>

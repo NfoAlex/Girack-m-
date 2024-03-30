@@ -1,4 +1,4 @@
-//サーバー情報保存
+//自分の情報保存
 import { defineStore } from "pinia";
 import type { MyUserinfo } from "~/types/user";
 

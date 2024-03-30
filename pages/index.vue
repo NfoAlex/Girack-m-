@@ -2,7 +2,7 @@
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 
-const { getServerinfo, getCount } = storeToRefs(useServerinfo());
+const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 </script>
 
@@ -28,7 +28,6 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
     <div class="text-h4 my-3">ここがホーム</div>
     <p>piniaデータ :</p>
     <m-card>
-      <p>カウンタ : {{ getCount }}</p>
       <p>Serverinfo :</p>
       <m-card variant="outlined">
         {{ getServerinfo }}

@@ -20,6 +20,10 @@ export default defineNuxtConfig({
       }
     }
   },
+  routeRules: {
+    '/uploadProfileIcon': { cors:true },
+    '/server/**': { ssr:false }
+  },
   //ここでプロキシ適用(なぜかエラー扱い)
   serverMiddleware: [
     { path: '/socket.io', handler: './server/middleware/proxy.ts' },
@@ -32,6 +36,7 @@ export default defineNuxtConfig({
       /* マテリアルデザイン用 */
       aliases: {
         MCard: "VCard",
+        MCardCompact: "VCard",
         MBtn: "VBtn",
         MInput: "VInput"
       },
@@ -64,6 +69,9 @@ export default defineNuxtConfig({
         VColorPicker: {
           rounded: 'xl'
         },
+        VProgressCircular: {
+          width: 7
+        },
         MInput: {
           rounded: 'pill'
         },
@@ -76,6 +84,9 @@ export default defineNuxtConfig({
           style: 'border-radius:28px; background-color:rgb(var(--v-theme-sidebarBackground));',
           class: 'pa-4',
         },
+        MCardCompact: {
+          style: 'border-radius:28px;'
+        }
       },
       theme: {
         themes: {

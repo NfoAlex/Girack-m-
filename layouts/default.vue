@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import getMyRolePower from "~/composables/getMyRolePower";
+import { useMyUserinfo } from "~/stores/userinfo";
+const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 </script>
 
 <template>
-  <div class="d-flex ma-0 pa-0" style="height: 100vh; width: 100vw;">
+  <div class="d-flex ma-0 pa-0">
     <!-- サイドバー -->
-    <div class="sidebar d-flex flex-column pa-3" style="overflow-y: auto;">
+    <div class="d-flex flex-column pa-3 flex-grow-1 flex-shrink-0" style="overflow-y: auto;">
       <!-- ホームボタン -->
       <span>
         <NuxtLink to="/">
@@ -53,15 +55,15 @@ import getMyRolePower from "~/composables/getMyRolePower";
         <NuxtLink to="/channel">
           <v-btn
             icon=""
-            :variant="$route.path === '/channel' ? 'tonal' : 'text'"
-            :color="$route.path === '/channel' ? 'primary' : ''"
+            :variant="$route.path.startsWith('/channel') ? 'tonal' : 'text'"
+            :color="$route.path.startsWith('/channel') ? 'primary' : ''"
             rounded="lg"
           >
             <v-icon size="large">mdi:mdi-pound</v-icon>
           </v-btn>
           <p
             class="text-caption text-center"
-            :class="$route.path === '/channel' ? 'text-primary' : null"
+            :class="$route.path.startsWith('/channel') ? 'text-primary' : null"
           >
             会話
           </p>
@@ -74,14 +76,13 @@ import getMyRolePower from "~/composables/getMyRolePower";
 
       <!-- プロフィールボタン -->
       <span class="mt-2">
-        <NuxtLink to="/profile">
-          <v-btn
-            icon="mdi:mdi-account"
-            :variant="$route.path.includes('/profile') ? 'tonal' : 'text'"
-            :color="$route.path.includes('/profile') ? 'primary' : ''"
-            rounded="lg"
+        <NuxtLink to="/profile" class="d-flex flex-column align-center">
+          <v-avatar
+            class="rounded-lg"
+            :style="$route.path.startsWith('/profile')?'border:solid 3px rgba(var(--v-theme-primary))':null"
           >
-          </v-btn>
+            <v-img :src="'/icon/' + getMyUserinfo.userId" :alt="getMyUserinfo.userId" />
+          </v-avatar>
           <p
             class="text-caption text-center"
             :class="$route.path.startsWith('/profile') ? 'text-primary' : null"
@@ -147,38 +148,21 @@ import getMyRolePower from "~/composables/getMyRolePower";
           </p>
         </NuxtLink>
       </span>
-
-      <!-- FOR DEBUG :: ログインページへ -->
-      <span class="mt-3">
-        <NuxtLink to="/auth">
-          <v-btn
-            icon="mdi:mdi-lock"
-            variant="text"
-            rounded="lg"
-            class=""
-            color="orange"
-          >
-          </v-btn>
-          <p class="text-caption text-center">認証</p>
-        </NuxtLink>
-      </span>
+      
     </div>
 
     <!-- メイン -->
-    <div class="mainContainer align-self-auto">
+    <div class="mainContainer flex-grow-1">
       <slot />
     </div>
   </div>
 </template>
 
 <style scoped>
-.sidebar {
-  height: 100vh;
-}
 
 .mainContainer {
-  height: 100vh;
   width: 100%;
+  
   background: rgb(var(--v-theme-background));
 
   overflow-y: auto;

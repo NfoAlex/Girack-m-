@@ -3,10 +3,14 @@ import { socket } from "../socketHandlers/socketInit";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 import { useConfig } from "../stores/config";
+import { useAppStatus } from "../stores/AppStatus";
 import type { MyUserinfo } from "~/types/user";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+const { getAppStatus } = storeToRefs(useAppStatus());
 const { updateSessionId } = useMyUserinfo();
+
 const router = useRouter();
 
 definePageMeta({
@@ -90,6 +94,9 @@ const initialize = (userId:string, sessionId:string) => {
       sessionId: sessionId,
     });
   }
+
+  //ログイン状態を完了と設定
+  getAppStatus.value.profile.authDone = true;
 
   //トップページへ移動
   router.push("/");
@@ -182,6 +189,20 @@ const SOCKETRESULTauthLogin = (
 };
 
 /**
+ * セッション認証結果の受け取り
+ * @param dat
+ */
+const SOCKEtauthSession = (dat:{result:string, dat:boolean}) => {
+  console.log("/auth :: SOCKETauthSession : dat->", dat);
+
+  //成功なら初期ロード開始
+  if (dat.result === "SUCCESS") {
+    //ロード開始
+    initialize(getMyUserinfo.value.userId, getSessionId.value);
+  }
+};
+
+/**
  * 登録結果の受け取りと処理
  * @param dat
  */
@@ -209,6 +230,7 @@ const SOCKETRESULTauthRegister = (
 onMounted(() => {
   //認証結果受け取り
   socket.on("RESULT::authLogin", SOCKETRESULTauthLogin);
+  socket.on("RESULT::authSession", SOCKEtauthSession);
   //登録ができたと受信したときの処理
   socket.on("RESULT::authRegister", SOCKETRESULTauthRegister);
 
@@ -228,20 +250,24 @@ onMounted(() => {
       userId: sessionData.userId,
     });
 
-    //準備処理開始
-    initialize(sessionData.userId, sessionData.sessionId);
+    //セッション認証
+    socket.emit("authSession", {
+      userId: sessionData.userId,
+      sessionId: sessionData.sessionId
+    });
   }
 });
 
 onUnmounted(() => {
   //socketハンドラ解除
-  socket.off("authResult");
-  socket.off("registerEnd");
+  socket.off("RESULT::authLogin", SOCKETRESULTauthLogin);
+  socket.off("RESULT::authSession", SOCKEtauthSession);
+  socket.off("RESULT::authRegister", SOCKETRESULTauthRegister);
 });
 </script>
 
 <template>
-  <div class="d-flex" style="height: 100vh; width: 100vw">
+  <div class="d-flex" style="height: 100%; width: 100vw">
     <!-- カバー画像 -->
     <div class="instanceImage me-auto mr-n5">ここが画像になる</div>
 

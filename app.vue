@@ -1,23 +1,35 @@
 <script setup>
 import { loadSocket } from "../socketHandlers/socketInit";
 import { useConfig } from "../stores/config";
-import { socket } from './socketHandlers/socketInit';
+import { useAppStatus } from "../stores/AppStatus";
+
 //サービスの準備ができてからSocketの設定開始
-onNuxtReady(() => { loadSocket(); })
+onNuxtReady(() => { loadSocket() });
 
 //設定の値監視してテーマを切り替え
 const { getConfig } = storeToRefs(useConfig());
+//状態監視用
+const { getAppStatus } = storeToRefs(useAppStatus());
+
 //テーマ切り替え用
 const theme = useTheme();
-//監視開始
+
+/**
+ * 設定を監視してテーマを適用
+ */
 watch(getConfig, async () => {
   theme.global.name.value = getConfig.value.theme; //テーマを設定で設定されているものへ設定
 });
 </script>
 
 <template>
-  <div>
-    <NuxtLayout>
+  <div class="d-flex flex-column" style="height:100vh; width:100vw;">
+    <div style="max-height:10%; overflow-y:auto">
+      <v-alert v-if="!getAppStatus.connected" type="error" density="compact" class="ma-1">
+        サーバーへ接続できていません
+      </v-alert>
+    </div>
+    <NuxtLayout class="flex-grow-1" style="height:90%;">
       <NuxtPage />
     </NuxtLayout>
   </div>
