@@ -5,7 +5,7 @@ import { useChannelinfo } from "~/stores/channel";
 import { useMyUserinfo } from "~/stores/userinfo";
 
 export default function deleteChannel(socket: Socket): void {
-  const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+  const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
   //チャンネル情報更新関数を取得
   const { deleteChannelinfo } = useChannelinfo();
   const { updateMyUserinfo } = useMyUserinfo();
@@ -24,5 +24,14 @@ export default function deleteChannel(socket: Socket): void {
     
     //Storeからチャンネル情報を削除する
     deleteChannelinfo(dat.data);
+
+    //チャンネル脱退処理をする
+    socket.emit("leaveChannel", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      channelId: dat.data
+    });
   });
 }
