@@ -5,6 +5,7 @@ import connect from "./connect";
 import disconnect from "./disconnect";
 import infoServer from "./InfoServer";
 import fetchChannelInfo from "./fetchChannelInfo";
+import deleteChannel from "./deleteChannel";
 import fetchUserInfo from "./fetchUserInfo";
 import fetchUserConfig from "./fetchUserConfig";
 import saveUserConfig from "./saveUserConfig";
@@ -34,6 +35,7 @@ export function loadSocket() {
   disconnect(socket); //切断検知用
   infoServer(socket); //サーバー情報
   fetchChannelInfo(socket); //チャンネル情報の受け取り
+  deleteChannel(socket); //チャンネル削除通知の受け取り
   fetchUserInfo(socket); //自ユーザー情報
   fetchUserConfig(socket); //設定データ
   saveUserConfig(socket); //設定データの保存結果
