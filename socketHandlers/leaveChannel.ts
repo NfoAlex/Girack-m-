@@ -5,7 +5,7 @@ import { useChannelinfo } from "~/stores/channel";
 import { useMyUserinfo } from "~/stores/userinfo";
 
 export default function leaveChannel(socket: Socket): void {
-  const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+  const { getMyUserinfo } = storeToRefs(useMyUserinfo());
   //チャンネル情報更新関数を取得
   const { updateMyUserinfo } = useMyUserinfo();
 

@@ -1,7 +1,6 @@
 //チャンネル削除したっていう情報受け取り、処理
 
 import { Socket } from "socket.io-client"; //クラス識別用
-import { useChannelinfo } from "~/stores/channel";
 import { useMyUserinfo } from "~/stores/userinfo";
 
 export default function deleteChannel(socket: Socket): void {
