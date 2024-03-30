@@ -25,6 +25,8 @@ export default function deleteChannel(socket: Socket): void {
     //Storeからチャンネル情報を削除する
     deleteChannelinfo(dat.data);
 
+    //console.log("socket(deleteChannel) : 処理してる");
+
     //チャンネル脱退処理をする
     socket.emit("leaveChannel", {
       RequestSender: {

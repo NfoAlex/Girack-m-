@@ -71,7 +71,7 @@ const deleteChannel = (channelIdDeleting:string) => {
  * @param dat
  */
 const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
-  console.log("browser :: SOCKETRfetchChannelList : dat->", dat);
+  //console.log("browser :: SOCKETRfetchChannelList : dat->", dat);
   stateLoding.value = false; //ロード中状態を解除
   channelList.value = dat.data; //格納
 }
