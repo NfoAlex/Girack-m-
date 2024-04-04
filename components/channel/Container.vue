@@ -43,7 +43,7 @@ onMounted(() => {
       };
     }
   }
-})
+});
 </script>
 
 <template>
@@ -52,7 +52,7 @@ onMounted(() => {
       class="flex-shrink-0"
       :channel-info="channelInfo"
     />
-    <ChannelContainerContent class="flex-grow-1" />
+    <ChannelContainerContent :channel-info="channelInfo" class="flex-grow-1" />
     <ChannelContainerInput :channel-info="channelInfo" class="flex-shrink-0"/>
   </div>
 </template>
