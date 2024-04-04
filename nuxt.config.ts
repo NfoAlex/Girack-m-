@@ -69,6 +69,9 @@ export default defineNuxtConfig({
         VColorPicker: {
           rounded: 'xl'
         },
+        VProgressCircular: {
+          width: 7
+        },
         MInput: {
           rounded: 'pill'
         },

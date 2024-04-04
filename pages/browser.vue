@@ -9,6 +9,7 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
  * data
  */
 const channelList = ref<channel[]>(); //チャンネル情報格納用
+const stateLoding = ref<boolean>(true); //チャンネル情報を受信できたかどうか
 const channelInfoDeleting = ref<{ //削除する予定のチャンネルの基本情報
   channelId:string, channelName:string
 }>({
@@ -70,7 +71,8 @@ const deleteChannel = (channelIdDeleting:string) => {
  * @param dat
  */
 const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
-  console.log("browser :: SOCKETRfetchChannelList : dat->", dat);
+  //console.log("browser :: SOCKETRfetchChannelList : dat->", dat);
+  stateLoding.value = false; //ロード中状態を解除
   channelList.value = dat.data; //格納
 }
 
@@ -170,6 +172,11 @@ onUnmounted(() => {
     <p class="text-h5">チャンネルブラウザ</p>
     <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
     <div class="pt-3 px-2" style="overflow-y:auto; padding-bottom:15vh;">
+      <!-- チャンネルロード中表示 -->
+      <div v-if="stateLoding" style="width:fit-content;" class="mx-auto my-10">
+        <v-progress-circular :size="50" indeterminate />
+      </div>
+
       <!-- チャンネルカード -->
       <m-card v-for="channel of channelList" class="mb-2 pb-3 pt-2 d-flex-column">
         
