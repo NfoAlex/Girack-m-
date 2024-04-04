@@ -53,6 +53,6 @@ onMounted(() => {
       :channel-info="channelInfo"
     />
     <ChannelContainerContent class="flex-grow-1" />
-    <ChannelContainerInput class="flex-shrink-0"/>
+    <ChannelContainerInput :channel-info="channelInfo" class="flex-shrink-0"/>
   </div>
 </template>
