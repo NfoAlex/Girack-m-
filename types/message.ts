@@ -1,4 +1,5 @@
 export default interface message {
+  messageId: string,
   channelId: string,
   userId: string,
   content: string,
