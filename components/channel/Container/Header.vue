@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { useChannelinfo } from "~/stores/channel";
-const route = useRoute();
+import type { channel } from "~/types/channel";
 
-//チャンネル情報取得
-const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
+const props = defineProps<{
+  channelInfo: channel
+}>();
 </script>
 
 <template>
   <m-card>
-    {{ getChannelinfoSingle($route.params.id)?.channelName }}
+    {{ props.channelInfo.channelName }}
   </m-card>
 </template>
