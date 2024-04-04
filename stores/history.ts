@@ -29,6 +29,10 @@ export const useHistory = defineStore("history", {
   getters: {
     //対象チャンネルの履歴を全部返す
     getHistoryFromChannel:(state) => (channelId:string):{[key: string]: message} => {
+      //もし特定のチャンネル用の履歴JSONが空なら作る
+      if (state._History[channelId] === undefined) {
+        state._History[channelId] = {};
+      }
       return state._History[channelId];
     }
   },
