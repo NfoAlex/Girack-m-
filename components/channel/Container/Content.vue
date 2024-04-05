@@ -30,7 +30,7 @@ const { getHistoryFromChannel } = storeToRefs(useHistory());
         </v-avatar>
         <m-card class="flex-grow-1 d-flex flex-column">
           <span>{{ getUserinfo(message.userId).userName }}</span>
-          <span class="text-medium-emphasis">{{ message.content }}</span>
+          <p class="text-medium-emphasis">{{ message.content }}</p>
         </m-card>
     </div>
     </div>
