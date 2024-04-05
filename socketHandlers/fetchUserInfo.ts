@@ -8,7 +8,7 @@ import type { MyUserinfo } from "../types/user";
 export default function fetchUserInfo(socket:Socket):void {
   //プロフィール情報の受け取り
   socket.on("RESULT::fetchUserInfo", (dat:{result:string, data:MyUserinfo}) => {
-    console.log("fetchUserInfo :: socketon(infoUser) : dat->", dat);
+    //console.log("fetchUserInfo :: socketon(infoUser) : dat->", dat);
 
     //ユーザー情報を更新する
     const { setUserIndex } = useUserIndex();
