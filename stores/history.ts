@@ -20,18 +20,16 @@ export const useHistory = defineStore("history", {
     }
   } as {
     _History: {
-      [key: string]: [ //チャンネルID
-        {[key: string]: message} //メッセージID、メッセージ
-      ]
+      [key: string]: message[]
     }
   }),
   
   getters: {
     //対象チャンネルの履歴を全部返す
-    getHistoryFromChannel:(state) => (channelId:string):[{[key: string]: message}] => {
+    getHistoryFromChannel:(state) => (channelId:string):message[] => {
       //もし特定のチャンネル用の履歴JSONが空なら作る
       if (state._History[channelId] === undefined) {
-        state._History[channelId] = [{}];
+        state._History[channelId] = [];
       }
       return state._History[channelId];
     }
@@ -42,14 +40,11 @@ export const useHistory = defineStore("history", {
     addMessage(message:message) {
       //もし特定のチャンネル用の履歴JSONが空なら作る
       if (this._History[message.channelId] === undefined) {
-        this._History[message.channelId] = [{}];
+        this._History[message.channelId] = [];
       }
       //メッセージ格納
       //this._History[message.channelId][message.messageId] = message;
-      const messageId = message.messageId;
-      this._History[message.channelId].unshift({
-        messageId: message
-      });
+      this._History[message.channelId].unshift(message);
     }
   }
 });
