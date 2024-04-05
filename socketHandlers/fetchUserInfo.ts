@@ -2,12 +2,17 @@
 
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useMyUserinfo } from "../stores/userinfo";
+import { useUserIndex } from "~/stores/userindex";
 import type { MyUserinfo } from "../types/user";
 
 export default function fetchUserInfo(socket:Socket):void {
   //プロフィール情報の受け取り
   socket.on("RESULT::fetchUserInfo", (dat:{result:string, data:MyUserinfo}) => {
     console.log("fetchUserInfo :: socketon(infoUser) : dat->", dat);
+
+    //ユーザー情報を更新する
+    const { setUserIndex } = useUserIndex();
+    setUserIndex(dat.data);
 
     //自分のユーザー情報だったのならStoreを更新
     const getMyUserinfo = useMyUserinfo().getMyUserinfo;
