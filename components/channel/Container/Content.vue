@@ -13,16 +13,23 @@ const { getHistoryFromChannel } = storeToRefs(useHistory());
 <template>
   <div style="overflow-y:auto;">
     <div class="d-flex flex-column-reverse">
-      <m-card
+      <div
         v-for="
           (message, key, index)
             of
           getHistoryFromChannel(props.channelInfo.channelId)
         "
         :key="key"
+        class="d-flex my-1"
       >
-        {{ message }}
-      </m-card>
+        <v-avatar class="mr-2">
+          <v-img :src="'/icon/' + message.userId" :alt="message.userId" />
+        </v-avatar>
+        <m-card class="flex-grow-1 d-flex flex-column">
+          <span>{{ message.userId }}</span>
+          <span class="text-medium-emphasis">{{ message.content }}</span>
+        </m-card>
+    </div>
     </div>
   </div>
 </template>
