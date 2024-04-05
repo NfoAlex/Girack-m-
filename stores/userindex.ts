@@ -26,7 +26,7 @@ export const useUserIndex = defineStore("userindex", {
   }),
 
   getters: {
-    getUserinfo: (state) => (userId:string) => {
+    getUserinfo: (state) => (userId:string):MyUserinfo => {
       //空じゃなければそのデータを返す、空ならホルダー作成して情報取得
       if (state._UserIndex[userId] !== undefined) {
         return state._UserIndex[userId];
@@ -51,6 +51,9 @@ export const useUserIndex = defineStore("userindex", {
           },
           userId: userId
         });
+
+        //ホルダー用データを返しておく
+        return state._UserIndex[userId];
       }
     },
   },
