@@ -9,10 +9,10 @@ export const useHistory = defineStore("history", {
     _History: {
       /*
       "0001": [
-        "0001-222220240404160919": {
+        {
           ...
         },
-        "0001-101020240404161132": {
+        {
           ...
         }
       ]
@@ -43,7 +43,6 @@ export const useHistory = defineStore("history", {
         this._History[message.channelId] = [];
       }
       //メッセージ格納
-      //this._History[message.channelId][message.messageId] = message;
       this._History[message.channelId].unshift(message);
     }
   }
