@@ -18,7 +18,7 @@ const { getHistoryFromChannel } = storeToRefs(useHistory());
     <div style="height:100%; overflow-y:auto;" class="d-flex flex-column-reverse">
       <div
         v-for="
-          (message, key, index)
+          (message, index)
             of
           getHistoryFromChannel(props.channelInfo.channelId)
         "
