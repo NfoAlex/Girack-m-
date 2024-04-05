@@ -47,7 +47,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="d-flex flex-column" style="width:0;">
+  <div class="d-flex flex-column" style="width:max-content;">
     <ChannelContainerHeader
       class="flex-shrink-0"
       :channel-info="channelInfo"
