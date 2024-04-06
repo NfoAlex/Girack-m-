@@ -23,6 +23,7 @@ export default function fetchUserInfo(socket:Socket):void {
       const { getAppStatus } = storeToRefs(useAppStatus());
       //最初の自情報ロードなら履歴を取得する
       if (!getAppStatus.value.profile.UserinfoLoaded) {
+        //参加しているチャンネルの数分ループ
         for (let channelId of dat.data.channelJoined) {
           //履歴を取得
           socket.emit("fetchHistory", {
