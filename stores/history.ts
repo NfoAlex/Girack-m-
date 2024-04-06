@@ -17,10 +17,24 @@ export const useHistory = defineStore("history", {
         }
       ]
       */
+    },
+    _Availability: {
+      /*
+      "0001": {
+        atTop: false,
+        atEnd: true
+      }
+      */
     }
   } as {
     _History: {
       [key: string]: message[]
+    },
+    _Availability: {
+      [key: string]: {
+        atTop: boolean,
+        atEnd: boolean
+      }
     }
   }),
   
