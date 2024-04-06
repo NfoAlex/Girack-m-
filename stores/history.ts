@@ -67,9 +67,9 @@ export const useHistory = defineStore("history", {
         this._History[channelId] = [];
       }
 
-      //メッセージを１個ずつ後ろから追加していく
+      //メッセージを１個ずつ追加する
       for (let msg of history) {
-        this._History[channelId].unshift(msg);
+        this._History[channelId].push(msg);
       }
     }
   }
