@@ -15,7 +15,7 @@ const { getHistoryFromChannel, getHistoryAvailability } = storeToRefs(useHistory
 
 <template>
   <div style="overflow-y:auto;">
-    <div style="height:100%; overflow-y:auto;" class="d-flex flex-column-reverse">
+    <div style="height:100%; overflow-y:auto;" class="d-flex flex-column-reverse py-1">
       
       <div
         v-for="
