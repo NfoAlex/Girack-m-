@@ -10,12 +10,13 @@ const props = defineProps<{
   channelInfo: channel
 }>();
 
-const { getHistoryFromChannel } = storeToRefs(useHistory());
+const { getHistoryFromChannel, getHistoryAvailability } = storeToRefs(useHistory());
 </script>
 
 <template>
   <div style="overflow-y:auto;">
     <div style="height:100%; overflow-y:auto;" class="d-flex flex-column-reverse">
+      
       <div
         v-for="
           (message, index)
@@ -32,7 +33,13 @@ const { getHistoryFromChannel } = storeToRefs(useHistory());
           <span>{{ getUserinfo(message.userId).userName }}</span>
           <p class="text-medium-emphasis">{{ message.content }}</p>
         </m-card>
-    </div>
+      </div>
+
+      <!-- 履歴の先頭だった用の表示 -->
+      <v-chip class="mx-auto my-4" v-if="getHistoryAvailability(props.channelInfo.channelId).atTop">
+        ここが先頭
+      </v-chip>
+
     </div>
   </div>
 </template>
