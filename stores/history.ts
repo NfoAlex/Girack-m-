@@ -71,6 +71,26 @@ export const useHistory = defineStore("history", {
       for (let msg of history) {
         this._History[channelId].push(msg);
       }
+    },
+
+    //履歴の位置データを格納
+    setAvailability(
+      channelId:string,
+      atData: {
+        atTop: boolean,
+        atEnd: boolean
+      }
+    )  {
+      //そのチャンネル用の履歴位置データが無ければ作成
+      if (this._Availability[channelId] === undefined) {
+        this._Availability[channelId] = {
+          atTop: false,
+          atEnd: false
+        };
+      }
+
+      //格納
+      this._Availability[channelId] = atData;
     }
   }
 });

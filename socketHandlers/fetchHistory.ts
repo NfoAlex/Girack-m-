@@ -22,7 +22,13 @@ export default function fetchHistory(socket:Socket):void {
     console.log("fetchHistory :: socketon(fetchHistory) : dat->", dat);
 
     //履歴をStoreへ格納
-    const { setHistory } = useHistory();
-    setHistory(dat.data.channelId, dat.data.historyData.history);
+    const { setHistory, setAvailability } = useHistory(); //piniaのActionsインポート
+    setHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
+    setAvailability(dat.data.channelId, //履歴の位置データ
+      {
+        atTop: dat.data.historyData.atTop,
+        atEnd: dat.data.historyData.atEnd
+      }
+    );
   });
 }
