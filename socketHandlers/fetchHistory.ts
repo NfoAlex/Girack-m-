@@ -14,7 +14,7 @@ export default function fetchHistory(socket:Socket):void {
         historyData: {
           history: message[],
           atTop: boolean,
-          atEnf: boolean
+          atEnd: boolean
         }
       }
     }
