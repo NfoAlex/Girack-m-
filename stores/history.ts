@@ -46,6 +46,19 @@ export const useHistory = defineStore("history", {
         state._History[channelId] = [];
       }
       return state._History[channelId];
+    },
+
+    //対象チャンネル用の履歴の位置データを返す
+    getHistoryAvailability:(state) => (channelId:string) => {
+      //そのチャンネル用の履歴位置データが無ければ作成
+      if (state._Availability[channelId] === undefined) {
+        state._Availability[channelId] = {
+          atTop: false,
+          atEnd: false
+        };
+      }
+      //返す
+      return state._Availability[channelId]
     }
   },
 
