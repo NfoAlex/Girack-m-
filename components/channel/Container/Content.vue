@@ -36,7 +36,7 @@ const { getHistoryFromChannel, getHistoryAvailability } = storeToRefs(useHistory
       </div>
 
       <!-- 履歴の先頭だった用の表示 -->
-      <v-chip class="mx-auto my-4" v-if="getHistoryAvailability(props.channelInfo.channelId).atTop">
+      <v-chip class="mx-auto my-4 pa-5" v-if="getHistoryAvailability(props.channelInfo.channelId).atTop">
         ここが先頭
       </v-chip>
 
