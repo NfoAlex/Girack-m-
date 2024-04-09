@@ -86,6 +86,32 @@ export const useHistory = defineStore("history", {
       }
     },
 
+    //履歴を挿入
+    insertHistory(channelId:string, historyInserting:message[]) {
+      //もし特定のチャンネル用の履歴JSONが空なら作ってそれを格納して終わる
+      if (this._History[channelId] === undefined) {
+        //空のを作る
+        this._History[channelId] = [];
+        //メッセージを１個ずつ追加する
+        for (let msg of historyInserting) {
+          this._History[channelId].push(msg);
+        }
+      }
+
+      //履歴の最新のメッセージ時間と取得した履歴の最後のメッセージ時間を比較して追加する場所を決める
+      if (
+        parseInt(this._History[channelId][0].time)
+          <
+        parseInt(historyInserting[historyInserting.length-1].time)
+      ) { //取得データが履歴Storeより新しい
+        //取得した履歴データが最新になるように配列をセット
+        this._History[channelId] = [...historyInserting, ...this._History[channelId]];
+      } else { //取得データが履歴Storeより古い
+        //取得した履歴データが最後になるように配列をセット
+        this._History[channelId] = [...this._History[channelId], ...historyInserting];
+      }
+    },
+
     //履歴の位置データを格納
     setAvailability(
       channelId:string,
