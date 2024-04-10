@@ -145,6 +145,7 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
           getHistoryFromChannel(props.channelInfo.channelId)
         "
         :key="message.messageId"
+        :id="message.messageId"
         class="d-flex my-1 px-1"
       >
         <v-avatar class="mr-2">
