@@ -120,10 +120,6 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
     fetchNewerHistory();
   }
 });
-
-watch(getHistoryAvailability(props.channelInfo.channelId), () => {
-  console.log("/channel/:id :: watch(atSkeleton) : 履歴が変わった?");
-});
 </script>
 
 <template>
