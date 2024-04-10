@@ -21,6 +21,9 @@ export default function fetchHistory(socket:Socket):void {
   ) => {
     console.log("fetchHistory :: socketon(fetchHistory) : dat->", dat);
 
+    //もし履歴データが無効なら終わり
+    if (dat.data.historyData === null) return;
+
     //履歴をStoreへ格納
     const { setHistory, setAvailability } = useHistory(); //piniaのActionsインポート
     setHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
