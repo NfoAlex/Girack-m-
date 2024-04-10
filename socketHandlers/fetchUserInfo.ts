@@ -32,7 +32,10 @@ export default function fetchUserInfo(socket:Socket):void {
               sessionId: getSessionId
             },
             channelId: channelId,
-            positionMessageId: "" //最新からとるために空(将来的に既読時間からやるようにする)
+            fetchingPosition: {
+              positionMessageId: "", //最新からとるために空(将来的に既読時間からやるようにする)
+              fetchDirection: "newer"
+            }
           });
         }
       }
