@@ -134,8 +134,6 @@ watch(getHistoryAvailability(props.channelInfo.channelId), () => {
       <span
         v-if="
           !getHistoryAvailability(props.channelInfo.channelId).atEnd
-          &&
-          getHistoryFromChannel(props.channelInfo.channelId).length > 30
         "
         ref="skeletonLoaderNewer"
       >
@@ -176,8 +174,6 @@ watch(getHistoryAvailability(props.channelInfo.channelId), () => {
       <v-chip
         v-if="
           getHistoryAvailability(props.channelInfo.channelId).atTop
-          &&
-          getHistoryFromChannel(props.channelInfo.channelId).length > 30
         "
         class="mx-auto my-4 pa-5"
       >
