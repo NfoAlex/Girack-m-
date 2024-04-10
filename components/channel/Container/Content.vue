@@ -140,13 +140,6 @@ watch(getHistoryAvailability(props.channelInfo.channelId), () => {
         <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
       </span>
 
-      <v-chip
-        v-if="getHistoryAvailability(props.channelInfo.channelId).atEnd"
-        class="mx-auto my-4 pa-5"
-      >
-        ここが終わり
-      </v-chip>
-
       <div
         v-for="
           (message, index)
