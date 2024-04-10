@@ -132,7 +132,11 @@ watch(getHistoryAvailability(props.channelInfo.channelId), () => {
       
       <!-- 終わりのロードホルダー -->
       <span
-        v-if="!getHistoryAvailability(props.channelInfo.channelId).atEnd"
+        v-if="
+          !getHistoryAvailability(props.channelInfo.channelId).atEnd
+          &&
+          getHistoryFromChannel(props.channelInfo.channelId).length > 30
+        "
         ref="skeletonLoaderNewer"
       >
         <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
@@ -169,8 +173,15 @@ watch(getHistoryAvailability(props.channelInfo.channelId), () => {
       </span>
 
       <!-- 履歴の先頭だった用の表示 -->
-      <v-chip class="mx-auto my-4 pa-5" v-if="getHistoryAvailability(props.channelInfo.channelId).atTop">
-        ここが先頭
+      <v-chip
+        v-if="
+          getHistoryAvailability(props.channelInfo.channelId).atTop
+          &&
+          getHistoryFromChannel(props.channelInfo.channelId).length > 30
+        "
+        class="mx-auto my-4 pa-5"
+      >
+        履歴はここまで
       </v-chip>
 
     </div>
