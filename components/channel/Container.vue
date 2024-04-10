@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { socket } from "~/socketHandlers/socketInit";
 import { useChannelinfo } from "~/stores/channel";
 import type { channel } from "~/types/channel";
 
@@ -20,7 +21,10 @@ const channelInfo = ref<channel>({
   speakableRole: ""
 });
 
-onMounted(() => {
+/**
+ * チャンネル情報を設定
+ */
+const bindChannelInfo = () => {
   //チャンネルID取得
   const channelId = route.params.id;
   //routeからのチャンネルIDがオブジェクトじゃなければチャンネル情報取得、格納
@@ -43,6 +47,24 @@ onMounted(() => {
       };
     }
   }
+}
+
+/**
+ * チャンネル情報を再取得させるだけ
+ */
+const updateChannelInfo = () => {
+  bindChannelInfo();
+}
+
+onMounted(() => {
+  //チャンネル情報を設定する
+  bindChannelInfo();
+  //チャンネル情報を受け取ったときにまた再取得させる
+  socket.on("RESULT::fetchChannelInfo", updateChannelInfo);
+});
+onUnmounted(() => {
+  //ただのoff
+  socket.off("RESULT::fetchChannelInfo", updateChannelInfo);
 });
 </script>
 
