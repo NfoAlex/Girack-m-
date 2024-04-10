@@ -35,6 +35,15 @@ const { getHistoryFromChannel, getHistoryAvailability } = storeToRefs(useHistory
         </m-card>
       </div>
 
+      <!-- 戦闘のロードホルダー -->
+      <span
+        v-if="!getHistoryAvailability(props.channelInfo.channelId).atTop"
+      >
+        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
+      </span>
+
       <!-- 履歴の先頭だった用の表示 -->
       <v-chip class="mx-auto my-4 pa-5" v-if="getHistoryAvailability(props.channelInfo.channelId).atTop">
         ここが先頭
