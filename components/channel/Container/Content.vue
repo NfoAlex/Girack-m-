@@ -124,12 +124,6 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 watch(getHistoryAvailability(props.channelInfo.channelId), () => {
   console.log("/channel/:id :: watch(atSkeleton) : 履歴が変わった?");
 });
-
-onMounted(() => {
-  if (process.client && window) {
-    window.history.scrollRestoration = 'auto';
-  }
-})
 </script>
 
 <template>
