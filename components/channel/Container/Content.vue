@@ -20,8 +20,10 @@ const { getHistoryFromChannel, getHistoryAvailability } = useHistory();
 /**
  * data
  */
-const skeletonLoader = ref(null); //要素位置監視用
-const atSkeleton = useElementVisibility(skeletonLoader); //スケルトンローダーが画面内にあるかどうか
+const skeletonLoaderOlder = ref(null); //要素位置監視用
+const atSkeletonOlder = useElementVisibility(skeletonLoaderOlder); //スケルトンローダーが画面内にあるかどうか
+const skeletonLoaderNewer = ref(null); //要素位置監視用
+const atSkeletonNewer = useElementVisibility(skeletonLoaderNewer); //スケルトンローダーが画面内にあるかどうか
 
 /**
  * 古い履歴の追加取得
@@ -33,7 +35,7 @@ const fetchOlderHistory = () => {
   const oldestMessageId = getHistoryFromChannel(
     props.channelInfo.channelId
   )[lengthOfHistory-1].messageId;
-  
+
   console.log("/channel/:id :: fetchOlderHistory : oldestMessageId->", oldestMessageId);
 
   //履歴を取得
@@ -60,24 +62,97 @@ const fetchOlderHistory = () => {
       fetchDirection: "older"
     }
   });
-
 }
 
-//スケルトンローダーの位置変数の監視
-watch(atSkeleton, function (newValue, oldValue) {
-  console.log("/channel/:id :: watch(atSkeleton) : atSkeleton->", newValue, oldValue);
+/**
+ * 新しい履歴の追加取得
+ */
+ const fetchNewerHistory = () => {
+  //一番新しいメッセージID
+  const oldestMessageId = getHistoryFromChannel(
+    props.channelInfo.channelId
+  )[0].messageId;
+
+  console.log("/channel/:id :: fetchOlderHistory : oldestMessageId->", oldestMessageId);
+
+  //履歴を取得
+  socket.emit("fetchHistory", {
+    RequestSender: {
+      userId: getMyUserinfo.userId,
+      sessionId: getSessionId
+    },
+    channelId: props.channelInfo.channelId,
+    fetchingPosition: {
+      positionMessageId: oldestMessageId,
+      fetchDirection: "newer"
+    }
+  });
+
+  console.log("/channel/:id :: fetchOlderHistory : 送信したもの->", {
+    RequestSender: {
+      userId: getMyUserinfo.userId,
+      sessionId: getSessionId
+    },
+    channelId: props.channelInfo.channelId,
+    fetchingPosition: {
+      positionMessageId: oldestMessageId,
+      fetchDirection: "newer"
+    }
+  });
+}
+
+//上のスケルトンローダーの位置変数の監視
+watch(atSkeletonOlder, function (newValue, oldValue) {
+  console.log("/channel/:id :: watch(atSkeletonOlder) : atSkeleton->", newValue, oldValue);
 
   //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
   if (newValue) {
     fetchOlderHistory();
   }
 });
+
+//下のスケルトンローダーの位置変数の監視
+watch(atSkeletonNewer, function (newValue, oldValue) {
+  console.log("/channel/:id :: watch(atSkeletonNewer) : atSkeleton->", newValue, oldValue);
+
+  //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
+  if (newValue) {
+    fetchNewerHistory();
+  }
+});
+
+watch(getHistoryAvailability(props.channelInfo.channelId), () => {
+  console.log("/channel/:id :: watch(atSkeleton) : 履歴が変わった?");
+});
+
+onMounted(() => {
+  if (process.client && window) {
+    window.history.scrollRestoration = 'auto';
+  }
+})
 </script>
 
 <template>
   <div style="overflow-y:auto;">
     <div style="height:100%; overflow-y:auto;" class="d-flex flex-column-reverse py-1">
       
+      <!-- 終わりのロードホルダー -->
+      <span
+        v-if="!getHistoryAvailability(props.channelInfo.channelId).atEnd"
+        ref="skeletonLoaderNewer"
+      >
+        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
+      </span>
+
+      <v-chip
+        v-if="getHistoryAvailability(props.channelInfo.channelId).atEnd"
+        class="mx-auto my-4 pa-5"
+      >
+        ここが終わり
+      </v-chip>
+
       <div
         v-for="
           (message, index)
@@ -99,7 +174,7 @@ watch(atSkeleton, function (newValue, oldValue) {
       <!-- 戦闘のロードホルダー -->
       <span
         v-if="!getHistoryAvailability(props.channelInfo.channelId).atTop"
-        ref="skeletonLoader"
+        ref="skeletonLoaderOlder"
       >
         <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
         <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
