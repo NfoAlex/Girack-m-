@@ -106,10 +106,32 @@ export const useHistory = defineStore("history", {
       ) { //取得データが履歴Storeより新しい
         //取得した履歴データが最新になるように配列をセット
         this._History[channelId] = [...historyInserting, ...this._History[channelId]];
+
+        //履歴データが60以上あるなら古い方を削る
+        if (this._History[channelId].length > 60) {
+          this._History[channelId].splice(30);
+          //削っているので最後にいるかどうかは必ずfalseになるはず
+          this._Availability[channelId].atEnd = false;
+        }
       } else { //取得データが履歴Storeより古い
         //取得した履歴データが最後になるように配列をセット
         this._History[channelId] = [...this._History[channelId], ...historyInserting];
+
+        console.log("history :: insertHistory : 履歴の長さ->", this._History[channelId].length);
+
+        //履歴データが60以上あるなら新しい方を削る
+        if (this._History[channelId].length > 60) {
+          console.log("history :: insetHistory : 削ってみた");
+          this._History[channelId].splice(0,30);
+          //削っているので先頭にいるかどうかは必ずfalseになるはず
+          this._Availability[channelId].atTop = false;
+        }
       }
+    },
+
+    //履歴を削る
+    trimHistory(channelId:string, trimDirection:string) {
+
     },
 
     //履歴の位置データを格納
