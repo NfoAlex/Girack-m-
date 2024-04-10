@@ -96,6 +96,8 @@ export const useHistory = defineStore("history", {
         for (let msg of historyInserting) {
           this._History[channelId].push(msg);
         }
+
+        return;
       }
 
       //履歴の最新のメッセージ時間と取得した履歴の最後のメッセージ時間を比較して追加する場所を決める
