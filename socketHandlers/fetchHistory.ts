@@ -25,8 +25,9 @@ export default function fetchHistory(socket:Socket):void {
     if (dat.data.historyData === null) return;
 
     //履歴をStoreへ格納
-    const { setHistory, setAvailability } = useHistory(); //piniaのActionsインポート
-    setHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
+    const { getHistoryFromChannel, insertHistory, setAvailability } = useHistory(); //piniaのActionsインポート
+    insertHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
+
     setAvailability(dat.data.channelId, //履歴の位置データ
       {
         atTop: dat.data.historyData.atTop,
