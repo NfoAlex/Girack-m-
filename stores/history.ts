@@ -108,7 +108,7 @@ export const useHistory = defineStore("history", {
       if (
         parseInt(this._History[channelId][0].time)
           <=
-        parseInt(historyInserting[1].time)
+        parseInt(historyInserting[0].time)
       ) { //取得データが履歴Storeより新しい
         //取得した履歴データが最新になるように配列をセット
         this._History[channelId] = [...historyInserting, ...this._History[channelId]];
