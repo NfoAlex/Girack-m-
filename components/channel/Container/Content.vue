@@ -45,7 +45,7 @@ const fetchOlderHistory = () => {
     return;
   }
 
-  console.log("/channel/:id :: fetchOlderHistory : oldestMessageId->", oldestMessageId);
+  //console.log("/channel/:id :: fetchOlderHistory : oldestMessageId->", oldestMessageId);
 
   //履歴を取得
   socket.emit("fetchHistory", {
@@ -87,20 +87,11 @@ const fetchOlderHistory = () => {
     newestMessageId = getHistoryFromChannel(
       props.channelInfo.channelId
     )[0].messageId;
-
-    console.log("/channel/:id :: fetchNewerHistory : ", 
-      " これが最新のはず->",
-      getHistoryFromChannel(props.channelInfo.channelId)[0],
-      " これが最古のはず->",
-      getHistoryFromChannel(props.channelInfo.channelId)[
-        getHistoryFromChannel(props.channelInfo.channelId).length - 1
-      ]
-    );
   } catch(e) {
     return;
   }
 
-  console.log("/channel/:id :: fetchNewerHistory : newestMessageId->", newestMessageId);
+  //console.log("/channel/:id :: fetchNewerHistory : newestMessageId->", newestMessageId);
 
   //履歴を取得
   socket.emit("fetchHistory", {

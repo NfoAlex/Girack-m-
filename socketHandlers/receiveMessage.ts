@@ -8,7 +8,7 @@ export default function receiveMessage(socket: Socket): void {
   const { addMessage } = useHistory();
   //メッセージの受け取り
   socket.on("receiveMessage", (message:message) => {
-    console.log("socket(receiveMessage) :: message->", message);
+    //console.log("socket(receiveMessage) :: message->", message);
 
     addMessage(message);
   });

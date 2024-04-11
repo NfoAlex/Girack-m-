@@ -117,7 +117,7 @@ export const useHistory = defineStore("history", {
         //取得した履歴データが最新になるように配列をセット
         this._History[channelId] = [...historyInserting, ...this._History[channelId]];
 
-        console.log("history :: insertHistory : 新しいのを挿入した履歴の長さ->", this._History[channelId].length);
+        //console.log("history :: insertHistory : 新しいのを挿入した履歴の長さ->", this._History[channelId].length);
 
         //履歴データが60以上あるなら古い方を削る
         if (this._History[channelId].length > 60) {
@@ -129,7 +129,7 @@ export const useHistory = defineStore("history", {
         //取得した履歴データが最後になるように配列をセット
         this._History[channelId] = [...this._History[channelId], ...historyInserting];
 
-        console.log("history :: insertHistory : 古いのを挿入した履歴の長さ->", this._History[channelId].length);
+        //console.log("history :: insertHistory : 古いのを挿入した履歴の長さ->", this._History[channelId].length);
 
         //履歴データが60以上あるなら新しい方を削る
         if (this._History[channelId].length > 60) {
