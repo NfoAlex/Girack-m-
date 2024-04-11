@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
+import { useGoTo } from 'vuetify'
 import { useAppStatus } from '~/stores/AppStatus';
 import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
@@ -12,6 +13,7 @@ import { useElementVisibility } from '@vueuse/core';
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = useMyUserinfo();
 const { getUserinfo } = useUserIndex();
+const goTo = useGoTo();
 
 //props(チャンネル情報)
 const props = defineProps<{
@@ -28,6 +30,7 @@ const skeletonLoaderOlder = ref(null); //要素位置監視用
 const atSkeletonOlder = useElementVisibility(skeletonLoaderOlder); //スケルトンローダーが画面内にあるかどうか
 const skeletonLoaderNewer = ref(null); //要素位置監視用
 const atSkeletonNewer = useElementVisibility(skeletonLoaderNewer); //スケルトンローダーが画面内にあるかどうか
+const anchorMessageId = ref<string>("");
 
 /**
  * 古い履歴の追加取得
@@ -135,6 +138,26 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
 
   //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
   if (newValue) {
+    displayDirection.value = 
+      displayDirection.value==="newer" ? "older" : "newer";
+    
+    try {
+      //メッセージIDのアンカーを設定
+      anchorMessageId.value = getHistoryFromChannel(
+        props.channelInfo.channelId
+      )[0].messageId;
+
+      goTo("#msg" + getHistoryFromChannel(props.channelInfo.channelId)[
+        getHistoryFromChannel(props.channelInfo.channelId).length-1
+      ].messageId, {
+        duration: 100
+      });
+    } catch(e) {
+      console.log("/channel/:id :: watch(atSkeletonOlder) : e->", e);
+      return;
+    }
+    console.log("/channel/:id :: watch(atSkeletonOlder) : もとに戻った");
+
     getAppStatus.value.fetchingHistory = true;
     fetchOlderHistory();
   }
@@ -151,16 +174,39 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 
   //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
   if (newValue) {
+    displayDirection.value = 
+      displayDirection.value==="older" ? "newer" : "older";
+    try {
+      //メッセージIDのアンカーを設定
+      anchorMessageId.value = getHistoryFromChannel(
+        props.channelInfo.channelId
+      )[0].messageId;
+
+      goTo("#msg" + getHistoryFromChannel(props.channelInfo.channelId)[
+        0
+      ].messageId, {
+        duration: 100
+      });
+    } catch(e) {
+      console.log("/channel/:id :: watch(atSkeletonNewer) : e->", e);
+      return;
+    }
+
+    console.log("/channel/:id :: watch(atSkeletonNewer) : REVERSED!");
+
     getAppStatus.value.fetchingHistory = true;
     fetchNewerHistory();
   }
 });
 
-//履歴の更新
+//履歴の更新を監視
 watch(
   () => getHistoryFromChannel(props.channelInfo.channelId),
   () => {
     console.log("/channel/:id :: watch(getHistory...) : 変更された?");
+    goTo("#msg" + anchorMessageId.value, {
+      duration: 100
+    });
   },
   {deep: true}
 );
@@ -168,11 +214,12 @@ watch(
 
 <template>
   <div style="overflow-y:auto;">
+
     <div
       style="height:100%; overflow-y:auto;"
-      class="d-flex flex-column-reverse py-1"
+      class="d-flex py-1 flex-column-reverse"
     >
-      
+
       <!-- 終わりのロードホルダー -->
       <span
         v-if="
@@ -185,39 +232,31 @@ watch(
         <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
       </span>
 
-      <div
-        v-for="
-          (message, index)
-            of
-          getHistoryFromChannel(props.channelInfo.channelId)
-        "
-        :key="message.messageId"
-        :id="message.messageId"
-        class="d-flex my-1 px-1"
-      >
-        <v-avatar class="mr-2">
-          <v-img :src="'/icon/' + message.userId" :alt="message.userId" />
-        </v-avatar>
-        <m-card class="flex-grow-1 d-flex flex-column">
-          <span class="d-flex align-center">
-            <p>{{ getUserinfo(message.userId).userName }}</p>
-            <p class="text-medium-emphasis text-subtitle-2 ml-2">
-              {{ message.time }}
-            </p>
-          </span>
-          <p class="text-medium-emphasis">{{ message.content }}</p>
-        </m-card>
-      </div>
-
-      <!-- 戦闘のロードホルダー -->
-      <span
-        v-if="!getHistoryAvailability(props.channelInfo.channelId).atTop"
-        ref="skeletonLoaderOlder"
-      >
-        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
-        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
-        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
-      </span>
+      <TransitionGroup class="d-flex flex-column-reverse" name="list" tag="div">
+        <div
+          v-for="
+            (message, index)
+              of
+            getHistoryFromChannel(props.channelInfo.channelId)
+          "
+          :key="message.messageId"
+          :id="'msg' + message.messageId"
+          class="d-flex my-1 px-1"
+        >
+          <v-avatar class="mr-2">
+            <v-img :src="'/icon/' + message.userId" :alt="message.userId" />
+          </v-avatar>
+          <m-card class="flex-grow-1 d-flex flex-column">
+            <span class="d-flex align-center">
+              <p>{{ getUserinfo(message.userId).userName }}</p>
+              <p class="text-medium-emphasis text-subtitle-2 ml-2">
+                {{ message.time }}
+              </p>
+            </span>
+            <p class="text-medium-emphasis">{{ message.content }}</p>
+          </m-card>
+        </div>
+      </TransitionGroup>
 
       <!-- 履歴の先頭だった用の表示 -->
       <v-chip
@@ -229,6 +268,29 @@ watch(
         履歴はここまで
       </v-chip>
 
+      <!-- 戦闘のロードホルダー -->
+      <span
+        v-if="!getHistoryAvailability(props.channelInfo.channelId).atTop"
+        ref="skeletonLoaderOlder"
+      >
+        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
+      </span>
+
     </div>
+
   </div>
 </template>
+
+<style scoped>
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+</style>
