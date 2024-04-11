@@ -63,14 +63,18 @@ export const useHistory = defineStore("history", {
   },
 
   actions: {
-    //メッセージを保存
+    //メッセージを履歴へ追加
     addMessage(message:message) {
       //もし特定のチャンネル用の履歴JSONが空なら作る
       if (this._History[message.channelId] === undefined) {
         this._History[message.channelId] = [];
       }
-      //メッセージ格納
-      this._History[message.channelId].unshift(message);
+
+      //履歴の最新にいるときのみ追加する
+      if (this._Availability[message.channelId].atEnd) {
+        //メッセージ追加
+        this._History[message.channelId].unshift(message);
+      }
     },
 
     //履歴をまるごと上書きする
