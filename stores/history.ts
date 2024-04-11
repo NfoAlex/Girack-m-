@@ -119,7 +119,7 @@ export const useHistory = defineStore("history", {
         if (this._History[channelId].length > 60) {
           this._History[channelId].splice(30);
           //削っているので最後にいるかどうかは必ずfalseになるはず
-          this._Availability[channelId].atEnd = false;
+          this._Availability[channelId].atTop = false;
         }
       } else { //取得データが履歴Storeより古い
         //取得した履歴データが最後になるように配列をセット
@@ -132,7 +132,7 @@ export const useHistory = defineStore("history", {
           console.log("history :: insetHistory : 削ってみた");
           this._History[channelId].splice(0,30);
           //削っているので先頭にいるかどうかは必ずfalseになるはず
-          this._Availability[channelId].atTop = false;
+          this._Availability[channelId].atEnd = false;
         }
       }
     },
