@@ -5,6 +5,7 @@ import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
 import { useUserIndex } from "~/stores/userindex";
 import type { channel } from '~/types/channel';
+import type message from '~/types/message';
 
 import { useElementVisibility } from '@vueuse/core'
 
