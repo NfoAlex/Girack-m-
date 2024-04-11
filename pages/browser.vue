@@ -31,6 +31,19 @@ const joinChannel = (channelIdJoining:string) => {
     },
     channelId: channelIdJoining
   });
+
+  //参加するチャンネルの履歴を取得
+  socket.emit("fetchHistory", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    channelId: channelIdJoining,
+    fetchingPosition: {
+      positionMessageId: "", //最新からとるために空(将来的に既読時間からやるようにする)
+      fetchDirection: "newer"
+    }
+  });
 }
 
 /**
