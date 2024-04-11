@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
+import { useAppStatus } from '~/stores/AppStatus';
 import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
 import { useUserIndex } from "~/stores/userindex";
@@ -7,6 +8,7 @@ import type { channel } from '~/types/channel';
 
 import { useElementVisibility } from '@vueuse/core'
 
+const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = useMyUserinfo();
 const { getUserinfo } = useUserIndex();
 
@@ -29,12 +31,19 @@ const atSkeletonNewer = useElementVisibility(skeletonLoaderNewer); //スケル�
  * 古い履歴の追加取得
  */
 const fetchOlderHistory = () => {
-  //履歴の長さカウント
+  //一番新しいメッセージID用変数
+  let oldestMessageId:string = "";
+  //メッセージIDを取得しようとして無理なのなら停止
+  try {
+    //履歴の長さカウント
   const lengthOfHistory = getHistoryFromChannel(props.channelInfo.channelId).length;
-  //一番古いメッセージID
-  const oldestMessageId = getHistoryFromChannel(
-    props.channelInfo.channelId
-  )[lengthOfHistory-1].messageId;
+    //一番古いメッセージID
+    oldestMessageId = getHistoryFromChannel(
+      props.channelInfo.channelId
+    )[lengthOfHistory-1].messageId;
+  } catch(e) {
+    return;
+  }
 
   console.log("/channel/:id :: fetchOlderHistory : oldestMessageId->", oldestMessageId);
 
@@ -50,6 +59,9 @@ const fetchOlderHistory = () => {
       fetchDirection: "older"
     }
   });
+
+  //履歴を取得中であるとグローバルで設定
+  getAppStatus.value.fetchingHistory = true;
 
   console.log("/channel/:id :: fetchOlderHistory : 送信したもの->", {
     RequestSender: {
@@ -68,12 +80,27 @@ const fetchOlderHistory = () => {
  * 新しい履歴の追加取得
  */
  const fetchNewerHistory = () => {
-  //一番新しいメッセージID
-  const oldestMessageId = getHistoryFromChannel(
-    props.channelInfo.channelId
-  )[0].messageId;
+  //一番新しいメッセージID用変数
+  let newestMessageId:string = "";
+  //メッセージIDを取得しようとして無理なのなら停止
+  try {
+    newestMessageId = getHistoryFromChannel(
+      props.channelInfo.channelId
+    )[0].messageId;
 
-  console.log("/channel/:id :: fetchOlderHistory : oldestMessageId->", oldestMessageId);
+    console.log("/channel/:id :: fetchNewerHistory : ", 
+      " これが最新のはず->",
+      getHistoryFromChannel(props.channelInfo.channelId)[0],
+      " これが最古のはず->",
+      getHistoryFromChannel(props.channelInfo.channelId)[
+        getHistoryFromChannel(props.channelInfo.channelId).length - 1
+      ]
+    );
+  } catch(e) {
+    return;
+  }
+
+  console.log("/channel/:id :: fetchNewerHistory : newestMessageId->", newestMessageId);
 
   //履歴を取得
   socket.emit("fetchHistory", {
@@ -83,19 +110,22 @@ const fetchOlderHistory = () => {
     },
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
-      positionMessageId: oldestMessageId,
+      positionMessageId: newestMessageId,
       fetchDirection: "newer"
     }
   });
 
-  console.log("/channel/:id :: fetchOlderHistory : 送信したもの->", {
+  //履歴を取得中であるとグローバルで設定
+  getAppStatus.value.fetchingHistory = true;
+
+  console.log("/channel/:id :: fetchNewerHistory : 送信したもの->", {
     RequestSender: {
       userId: getMyUserinfo.userId,
       sessionId: getSessionId
     },
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
-      positionMessageId: oldestMessageId,
+      positionMessageId: newestMessageId,
       fetchDirection: "newer"
     }
   });
@@ -103,20 +133,32 @@ const fetchOlderHistory = () => {
 
 //上のスケルトンローダーの位置変数の監視
 watch(atSkeletonOlder, function (newValue, oldValue) {
-  console.log("/channel/:id :: watch(atSkeletonOlder) : atSkeleton->", newValue, oldValue);
+  console.log("/channel/:id :: watch(atSkeletonOlder) : atSkeleton->(", newValue, oldValue, ")",
+    " fetching->", getAppStatus.value.fetchingHistory
+  );
+
+  //すでに履歴を取得中の状態なら停止
+  if (getAppStatus.value.fetchingHistory) return;
 
   //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
   if (newValue) {
+    getAppStatus.value.fetchingHistory = true;
     fetchOlderHistory();
   }
 });
 
 //下のスケルトンローダーの位置変数の監視
 watch(atSkeletonNewer, function (newValue, oldValue) {
-  console.log("/channel/:id :: watch(atSkeletonNewer) : atSkeleton->", newValue, oldValue);
+  console.log("/channel/:id :: watch(atSkeletonNewer) : atSkeleton->(", newValue, oldValue, ")",
+    " fetching->", getAppStatus.value.fetchingHistory
+  );
+
+  //すでに履歴を取得中の状態なら停止
+  if (getAppStatus.value.fetchingHistory) return;
 
   //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
   if (newValue) {
+    getAppStatus.value.fetchingHistory = true;
     fetchNewerHistory();
   }
 });
@@ -152,7 +194,12 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
           <v-img :src="'/icon/' + message.userId" :alt="message.userId" />
         </v-avatar>
         <m-card class="flex-grow-1 d-flex flex-column">
-          <span>{{ getUserinfo(message.userId).userName }}</span>
+          <span class="d-flex align-center">
+            <p>{{ getUserinfo(message.userId).userName }}</p>
+            <p class="text-medium-emphasis text-subtitle-2 ml-2">
+              {{ message.time }}
+            </p>
+          </span>
           <p class="text-medium-emphasis">{{ message.content }}</p>
         </m-card>
       </div>

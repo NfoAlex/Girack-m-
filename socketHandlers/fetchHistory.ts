@@ -2,6 +2,7 @@
 
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useHistory } from "~/stores/history";
+import { useAppStatus } from '~/stores/AppStatus';
 import type message from "~/types/message";
 
 export default function fetchHistory(socket:Socket):void {
@@ -25,8 +26,12 @@ export default function fetchHistory(socket:Socket):void {
     if (dat.data.historyData === null) return;
 
     //履歴をStoreへ格納
-    const { getHistoryFromChannel, insertHistory, setAvailability } = useHistory(); //piniaのActionsインポート
+    const { insertHistory, setAvailability } = useHistory(); //piniaのActionsインポート
     insertHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
+
+    //履歴取得中であることを無効化
+    const { getAppStatus } = storeToRefs(useAppStatus());
+    getAppStatus.value.fetchingHistory = false;
 
     setAvailability(dat.data.channelId, //履歴の位置データ
       {
