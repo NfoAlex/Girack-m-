@@ -156,9 +156,13 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 });
 
 //履歴の更新
-watch(() => getHistoryFromChannel(props.channelInfo.channelId), () => {
-  console.log("/channel/:id :: watch(getHistory...) : 変更された?");
-}, {deep: true});
+watch(
+  () => getHistoryFromChannel(props.channelInfo.channelId),
+  () => {
+    console.log("/channel/:id :: watch(getHistory...) : 変更された?");
+  },
+  {deep: true}
+);
 </script>
 
 <template>
