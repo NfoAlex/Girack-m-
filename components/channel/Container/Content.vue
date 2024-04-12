@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
+import { useGoTo } from 'vuetify'
 import { useAppStatus } from '~/stores/AppStatus';
 import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
 import { useUserIndex } from "~/stores/userindex";
 import type { channel } from '~/types/channel';
+import type message from '~/types/message';
 
-import { useElementVisibility } from '@vueuse/core'
+import { useElementVisibility } from '@vueuse/core';
 
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = useMyUserinfo();
 const { getUserinfo } = useUserIndex();
+const goTo = useGoTo();
 
 //props(チャンネル情報)
 const props = defineProps<{
@@ -22,10 +25,12 @@ const { getHistoryFromChannel, getHistoryAvailability } = useHistory();
 /**
  * data
  */
+const displayDirection = ref<"newer"|"older">("older"); //履歴の取得、表示方向
 const skeletonLoaderOlder = ref(null); //要素位置監視用
 const atSkeletonOlder = useElementVisibility(skeletonLoaderOlder); //スケルトンローダーが画面内にあるかどうか
 const skeletonLoaderNewer = ref(null); //要素位置監視用
 const atSkeletonNewer = useElementVisibility(skeletonLoaderNewer); //スケルトンローダーが画面内にあるかどうか
+const anchorMessageId = ref<string>("");
 
 /**
  * 古い履歴の追加取得
@@ -133,8 +138,12 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
 
   //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
   if (newValue) {
+    displayDirection.value = "older"
+    
+    console.log("/channel/:id :: watch(atSkeletonOlder) : もとに戻った");
+
     getAppStatus.value.fetchingHistory = true;
-    fetchOlderHistory();
+    setTimeout(fetchOlderHistory, 100);
   }
 });
 
@@ -149,16 +158,60 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 
   //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
   if (newValue) {
+    displayDirection.value = "newer";
+
+    console.log("/channel/:id :: watch(atSkeletonNewer) : REVERSED!");
+
     getAppStatus.value.fetchingHistory = true;
-    fetchNewerHistory();
+    setTimeout(fetchNewerHistory, 100);
   }
 });
+
+//履歴の更新を監視
+watch(
+  () => getHistoryFromChannel(props.channelInfo.channelId),
+  () => {
+    nextTick(() => {
+      console.log("/channel/:id :: watch(getHistory...) : 変更された?");
+      //スクロールしてみる
+      if (displayDirection.value === "newer") {
+        //履歴追加をし始めた位置
+        const messageScrolledPosition = getHistoryFromChannel(
+            props.channelInfo.channelId
+          )[
+            getHistoryAvailability(props.channelInfo.channelId).latestFetchedHistoryLength - 1
+          ].messageId;
+
+        console.log("/channel/:id :: watch(getHistory...) : スクロールをしたい位置->",
+          messageScrolledPosition
+        );
+
+        setTimeout(() => {
+          goTo("#msg" + messageScrolledPosition, {
+            duration: 0,
+            container: "#ChannelContainerContent"
+          }).then(() => {
+            console.log("/channel/:id :: watch(getHistory...) : スクロールしたはず?->", 
+              "#msg" + messageScrolledPosition
+            );
+          });
+        }, 10);
+      }
+    });
+  },
+  {deep: true}
+);
 </script>
 
 <template>
   <div style="overflow-y:auto;">
-    <div style="height:100%; overflow-y:auto;" class="d-flex flex-column-reverse py-1">
-      
+
+    <div
+      style="height:100%; overflow-y:auto;"
+      class="d-flex py-1 flex-column-reverse"
+      id="ChannelContainerContent"
+    >
+
       <!-- 終わりのロードホルダー -->
       <span
         v-if="
@@ -171,6 +224,8 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
         <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
       </span>
 
+      <span>{{ getHistoryAvailability(props.channelInfo.channelId) }}</span>
+
       <div
         v-for="
           (message, index)
@@ -178,7 +233,7 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
           getHistoryFromChannel(props.channelInfo.channelId)
         "
         :key="message.messageId"
-        :id="message.messageId"
+        :id="'msg' + message.messageId"
         class="d-flex my-1 px-1"
       >
         <v-avatar class="mr-2">
@@ -195,16 +250,6 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
         </m-card>
       </div>
 
-      <!-- 戦闘のロードホルダー -->
-      <span
-        v-if="!getHistoryAvailability(props.channelInfo.channelId).atTop"
-        ref="skeletonLoaderOlder"
-      >
-        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
-        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
-        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
-      </span>
-
       <!-- 履歴の先頭だった用の表示 -->
       <v-chip
         v-if="
@@ -215,6 +260,17 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
         履歴はここまで
       </v-chip>
 
+      <!-- 戦闘のロードホルダー -->
+      <span
+        v-if="!getHistoryAvailability(props.channelInfo.channelId).atTop"
+        ref="skeletonLoaderOlder"
+      >
+        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
+      </span>
+
     </div>
+
   </div>
 </template>
