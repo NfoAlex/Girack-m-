@@ -30,7 +30,6 @@ const skeletonLoaderOlder = ref(null); //要素位置監視用
 const atSkeletonOlder = useElementVisibility(skeletonLoaderOlder); //スケルトンローダーが画面内にあるかどうか
 const skeletonLoaderNewer = ref(null); //要素位置監視用
 const atSkeletonNewer = useElementVisibility(skeletonLoaderNewer); //スケルトンローダーが画面内にあるかどうか
-const anchorMessageId = ref<string>("");
 
 /**
  * 古い履歴の追加取得
@@ -129,9 +128,6 @@ const fetchOlderHistory = () => {
 
 //上のスケルトンローダーの位置変数の監視
 watch(atSkeletonOlder, function (newValue, oldValue) {
-  console.log("/channel/:id :: watch(atSkeletonOlder) : atSkeleton->(", newValue, oldValue, ")",
-    " fetching->", getAppStatus.value.fetchingHistory
-  );
 
   //すでに履歴を取得中の状態なら停止
   if (getAppStatus.value.fetchingHistory) return;
@@ -140,7 +136,7 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
   if (newValue) {
     displayDirection.value = "older"
     
-    console.log("/channel/:id :: watch(atSkeletonOlder) : もとに戻った");
+    //console.log("/channel/:id :: watch(atSkeletonOlder) : もとに戻った");
 
     getAppStatus.value.fetchingHistory = true;
     setTimeout(fetchOlderHistory, 100);
@@ -149,10 +145,6 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
 
 //下のスケルトンローダーの位置変数の監視
 watch(atSkeletonNewer, function (newValue, oldValue) {
-  console.log("/channel/:id :: watch(atSkeletonNewer) : atSkeleton->(", newValue, oldValue, ")",
-    " fetching->", getAppStatus.value.fetchingHistory
-  );
-
   //すでに履歴を取得中の状態なら停止
   if (getAppStatus.value.fetchingHistory) return;
 
@@ -160,7 +152,7 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
   if (newValue) {
     displayDirection.value = "newer";
 
-    console.log("/channel/:id :: watch(atSkeletonNewer) : REVERSED!");
+    //console.log("/channel/:id :: watch(atSkeletonNewer) : REVERSED!");
 
     getAppStatus.value.fetchingHistory = true;
     setTimeout(fetchNewerHistory, 100);
@@ -172,8 +164,11 @@ watch(
   () => getHistoryFromChannel(props.channelInfo.channelId),
   () => {
     nextTick(() => {
-      console.log("/channel/:id :: watch(getHistory...) : 変更された?");
-      //スクロールしてみる
+      //console.log("/channel/:id :: watch(getHistory...) : 変更された?");
+
+      // ❗ ↓新しい方の履歴を取得した際のみ↓ ❗ //
+
+      //履歴を取得した位置からスクロールする
       if (displayDirection.value === "newer") {
         //履歴追加をし始めた位置
         const messageScrolledPosition = getHistoryFromChannel(
@@ -182,18 +177,10 @@ watch(
             getHistoryAvailability(props.channelInfo.channelId).latestFetchedHistoryLength - 1
           ].messageId;
 
-        console.log("/channel/:id :: watch(getHistory...) : スクロールをしたい位置->",
-          messageScrolledPosition
-        );
-
         setTimeout(() => {
           goTo("#msg" + messageScrolledPosition, {
             duration: 0,
             container: "#ChannelContainerContent"
-          }).then(() => {
-            console.log("/channel/:id :: watch(getHistory...) : スクロールしたはず?->", 
-              "#msg" + messageScrolledPosition
-            );
           });
         }, 10);
       }
