@@ -146,12 +146,6 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
       anchorMessageId.value = getHistoryFromChannel(
         props.channelInfo.channelId
       )[0].messageId;
-
-      goTo("#msg" + getHistoryFromChannel(props.channelInfo.channelId)[
-        getHistoryFromChannel(props.channelInfo.channelId).length-1
-      ].messageId, {
-        duration: 100
-      });
     } catch(e) {
       console.log("/channel/:id :: watch(atSkeletonOlder) : e->", e);
       return;
@@ -181,12 +175,6 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
       anchorMessageId.value = getHistoryFromChannel(
         props.channelInfo.channelId
       )[0].messageId;
-
-      goTo("#msg" + getHistoryFromChannel(props.channelInfo.channelId)[
-        0
-      ].messageId, {
-        duration: 100
-      });
     } catch(e) {
       console.log("/channel/:id :: watch(atSkeletonNewer) : e->", e);
       return;
@@ -204,9 +192,6 @@ watch(
   () => getHistoryFromChannel(props.channelInfo.channelId),
   () => {
     console.log("/channel/:id :: watch(getHistory...) : 変更された?");
-    goTo("#msg" + anchorMessageId.value, {
-      duration: 100
-    });
   },
   {deep: true}
 );
@@ -286,7 +271,7 @@ watch(
 <style scoped>
 .list-enter-active,
 .list-leave-active {
-  transition: all 0.5s ease;
+  transition: all 0.05s ease;
 }
 .list-enter-from,
 .list-leave-to {
