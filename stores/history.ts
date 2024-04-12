@@ -141,11 +141,6 @@ export const useHistory = defineStore("history", {
       }
     },
 
-    //履歴を削る
-    trimHistory(channelId:string, trimDirection:string) {
-
-    },
-
     //履歴の位置データを格納
     setAvailability(
       channelId:string,
