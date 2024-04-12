@@ -174,13 +174,29 @@ watch(
     nextTick(() => {
       console.log("/channel/:id :: watch(getHistory...) : 変更された?");
       //スクロールしてみる
-      // if (displayDirection.value === "newer") {
-      //   goTo("#msg" + anchorMessageId.value, {duration: 100}).then(() => {
-      //     console.log("/channel/:id :: watch(getHistory...) : スクロールしたはず?->", 
-      //       "#msg" + anchorMessageId.value
-      //     );
-      //   });
-      // }
+      if (displayDirection.value === "newer") {
+        //履歴追加をし始めた位置
+        const messageScrolledPosition = getHistoryFromChannel(
+            props.channelInfo.channelId
+          )[
+            getHistoryAvailability(props.channelInfo.channelId).latestFetchedHistoryLength - 1
+          ].messageId;
+
+        console.log("/channel/:id :: watch(getHistory...) : スクロールをしたい位置->",
+          messageScrolledPosition
+        );
+
+        setTimeout(() => {
+          goTo("#msg" + messageScrolledPosition, {
+            duration: 0,
+            container: "#ChannelContainerContent"
+          }).then(() => {
+            console.log("/channel/:id :: watch(getHistory...) : スクロールしたはず?->", 
+              "#msg" + messageScrolledPosition
+            );
+          });
+        }, 100);
+      }
     });
   },
   {deep: true}
