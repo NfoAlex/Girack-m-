@@ -174,19 +174,23 @@ watch(
 
       //履歴を取り終えたとき、履歴を取得した位置からスクロールする
       if (displayDirection.value === "newer" && !newValue.fetchingHistory) {
-        //履歴追加をし始めた位置
-        const messageScrolledPosition = getHistoryFromChannel(
-            props.channelInfo.channelId
-          )[
-            getHistoryAvailability(props.channelInfo.channelId).latestFetchedHistoryLength - 1
-          ].messageId;
+        try {
+          //履歴追加をし始めた位置
+          const messageScrolledPosition = getHistoryFromChannel(
+              props.channelInfo.channelId
+            )[
+              getHistoryAvailability(props.channelInfo.channelId).latestFetchedHistoryLength - 1
+            ].messageId;
 
-        setTimeout(() => {
-          goTo("#msg" + messageScrolledPosition, {
-            duration: 0,
-            container: "#ChannelContainerContent"
-          });
-        }, 10);
+          setTimeout(() => {
+            goTo("#msg" + messageScrolledPosition, {
+              duration: 0,
+              container: "#ChannelContainerContent"
+            });
+          }, 10);
+        } catch(e) {
+          //なにもしない
+        }
       }
     });
   },

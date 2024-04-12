@@ -111,13 +111,18 @@ export const useHistory = defineStore("history", {
         return;
       }
 
+      //挿入データ長が0ならここで停止
+      if (historyInserting.length === 0) {
+        return;
+      }
+
       // console.log("history :: insertHistory : 時間の比較 履歴データ最新->", parseInt(this._History[channelId][0].time),
       //   " 挿入データの最後->", parseInt(historyInserting[1].time)
       // );
 
       //履歴の最新のメッセージ時間と取得した履歴の最後のメッセージ時間を比較して追加する場所を決める
       if (
-        this._History[channelId][0].time
+        this._History[channelId][ this._History[channelId].length-1 ].time
           <=
         historyInserting[0].time
       ) { //取得データが履歴Storeより新しい
