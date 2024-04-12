@@ -140,15 +140,6 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
   if (newValue) {
     displayDirection.value = "older"
     
-    try {
-      //メッセージIDのアンカーを設定
-      anchorMessageId.value = getHistoryFromChannel(
-        props.channelInfo.channelId
-      )[0].messageId;
-    } catch(e) {
-      console.log("/channel/:id :: watch(atSkeletonOlder) : e->", e);
-      return;
-    }
     console.log("/channel/:id :: watch(atSkeletonOlder) : もとに戻った");
 
     getAppStatus.value.fetchingHistory = true;
@@ -168,15 +159,6 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
   //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
   if (newValue) {
     displayDirection.value = "newer";
-    try {
-      //メッセージIDのアンカーを設定
-      anchorMessageId.value = getHistoryFromChannel(
-        props.channelInfo.channelId
-      )[0].messageId;
-    } catch(e) {
-      console.log("/channel/:id :: watch(atSkeletonNewer) : e->", e);
-      return;
-    }
 
     console.log("/channel/:id :: watch(atSkeletonNewer) : REVERSED!");
 
