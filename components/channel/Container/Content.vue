@@ -138,8 +138,7 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
 
   //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
   if (newValue) {
-    displayDirection.value = 
-      displayDirection.value==="newer" ? "older" : "newer";
+    displayDirection.value = "older"
     
     try {
       //メッセージIDのアンカーを設定
@@ -168,8 +167,7 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 
   //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
   if (newValue) {
-    displayDirection.value = 
-      displayDirection.value==="older" ? "newer" : "older";
+    displayDirection.value = "newer";
     try {
       //メッセージIDのアンカーを設定
       anchorMessageId.value = getHistoryFromChannel(
