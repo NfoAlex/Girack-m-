@@ -72,10 +72,15 @@ export const useHistory = defineStore("history", {
         this._History[message.channelId] = [];
       }
 
-      //履歴の最新にいるときのみ追加する
+      //履歴の最新にいるときのみ更新する
       if (this._Availability[message.channelId].atEnd) {
         //メッセージ追加
         this._History[message.channelId].unshift(message);
+        //履歴が61以上あるなら古い方を1つ削除してトップにいないと設定
+        if (this._History[message.channelId].length > 61) {
+          this._History[message.channelId].splice(60);
+          this._Availability[message.channelId].atTop = false;
+        }
       }
     },
 
