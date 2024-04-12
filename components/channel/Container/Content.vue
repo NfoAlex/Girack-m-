@@ -160,15 +160,15 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 
 //履歴の更新を監視
 watch(
-  () => getHistoryFromChannel(props.channelInfo.channelId),
-  () => {
+  getAppStatus,
+  (newValue, oldValue) => {
     nextTick(() => {
-      //console.log("/channel/:id :: watch(getHistory...) : 変更された?");
+      //console.log("/channel/:id :: watch(getHistory...) : 変更された?", newValue, oldValue);
 
       // ❗ ↓新しい方の履歴を取得した際のみ↓ ❗ //
 
-      //履歴を取得した位置からスクロールする
-      if (displayDirection.value === "newer") {
+      //履歴を取り終えたとき、履歴を取得した位置からスクロールする
+      if (displayDirection.value === "newer" && !newValue.fetchingHistory) {
         //履歴追加をし始めた位置
         const messageScrolledPosition = getHistoryFromChannel(
             props.channelInfo.channelId
