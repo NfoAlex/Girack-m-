@@ -22,7 +22,7 @@ export default function fetchHistory(socket:Socket):void {
   ) => {
     console.log("fetchHistory :: socketon(fetchHistory) : dat->", dat);
 
-    const { insertHistory, setAvailability } = useHistory(); //piniaのActionsインポート
+    const { getHistoryAvailability, insertHistory, setAvailability } = useHistory(); //piniaのActionsインポート
 
     //もし履歴データがnullならホルダーだけ作って終わり
     if (dat.data.historyData === null) {
@@ -42,10 +42,13 @@ export default function fetchHistory(socket:Socket):void {
     const { getAppStatus } = storeToRefs(useAppStatus());
     getAppStatus.value.fetchingHistory = false;
 
-    setAvailability(dat.data.channelId, //履歴の位置データ
-      {
-        atTop: dat.data.historyData.atTop,
-        atEnd: dat.data.historyData.atEnd
+    //履歴の位置データ保存
+    setAvailability(dat.data.channelId,
+      { //falseの時のみ変更を適用する
+        atTop: !getHistoryAvailability(dat.data.channelId).atTop
+          ? dat.data.historyData.atTop : true,
+        atEnd: !getHistoryAvailability(dat.data.channelId).atTop
+          ? dat.data.historyData.atEnd : true
       }
     );
   });
