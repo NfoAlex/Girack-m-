@@ -227,7 +227,7 @@ watch(
           <span class="d-flex align-center">
             <p>{{ getUserinfo(message.userId).userName }}</p>
             <p class="text-medium-emphasis text-subtitle-2 ml-2">
-              {{ message.time }}
+              {{ new Date(message.time).toLocaleString() }}
             </p>
           </span>
           <p class="text-medium-emphasis">{{ message.content }}</p>
