@@ -217,31 +217,31 @@ watch(
         <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
       </span>
 
-      <TransitionGroup class="d-flex flex-column-reverse" name="list" tag="div">
-        <div
-          v-for="
-            (message, index)
-              of
-            getHistoryFromChannel(props.channelInfo.channelId)
-          "
-          :key="message.messageId"
-          :id="'msg' + message.messageId"
-          class="d-flex my-1 px-1"
-        >
-          <v-avatar class="mr-2">
-            <v-img :src="'/icon/' + message.userId" :alt="message.userId" />
-          </v-avatar>
-          <m-card class="flex-grow-1 d-flex flex-column">
-            <span class="d-flex align-center">
-              <p>{{ getUserinfo(message.userId).userName }}</p>
-              <p class="text-medium-emphasis text-subtitle-2 ml-2">
-                {{ message.time }}
-              </p>
-            </span>
-            <p class="text-medium-emphasis">{{ message.content }}</p>
-          </m-card>
-        </div>
-      </TransitionGroup>
+      <span>{{ getHistoryAvailability(props.channelInfo.channelId) }}</span>
+
+      <div
+        v-for="
+          (message, index)
+            of
+          getHistoryFromChannel(props.channelInfo.channelId)
+        "
+        :key="message.messageId"
+        :id="'msg' + message.messageId"
+        class="d-flex my-1 px-1"
+      >
+        <v-avatar class="mr-2">
+          <v-img :src="'/icon/' + message.userId" :alt="message.userId" />
+        </v-avatar>
+        <m-card class="flex-grow-1 d-flex flex-column">
+          <span class="d-flex align-center">
+            <p>{{ getUserinfo(message.userId).userName }}</p>
+            <p class="text-medium-emphasis text-subtitle-2 ml-2">
+              {{ message.time }}
+            </p>
+          </span>
+          <p class="text-medium-emphasis">{{ message.content }}</p>
+        </m-card>
+      </div>
 
       <!-- 履歴の先頭だった用の表示 -->
       <v-chip
@@ -267,15 +267,3 @@ watch(
 
   </div>
 </template>
-
-<style scoped>
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.05s ease;
-}
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
-}
-</style>
