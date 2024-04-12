@@ -7,11 +7,16 @@ import { useMyUserinfo } from "~/stores/userinfo";
 import { useUserIndex } from "~/stores/userindex";
 import type { channel } from '~/types/channel';
 
-import { useElementVisibility } from '@vueuse/core';
+import { useElementVisibility, useScroll } from '@vueuse/core';
+//スクロール位置取得用
+const ChannelContainerContent = ref<HTMLElement | null>(null);
+const { y } = useScroll(ChannelContainerContent)
 
+//Storeデータ用
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = useMyUserinfo();
 const { getUserinfo } = useUserIndex();
+const { getHistoryFromChannel, getHistoryAvailability } = useHistory();
 const goTo = useGoTo();
 
 //props(チャンネル情報)
@@ -19,12 +24,12 @@ const props = defineProps<{
   channelInfo: channel
 }>();
 
-const { getHistoryFromChannel, getHistoryAvailability } = useHistory();
-
 /**
  * data
  */
+const currentScrollPosition = ref<number>(0); //スクロール位置格納用
 const displayDirection = ref<"newer"|"older">("older"); //履歴の取得、表示方向
+
 const skeletonLoaderOlder = ref(null); //要素位置監視用
 const atSkeletonOlder = useElementVisibility(skeletonLoaderOlder); //スケルトンローダーが画面内にあるかどうか
 const skeletonLoaderNewer = ref(null); //要素位置監視用
@@ -187,6 +192,32 @@ watch(
   },
   {deep: true}
 );
+
+//スクロール位置の変更監視して記憶するように
+watch(y, () => {
+  //console.log("/channel/:id :: watch(y) : y.value->", y.value);
+  sessionStorage.setItem('scrollPositionY::'+props.channelInfo.channelId, y.value.toString());
+});
+
+//チャンネル情報の変更を監視してスクロール位置を戻す
+watch(props, (newProp, oldProp) => {
+  //スクロール位置を取り出し
+  const scrollPosition = sessionStorage.getItem(
+    "scrollPositionY::" + oldProp.channelInfo.channelId
+  );
+  //取り出したものを数値化、nullなら0へ
+  const scrollPositionCalculated = scrollPosition===null ? 0 : parseInt(scrollPosition);
+
+  //スクロールする
+  goTo(
+    scrollPositionCalculated,
+    {
+    duration: 0,
+    container: "#ChannelContainerContent"
+    }
+  );
+});
+
 </script>
 
 <template>
@@ -196,6 +227,7 @@ watch(
       style="height:100%; overflow-y:auto;"
       class="d-flex py-1 flex-column-reverse"
       id="ChannelContainerContent"
+      ref="ChannelContainerContent"
     >
 
       <!-- 終わりのロードホルダー -->
