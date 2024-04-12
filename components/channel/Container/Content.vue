@@ -195,7 +195,7 @@ watch(
               "#msg" + messageScrolledPosition
             );
           });
-        }, 100);
+        }, 10);
       }
     });
   },
