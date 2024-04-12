@@ -27,7 +27,6 @@ const props = defineProps<{
 /**
  * data
  */
-const currentScrollPosition = ref<number>(0); //スクロール位置格納用
 const displayDirection = ref<"newer"|"older">("older"); //履歴の取得、表示方向
 
 const skeletonLoaderOlder = ref(null); //要素位置監視用
