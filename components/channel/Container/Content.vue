@@ -189,7 +189,17 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 watch(
   () => getHistoryFromChannel(props.channelInfo.channelId),
   () => {
-    console.log("/channel/:id :: watch(getHistory...) : 変更された?");
+    nextTick(() => {
+      console.log("/channel/:id :: watch(getHistory...) : 変更された?");
+      //スクロールしてみる
+      // if (displayDirection.value === "newer") {
+      //   goTo("#msg" + anchorMessageId.value, {duration: 100}).then(() => {
+      //     console.log("/channel/:id :: watch(getHistory...) : スクロールしたはず?->", 
+      //       "#msg" + anchorMessageId.value
+      //     );
+      //   });
+      // }
+    });
   },
   {deep: true}
 );
