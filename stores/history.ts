@@ -117,9 +117,9 @@ export const useHistory = defineStore("history", {
 
       //履歴の最新のメッセージ時間と取得した履歴の最後のメッセージ時間を比較して追加する場所を決める
       if (
-        parseInt(this._History[channelId][0].time)
+        this._History[channelId][0].time
           <=
-        parseInt(historyInserting[0].time)
+        historyInserting[0].time
       ) { //取得データが履歴Storeより新しい
         //取得した履歴データが最新になるように配列をセット
         this._History[channelId] = [...historyInserting, ...this._History[channelId]];
