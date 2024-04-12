@@ -30,6 +30,9 @@ const triggerEnter = (event:Event) => {
       content: messageInput.value
     }
   });
+  
+  //入力欄を初期化
+  messageInput.value = "";
 }
 </script>
 
