@@ -10,7 +10,7 @@ export default function fetchUserConfig(socket: Socket): void {
     result: string,
     data: Config
   }) => {
-    console.log("UserConfig :: dat->", dat);
+    //console.log("UserConfig :: dat->", dat);
     const Config = useConfig(); //piniaからインポート
 
     Config.updateConfig(dat.data); //設定データを適用

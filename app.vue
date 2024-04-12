@@ -20,6 +20,11 @@ const theme = useTheme();
 watch(getConfig, async () => {
   theme.global.name.value = getConfig.value.theme; //テーマを設定で設定されているものへ設定
 });
+
+//リロード時にチャンネルごとに記憶されたスクロール位置を消去するように
+onMounted(() => {
+  sessionStorage.clear();
+})
 </script>
 
 <template>

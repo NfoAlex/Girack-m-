@@ -10,7 +10,7 @@ export default function fetchRoleSingle(socket: Socket): void {
     result: string,
     data: role
   }) => {
-    console.log("fetchRoleSingle :: dat->", dat);
+    //console.log("fetchRoleSingle :: dat->", dat);
 
     //ロールセット用処理をインポート
     const { bindRoleSingle } = useRole();

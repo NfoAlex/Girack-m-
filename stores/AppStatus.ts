@@ -7,6 +7,7 @@ export const useAppStatus = defineStore("appstatus", {
   ({
     _AppStatus: {
       connected: false,
+      fetchingHistory: false,
       profile: {
         authDone: false,
         UserinfoLoaded: false
@@ -23,7 +24,7 @@ export const useAppStatus = defineStore("appstatus", {
   },
   
   actions: {
-    updateMyUserinfo(data: AppStatus) {
+    updateAppStatus(data: AppStatus) {
       this._AppStatus = data;
     },
   }

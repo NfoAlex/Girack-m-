@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   css: ["@/assets/styles/main.scss"],
-  modules: ["@pinia/nuxt", "vuetify-nuxt-module"],
+  modules: ["@pinia/nuxt", "vuetify-nuxt-module", "@vueuse/nuxt"],
   pinia: {
     storesDirs: ['./stores/**'],
   },

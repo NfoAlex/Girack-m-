@@ -10,7 +10,7 @@ export default function fetchRoles(socket: Socket): void {
     result: string,
     data: role[]
   }) => {
-    console.log("fetchRoles :: dat->", dat);
+    //console.log("fetchRoles :: dat->", dat);
 
     //ロールパス用
     const roleParsed:{
