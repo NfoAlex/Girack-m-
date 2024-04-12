@@ -30,7 +30,8 @@ export default function fetchHistory(socket:Socket):void {
       setAvailability(dat.data.channelId, //履歴の位置データ
         {
           atTop: true,
-          atEnd: true
+          atEnd: true,
+          latestFetchedHistoryLength: 0
         }
       );
     }
@@ -48,7 +49,8 @@ export default function fetchHistory(socket:Socket):void {
         atTop: !getHistoryAvailability(dat.data.channelId).atTop
           ? dat.data.historyData.atTop : true,
         atEnd: !getHistoryAvailability(dat.data.channelId).atTop
-          ? dat.data.historyData.atEnd : true
+          ? dat.data.historyData.atEnd : true,
+        latestFetchedHistoryLength: dat.data.historyData.history.length
       }
     );
   });

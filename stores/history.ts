@@ -32,8 +32,9 @@ export const useHistory = defineStore("history", {
     },
     _Availability: {
       [key: string]: {
-        atTop: boolean,
-        atEnd: boolean
+        atTop: boolean, //履歴の一番最初にいるかどうか
+        atEnd: boolean, //履歴の一番最新にいるかどうか
+        latestFetchedHistoryLength: number //最後に取得した履歴の長さ
       }
     }
   }),
@@ -54,7 +55,8 @@ export const useHistory = defineStore("history", {
       if (state._Availability[channelId] === undefined) {
         state._Availability[channelId] = {
           atTop: false,
-          atEnd: false
+          atEnd: false,
+          latestFetchedHistoryLength: 0
         };
       }
       //返す
@@ -146,14 +148,16 @@ export const useHistory = defineStore("history", {
       channelId:string,
       atData: {
         atTop: boolean,
-        atEnd: boolean
+        atEnd: boolean,
+        latestFetchedHistoryLength: number
       }
     )  {
       //そのチャンネル用の履歴位置データが無ければ作成
       if (this._Availability[channelId] === undefined) {
         this._Availability[channelId] = {
           atTop: false,
-          atEnd: false
+          atEnd: false,
+          latestFetchedHistoryLength: 0
         };
       }
 
