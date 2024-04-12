@@ -211,6 +211,7 @@ watch(
     <div
       style="height:100%; overflow-y:auto;"
       class="d-flex py-1 flex-column-reverse"
+      id="ChannelContainerContent"
     >
 
       <!-- 終わりのロードホルダー -->
