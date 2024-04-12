@@ -211,8 +211,6 @@ watch(
         <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
       </span>
 
-      <span>{{ getHistoryAvailability(props.channelInfo.channelId) }}</span>
-
       <div
         v-for="
           (message, index)
