@@ -385,7 +385,7 @@ watch(props, (newProp, oldProp) => {
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 .messageBottom {
@@ -394,7 +394,7 @@ watch(props, (newProp, oldProp) => {
   border-bottom-left-radius: 18px;
   border-bottom-right-radius: 18px;
 
-  margin-Bottom: 8px;
+  margin-Bottom: 4px;
 }
 
 .messageMiddle {
