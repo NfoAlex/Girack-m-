@@ -112,7 +112,7 @@ const SOCKETjoinChannel = (dat:{result:string, data:boolean}) => {
  * チャンネル脱退結果受け取り
  * @param dat
  */
- const SOCKETleaveChannel = (dat:{result:string, data:boolean}) => {
+const SOCKETleaveChannel = (dat:{result:string, data:boolean}) => {
   console.log("browser :: SOCKETleaveChannel : dat->", dat);
   //成功なら自分のユーザー情報を取得して更新する
   if (dat.result === "SUCCESS") {
@@ -127,10 +127,25 @@ const SOCKETjoinChannel = (dat:{result:string, data:boolean}) => {
   }
 }
 
+/**
+ * チャンネル削除結果の受け取り
+ * @param dat 
+ */
+const SOCKETdeleteChannel = (dat:{result:string, data:string}) => {
+  //チャンネルリストの取得
+  socket.emit("fetchChannelList", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    }
+  });
+}
+
 onMounted(() => {
   socket.on("RESULT::fetchChannelList", SOCKETRfetchChannelList);
   socket.on("RESULT::joinChannel", SOCKETjoinChannel);
   socket.on("RESULT::leaveChannel", SOCKETleaveChannel);
+  socket.on("RESULT::deleteChannel", SOCKETdeleteChannel);
 
   //チャンネルリストの取得
   socket.emit("fetchChannelList", {
@@ -145,6 +160,7 @@ onUnmounted(() => {
   socket.off("RESULT::fetchChannelList", SOCKETRfetchChannelList);
   socket.off("RESULT::joinChannel", SOCKETjoinChannel);
   socket.off("RESULT::leaveChannel", SOCKETleaveChannel);
+  socket.off("RESULT::deleteChannel", SOCKETdeleteChannel);
 });
 </script>
 
