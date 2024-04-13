@@ -86,7 +86,7 @@ const fetchOlderHistory = () => {
 /**
  * 新しい履歴の追加取得
  */
- const fetchNewerHistory = () => {
+const fetchNewerHistory = () => {
   //一番新しいメッセージID用変数
   let newestMessageId:string = "";
   //メッセージIDを取得しようとして無理なのなら停止
