@@ -321,7 +321,7 @@ watch(props, (newProp, oldProp) => {
               userIdForDialog = message.userId;
               displayUserpage = true;
             }"
-            class="mr-2"
+            class="mr-2 cursor-pointer"
             v-show="
               calculateMessageBorder(index)==='messageSingle'
               ||
