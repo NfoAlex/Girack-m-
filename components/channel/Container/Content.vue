@@ -142,9 +142,9 @@ const calculateMessageBorder = (messageIndex:number) => {
 
   //最初のメッセージだったら
   if (messageIndex === 0) {
-    console.log("/channel/:id :: calculateMessageBorder : 次のメッセージ->",
-      getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1]
-    );
+    // console.log("/channel/:id :: calculateMessageBorder : 次のメッセージ->",
+    //   getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1]
+    // );
 
     //かつ次のメッセージがないなら
     if (messageAvailable.next === null) return "messageSingle";
