@@ -129,6 +129,57 @@ const fetchNewerHistory = () => {
   });
 }
 
+/**
+ * メッセージ枠のスタイル計算用
+ */
+const calculateMessageBorder = (messageIndex:number) => {
+  //メッセージの前後を取得
+  const messageAvailable = {
+    before: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex - 1] || null,
+    here: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex],
+    next: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1] || null,
+  };
+
+  //最初のメッセージだったら
+  if (messageIndex === 0) {
+    // console.log("/channel/:id :: calculateMessageBorder : 次のメッセージ->",
+    //   getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1]
+    // );
+
+    //かつ次のメッセージがないなら
+    if (messageAvailable.next === null) return "messageSingle";
+
+    //次のメッセージが違う送信者なら
+    if (messageAvailable.next.userId !== messageAvailable.here.userId) {
+      return "messageSingle";
+    } else {
+      return "messageBottom";
+    }
+  } else if (messageAvailable.next === null) { //最初でなく、次のメッセージがなければ(最後)
+    if (messageAvailable.before.userId === messageAvailable.here.userId) {
+      return "messageTop";
+    } else {
+      return "messageSingle";
+    }
+  } else { //最初でも最後のメッセージでもないなら
+    //次のメッセージと同じ送信者で
+    if (messageAvailable.next.userId === messageAvailable.here.userId) {
+      //かつ前のメッセージとも同じなら
+      if (messageAvailable.before.userId === messageAvailable.here.userId) {
+        return "messageMiddle";
+      } else {
+        return "messageBottom";
+      }
+    } else {
+      if (messageAvailable.before.userId === messageAvailable.here.userId) {
+        return "messageTop";
+      } else {
+        return "messageSingle";
+      }
+    }
+  }
+}
+
 //上のスケルトンローダーの位置変数の監視
 watch(atSkeletonOlder, function (newValue, oldValue) {
 
@@ -227,7 +278,7 @@ watch(props, (newProp, oldProp) => {
   <div style="overflow-y:auto;">
 
     <div
-      style="height:100%; overflow-y:auto;"
+      style="height:100%; width:100%; overflow-y:auto;"
       class="d-flex py-1 flex-column-reverse"
       id="ChannelContainerContent"
       ref="ChannelContainerContent"
@@ -253,20 +304,43 @@ watch(props, (newProp, oldProp) => {
         "
         :key="message.messageId"
         :id="'msg' + message.messageId"
-        class="d-flex my-1 px-1"
+        class="d-flex pr-2"
       >
-        <v-avatar class="mr-2">
-          <v-img :src="'/icon/' + message.userId" :alt="message.userId" />
-        </v-avatar>
-        <m-card class="flex-grow-1 d-flex flex-column">
-          <span class="d-flex align-center">
+        <span style="width:65px" class="px-1">
+          <v-avatar
+            class="mr-2"
+            v-show="
+              calculateMessageBorder(index)==='messageSingle'
+              ||
+              calculateMessageBorder(index)==='messageTop'
+            "
+            size="45px"
+          >
+            <v-img :src="'/icon/' + message.userId" :alt="message.userId" />
+          </v-avatar>
+        </span>
+        <div
+          class="px-3 flex-grow-1 d-flex flex-column flex-wrap messageContainer"
+          :class="calculateMessageBorder(index)"
+          style="width:calc(100% - 65px);"
+        >
+          <span
+            v-if="
+              calculateMessageBorder(index)==='messageSingle'
+              ||
+              calculateMessageBorder(index)==='messageTop'
+            "
+            class="d-flex align-center"
+          >
             <p>{{ getUserinfo(message.userId).userName }}</p>
             <p class="text-medium-emphasis text-subtitle-2 ml-2">
               {{ new Date(message.time).toLocaleString() }}
             </p>
           </span>
-          <p class="text-medium-emphasis">{{ message.content }}</p>
-        </m-card>
+          <p class="text-medium-emphasis" style="word-break: break-all;">
+            {{ message.content }}
+          </p>
+        </div>
       </div>
 
       <!-- 履歴の先頭だった用の表示 -->
@@ -293,3 +367,50 @@ watch(props, (newProp, oldProp) => {
 
   </div>
 </template>
+
+<style scoped>
+
+.messageContainer {
+  background-color: rgb(var(--v-theme-code));
+  padding: 8px;
+}
+
+.messageContainer:hover {
+  background-color: rgb(var(--v-theme-messageHovered));
+}
+
+.messageTop {
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+
+  margin-top: 4px;
+}
+
+.messageBottom {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+
+  margin-Bottom: 4px;
+}
+
+.messageMiddle {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+
+  padding: 2px;
+  margin: 0;
+}
+
+.messageSingle {
+  border-radius: 18px;
+
+  margin: 4px 0;
+}
+
+</style>
