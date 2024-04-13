@@ -4,15 +4,17 @@ import { useMyUserinfo } from '~/stores/userinfo';
 import { useServerinfo } from "~/stores/serverinfo";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
-const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 /**
  * data
  */
 const file = ref<File[]>([]); //プロフィール画像ファイル入力用
+const stateUploading = ref<boolean>(false); //アップロード途中であるかどうか
 const uploadResult = ref<"SUCCESS"|"ERROR"|null>(null);
-const metadata = ref<{userId:string}>({ //ユーザーIDとか格納用
-  userId: getMyUserinfo.value.userId
+const metadata = ref<{userId:string, sessionId:string}>({ //ユーザーIDとか格納用
+  userId: getMyUserinfo.value.userId,
+  sessionId: getSessionId.value
 });
 const uploadRule = ref<any>([ //アップロードするファイルのサイズ制限確認
   (fileInput:File[]) => {
@@ -57,11 +59,15 @@ const avatarLimitSizeHumanDisplay = () => {
  * プロフィール画像をアップロード
  */
 const submit = async () => {
+  //ファイルがあると処理をする
   if (file.value) {
     const formData = new FormData();
     formData.append('file', file.value[0]);
     // JSONデータを文字列に変換して追加
     formData.append('metadata', JSON.stringify(metadata.value));
+
+    //アップロード中と設定
+    stateUploading.value = true;
 
     //画像アップロード(結果はHTTPリスポンス)
     const result:any = await fetch('/uploadProfileIcon', {
@@ -69,6 +75,8 @@ const submit = async () => {
       body: formData
     }).finally(() => {
       //console.log("/profile :: submit : アップロードが完了");
+      //アップロード状態を解除
+      stateUploading.value = false;
     })
     .catch((err:Error) => {
       console.log("/profile :: submit : アップロードエラー->", err);
@@ -91,7 +99,7 @@ const submit = async () => {
     style="max-width: 650px; width: 80vw"
   >
 
-    <m-card v-if="uploadResult!=='SUCCESS'">
+    <m-card v-if="uploadResult!=='SUCCESS'" :loading="stateUploading">
       <v-card-title>
         プロフィール画像を変更
       </v-card-title>
@@ -111,7 +119,8 @@ const submit = async () => {
           @click="submit"
           :disabled="
             file.length === 0 ||
-            file[0].size > getServerinfo.config.PROFILE.iconMaxSize
+            file[0].size > getServerinfo.config.PROFILE.iconMaxSize ||
+            stateUploading
           "
           color="primary"
         >アップロード</m-btn>
