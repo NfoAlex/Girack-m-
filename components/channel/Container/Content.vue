@@ -28,6 +28,8 @@ const props = defineProps<{
  * data
  */
 const displayDirection = ref<"newer"|"older">("older"); //履歴の取得、表示方向
+const displayUserpage = ref<boolean>(false); //ユーザーページ表示用
+const userIdForDialog = ref<string>(""); //ユーザーページ用のユーザーID格納用
 
 const skeletonLoaderOlder = ref(null); //要素位置監視用
 const atSkeletonOlder = useElementVisibility(skeletonLoaderOlder); //スケルトンローダーが画面内にあるかどうか
@@ -275,6 +277,13 @@ watch(props, (newProp, oldProp) => {
 </script>
 
 <template>
+  <!-- ユーザーページ -->
+  <Userinfo
+    v-model="displayUserpage"
+    v-if="displayUserpage"
+    :userId="userIdForDialog"
+  />
+
   <div style="overflow-y:auto;">
 
     <div
@@ -308,6 +317,10 @@ watch(props, (newProp, oldProp) => {
       >
         <span style="width:65px" class="px-1">
           <v-avatar
+            @click="() => { 
+              userIdForDialog = message.userId;
+              displayUserpage = true;
+            }"
             class="mr-2"
             v-show="
               calculateMessageBorder(index)==='messageSingle'
