@@ -376,7 +376,7 @@ watch(props, (newProp, oldProp) => {
 }
 
 .messageContainer:hover {
-  background-color: rgb(var(--v-theme-surface));
+  background-color: rgb(var(--v-theme-messageHovered));
 }
 
 .messageTop {
