@@ -293,3 +293,43 @@ watch(props, (newProp, oldProp) => {
 
   </div>
 </template>
+
+<style scoped>
+
+.messageContainer {
+  background-color: rgb(var(--v-theme-code));
+  padding: 8px;
+}
+
+.messageTop {
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+
+  margin-top: 8px;
+}
+
+.messageBottom {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+
+  margin-Bottom: 8px;
+}
+
+.messageMiddle {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+
+  margin: 0;
+}
+
+.messageSingle {
+  border-radius: 18px;
+}
+
+</style>
