@@ -19,9 +19,8 @@ export default function fetchUserInfo(socket:Socket):void {
     const { getMyUserinfo, getSessionId } = useMyUserinfo();
     if (getMyUserinfo.userId === dat.data.userId) {
 
-      //ユーザー情報ロードできたかどうかを調べる用
-      const { getAppStatus } = storeToRefs(useAppStatus());
       //最初の自情報ロードなら履歴を取得する
+      const { getAppStatus } = storeToRefs(useAppStatus());
       if (!getAppStatus.value.profile.UserinfoLoaded) {
         //参加しているチャンネルの数分ループ
         for (let channelId of dat.data.channelJoined) {
