@@ -277,14 +277,16 @@ watch(props, (newProp, oldProp) => {
 </script>
 
 <template>
-  <!-- ユーザーページ -->
-  <Userinfo
-    v-model="displayUserpage"
-    v-if="displayUserpage"
-    :userId="userIdForDialog"
-  />
+  
 
   <div style="overflow-y:auto;">
+
+    <!-- ユーザーページ -->
+    <Userinfo
+      v-model="displayUserpage"
+      v-if="displayUserpage"
+      :userId="userIdForDialog"
+    />
 
     <div
       style="height:100%; width:100%; overflow-y:auto;"
