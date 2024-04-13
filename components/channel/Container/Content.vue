@@ -375,6 +375,10 @@ watch(props, (newProp, oldProp) => {
   padding: 8px;
 }
 
+.messageContainer:hover {
+  background-color: rgb(var(--v-theme-surface));
+}
+
 .messageTop {
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
