@@ -4,7 +4,7 @@ import { useMyUserinfo } from '~/stores/userinfo';
 import { useServerinfo } from "~/stores/serverinfo";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
-const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 /**
  * data
@@ -12,8 +12,9 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 const file = ref<File[]>([]); //プロフィール画像ファイル入力用
 const stateUploading = ref<boolean>(false); //アップロード途中であるかどうか
 const uploadResult = ref<"SUCCESS"|"ERROR"|null>(null);
-const metadata = ref<{userId:string}>({ //ユーザーIDとか格納用
-  userId: getMyUserinfo.value.userId
+const metadata = ref<{userId:string, sessionId:string}>({ //ユーザーIDとか格納用
+  userId: getMyUserinfo.value.userId,
+  sessionId: getSessionId.value
 });
 const uploadRule = ref<any>([ //アップロードするファイルのサイズ制限確認
   (fileInput:File[]) => {
