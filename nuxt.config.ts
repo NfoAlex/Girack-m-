@@ -93,7 +93,8 @@ export default defineNuxtConfig({
           light: {
             colors: {
               "sidebarBackground": "#efefef",
-              "cardInner": "#f9f9f9"
+              "cardInner": "#f9f9f9",
+              "messageHovered": "rgba(33, 37, 41, 0.15)"
             }
           },
           dark: {
