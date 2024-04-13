@@ -337,7 +337,9 @@ watch(props, (newProp, oldProp) => {
               {{ new Date(message.time).toLocaleString() }}
             </p>
           </span>
-          <p class="text-medium-emphasis">{{ message.content }}</p>
+          <p class="text-medium-emphasis" style="word-break: break-all;">
+            {{ message.content }}
+          </p>
         </div>
       </div>
 
