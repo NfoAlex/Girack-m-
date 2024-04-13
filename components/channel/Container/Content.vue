@@ -278,7 +278,7 @@ watch(props, (newProp, oldProp) => {
   <div style="overflow-y:auto;">
 
     <div
-      style="height:100%; overflow-y:auto;"
+      style="height:100%; width:100%; overflow-y:auto;"
       class="d-flex py-1 flex-column-reverse"
       id="ChannelContainerContent"
       ref="ChannelContainerContent"
@@ -304,7 +304,7 @@ watch(props, (newProp, oldProp) => {
         "
         :key="message.messageId"
         :id="'msg' + message.messageId"
-        class="d-flex px-1"
+        class="d-flex pr-2"
       >
         <span style="width:65px" class="px-1">
           <v-avatar
@@ -320,8 +320,9 @@ watch(props, (newProp, oldProp) => {
           </v-avatar>
         </span>
         <div
-          class="flex-grow-1 d-flex flex-column messageContainer"
+          class="px-3 flex-grow-1 d-flex flex-column flex-wrap messageContainer"
           :class="calculateMessageBorder(index)"
+          style="width:calc(100% - 65px);"
         >
           <span
             v-if="
@@ -396,6 +397,7 @@ watch(props, (newProp, oldProp) => {
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 
+  padding: 2px;
   margin: 0;
 }
 
