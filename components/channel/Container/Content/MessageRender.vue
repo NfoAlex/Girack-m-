@@ -17,6 +17,13 @@ const propsMessage = defineProps<{
 </script>
 
 <template>
+  <!-- ユーザーページ -->
+  <Userinfo
+    v-model="displayUserpage"
+    v-if="displayUserpage"
+    :userId="userIdForDialog"
+  />
+  
   <v-menu
     open-on-hover
     location="end"
