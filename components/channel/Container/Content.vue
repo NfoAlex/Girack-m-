@@ -5,9 +5,11 @@ import { useAppStatus } from '~/stores/AppStatus';
 import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
 import { useUserIndex } from "~/stores/userindex";
+import MessageRender from './Content/MessageRender.vue';
 import type { channel } from '~/types/channel';
 
 import { useElementVisibility, useScroll } from '@vueuse/core';
+
 //スクロール位置取得用
 const ChannelContainerContent = ref<HTMLElement | null>(null);
 const { y } = useScroll(ChannelContainerContent)
@@ -281,13 +283,6 @@ watch(props, (newProp, oldProp) => {
 
   <div style="overflow-y:auto;">
 
-    <!-- ユーザーページ -->
-    <Userinfo
-      v-model="displayUserpage"
-      v-if="displayUserpage"
-      :userId="userIdForDialog"
-    />
-
     <div
       style="height:100%; width:100%; overflow-y:auto;"
       class="d-flex py-1 flex-column-reverse"
@@ -307,6 +302,7 @@ watch(props, (newProp, oldProp) => {
         <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
       </span>
 
+      <!-- メッセージ表示 -->
       <div
         v-for="
           (message, index)
@@ -315,47 +311,14 @@ watch(props, (newProp, oldProp) => {
         "
         :key="message.messageId"
         :id="'msg' + message.messageId"
-        class="d-flex pr-2"
+        position="relative"
       >
-        <span style="width:65px" class="px-1">
-          <v-avatar
-            @click="() => { 
-              userIdForDialog = message.userId;
-              displayUserpage = true;
-            }"
-            class="mr-2 cursor-pointer"
-            v-show="
-              calculateMessageBorder(index)==='messageSingle'
-              ||
-              calculateMessageBorder(index)==='messageTop'
-            "
-            size="45px"
-          >
-            <v-img :src="'/icon/' + message.userId" :alt="message.userId" />
-          </v-avatar>
-        </span>
-        <div
-          class="px-3 flex-grow-1 d-flex flex-column flex-wrap messageContainer"
-          :class="calculateMessageBorder(index)"
-          style="width:calc(100% - 65px);"
-        >
-          <span
-            v-if="
-              calculateMessageBorder(index)==='messageSingle'
-              ||
-              calculateMessageBorder(index)==='messageTop'
-            "
-            class="d-flex align-center"
-          >
-            <p>{{ getUserinfo(message.userId).userName }}</p>
-            <p class="text-medium-emphasis text-subtitle-2 ml-2">
-              {{ new Date(message.time).toLocaleString() }}
-            </p>
-          </span>
-          <p class="text-medium-emphasis" style="word-break: break-all;">
-            {{ message.content }}
-          </p>
-        </div>
+
+        <MessageRender
+          :message="message"
+          :borderClass="calculateMessageBorder(index)"
+        />
+
       </div>
 
       <!-- 履歴の先頭だった用の表示 -->

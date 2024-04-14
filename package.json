@@ -19,6 +19,7 @@
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
     "@vueuse/nuxt": "^10.9.0",
+    "emoji-mart-vue-fast": "^15.0.1",
     "http-proxy-middleware": "^2.0.6",
     "pinia": "^2.1.7",
     "sass": "^1.69.5",

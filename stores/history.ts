@@ -84,6 +84,18 @@ export const useHistory = defineStore("history", {
       }
     },
 
+    //メッセージを更新
+    updateMessage(message:message) {
+      //履歴分ループ
+      for (let index in this._History[message.channelId]) {
+        //IDが一致するメッセージを探して更新する
+        if (this._History[message.channelId][index].messageId === message.messageId) {
+          this._History[message.channelId][index] = message
+          break;
+        }
+      }
+    },
+
     //履歴をまるごと上書きする
     setHistory(channelId:string, history:message[]) {
       //もし特定のチャンネル用の履歴JSONが空なら作る

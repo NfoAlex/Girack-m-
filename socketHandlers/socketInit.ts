@@ -11,6 +11,7 @@ import deleteChannel from "./deleteChannel";
 
 import receiveMessage from "./receiveMessage";
 import fetchHistory from "./fetchHistory";
+import updateMessage from "./updateMessage";
 
 import fetchUserInfo from "./fetchUserInfo";
 import fetchUserConfig from "./fetchUserConfig";
@@ -47,6 +48,7 @@ export function loadSocket() {
 
   receiveMessage(socket); //メッセージの受信
   fetchHistory(socket); //履歴の受信
+  updateMessage(socket); //メッセージ更新の受信
 
   fetchUserInfo(socket); //自ユーザー情報
   fetchUserConfig(socket); //設定データ

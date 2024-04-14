@@ -1,3 +1,5 @@
+import vue from "@vitejs/plugin-vue";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   css: ["@/assets/styles/main.scss"],
@@ -18,6 +20,11 @@ export default defineNuxtConfig({
         "/uploadProfileIcon": "http://localhost:33333/",
         "/icon": "http://localhost:33333/"
       }
+    }
+  },
+  nitro: {
+    rollupConfig: {
+      plugins: [vue()]
     }
   },
   routeRules: {
