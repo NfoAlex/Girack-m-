@@ -1,16 +1,22 @@
 <template>
   <v-card
-    class=" rounded-pill pa-1"
-    width="fit-content"
+    class="pa-1"
+    rounded="pill"
     height="fit-content"
   >
     <v-btn
       @click=""
-      rounded="pill"
-      width="fit-content"
+      size="small"
       variant="text"
-    >
-      asdf
-    </v-btn>
+      icon="mdi-emoticon-happy-outline"
+      class="pa-2"
+    />
+    <v-btn
+      @click=""
+      size="small"
+      variant="text"
+      icon="mdi-pencil"
+      class="pa-2"
+    />
   </v-card>
 </template>
