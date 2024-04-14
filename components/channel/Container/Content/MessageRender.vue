@@ -80,7 +80,7 @@ const propsMessage = defineProps<{
     </template>
 
     <!-- ホバーメニュー -->
-    <HoverMenu style="width:fit-content;" />
+    <HoverMenu :message="propsMessage.message" style="width:fit-content;" />
 
   </v-menu>
 </template>
