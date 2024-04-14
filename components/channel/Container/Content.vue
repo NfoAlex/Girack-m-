@@ -8,6 +8,7 @@ import { useUserIndex } from "~/stores/userindex";
 import type { channel } from '~/types/channel';
 
 import { useElementVisibility, useScroll } from '@vueuse/core';
+
 //スクロール位置取得用
 const ChannelContainerContent = ref<HTMLElement | null>(null);
 const { y } = useScroll(ChannelContainerContent)
@@ -307,6 +308,7 @@ watch(props, (newProp, oldProp) => {
         <v-skeleton-loader type="list-item-avatar" color="background"></v-skeleton-loader>
       </span>
 
+      <!-- メッセージ表示 -->
       <div
         v-for="
           (message, index)
@@ -317,6 +319,7 @@ watch(props, (newProp, oldProp) => {
         :id="'msg' + message.messageId"
         class="d-flex pr-2"
       >
+        <!-- アバター -->
         <span style="width:65px" class="px-1">
           <v-avatar
             @click="() => { 
@@ -334,6 +337,7 @@ watch(props, (newProp, oldProp) => {
             <v-img :src="'/icon/' + message.userId" :alt="message.userId" />
           </v-avatar>
         </span>
+
         <div
           class="px-3 flex-grow-1 d-flex flex-column flex-wrap messageContainer"
           :class="calculateMessageBorder(index)"
@@ -355,6 +359,10 @@ watch(props, (newProp, oldProp) => {
           <p class="text-medium-emphasis" style="word-break: break-all;">
             {{ message.content }}
           </p>
+
+          <!-- 絵文字表示 -->
+          <ChannelContainerContentEmojiRender />
+
         </div>
       </div>
 
