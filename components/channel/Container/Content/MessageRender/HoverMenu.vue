@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useElementBounding, useWindowSize  } from '@vueuse/core';
-import { Picker, EmojiIndex } from 'emoji-mart-vue-fast/src';
+import { Picker, EmojiIndex } from 'emoji-mart-vue-fast/src'; //TS...
 import data from "emoji-mart-vue-fast/data/twitter.json";
 import "emoji-mart-vue-fast/css/emoji-mart.css";
 
