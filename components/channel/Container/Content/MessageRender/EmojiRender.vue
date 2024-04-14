@@ -44,7 +44,7 @@ const emojiRender = (emojiId:string) => {
   <span>
     <v-chip
       v-for="(reaction,key) of props.reaction"
-      class="mr-1" 
+      style="margin-top:4px; margin-right:4px;"
       :key="key"
     >
       {{ emojiRender(key.toString()) }}
