@@ -57,9 +57,9 @@ const reactIt = (emoji:any) => {
         position: absolute;
         right: 0;
         background-color: rgb(var(--v-theme-sidebarBackground));
+        color: rgb(var(--v-theme-on-surface));
         border: 0;
         border-radius: 18px;
-        color: rgb(var(--v-theme-on-surface));
       "
       color="lightblue"
       :style="height/2 > y ? 'top:50px;' : 'bottom:50px;'"
