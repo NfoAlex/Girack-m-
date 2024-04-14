@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import { useElementBounding, useWindowSize  } from '@vueuse/core';
 import { Picker, EmojiIndex } from 'emoji-mart-vue-fast/src';
 import data from "emoji-mart-vue-fast/data/twitter.json";
 import "emoji-mart-vue-fast/css/emoji-mart.css";
+
+const pickerRef = ref(null);
+const { y } = useElementBounding(pickerRef);
+const { height } = useWindowSize();
 
 //絵文字ピッカー用データ
 let emojiIndex = new EmojiIndex(data);
@@ -14,13 +19,14 @@ const displayEmojiPicker = ref<boolean>(false);
 </script>
 
 <template>
-  <span>
+  <span ref="pickerRef">
     <Picker
       v-if="displayEmojiPicker"
       :data="emojiIndex"
       title="リアクション"
-      style="position:absolute; bottom:15px; right:100%;"
-      :defaultSkin="1"
+      style="position:absolute; right:0;"
+      :style="height/2 > y ? 'top:50px;' : 'bottom:50px;'"
+      defaultSkin="3"
     />
 
     <v-card
@@ -28,6 +34,8 @@ const displayEmojiPicker = ref<boolean>(false);
       rounded="pill"
       height="fit-content"
     >
+      {{ height/2 > y }}
+      {{ y }}
       <v-btn
         @click="displayEmojiPicker = !displayEmojiPicker;"
         size="small"
