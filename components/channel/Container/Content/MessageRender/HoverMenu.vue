@@ -13,6 +13,7 @@ const pickerRef = ref(null);
 const { y } = useElementBounding(pickerRef);
 const { height } = useWindowSize();
 
+//Socket通信のユーザー情報用
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 //絵文字ピッカー用データ
@@ -31,7 +32,7 @@ const displayEmojiPicker = ref<boolean>(false);
  * リアクションする
  */
 const reactIt = (emoji:any) => {
-  console.log("/channel/:id :: reactIt : emoji->", emoji);
+  //console.log("/channel/:id :: reactIt : emoji->", emoji);
   socket.emit("reactMessage", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
@@ -52,9 +53,14 @@ const reactIt = (emoji:any) => {
       @select="reactIt"
       :data="emojiIndex"
       title="リアクション"
-      style="position:absolute; right:0;"
+      style="
+        position: absolute;
+        right: 0;
+        background-color: rgb(var(--v-theme-cardInner));
+        color: rgb(var(--v-theme-on-surface));
+      "
+      color="lightblue"
       :style="height/2 > y ? 'top:50px;' : 'bottom:50px;'"
-      defaultSkin="3"
     />
 
     <v-card
