@@ -72,7 +72,7 @@ const propsMessage = defineProps<{
           </p>
 
           <!-- 絵文字表示 -->
-          <EmojiRender :reaction="message.reaction" />
+          <EmojiRender :reaction="JSON.parse(message.reaction)" />
 
         </div>
       </div>
