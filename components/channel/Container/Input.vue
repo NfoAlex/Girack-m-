@@ -19,7 +19,7 @@ const messageInput = ref<string>("");
  * Enterキーの処理
  */
 const triggerEnter = (event:Event) => {
-  console.log("/channel/:id :: triggerEnter : Enterメッセージ->", messageInput.value, event, props);
+  //console.log("/channel/:id :: triggerEnter : Enterメッセージ->", messageInput.value, event, props);
   socket.emit("sendMessage", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
