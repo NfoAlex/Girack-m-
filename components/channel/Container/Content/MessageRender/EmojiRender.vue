@@ -67,7 +67,12 @@ const addMoreReaction = (emojiId:string) => {
     <v-chip
       v-for="(reaction,key) of props.reaction"
       @click="addMoreReaction(key.toString())"
-      style="margin-top:4px; margin-right:4px;"
+      style="
+        margin-top: 4px;
+        margin-right: 4px;
+        user-select: none;
+        -webkit-user-select: none;
+      "
       :key="key"
     >
       {{ emojiRender(key.toString()) }}
