@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import { EmojiIndex } from 'emoji-mart-vue-fast/src'; //TS...
+import { useMyUserinfo } from '~/stores/userinfo';
 import data from "emoji-mart-vue-fast/data/twitter.json";
 
 let emojiIndex:any; //絵文字データ用(onMountedでロードする)
 
+//Socket通信のユーザー情報用
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+
 //props(リアクション)
 const props = defineProps<{
+  channelId: string,
+  messageId: string,
   reaction: {
     [key: string]: {
       [key: string]: number
@@ -38,12 +44,29 @@ const emojiRender = (emojiId:string) => {
     console.log("EmojiReader :: onMounted : e->", e);
   }
 }
+
+/**
+ * 絵文字表示をクリックしたらそれに対してリアクション
+ * @param emojiId
+ */
+const addMoreReaction = (emojiId:string) => {
+  socket.emit("reactMessage", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    channelId: props.channelId,
+    messageId: props.messageId,
+    reactionName: emojiId
+  });
+}
 </script>
 
 <template>
   <span>
     <v-chip
       v-for="(reaction,key) of props.reaction"
+      @click="addMoreReaction(key.toString())"
       style="margin-top:4px; margin-right:4px;"
       :key="key"
     >
