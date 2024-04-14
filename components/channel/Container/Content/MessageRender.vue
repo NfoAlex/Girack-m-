@@ -19,13 +19,16 @@ const propsMessage = defineProps<{
 <template>
   <v-menu
     open-on-hover
-    location="top end"
-    origin="start center"
+    location="end"
+    origin="end center"
     :close-on-content-click="false"
+    close-delay="10"
+    open-delay="10"
+    transition="none"
   >
     <template v-slot:activator="{ props }">
 
-      <div v-bind="props" class="d-flex pr-2">
+      <div v-bind="props" class="d-flex pr-2" style="width:100%; height:100%;">
 
         <!-- アバター -->
         <span style="width:65px" class="px-1">
@@ -76,9 +79,8 @@ const propsMessage = defineProps<{
       
     </template>
 
-    
     <!-- ホバーメニュー -->
-    <HoverMenu style="width:fit-content; " />
+    <HoverMenu style="width:fit-content;" />
 
   </v-menu>
 </template>
