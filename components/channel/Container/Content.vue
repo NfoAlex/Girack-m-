@@ -283,13 +283,6 @@ watch(props, (newProp, oldProp) => {
 
   <div style="overflow-y:auto;">
 
-    <!-- ユーザーページ -->
-    <Userinfo
-      v-model="displayUserpage"
-      v-if="displayUserpage"
-      :userId="userIdForDialog"
-    />
-
     <div
       style="height:100%; width:100%; overflow-y:auto;"
       class="d-flex py-1 flex-column-reverse"
