@@ -23,13 +23,6 @@ const emojiRender = (emojiId:string) => {
     console.log("EmojiReader :: onMounted : e->", e);
   }
 }
-
-onMounted(() => {
-  if (JSON.stringify(props.reaction) !== "{}") {
-    //console.log("EmojiReader :: onMounted : reaction->", props.reaction);
-    //console.log("EmojiReader :: onMounted : data->", data);
-  }
-});
 </script>
 
 <template>
