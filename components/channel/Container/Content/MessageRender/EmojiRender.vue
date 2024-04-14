@@ -16,20 +16,29 @@ const props = defineProps<{
  * 絵文字のレンダー
  */
 const emojiRender = (emojiId:string) => {
-  let emojiIndex = new EmojiIndex(data);
-  return emojiIndex._emojis[emojiId].native;
+  try {
+    let emojiIndex = new EmojiIndex(data);
+    return emojiIndex._emojis[emojiId].native;
+  } catch(e) {
+    console.log("EmojiReader :: onMounted : e->", e);
+  }
 }
 
 onMounted(() => {
   if (JSON.stringify(props.reaction) !== "{}") {
-    console.log("EmojiReader :: reaction->", props.reaction);
+    //console.log("EmojiReader :: onMounted : reaction->", props.reaction);
+    //console.log("EmojiReader :: onMounted : data->", data);
   }
 });
 </script>
 
 <template>
   <span>
-    <v-chip v-for="(reaction,key) of props.reaction" class="pr-2">
+    <v-chip
+      v-for="(reaction,key) of props.reaction"
+      class="mr-1" 
+      :key="key"
+    >
       {{ emojiRender(key.toString()) }}
     </v-chip>
   </span>
