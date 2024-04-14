@@ -68,7 +68,8 @@ const addMoreReaction = (emojiId:string) => {
       v-for="(reaction,key) of props.reaction"
       @click="addMoreReaction(key.toString())"
       style="
-        margin-top: 4px;
+        margin-bottom: 4px;
+        margin-top: 2px;
         margin-right: 4px;
         user-select: none;
         -webkit-user-select: none;
