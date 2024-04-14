@@ -34,8 +34,6 @@ const displayEmojiPicker = ref<boolean>(false);
       rounded="pill"
       height="fit-content"
     >
-      {{ height/2 > y }}
-      {{ y }}
       <v-btn
         @click="displayEmojiPicker = !displayEmojiPicker;"
         size="small"
