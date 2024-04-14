@@ -27,6 +27,14 @@ if (JSON.stringify(props.reaction) !== "{}") {
   emojiIndex = new EmojiIndex(data);
 }
 
+//リアクションデータの変更を監視して絵文字データをロードするように
+watch(props, () => {
+  //初回のみね
+  if (JSON.stringify(props.reaction) !== "{}" && emojiIndex === undefined) {
+    emojiIndex = new EmojiIndex(data);
+  }
+});
+
 /**
  * 絵文字のレンダー
  */
