@@ -9,7 +9,7 @@ export default function updateMessage(socket: Socket): void {
   //WSからの切断を検知
   socket.on("updateMessage", (dat:{result:string, data:message}
   ) => {
-    console.log("updateMessage :: ");
+    //console.log("updateMessage :: dat->", dat);
     
     //メッセージデータを上書き
     const { updateMessage } = useHistory();
