@@ -185,8 +185,11 @@ const calculateMessageBorder = (messageIndex:number) => {
   }
 }
 
+// *************  位置監視  ************* //
 //上のスケルトンローダーの位置変数の監視
 watch(atSkeletonOlder, function (newValue, oldValue) {
+  //ロードできてないなら停止
+  if (!stateLoaded) return;
 
   //すでに履歴を取得中の状態なら停止
   if (getAppStatus.value.fetchingHistory) return;
@@ -204,6 +207,9 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
 
 //下のスケルトンローダーの位置変数の監視
 watch(atSkeletonNewer, function (newValue, oldValue) {
+  //ロードできてないなら停止
+  if (!stateLoaded) return;
+
   //すでに履歴を取得中の状態なら停止
   if (getAppStatus.value.fetchingHistory) return;
 
@@ -252,6 +258,7 @@ watch(
   {deep: true}
 );
 
+// *************  スクロール関係  ************* //
 //スクロール位置の変更監視して記憶するように
 watch(y, () => {
   //console.log("/channel/:id :: watch(y) : y.value->", y.value);
