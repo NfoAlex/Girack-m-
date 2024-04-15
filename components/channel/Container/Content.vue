@@ -30,9 +30,6 @@ const props = defineProps<{
  * data
  */
 const displayDirection = ref<"newer"|"older">("older"); //履歴の取得、表示方向
-const displayUserpage = ref<boolean>(false); //ユーザーページ表示用
-const userIdForDialog = ref<string>(""); //ユーザーページ用のユーザーID格納用
-
 const skeletonLoaderOlder = ref(null); //要素位置監視用
 const atSkeletonOlder = useElementVisibility(skeletonLoaderOlder); //スケルトンローダーが画面内にあるかどうか
 const skeletonLoaderNewer = ref(null); //要素位置監視用

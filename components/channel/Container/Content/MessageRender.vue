@@ -2,6 +2,7 @@
 import { useUserIndex } from '~/stores/userindex';
 import HoverMenu from './MessageRender/HoverMenu.vue';
 import EmojiRender from './MessageRender/EmojiRender.vue';
+import TextRender from './MessageRender/TextRender.vue';
 import type message from '~/types/message';
 
 const { getUserinfo } = useUserIndex();
@@ -74,9 +75,9 @@ const propsMessage = defineProps<{
               {{ new Date(message.time).toLocaleString() }}
             </p>
           </span>
-          <p class="text-medium-emphasis" style="word-break: break-all;">
-            {{ message.content }}
-          </p>
+          
+          <!-- メッセージ文レンダー -->
+          <TextRender :content="message.content" />
 
           <!-- 絵文字表示 -->
           <EmojiRender :channelId="message.channelId" :messageId="message.messageId" :reaction="message.reaction" />
