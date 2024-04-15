@@ -16,7 +16,7 @@ const { y } = useScroll(ChannelContainerContent)
 
 //Storeデータ用
 const { getAppStatus } = storeToRefs(useAppStatus());
-const { getMyUserinfo, getSessionId } = useMyUserinfo();
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getHistoryFromChannel, getHistoryAvailability } = useHistory();
 const { setMessageReadId } = useMessageReadId();
 const goTo = useGoTo();
@@ -62,8 +62,8 @@ const fetchOlderHistory = () => {
   //履歴を取得
   socket.emit("fetchHistory", {
     RequestSender: {
-      userId: getMyUserinfo.userId,
-      sessionId: getSessionId
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
     },
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
@@ -77,8 +77,8 @@ const fetchOlderHistory = () => {
 
   console.log("/channel/:id :: fetchOlderHistory : 送信したもの->", {
     RequestSender: {
-      userId: getMyUserinfo.userId,
-      sessionId: getSessionId
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
     },
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
@@ -108,8 +108,8 @@ const fetchNewerHistory = () => {
   //履歴を取得
   socket.emit("fetchHistory", {
     RequestSender: {
-      userId: getMyUserinfo.userId,
-      sessionId: getSessionId
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
     },
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
@@ -123,8 +123,8 @@ const fetchNewerHistory = () => {
 
   console.log("/channel/:id :: fetchNewerHistory : 送信したもの->", {
     RequestSender: {
-      userId: getMyUserinfo.userId,
-      sessionId: getSessionId
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
     },
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
