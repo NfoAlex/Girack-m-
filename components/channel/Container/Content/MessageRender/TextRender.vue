@@ -66,7 +66,8 @@ const parseVNode = () => {
             {
               href: VNodeRenderingIndex.value["Index"+index].data,
               target: "_blank",
-              rel: "noopener noreferrer"
+              rel: "noopener noreferrer",
+              style: "color:rgba(var(--v-theme-primary),0.5)"
             },
             VNodeRenderingIndex.value["Index"+index].data
           )
