@@ -18,7 +18,7 @@ const { y } = useScroll(ChannelContainerContent)
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getHistoryFromChannel, getHistoryAvailability } = useHistory();
-const { setMessageReadId } = useMessageReadId();
+const { updateMessageReadId } = useMessageReadId();
 const goTo = useGoTo();
 
 //props(チャンネル情報)
@@ -227,12 +227,12 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 //最新のメッセージにいるかどうか
 watch(atLatestMessage, function (newValue, oldValue) {
   console.log("/channel/:id :: watch(atLatestMessage) : 最新にいそうだな->", newValue);
-  
+
   //表示している内の最新のメッセージIDを取得
   const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
 
   //最終既読Idを更新
-  setMessageReadId(
+  updateMessageReadId(
     props.channelInfo.channelId,
     latestMessageId
   );

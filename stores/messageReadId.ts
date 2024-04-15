@@ -22,9 +22,16 @@ export const useMessageReadId = defineStore("messagereadid", {
   },
   
   actions: {
-    setMessageReadId(channelId:string, time:string) {
-      this._MessageReadId[channelId] = time;
-      console.log("messageReadTime :: setmessageReadTime : 今->", this._MessageReadId);
+    //まるごと格納
+    setMessageReadId(data:any) {
+      //console.log("messageReadTime :: setmessageReadTime : 今->", this._MessageReadId);
+      this._MessageReadId = data;
+    },
+
+    //チャンネルを指定して設定
+    updateMessageReadId(channelId:string, messageId:string) {
+      //console.log("messageReadTime :: setmessageReadTime : 今->", this._MessageReadId);
+      this._MessageReadId[channelId] = messageId;
     },
   }
 });
