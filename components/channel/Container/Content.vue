@@ -227,13 +227,24 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 //最新のメッセージにいるかどうか
 watch(atLatestMessage, function (newValue, oldValue) {
   console.log("/channel/:id :: watch(atLatestMessage) : 最新にいそうだな->", newValue);
-  //最終既読時間を設定
+  
+  //表示している内の最新のメッセージIDを取得
+  const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
+
+  //最終既読Idを更新
   setMessageReadId(
     props.channelInfo.channelId,
-    getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
+    latestMessageId
   );
-
-  //socket.emit("")
+  //メッセージ既読状態を設定する
+  socket.emit("setMessageReadId", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    channelId: props.channelInfo.channelId,
+    messageId: latestMessageId
+  });
 });
 
 // *************  履歴監視  ************* //
