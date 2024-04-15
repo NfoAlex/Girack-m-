@@ -34,6 +34,8 @@ const skeletonLoaderOlder = ref(null); //要素位置監視用
 const atSkeletonOlder = useElementVisibility(skeletonLoaderOlder); //スケルトンローダーが画面内にあるかどうか
 const skeletonLoaderNewer = ref(null); //要素位置監視用
 const atSkeletonNewer = useElementVisibility(skeletonLoaderNewer); //スケルトンローダーが画面内にあるかどうか
+const latestMessageAnchor = ref(null); //最新メッセージ要素監視用
+const atLatestMessage = useElementVisibility(latestMessageAnchor); //最終メッセージを見ているかどうか
 
 /**
  * 古い履歴の追加取得
