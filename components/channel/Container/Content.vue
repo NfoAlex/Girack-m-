@@ -224,6 +224,12 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
   }
 });
 
+//最新のメッセージにいるかどうか
+watch(atLatestMessage, function (newValue, oldValue) {
+  console.log("/channel/:id :: watch(atLatestMessage) : 最新にいそうだな->", newValue);
+});
+
+// *************  履歴監視  ************* //
 //履歴の更新を監視
 watch(
   getAppStatus,
@@ -324,11 +330,18 @@ watch(props, (newProp, oldProp) => {
         :id="'msg' + message.messageId"
         position="relative"
       >
-
-        <MessageRender
-          :message="message"
-          :borderClass="calculateMessageBorder(index)"
-        />
+        <span v-if="index===0" ref="latestMessageAnchor">
+          <MessageRender
+            :message="message"
+            :borderClass="calculateMessageBorder(index)"
+          />
+        </span>
+        <span v-else>
+          <MessageRender
+            :message="message"
+            :borderClass="calculateMessageBorder(index)"
+          />
+        </span>
 
       </div>
 
