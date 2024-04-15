@@ -1,11 +1,10 @@
-//単一ロール情報受け取り用
+//最新既読Id受信用
 
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useAppStatus } from "~/stores/AppStatus";
 import { useMessageReadId } from "~/stores/messageReadId";
 
 export default function getMessageReadId(socket: Socket): void {
-  //サーバー(インスタンス)情報
   socket.on("RESULT::getMessageReadId", (dat:{
     result: string,
     data: any
