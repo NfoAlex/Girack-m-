@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { VNode } from 'vue';
 import { defineComponent, h } from 'vue'
+import URLChip from './TextRender/URLChip.vue';
 
 const URLRegex:RegExp = /((https|http)?:\/\/[^\s]+)/g;
 //let URLFilteringRegex:RegExp|string = "";
@@ -62,14 +63,8 @@ const parseVNode = () => {
       if (VNodeRenderingIndex.value["Index"+index] !== undefined) {
         MessageRenderingFinal.value.push(
           h(
-            "a",
-            {
-              href: VNodeRenderingIndex.value["Index"+index].data,
-              target: "_blank",
-              rel: "noopener noreferrer",
-              style: "color:rgba(var(--v-theme-primary),0.5)"
-            },
-            VNodeRenderingIndex.value["Index"+index].data
+            URLChip,
+            {url: VNodeRenderingIndex.value["Index"+index].data}
           )
         );
       }
