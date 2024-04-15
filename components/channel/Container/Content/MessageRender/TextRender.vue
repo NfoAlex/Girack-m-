@@ -63,7 +63,11 @@ const parseVNode = () => {
         MessageRenderingFinal.value.push(
           h(
             "a",
-            {href:VNodeRenderingIndex.value["Index"+index].data},
+            {
+              href: VNodeRenderingIndex.value["Index"+index].data,
+              target: "_blank",
+              rel: "noopener noreferre"
+            },
             VNodeRenderingIndex.value["Index"+index].data
           )
         );
