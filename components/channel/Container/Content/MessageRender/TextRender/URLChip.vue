@@ -6,8 +6,18 @@ const props = defineProps<{
 
 <template>
   <a :href="props.url" rel="noopener noreferrer" target="_blank">
-    <v-chip size="small" color="primary">
+    <span
+      class="px-1 py-1 urlStringContainer"
+    >
       {{ props.url }}
-    </v-chip>
+    </span>
   </a>
 </template>
+
+<style scoped>
+.urlStringContainer {
+  border-radius: 99999px;
+  background-color: rgba(var(--v-theme-primary),0.2);
+  font-size:12px;
+}
+</style>
