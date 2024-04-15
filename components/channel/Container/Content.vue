@@ -37,6 +37,8 @@ const atSkeletonNewer = useElementVisibility(skeletonLoaderNewer); //スケル�
 const latestMessageAnchor = ref(null); //最新メッセージ要素監視用
 const atLatestMessage = useElementVisibility(latestMessageAnchor); //最終メッセージを見ているかどうか
 
+const stateLoaded = ref<boolean>(false); //履歴や処理準備ができたかどうか
+
 /**
  * 古い履歴の追加取得
  */
@@ -273,6 +275,9 @@ watch(props, (newProp, oldProp) => {
     container: "#ChannelContainerContent"
     }
   );
+
+  //ロードできたと設定
+  stateLoaded.value = true;
 });
 
 </script>
