@@ -4,7 +4,7 @@ import { useGoTo } from 'vuetify'
 import { useAppStatus } from '~/stores/AppStatus';
 import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
-import { useUserIndex } from "~/stores/userindex";
+import { useMessageReadId } from "~/stores/messageReadId";
 import MessageRender from './Content/MessageRender.vue';
 import type { channel } from '~/types/channel';
 
@@ -17,8 +17,8 @@ const { y } = useScroll(ChannelContainerContent)
 //Storeデータ用
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = useMyUserinfo();
-const { getUserinfo } = useUserIndex();
 const { getHistoryFromChannel, getHistoryAvailability } = useHistory();
+const { setMessageReadId } = useMessageReadId();
 const goTo = useGoTo();
 
 //props(チャンネル情報)
@@ -227,6 +227,13 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 //最新のメッセージにいるかどうか
 watch(atLatestMessage, function (newValue, oldValue) {
   console.log("/channel/:id :: watch(atLatestMessage) : 最新にいそうだな->", newValue);
+  //最終既読時間を設定
+  setMessageReadId(
+    props.channelInfo.channelId,
+    getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
+  );
+
+  //socket.emit("")
 });
 
 // *************  履歴監視  ************* //
@@ -414,5 +421,4 @@ watch(props, (newProp, oldProp) => {
 
   margin: 4px 0;
 }
-
 </style>
