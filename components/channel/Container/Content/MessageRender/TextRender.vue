@@ -6,6 +6,9 @@ const URLRegex:RegExp = /((https|http)?:\/\/[^\s]+)/g;
 //let URLFilteringRegex:RegExp|string = "";
 const URLMatched = ref<RegExpMatchArray|null>(null);
 
+/**
+ * data
+ */
 const MessageRenderingFinal = ref<VNode[]>([]);
 const VNodeRenderingIndex = ref<{
   [key: string]: {
@@ -14,6 +17,7 @@ const VNodeRenderingIndex = ref<{
   }
 }>({});
 
+//props
 const props = defineProps<{
   content: string
 }>();
@@ -26,8 +30,9 @@ const parseVNode = () => {
   URLMatched.value = props.content.match(URLRegex);
   //もしURLがnullじゃないならパース処理
   if (URLMatched.value !== null) {
+    //この文字列用のURLRegexを作成する
     const URLFilteringRegex = createRegex();
-    console.log("/channel/:id :: TextRender :: parseVNode : URLFilteringRegex->", URLFilteringRegex);
+    //console.log("/channel/:id :: TextRender :: parseVNode : URLFilteringRegex->", URLFilteringRegex);
     if (URLFilteringRegex === null) return;
 
     for (let index in URLMatched.value) {
@@ -42,7 +47,7 @@ const parseVNode = () => {
     //メッセージ本文からsplitでこのURLを取り除いて格納
     const contentFiltered = props.content.split(URLFilteringRegex);
 
-    console.log("/channel/:id :: TextRender :: watch(props) : contentFiltered->", contentFiltered);
+    //console.log("/channel/:id :: TextRender :: watch(props) : contentFiltered->", contentFiltered);
 
     //URL抜いたcontent配列をループ、VNode化して格納
     for (let index in contentFiltered) {
@@ -50,7 +55,6 @@ const parseVNode = () => {
       MessageRenderingFinal.value.push(
         h(
           "span",
-          null,
           contentFiltered[index]
         )
       );
@@ -65,8 +69,13 @@ const parseVNode = () => {
         );
       }
     }
-
-    console.log("FINAL RESULT ->", MessageRenderingFinal.value);
+  } else {
+    MessageRenderingFinal.value.push(
+      h(
+        "span",
+        props.content
+      )
+    );
   }
 }
 
@@ -110,31 +119,23 @@ const createRegex = ():RegExp|null => {
  * 最終的にパースして作ったVNodeをコンポーネント化した部分
  */
 const ContentRenderParsed = defineComponent({
-  return() {
-    return (
-      h(
-        "span",
-        MessageRenderingFinal.value
-      )
-    )
+  setup() {
+    return () => MessageRenderingFinal.value
   }
 });
 
-//メッセージ本文の変更監視
+//メッセージ本文の変更検知したときもパース処理する
 watch(props, () => {
-  //console.log("/channel/:id :: TextRender :: watch(props) : match->", props.content.match(URLRegex));
   parseVNode();
 });
 
 onMounted(() => {
-  // /(?:https:\/\/youtube.com)|(?:https:\/\/tumblr.com)/
   parseVNode();
 });
 </script>
 
 <template>
   <p class="text-medium-emphasis" style="word-break: break-all;">
-    {{ props.content }}
-    <span>ここからパースしたもの -- </span><ContentRenderParsed />
+    <ContentRenderParsed />
   </p>
 </template>
