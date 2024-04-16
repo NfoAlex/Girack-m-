@@ -4,6 +4,8 @@ import { Socket } from "socket.io-client"; //クラス識別用
 import { useHistory } from "~/stores/history";
 import { useMessageReadId } from "~/stores/messageReadId";
 import { useMyUserinfo } from "~/stores/userinfo";
+import { useWindowFocus } from '@vueuse/core'
+
 import type message from "~/types/message";
 
 export default function receiveMessage(socket: Socket): void {
@@ -14,7 +16,7 @@ export default function receiveMessage(socket: Socket): void {
 
     addMessage(message);
 
-    //現在そのチャンネルにいて、一番下にスクロールしているのなら最新既読Id更新
+    //現在そのチャンネルにいて、フォーカスしていてかつ一番下にスクロールしているのなら最新既読Id更新
     const route = useRoute();
     if (typeof(route.params.id) !== "object") {
       //スクロール位置を取り出し
@@ -23,12 +25,17 @@ export default function receiveMessage(socket: Socket): void {
       );
       //もしスクロールの値がないなら停止
       if (scrollPosition === null) return;
+
+      //ウィンドウへのフォーカスを取得
+      const windowFocused = useWindowFocus()
       
       //判別
       if (
         route.params.id === message.channelId
         &&
         parseInt(scrollPosition) === 0
+        &&
+        windowFocused.value
       ) {
         //最終既読IdをStoreにて更新
         const { updateMessageReadId } = useMessageReadId();
