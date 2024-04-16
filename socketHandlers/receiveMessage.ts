@@ -8,6 +8,7 @@ import { useWindowFocus } from '@vueuse/core'
 import type message from "~/types/message";
 
 export default function receiveMessage(socket: Socket): void {
+  //メッセージ追加を取得
   const { addMessage } = useHistory();
   //メッセージの受け取り
   socket.on("receiveMessage", (message:message) => {
@@ -37,6 +38,10 @@ export default function receiveMessage(socket: Socket): void {
         windowFocused.value
       ) {
         updateMessageReadIdCloudAndLocal(message.channelId, message.messageId);
+      } else {
+        //新着があると設定
+        const { setHasNewMessage } = useHistory();
+        setHasNewMessage(message.channelId, true);
       }
     }
   });
