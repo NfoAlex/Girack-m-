@@ -18,7 +18,7 @@ const { y } = useScroll(ChannelContainerContent)
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getHistoryFromChannel, getHistoryAvailability } = useHistory();
-const { updateMessageReadId } = useMessageReadId();
+const { updateMessageReadId, getMessageReadId } = useMessageReadId();
 const goTo = useGoTo();
 
 //props(チャンネル情報)
@@ -295,8 +295,22 @@ watch(props, (newProp, oldProp) => {
   const scrollPosition = sessionStorage.getItem(
     "scrollPositionY::" + oldProp.channelInfo.channelId
   );
+  //もしnullなら既読Idへスクロールしてみる
+  if (scrollPosition === null) {
+    //スクロールする
+    goTo(
+      "#msg" + getMessageReadId(props.channelInfo.channelId),
+      {
+      duration: 0,
+      container: "#ChannelContainerContent"
+      }
+    );
+    //そして終わる
+    return;
+  }
+
   //取り出したものを数値化、nullなら0へ
-  const scrollPositionCalculated = scrollPosition===null ? 0 : parseInt(scrollPosition);
+  const scrollPositionCalculated = parseInt(scrollPosition);
 
   //スクロールする
   goTo(
