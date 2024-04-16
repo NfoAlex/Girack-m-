@@ -276,7 +276,7 @@ watch(
 // *************  ウィンドウフォーカス  ************* //
 //フォーカスしたとき、一番下にいるのなら最新既読Idを更新
 watch(windowFocused, (newValue, oldValue) => {
-  if (newValue && y.value === 0) {
+  if (newValue && y.value === 0 && getHistoryAvailability(props.channelInfo.channelId).atEnd) {
     //最新メッセIDを取得
     const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId;
     //Storeとサーバーで同期
