@@ -5,6 +5,7 @@ import { useAppStatus } from '~/stores/AppStatus';
 import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
 import { useMessageReadId } from "~/stores/messageReadId";
+import updateMessageReadIdCloudAndLocal from "~/composables/updateMessageReadIdCloudAndLocal";
 import MessageRender from './Content/MessageRender.vue';
 import type { channel } from '~/types/channel';
 
@@ -18,7 +19,7 @@ const { y } = useScroll(ChannelContainerContent)
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getHistoryFromChannel, getHistoryAvailability } = useHistory();
-const { updateMessageReadId, getMessageReadId } = useMessageReadId();
+const { getMessageReadId } = useMessageReadId();
 const goTo = useGoTo();
 
 //props(チャンネル情報)
@@ -231,20 +232,8 @@ watch(atLatestMessage, function (newValue, oldValue) {
   //表示している内の最新のメッセージIDを取得
   const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
 
-  //最終既読IdをStoreにて更新
-  updateMessageReadId(
-    props.channelInfo.channelId,
-    latestMessageId
-  );
-  //メッセージ既読状態を設定する
-  socket.emit("setMessageReadId", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    channelId: props.channelInfo.channelId,
-    messageId: latestMessageId
-  });
+  //最新既読Idを更新
+  updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
 });
 
 // *************  履歴監視の取得状態監視  ************* //
