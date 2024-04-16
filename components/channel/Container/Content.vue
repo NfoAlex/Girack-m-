@@ -289,6 +289,7 @@ watch(y, () => {
   sessionStorage.setItem('scrollPositionY::'+props.channelInfo.channelId, y.value.toString());
 });
 
+// *************  チャンネル情報  ************* //
 //チャンネル情報の変更を監視してスクロール位置を戻す
 watch(props, (newProp, oldProp) => {
   //スクロール位置を取り出し
