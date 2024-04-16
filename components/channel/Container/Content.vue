@@ -231,7 +231,7 @@ watch(atLatestMessage, function (newValue, oldValue) {
   //表示している内の最新のメッセージIDを取得
   const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
 
-  //最終既読Idを更新
+  //最終既読IdをStoreにて更新
   updateMessageReadId(
     props.channelInfo.channelId,
     latestMessageId
@@ -247,14 +247,14 @@ watch(atLatestMessage, function (newValue, oldValue) {
   });
 });
 
-// *************  履歴監視  ************* //
+// *************  履歴監視の取得状態監視  ************* //
 //履歴の更新を監視
 watch(
   getAppStatus,
   (newValue, oldValue) => {
     nextTick(() => {
       //console.log("/channel/:id :: watch(getHistory...) : 変更された?", newValue, oldValue);
-
+      
       // ❗ ↓新しい方の履歴を取得した際のみ↓ ❗ //
 
       //履歴を取り終えたとき、履歴を取得した位置からスクロールする
