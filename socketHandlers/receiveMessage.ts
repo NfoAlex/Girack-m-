@@ -17,7 +17,19 @@ export default function receiveMessage(socket: Socket): void {
     //現在そのチャンネルにいて、一番下にスクロールしているのなら最新既読Id更新
     const route = useRoute();
     if (typeof(route.params.id) !== "object") {
-      if (route.params.id === message.channelId) {
+      //スクロール位置を取り出し
+      const scrollPosition:string|null = sessionStorage.getItem(
+        "scrollPositionY::" + message.channelId
+      );
+      //もしスクロールの値がないなら停止
+      if (scrollPosition === null) return;
+      
+      //判別
+      if (
+        route.params.id === message.channelId
+        &&
+        parseInt(scrollPosition) === 0
+      ) {
         //最終既読IdをStoreにて更新
         const { updateMessageReadId } = useMessageReadId();
         updateMessageReadId(
