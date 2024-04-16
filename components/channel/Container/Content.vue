@@ -9,11 +9,13 @@ import updateMessageReadIdCloudAndLocal from "~/composables/updateMessageReadIdC
 import MessageRender from './Content/MessageRender.vue';
 import type { channel } from '~/types/channel';
 
-import { useElementVisibility, useScroll } from '@vueuse/core';
+import { useElementVisibility, useScroll, useWindowFocus } from '@vueuse/core';
 
 //スクロール位置取得用
 const ChannelContainerContent = ref<HTMLElement | null>(null);
 const { y } = useScroll(ChannelContainerContent)
+//ウィンドウのフォーカス取得用
+const windowFocused = useWindowFocus();
 
 //Storeデータ用
 const { getAppStatus } = storeToRefs(useAppStatus());
@@ -270,6 +272,17 @@ watch(
   },
   {deep: true}
 );
+
+// *************  ウィンドウフォーカス  ************* //
+//フォーカスしたとき、一番下にいるのなら最新既読Idを更新
+watch(windowFocused, (newValue, oldValue) => {
+  if (newValue && y.value === 0) {
+    //最新メッセIDを取得
+    const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId;
+    //Storeとサーバーで同期
+    updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+  }
+});
 
 // *************  スクロール関係  ************* //
 //スクロール位置の変更監視して記憶するように
