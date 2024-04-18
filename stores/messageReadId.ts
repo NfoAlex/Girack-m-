@@ -38,6 +38,7 @@ export const useMessageReadId = defineStore("messagereadid", {
     setMessageReadId(data:any) {
       //console.log("messageReadTime :: setmessageReadTime : 今->", this._MessageReadId);
       this._MessageReadId = data;
+      this._MessageReadIdBefore = data;
     },
 
     //チャンネルを指定して設定
