@@ -20,7 +20,7 @@ const windowFocused = useWindowFocus();
 //Storeデータ用
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-const { getHistoryFromChannel, getHistoryAvailability } = useHistory();
+const { getHistoryFromChannel, getHistoryAvailability, setHasNewMessage } = useHistory();
 const { getMessageReadId } = useMessageReadId();
 const goTo = useGoTo();
 
@@ -231,11 +231,19 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 watch(atLatestMessage, function (newValue, oldValue) {
   console.log("/channel/:id :: watch(atLatestMessage) : 最新にいそうだな->", newValue);
 
-  //表示している内の最新のメッセージIDを取得
-  const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
+  //最新メッセから離れたときを除く
+  if (newValue) {
+    //表示している内の最新のメッセージIDを取得
+    const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
 
-  //最新既読Idを更新
-  updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+    //もし履歴の最後にいるなら新着を消す
+    if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
+      setHasNewMessage(props.channelInfo.channelId, false);
+    }
+
+    //最新既読Idを更新
+    updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+  }
 });
 
 // *************  履歴監視の取得状態監視  ************* //
