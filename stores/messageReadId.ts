@@ -9,8 +9,16 @@ export const useMessageReadId = defineStore("messagereadid", {
       "0001": "9734758937895324"
       */
     },
+    _MessageReadIdBefore: {
+      /*
+      "0001": "89123789781234123"
+      */
+    }
   } as {
     _MessageReadId: {
+      [key: string]: string
+    },
+    _MessageReadIdBefore: {
       [key: string]: string
     }
   }),
