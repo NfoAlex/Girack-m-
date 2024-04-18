@@ -324,6 +324,11 @@ watch(props, (newProp, oldProp) => {
     }
   );
 
+  //もし履歴の最後にいるなら新着を消す
+  if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
+    setHasNewMessage(props.channelInfo.channelId, false);
+  }
+
   //ロードできたと設定
   stateLoaded.value = true;
 });
