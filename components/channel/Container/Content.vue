@@ -236,13 +236,13 @@ watch(atLatestMessage, function (newValue, oldValue) {
     //表示している内の最新のメッセージIDを取得
     const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
 
-    //もし履歴の最後にいるなら新着を消す
+    //もし履歴の最後にいるなら更新処理
     if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
+      //新着があるという状態を解除
       setHasNewMessage(props.channelInfo.channelId, false);
+      //最新既読Idを更新
+      updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
     }
-
-    //最新既読Idを更新
-    updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
   }
 });
 
