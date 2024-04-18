@@ -38,7 +38,11 @@ export const useMessageReadId = defineStore("messagereadid", {
     setMessageReadId(data:any) {
       //console.log("messageReadTime :: setmessageReadTime : 今->", this._MessageReadId);
       this._MessageReadId = data;
-      this._MessageReadIdBefore = data;
+
+      //もし初回の格納ならBeforeにも設定
+      if (JSON.stringify(this._MessageReadIdBefore) === "{}") {
+        this._MessageReadIdBefore = structuredClone(data);
+      }
     },
 
     //チャンネルを指定して設定
