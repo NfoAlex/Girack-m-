@@ -23,14 +23,16 @@ const currentPath = ref<string>(""); //チャンネルID
  * 最新のメッセージと違うかどうか
  */
 const IsItNew = (channelId: string) => {
-  //そもそも履歴の最後を持っていないなら新着
-  if (!getHistoryAvailability(channelId).atEnd) {
-    return true;
-  }
-  //最新メッセージのメッセIDと最新既読Idが違うならこれは新着
-  if (getHistoryFromChannel(channelId)[0].messageId !== getMessageReadId(channelId)) {
-    return true
-  }
+    try {
+    //そもそも履歴の最後を持っていないなら新着
+    if (!getHistoryAvailability(channelId).atEnd) {
+      return true;
+    }
+    //最新メッセージのメッセIDと最新既読Idが違うならこれは新着
+    if (getHistoryFromChannel(channelId)[0].messageId !== getMessageReadId(channelId)) {
+      return true
+    }
+  } catch(e) {}
 
   return false;
 }
