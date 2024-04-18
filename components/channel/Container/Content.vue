@@ -310,43 +310,74 @@ watch(y, () => {
 // *************  チャンネル情報  ************* //
 //チャンネル情報の変更を監視してスクロール位置を戻す
 watch(props, (newProp, oldProp) => {
-  //スクロール位置を取り出し
-  const scrollPosition = sessionStorage.getItem(
-    "scrollPositionY::" + oldProp.channelInfo.channelId
-  );
-  //もしnullなら既読Idへスクロールしてみる
-  if (scrollPosition === null) {
-    //スクロールする
-    goTo(
-      "#msg" + getMessageReadId(props.channelInfo.channelId),
-      {
-      duration: 0,
-      container: "#ChannelContainerContent"
-      }
+  nextTick(() => {
+
+    //スクロール位置を取り出し
+    const scrollPosition = sessionStorage.getItem(
+      "scrollPositionY::" + oldProp.channelInfo.channelId
     );
-    //そして終わる
-    return;
-  }
-
-  //取り出したものを数値化、nullなら0へ
-  const scrollPositionCalculated = parseInt(scrollPosition);
-
-  //スクロールする
-  goTo(
-    scrollPositionCalculated,
-    {
-    duration: 0,
-    container: "#ChannelContainerContent"
+    //もしnullなら既読Idへスクロールしてみる
+    if (scrollPosition === null) {
+      //スクロールする
+      goTo(
+        "#msg" + getMessageReadId(props.channelInfo.channelId),
+        {
+        duration: 0,
+        container: "#ChannelContainerContent"
+        }
+      );
+      //そして終わる
+      return;
     }
-  );
 
-  //もし履歴の最後にいるなら新着を消す
-  if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
-    setHasNewMessage(props.channelInfo.channelId, false);
-  }
+    //取り出したものを数値化、nullなら0へ
+    const scrollPositionCalculated = parseInt(scrollPosition);
 
-  //ロードできたと設定
-  stateLoaded.value = true;
+    //スクロールする、もともと一番下なら最新既読メッセIDへスクロール
+    // if (scrollPositionCalculated !== 0) {
+    //   goTo(
+    //     scrollPositionCalculated,
+    //     {
+    //     duration: 0,
+    //     container: "#ChannelContainerContent"
+    //     }
+    //   );
+    // } else {
+    //   console.log("/channel/:id :: 最新既読Idへ", "#msg" + getMessageReadId(props.channelInfo.channelId));
+    //   goTo(
+    //     "#msg" + getMessageReadId(props.channelInfo.channelId),
+    //     {
+    //     duration: 0,
+    //     container: "#ChannelContainerContent"
+    //     }
+    //   );
+    // }
+
+    console.log("/channel/:id :: 最新既読Idへ", "#msg" + getMessageReadId(props.channelInfo.channelId));
+    if (
+      document.getElementById("#msg" + getMessageReadId(props.channelInfo.channelId))
+        !==
+      undefined
+    ) {
+      goTo(
+        "#msg" + getMessageReadId(props.channelInfo.channelId),
+        {
+        duration: 0,
+        container: "#ChannelContainerContent",
+        offset: 10
+        }
+      );
+    }
+
+    //もし履歴の最後にいるなら新着を消す
+    if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
+      setHasNewMessage(props.channelInfo.channelId, false);
+    }
+
+    //ロードできたと設定
+    stateLoaded.value = true;
+
+  });
 });
 
 </script>
