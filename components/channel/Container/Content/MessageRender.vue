@@ -109,6 +109,7 @@ const propsMessage = defineProps<{
           class="flex-shrink-0"
           size="x-small"
           color="secondary"
+          variant="flat"
         >
           ここから新着
         </v-chip>
