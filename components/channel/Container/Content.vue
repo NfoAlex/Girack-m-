@@ -269,7 +269,8 @@ watch(
           setTimeout(() => {
             goTo("#msg" + messageScrolledPosition, {
               duration: 0,
-              container: "#ChannelContainerContent"
+              container: "#ChannelContainerContent",
+              offset: 10
             });
           }, 10);
         } catch(e) {
