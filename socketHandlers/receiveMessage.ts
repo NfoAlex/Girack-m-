@@ -24,7 +24,7 @@ export default function receiveMessage(socket: Socket): void {
         "scrollPositionY::" + message.channelId
       );
       //もしスクロールの値がないなら停止
-      if (scrollPosition === null) return;
+      //if (scrollPosition === null) return;
 
       //ウィンドウへのフォーカスを取得
       const windowFocused = useWindowFocus()
@@ -33,10 +33,11 @@ export default function receiveMessage(socket: Socket): void {
       if (
         route.params.id === message.channelId
         &&
-        parseInt(scrollPosition) === 0
+        parseInt(scrollPosition || "0") === 0
         &&
         windowFocused.value
       ) {
+        //最新既読Idを更新
         updateMessageReadIdCloudAndLocal(message.channelId, message.messageId);
       } else {
         //新着があると設定
