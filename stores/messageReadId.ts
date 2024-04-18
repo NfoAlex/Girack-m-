@@ -43,7 +43,11 @@ export const useMessageReadId = defineStore("messagereadid", {
     //チャンネルを指定して設定
     updateMessageReadId(channelId:string, messageId:string) {
       //console.log("messageReadTime :: setmessageReadTime : 今->", this._MessageReadId);
-      //もし一つ古い最新既読IdがundefinedならそのメッセージIDに
+
+      //メッセージIdが変わらないなら何もしない
+      if (this._MessageReadIdBefore[channelId] === messageId) return;
+
+      //もし一つ古い最新既読IdがundefinedならそのメッセージIdに
       if (this._MessageReadIdBefore[channelId] === undefined) {
         this._MessageReadIdBefore[channelId] = messageId;
       } else {
