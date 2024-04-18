@@ -21,7 +21,7 @@ const windowFocused = useWindowFocus();
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getHistoryFromChannel, getHistoryAvailability, setHasNewMessage } = useHistory();
-const { getMessageReadId } = useMessageReadId();
+const { getMessageReadId, updateMessageReadIdBefore } = useMessageReadId();
 const goTo = useGoTo();
 
 //props(チャンネル情報)
@@ -372,6 +372,9 @@ watch(props, (newProp, oldProp) => {
     if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
       setHasNewMessage(props.channelInfo.channelId, false);
     }
+
+    //移動前のチャンネル用の最新既読IdBeforeを更新
+    updateMessageReadIdBefore(oldProp.channelInfo.channelId);
 
     //ロードできたと設定
     stateLoaded.value = true;
