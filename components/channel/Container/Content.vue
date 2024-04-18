@@ -204,7 +204,7 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
     //console.log("/channel/:id :: watch(atSkeletonOlder) : もとに戻った");
 
     getAppStatus.value.fetchingHistory = true;
-    setTimeout(fetchOlderHistory, 100);
+    setTimeout(fetchOlderHistory, 10);
   }
 });
 
@@ -223,7 +223,7 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
     //console.log("/channel/:id :: watch(atSkeletonNewer) : REVERSED!");
 
     getAppStatus.value.fetchingHistory = true;
-    setTimeout(fetchNewerHistory, 100);
+    setTimeout(fetchNewerHistory, 10);
   }
 });
 
