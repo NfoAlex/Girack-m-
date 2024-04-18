@@ -2,6 +2,7 @@
 
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useHistory } from "~/stores/history";
+import { useMessageReadId } from "~/stores/messageReadId";
 import updateMessageReadIdCloudAndLocal from "~/composables/updateMessageReadIdCloudAndLocal";
 import { useWindowFocus } from '@vueuse/core'
 
@@ -39,6 +40,10 @@ export default function receiveMessage(socket: Socket): void {
       ) {
         //最新既読Idを更新
         updateMessageReadIdCloudAndLocal(message.channelId, message.messageId);
+        //最新Idに合わせてBeforeを設定
+        const { updateMessageReadIdBefore } = useMessageReadId();
+        updateMessageReadIdBefore(message.channelId);
+        
       } else {
         //新着があると設定
         const { setHasNewMessage } = useHistory();
