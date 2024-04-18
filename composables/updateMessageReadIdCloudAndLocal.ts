@@ -1,5 +1,6 @@
 import { socket } from "~/socketHandlers/socketInit";
 import { useMyUserinfo } from "~/stores/userinfo";
+import { useMessageReadId } from "~/stores/messageReadId";
 
 export default function updateMessageReadIdCloudAndLocal(channelId:string, messageId:string) {
   //最終既読IdをStoreにて更新
