@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useConfig } from '~/stores/config';
+import { useHistory } from '~/stores/history';
 
 const { getConfig, getConfigSyncStatus } = storeToRefs(useConfig());
+const { getHasNewMessage } = useHistory();
 </script>
 
 <template>
@@ -41,6 +43,13 @@ const { getConfig, getConfigSyncStatus } = storeToRefs(useConfig());
       <m-card>
         <code>
           {{ getConfig.sidebar }}
+        </code>
+      </m-card>
+
+      <p class="mt-3">新着状況 - history</p>
+      <m-card>
+        <code>
+          {{ getHasNewMessage("0001") }}
         </code>
       </m-card>
     </NuxtLayout>
