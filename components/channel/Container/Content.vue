@@ -386,15 +386,18 @@ watch(props, (newProp, oldProp) => {
         :id="'msg' + message.messageId"
         position="relative"
       >
+
         <span v-if="index===0" ref="latestMessageAnchor">
           <MessageRender
             :message="message"
+            :index
             :borderClass="calculateMessageBorder(index)"
           />
         </span>
         <span v-else>
           <MessageRender
             :message="message"
+            :index
             :borderClass="calculateMessageBorder(index)"
           />
         </span>
