@@ -14,6 +14,7 @@ const displayUserpage = ref<boolean>(false);
 
 const propsMessage = defineProps<{
   message: message,
+  index: number,
   borderClass: string,
 }>();
 
@@ -40,7 +41,17 @@ const propsMessage = defineProps<{
 
       <!-- 新着メッセージ表示 -->
       <span
-        v-if="getMessageReadIdBefore(propsMessage.message.channelId) === propsMessage.message.messageId"
+        v-if="
+          (
+            getMessageReadIdBefore(propsMessage.message.channelId)
+              ===
+            propsMessage.message.messageId
+          )
+            &&
+          index !== 0
+            &&
+          index !== 1
+        "
         class="d-flex align-center"
         style="margin-top:-10px; margin-bottom:-10px;"
       >
