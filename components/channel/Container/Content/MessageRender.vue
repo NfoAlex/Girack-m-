@@ -39,37 +39,6 @@ const propsMessage = defineProps<{
   >
     <template v-slot:activator="{ props }">
 
-      <!-- 新着メッセージ表示 -->
-      <span
-        v-if="
-          (
-            getMessageReadIdBefore(propsMessage.message.channelId)
-              ===
-            propsMessage.message.messageId
-          )
-            &&
-          index !== 0
-            &&
-          index !== 1
-        "
-        class="d-flex align-center"
-        style="margin-top:-10px; margin-bottom:-10px;"
-      >
-        <v-divider
-          color="secondary"
-        />
-        <v-chip
-          class="flex-shrink-0"
-          size="x-small"
-          color="secondary"
-        >
-          ここから新着
-        </v-chip>
-        <v-divider
-          color="secondary"
-        />
-      </span>
-
       <div v-bind="props" class="d-flex pr-2" style="width:100%; height:100%;">
 
         <!-- アバター -->
@@ -118,6 +87,35 @@ const propsMessage = defineProps<{
 
         </div>
       </div>
+
+      <!-- 新着メッセージ表示 -->
+      <span
+        v-if="
+          (
+            getMessageReadIdBefore(propsMessage.message.channelId)
+              ===
+            propsMessage.message.messageId
+          )
+            &&
+          propsMessage.index !== 0
+        "
+        class="d-flex align-center"
+        style="margin-top:-10px; margin-bottom:-10px;"
+      >
+        <v-divider
+          color="secondary"
+        />
+        <v-chip
+          class="flex-shrink-0"
+          size="x-small"
+          color="secondary"
+        >
+          ここから新着
+        </v-chip>
+        <v-divider
+          color="secondary"
+        />
+      </span>
       
     </template>
 
