@@ -50,11 +50,13 @@ export const useMessageReadId = defineStore("messagereadid", {
     },
 
     //ひとつ前用の最新既読Id設定
-    updateMessageReadIdBefore(channelId:string, messageId:string) {
+    updateMessageReadIdBefore(channelId:string) {
       //console.log("messageReadTime :: setmessageReadTimeBefore : ひとつ前用->", this._MessageReadId);
 
+      //もし最新既読Idが空なら飛ばす
+      if (this._MessageReadId[channelId] === undefined) return;
       //ひとつ前の最新既読Idを更新
-      this._MessageReadIdBefore[channelId] = messageId;
+      this._MessageReadIdBefore[channelId] = this._MessageReadId[channelId];
     },
   }
 });
