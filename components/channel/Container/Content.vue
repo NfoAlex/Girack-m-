@@ -266,13 +266,11 @@ watch(
               getHistoryAvailability(props.channelInfo.channelId).latestFetchedHistoryLength - 1
             ].messageId;
 
-          setTimeout(() => {
-            goTo("#msg" + messageScrolledPosition, {
-              duration: 0,
-              container: "#ChannelContainerContent",
-              offset: 10
-            });
-          }, 10);
+          goTo("#msg" + messageScrolledPosition, {
+            duration: 0,
+            container: "#ChannelContainerContent",
+            offset: 10
+          });
         } catch(e) {
           //なにもしない
         }
