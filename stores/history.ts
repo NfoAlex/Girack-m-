@@ -23,6 +23,13 @@ export const useHistory = defineStore("history", {
       "0001": {
         atTop: false,
         atEnd: true
+        latestFetchedHistoryLength: 13
+      }
+      */
+    },
+    _HasNewMessage: {
+      /*
+      "0001":false
       }
       */
     }
@@ -34,8 +41,11 @@ export const useHistory = defineStore("history", {
       [key: string]: {
         atTop: boolean, //履歴の一番最初にいるかどうか
         atEnd: boolean, //履歴の一番最新にいるかどうか
-        latestFetchedHistoryLength: number //最後に取得した履歴の長さ
+        latestFetchedHistoryLength: number, //最後に取得した履歴の長さ
       }
+    },
+    _HasNewMessage: {
+      [key: string]: boolean
     }
   }),
   
@@ -61,6 +71,17 @@ export const useHistory = defineStore("history", {
       }
       //返す
       return state._Availability[channelId]
+    },
+
+    //そのチャンネルの新着があるかどうかを取得(データ操作もここでやる)
+    getHasNewMessage:(state) => (channelId:string) => {
+      //そもそもデータがないなら新たに作成
+      if (state._HasNewMessage[channelId] === undefined) {
+        state._HasNewMessage[channelId] = false;
+        return false;
+      }
+      //そのまま返す
+      return state._HasNewMessage[channelId];
     }
   },
 
@@ -184,6 +205,11 @@ export const useHistory = defineStore("history", {
 
       //格納
       this._Availability[channelId] = atData;
+    },
+
+    //新着があるかを設定
+    setHasNewMessage(channelId:string, hasNewMessage:boolean) {
+      this._HasNewMessage[channelId] = hasNewMessage;
     }
   }
 });

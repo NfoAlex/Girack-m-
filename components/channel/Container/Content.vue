@@ -4,21 +4,24 @@ import { useGoTo } from 'vuetify'
 import { useAppStatus } from '~/stores/AppStatus';
 import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
-import { useUserIndex } from "~/stores/userindex";
+import { useMessageReadId } from "~/stores/messageReadId";
+import updateMessageReadIdCloudAndLocal from "~/composables/updateMessageReadIdCloudAndLocal";
 import MessageRender from './Content/MessageRender.vue';
 import type { channel } from '~/types/channel';
 
-import { useElementVisibility, useScroll } from '@vueuse/core';
+import { useElementVisibility, useScroll, useWindowFocus } from '@vueuse/core';
 
 //スクロール位置取得用
 const ChannelContainerContent = ref<HTMLElement | null>(null);
 const { y } = useScroll(ChannelContainerContent)
+//ウィンドウのフォーカス取得用
+const windowFocused = useWindowFocus();
 
 //Storeデータ用
 const { getAppStatus } = storeToRefs(useAppStatus());
-const { getMyUserinfo, getSessionId } = useMyUserinfo();
-const { getUserinfo } = useUserIndex();
-const { getHistoryFromChannel, getHistoryAvailability } = useHistory();
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+const { getHistoryFromChannel, getHistoryAvailability, setHasNewMessage } = useHistory();
+const { getMessageReadId, updateMessageReadIdBefore } = useMessageReadId();
 const goTo = useGoTo();
 
 //props(チャンネル情報)
@@ -34,6 +37,10 @@ const skeletonLoaderOlder = ref(null); //要素位置監視用
 const atSkeletonOlder = useElementVisibility(skeletonLoaderOlder); //スケルトンローダーが画面内にあるかどうか
 const skeletonLoaderNewer = ref(null); //要素位置監視用
 const atSkeletonNewer = useElementVisibility(skeletonLoaderNewer); //スケルトンローダーが画面内にあるかどうか
+const latestMessageAnchor = ref(null); //最新メッセージ要素監視用
+const atLatestMessage = useElementVisibility(latestMessageAnchor); //最終メッセージを見ているかどうか
+
+const stateLoaded = ref<boolean>(false); //履歴や処理準備ができたかどうか
 
 /**
  * 古い履歴の追加取得
@@ -58,8 +65,8 @@ const fetchOlderHistory = () => {
   //履歴を取得
   socket.emit("fetchHistory", {
     RequestSender: {
-      userId: getMyUserinfo.userId,
-      sessionId: getSessionId
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
     },
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
@@ -73,8 +80,8 @@ const fetchOlderHistory = () => {
 
   console.log("/channel/:id :: fetchOlderHistory : 送信したもの->", {
     RequestSender: {
-      userId: getMyUserinfo.userId,
-      sessionId: getSessionId
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
     },
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
@@ -104,8 +111,8 @@ const fetchNewerHistory = () => {
   //履歴を取得
   socket.emit("fetchHistory", {
     RequestSender: {
-      userId: getMyUserinfo.userId,
-      sessionId: getSessionId
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
     },
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
@@ -119,8 +126,8 @@ const fetchNewerHistory = () => {
 
   console.log("/channel/:id :: fetchNewerHistory : 送信したもの->", {
     RequestSender: {
-      userId: getMyUserinfo.userId,
-      sessionId: getSessionId
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
     },
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
@@ -181,8 +188,11 @@ const calculateMessageBorder = (messageIndex:number) => {
   }
 }
 
+// *************  位置監視  ************* //
 //上のスケルトンローダーの位置変数の監視
 watch(atSkeletonOlder, function (newValue, oldValue) {
+  //ロードできてないなら停止
+  if (!stateLoaded) return;
 
   //すでに履歴を取得中の状態なら停止
   if (getAppStatus.value.fetchingHistory) return;
@@ -194,12 +204,15 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
     //console.log("/channel/:id :: watch(atSkeletonOlder) : もとに戻った");
 
     getAppStatus.value.fetchingHistory = true;
-    setTimeout(fetchOlderHistory, 100);
+    setTimeout(fetchOlderHistory, 10);
   }
 });
 
 //下のスケルトンローダーの位置変数の監視
 watch(atSkeletonNewer, function (newValue, oldValue) {
+  //ロードできてないなら停止
+  if (!stateLoaded) return;
+
   //すでに履歴を取得中の状態なら停止
   if (getAppStatus.value.fetchingHistory) return;
 
@@ -210,17 +223,37 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
     //console.log("/channel/:id :: watch(atSkeletonNewer) : REVERSED!");
 
     getAppStatus.value.fetchingHistory = true;
-    setTimeout(fetchNewerHistory, 100);
+    setTimeout(fetchNewerHistory, 10);
   }
 });
 
+//最新のメッセージにいるかどうか
+watch(atLatestMessage, function (newValue, oldValue) {
+  console.log("/channel/:id :: watch(atLatestMessage) : 最新にいそうだな->", newValue);
+
+  //最新メッセから離れたときを除く
+  if (newValue) {
+    //表示している内の最新のメッセージIDを取得
+    const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
+
+    //もし履歴の最後にいるなら更新処理
+    if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
+      //新着があるという状態を解除
+      setHasNewMessage(props.channelInfo.channelId, false);
+      //最新既読Idを更新
+      updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+    }
+  }
+});
+
+// *************  履歴監視の取得状態監視  ************* //
 //履歴の更新を監視
 watch(
   getAppStatus,
   (newValue, oldValue) => {
     nextTick(() => {
       //console.log("/channel/:id :: watch(getHistory...) : 変更された?", newValue, oldValue);
-
+      
       // ❗ ↓新しい方の履歴を取得した際のみ↓ ❗ //
 
       //履歴を取り終えたとき、履歴を取得した位置からスクロールする
@@ -233,12 +266,11 @@ watch(
               getHistoryAvailability(props.channelInfo.channelId).latestFetchedHistoryLength - 1
             ].messageId;
 
-          setTimeout(() => {
-            goTo("#msg" + messageScrolledPosition, {
-              duration: 0,
-              container: "#ChannelContainerContent"
-            });
-          }, 10);
+          goTo("#msg" + messageScrolledPosition, {
+            duration: 0,
+            container: "#ChannelContainerContent",
+            offset: 10
+          });
         } catch(e) {
           //なにもしない
         }
@@ -248,29 +280,106 @@ watch(
   {deep: true}
 );
 
+// *************  ウィンドウフォーカス  ************* //
+//フォーカスしたとき、一番下にいるのなら最新既読Idを更新
+watch(windowFocused, (newValue, oldValue) => {
+  if (
+    newValue
+      &&
+    y.value === 0
+      &&
+    getHistoryAvailability(props.channelInfo.channelId).atEnd
+  ) {
+    //新着状態を消す
+    setHasNewMessage(props.channelInfo.channelId, false);
+    //最新メッセIDを取得
+    const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId;
+    //Storeとサーバーで同期
+    updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+  }
+});
+
+// *************  スクロール関係  ************* //
 //スクロール位置の変更監視して記憶するように
 watch(y, () => {
   //console.log("/channel/:id :: watch(y) : y.value->", y.value);
   sessionStorage.setItem('scrollPositionY::'+props.channelInfo.channelId, y.value.toString());
 });
 
+// *************  チャンネル情報  ************* //
 //チャンネル情報の変更を監視してスクロール位置を戻す
 watch(props, (newProp, oldProp) => {
-  //スクロール位置を取り出し
-  const scrollPosition = sessionStorage.getItem(
-    "scrollPositionY::" + oldProp.channelInfo.channelId
-  );
-  //取り出したものを数値化、nullなら0へ
-  const scrollPositionCalculated = scrollPosition===null ? 0 : parseInt(scrollPosition);
+  nextTick(() => {
 
-  //スクロールする
-  goTo(
-    scrollPositionCalculated,
-    {
-    duration: 0,
-    container: "#ChannelContainerContent"
+    //スクロール位置を取り出し
+    const scrollPosition = sessionStorage.getItem(
+      "scrollPositionY::" + oldProp.channelInfo.channelId
+    );
+    //もしnullなら既読Idへスクロールしてみる
+    if (scrollPosition === null) {
+      //スクロールする
+      goTo(
+        "#msg" + getMessageReadId(props.channelInfo.channelId),
+        {
+        duration: 0,
+        container: "#ChannelContainerContent"
+        }
+      );
+      //そして終わる
+      return;
     }
-  );
+
+    //取り出したものを数値化、nullなら0へ
+    const scrollPositionCalculated = parseInt(scrollPosition);
+
+    //スクロールする、もともと一番下なら最新既読メッセIDへスクロール
+    // if (scrollPositionCalculated !== 0) {
+    //   goTo(
+    //     scrollPositionCalculated,
+    //     {
+    //     duration: 0,
+    //     container: "#ChannelContainerContent"
+    //     }
+    //   );
+    // } else {
+    //   console.log("/channel/:id :: 最新既読Idへ", "#msg" + getMessageReadId(props.channelInfo.channelId));
+    //   goTo(
+    //     "#msg" + getMessageReadId(props.channelInfo.channelId),
+    //     {
+    //     duration: 0,
+    //     container: "#ChannelContainerContent"
+    //     }
+    //   );
+    // }
+
+    console.log("/channel/:id :: 最新既読Idへ", "#msg" + getMessageReadId(props.channelInfo.channelId));
+    if (
+      document.getElementById("#msg" + getMessageReadId(props.channelInfo.channelId))
+        !==
+      undefined
+    ) {
+      goTo(
+        "#msg" + getMessageReadId(props.channelInfo.channelId),
+        {
+        duration: 0,
+        container: "#ChannelContainerContent",
+        offset: 10
+        }
+      );
+    }
+
+    //もし履歴の最後にいるなら新着を消す
+    if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
+      setHasNewMessage(props.channelInfo.channelId, false);
+    }
+
+    //移動前のチャンネル用の最新既読IdBeforeを更新
+    updateMessageReadIdBefore(oldProp.channelInfo.channelId);
+
+    //ロードできたと設定
+    stateLoaded.value = true;
+
+  });
 });
 
 </script>
@@ -311,10 +420,20 @@ watch(props, (newProp, oldProp) => {
         position="relative"
       >
 
-        <MessageRender
-          :message="message"
-          :borderClass="calculateMessageBorder(index)"
-        />
+        <span v-if="index===0" ref="latestMessageAnchor">
+          <MessageRender
+            :message="message"
+            :index
+            :borderClass="calculateMessageBorder(index)"
+          />
+        </span>
+        <span v-else>
+          <MessageRender
+            :message="message"
+            :index
+            :borderClass="calculateMessageBorder(index)"
+          />
+        </span>
 
       </div>
 
@@ -387,5 +506,4 @@ watch(props, (newProp, oldProp) => {
 
   margin: 4px 0;
 }
-
 </style>

@@ -3,6 +3,7 @@
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useHistory } from "~/stores/history";
 import { useAppStatus } from '~/stores/AppStatus';
+import { useMessageReadId } from "~/stores/messageReadId";
 import type message from "~/types/message";
 
 export default function fetchHistory(socket:Socket):void {
@@ -53,5 +54,18 @@ export default function fetchHistory(socket:Socket):void {
         latestFetchedHistoryLength: dat.data.historyData.history.length
       }
     );
+
+    //最新既読Idと最後のメッセージ比較して新着を設定
+    const { setHasNewMessage, getHistoryFromChannel } = useHistory();
+    const { getMessageReadId } = useMessageReadId();
+    if (getHistoryAvailability(dat.data.channelId).atEnd) {
+      if (
+        getHistoryFromChannel(dat.data.channelId)[0].messageId
+          !==
+        getMessageReadId(dat.data.channelId)
+      ) {
+        setHasNewMessage(dat.data.channelId, true);
+      }
+    }
   });
 }

@@ -2,9 +2,14 @@
 import { useMyUserinfo } from '~/stores/userinfo';
 import { useServerinfo } from '~/stores/serverinfo';
 import { useChannelinfo } from "~/stores/channel";
+import { useHistory } from '~/stores/history';
+import { useMessageReadId } from '~/stores/messageReadId';
+
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
+const { getHistoryFromChannel, getHistoryAvailability, getHasNewMessage } = useHistory();
+const { getMessageReadId } = useMessageReadId();
 
 const router = useRouter();
 const route = useRoute();
@@ -13,6 +18,24 @@ const route = useRoute();
  * data
  */
 const currentPath = ref<string>(""); //チャンネルID
+
+/**
+ * 最新のメッセージと違うかどうか
+ */
+const IsItNew = (channelId: string) => {
+    try {
+      //そもそも履歴の最後を持っていないなら新着
+      if (!getHistoryAvailability(channelId).atEnd) {
+        return true;
+      }
+      //最新メッセージのメッセIDと最新既読Idが違うならこれは新着
+      if (getHistoryFromChannel(channelId)[0].messageId !== getMessageReadId(channelId)) {
+        return true
+      }
+  } catch(e) {}
+
+  return false;
+}
 
 onMounted(() => {
   //なぜかpathが配列ならブラウザへ
@@ -39,6 +62,7 @@ onMounted(() => {
     >
       <v-icon class="mr-1" size="small">mdi-pound</v-icon>
       <p>{{ getChannelinfoSingle(channelId)?.channelName }}</p>
+      <v-icon v-if="getHasNewMessage(channelId)" class="ml-auto">mdi-circle-medium</v-icon>
     </m-card-compact>
   </div>
 </template>

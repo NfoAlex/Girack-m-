@@ -8,6 +8,7 @@ export const useAppStatus = defineStore("appstatus", {
     _AppStatus: {
       connected: false,
       fetchingHistory: false,
+      hasMessageReadId: false,
       profile: {
         authDone: false,
         UserinfoLoaded: false

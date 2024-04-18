@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { useUserIndex } from '~/stores/userindex';
+import { useMessageReadId } from '~/stores/messageReadId';
 import HoverMenu from './MessageRender/HoverMenu.vue';
 import EmojiRender from './MessageRender/EmojiRender.vue';
 import TextRender from './MessageRender/TextRender.vue';
 import type message from '~/types/message';
 
 const { getUserinfo } = useUserIndex();
+const { getMessageReadIdBefore } = useMessageReadId();
 
 const userIdForDialog = ref<string>("");
 const displayUserpage = ref<boolean>(false);
 
 const propsMessage = defineProps<{
   message: message,
+  index: number,
   borderClass: string,
 }>();
 
@@ -84,6 +87,36 @@ const propsMessage = defineProps<{
 
         </div>
       </div>
+
+      <!-- 新着メッセージ表示 -->
+      <span
+        v-if="
+          (
+            getMessageReadIdBefore(propsMessage.message.channelId)
+              ===
+            propsMessage.message.messageId
+          )
+            &&
+          propsMessage.index !== 0
+        "
+        class="d-flex align-center"
+        style="margin-top:-10px; margin-bottom:-10px;"
+      >
+        <v-divider
+          color="secondary"
+        />
+        <v-chip
+          class="flex-shrink-0"
+          size="x-small"
+          color="secondary"
+          variant="flat"
+        >
+          ここから新着
+        </v-chip>
+        <v-divider
+          color="secondary"
+        />
+      </span>
       
     </template>
 

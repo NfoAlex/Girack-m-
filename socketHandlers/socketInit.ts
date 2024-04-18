@@ -16,6 +16,7 @@ import updateMessage from "./updateMessage";
 import fetchUserInfo from "./fetchUserInfo";
 import fetchUserConfig from "./fetchUserConfig";
 import saveUserConfig from "./saveUserConfig";
+import getMessageReadId from "./getMessageReadId";
 
 import fetchRoles from "./fetchRoles";
 import fetchRoleSingle from "./fetchRoleSingle";
@@ -53,6 +54,7 @@ export function loadSocket() {
   fetchUserInfo(socket); //自ユーザー情報
   fetchUserConfig(socket); //設定データ
   saveUserConfig(socket); //設定データの保存結果
+  getMessageReadId(socket); //最新既読Id取得
 
   fetchRoles(socket); //全ロール受け取り
   fetchRoleSingle(socket); //単一ロール受け取り
