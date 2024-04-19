@@ -58,7 +58,11 @@ export default function fetchHistory(socket:Socket):void {
     //最新既読Idと最後のメッセージ比較して新着を設定
     const { setHasNewMessage, getHistoryFromChannel } = useHistory();
     const { getMessageReadId } = useMessageReadId();
-    if (getHistoryAvailability(dat.data.channelId).atEnd) {
+    if (
+      getHistoryAvailability(dat.data.channelId).atEnd
+      &&
+      getHistoryFromChannel(dat.data.channelId).length !== 0
+    ) {
       if (
         getHistoryFromChannel(dat.data.channelId)[0].messageId
           !==
