@@ -112,7 +112,7 @@ export const useHistory = defineStore("history", {
     addMessage(message:message) {
       //もし特定のチャンネル用の履歴JSONが空なら作る
       if (this._History[message.channelId] === undefined) {
-        this._History[message.channelId] = [];
+        return;
       }
 
       //履歴の最新にいるときのみ更新する
