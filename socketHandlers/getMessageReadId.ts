@@ -17,6 +17,9 @@ export default function getMessageReadId(socket: Socket): void {
    const { setMessageReadId } = useMessageReadId();
    const { getAppStatus } = storeToRefs(useAppStatus());
 
+   //最新のメッセージ既読Idを格納
+   setMessageReadId(dat.data);
+
    //もし初回の受信なら履歴を取得
    if (!getAppStatus.value.hasMessageReadId) {
      //参加しているチャンネルの数分ループして取得
@@ -38,8 +41,6 @@ export default function getMessageReadId(socket: Socket): void {
     }
    }
 
-   //最新のメッセージ既読Idを格納
-   setMessageReadId(dat.data);
     //最新既読Idを持っていると設定
    getAppStatus.value.hasMessageReadId = true;
   });
