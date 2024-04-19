@@ -60,7 +60,7 @@ export default function fetchHistory(socket:Socket):void {
     const { getMessageReadId } = useMessageReadId();
     if (
       getHistoryAvailability(dat.data.channelId).atEnd
-      &&
+        &&
       getHistoryFromChannel(dat.data.channelId).length !== 0
     ) {
       if (
