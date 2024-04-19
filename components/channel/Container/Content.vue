@@ -71,6 +71,7 @@ const fetchOlderHistory = () => {
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
       positionMessageId: oldestMessageId,
+      includeThisPosition: false,
       fetchDirection: "older"
     }
   });
@@ -117,6 +118,7 @@ const fetchNewerHistory = () => {
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
       positionMessageId: newestMessageId,
+      includeThisPosition: false,
       fetchDirection: "newer"
     }
   });
@@ -353,6 +355,7 @@ watch(props, (newProp, oldProp) => {
     // }
 
     console.log("/channel/:id :: 最新既読Idへ", "#msg" + getMessageReadId(props.channelInfo.channelId));
+    //最新既読Idへスクロール、ないなら一番古いやつへ
     if (
       document.getElementById("#msg" + getMessageReadId(props.channelInfo.channelId))
         !==
