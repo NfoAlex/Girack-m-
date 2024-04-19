@@ -21,23 +21,23 @@ export default function fetchUserInfo(socket:Socket):void {
 
       //最初の自情報ロードなら履歴を取得する
       const { getAppStatus } = storeToRefs(useAppStatus());
-      if (!getAppStatus.value.profile.UserinfoLoaded) {
-        //参加しているチャンネルの数分ループ
-        for (let channelId of dat.data.channelJoined) {
-          //履歴を取得
-          socket.emit("fetchHistory", {
-            RequestSender: {
-              userId: getMyUserinfo.userId,
-              sessionId: getSessionId
-            },
-            channelId: channelId,
-            fetchingPosition: {
-              positionMessageId: "", //最新からとるために空(将来的に既読時間からやるようにする)
-              fetchDirection: "older"
-            }
-          });
-        }
-      }
+      // if (!getAppStatus.value.profile.UserinfoLoaded) {
+      //   //参加しているチャンネルの数分ループ
+      //   for (let channelId of dat.data.channelJoined) {
+      //     //履歴を取得
+      //     socket.emit("fetchHistory", {
+      //       RequestSender: {
+      //         userId: getMyUserinfo.userId,
+      //         sessionId: getSessionId
+      //       },
+      //       channelId: channelId,
+      //       fetchingPosition: {
+      //         positionMessageId: "", //最新からとるために空(将来的に既読時間からやるようにする)
+      //         fetchDirection: "older"
+      //       }
+      //     });
+      //   }
+      // }
 
       //自ユーザー情報格納
       const MyUserinfo = useMyUserinfo();
