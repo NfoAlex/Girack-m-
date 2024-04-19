@@ -1,5 +1,7 @@
 //履歴保存、管理
 import { defineStore } from "pinia";
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "./userinfo";
 
 import type message from "~/types/message";
 
@@ -55,7 +57,27 @@ export const useHistory = defineStore("history", {
       //もし特定のチャンネル用の履歴JSONが空なら作る
       if (state._History[channelId] === undefined) {
         state._History[channelId] = [];
+        state._Availability[channelId] = {
+          atTop: false,
+          atEnd: false,
+          latestFetchedHistoryLength: 0
+        };
+
+        //履歴を取得
+        const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+        socket.emit("fetchHistory", {
+          RequestSender: {
+            userId: getMyUserinfo.value.userId,
+            sessionId: getSessionId.value
+          },
+          channelId: channelId,
+          fetchingPosition: {
+            positionMessageId: "",
+            fetchDirection: "older"
+          }
+        });
       }
+
       return state._History[channelId];
     },
 
