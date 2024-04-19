@@ -31,7 +31,7 @@ export default function getMessageReadId(socket: Socket): void {
         channelId: channelId,
         fetchingPosition: {
           positionMessageId: dat.data[channelId],
-          fetchDirection: "newer"
+          fetchDirection: "older"
         }
       });
     }
