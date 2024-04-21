@@ -7,7 +7,7 @@ import type message from "~/types/message";
 export const useHistory = defineStore("history", {
   state: () => 
   ({
-    _History: {
+    _History: { //履歴データ
       /*
       "0001": [
         {
@@ -19,7 +19,7 @@ export const useHistory = defineStore("history", {
       ]
       */
     },
-    _Availability: {
+    _Availability: { //履歴の取得状態
       /*
       "0001": {
         atTop: false,
@@ -28,9 +28,19 @@ export const useHistory = defineStore("history", {
       }
       */
     },
-    _HasNewMessage: {
+    _HasNewMessage: { //新着があるかどうか状態
       /*
       "0001":false
+      }
+      */
+    },
+    _LatestMessage: { //それぞれのチャンネルの最新メッセージになるもの
+      /*
+      "0001": {
+        messageId: "98172389",
+        userId: "011198289",
+        content: "asdf",
+        ...
       }
       */
     }
@@ -47,6 +57,9 @@ export const useHistory = defineStore("history", {
     },
     _HasNewMessage: {
       [key: string]: boolean
+    },
+    _LatestMessage: {
+      [key: string]: message
     }
   }),
   
@@ -89,6 +102,11 @@ export const useHistory = defineStore("history", {
       }
       //そのまま返す
       return state._HasNewMessage[channelId];
+    },
+
+    //対象チャンネルの最新のメッセージ取得
+    getLatestMessage:(state) => (channelId:string) => {
+      return state._LatestMessage[channelId];
     }
   },
 
