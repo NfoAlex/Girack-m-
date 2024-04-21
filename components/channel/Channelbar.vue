@@ -61,8 +61,13 @@ onMounted(() => {
       width="100%"
     >
       <v-icon class="mr-1" size="small">mdi-pound</v-icon>
-      <p>{{ getChannelinfoSingle(channelId)?.channelName }}</p>
-      <v-icon v-if="getHasNewMessage(channelId)" class="ml-auto">mdi-circle-medium</v-icon>
+      <p class="flex-shrink-1 text-truncate">{{ getChannelinfoSingle(channelId)?.channelName }}</p>
+      <v-icon
+        v-if="getHasNewMessage(channelId)"
+        class="ml-auto flex-shrink-0"
+      >
+        mdi-circle-medium
+      </v-icon>
     </m-card-compact>
   </div>
 </template>
