@@ -80,6 +80,12 @@ export default function fetchHistory(socket:Socket):void {
       ) {
         setHasNewMessage(dat.data.channelId, true);
       }
+    } else if ( //履歴取得時にこれが最初の格納で、最新でないなら新着と設定
+      !getHistoryAvailability(dat.data.channelId).atEnd
+        &&
+      getLatestMessage(dat.data.channelId).messageId === "UNDEFINED"
+    ) {
+      setHasNewMessage(dat.data.channelId, true);
     }
   });
 }
