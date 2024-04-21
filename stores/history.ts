@@ -191,6 +191,11 @@ export const useHistory = defineStore("history", {
         return;
       }
 
+      //もし挿入先が0からそのまま代入
+      if (this._History[channelId].length === 0) {
+        this._History[channelId] = historyInserting;
+      }
+
       // console.log("history :: insertHistory : 時間の比較 履歴データ最新->", parseInt(this._History[channelId][0].time),
       //   " 挿入データの最後->", parseInt(historyInserting[1].time)
       // );
