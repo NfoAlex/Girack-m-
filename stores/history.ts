@@ -262,6 +262,14 @@ export const useHistory = defineStore("history", {
     //最新メッセを更新する
     setLatestmessage(channelId:string, message:message) {
       this._LatestMessage[channelId] = message;
+    },
+
+    //指定のチャンネルのデータ削除
+    deleteHistoryData(channelId:string) {
+      delete this._History[channelId];
+      delete this._Availability[channelId];
+      delete this._HasNewMessage[channelId];
+      delete this._LatestMessage[channelId];
     }
   }
 });
