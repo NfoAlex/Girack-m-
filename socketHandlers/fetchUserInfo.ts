@@ -39,6 +39,16 @@ export default function fetchUserInfo(socket:Socket):void {
       //   }
       // }
 
+      //もし初回の自情報ロードなら最新既読Idを取得
+      if (!getAppStatus.value.profile.UserinfoLoaded) {
+        socket.emit("getMessageReadId", {
+          RequestSender: {
+            userId: dat.data.userId,
+            sessionId: getSessionId
+          }
+        });
+      }
+
       //自ユーザー情報格納
       const MyUserinfo = useMyUserinfo();
       MyUserinfo.updateMyUserinfo(dat.data);

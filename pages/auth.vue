@@ -95,13 +95,13 @@ const initialize = (userId:string, sessionId:string) => {
     });
   }
 
-  //メッセージの最新既読Idを取得
-  socket.emit("getMessageReadId", {
-    RequestSender: {
-      userId: userId,
-      sessionId: sessionId
-    }
-  });
+  // //メッセージの最新既読Idを取得
+  // socket.emit("getMessageReadId", {
+  //   RequestSender: {
+  //     userId: userId,
+  //     sessionId: sessionId
+  //   }
+  // });
 
   //ログイン状態を完了と設定
   getAppStatus.value.profile.authDone = true;
