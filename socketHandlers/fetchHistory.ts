@@ -23,7 +23,13 @@ export default function fetchHistory(socket:Socket):void {
   ) => {
     console.log("fetchHistory :: socketon(fetchHistory) : dat->", dat);
 
-    const { getHistoryAvailability, insertHistory, setAvailability, setLatestmessage } = useHistory(); //piniaのActionsインポート
+    const {
+      getHistoryAvailability,
+      getLatestMessage,
+      insertHistory,
+      setAvailability,
+      setLatestmessage
+    } = useHistory(); //piniaのActionsインポート
 
     //もし履歴データがnullならホルダーだけ作って終わり
     if (dat.data.historyData === null) {
@@ -68,7 +74,7 @@ export default function fetchHistory(socket:Socket):void {
       getHistoryFromChannel(dat.data.channelId).length !== 0
     ) {
       if (
-        getHistoryFromChannel(dat.data.channelId)[0].messageId
+        getLatestMessage(dat.data.channelId).messageId
           !==
         getMessageReadId(dat.data.channelId)
       ) {
