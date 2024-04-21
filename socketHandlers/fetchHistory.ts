@@ -57,7 +57,7 @@ export default function fetchHistory(socket:Socket):void {
     //履歴をStoreへ格納
     insertHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
     //この履歴が一番最新のものなら最新メッセージを更新
-    if (dat.data.historyData.atEnd) {
+    if (dat.data.historyData.atEnd && dat.data.historyData.history[0] !== undefined) {
       setLatestmessage(dat.data.channelId, dat.data.historyData.history[0]);
     }
 
