@@ -23,7 +23,7 @@ export default function fetchHistory(socket:Socket):void {
   ) => {
     console.log("fetchHistory :: socketon(fetchHistory) : dat->", dat);
 
-    const { getHistoryAvailability, insertHistory, setAvailability } = useHistory(); //piniaのActionsインポート
+    const { getHistoryAvailability, insertHistory, setAvailability, setLatestmessage } = useHistory(); //piniaのActionsインポート
 
     //もし履歴データがnullならホルダーだけ作って終わり
     if (dat.data.historyData === null) {
@@ -50,6 +50,10 @@ export default function fetchHistory(socket:Socket):void {
     
     //履歴をStoreへ格納
     insertHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
+    //この履歴が一番最新のものなら最新メッセージを更新
+    if (dat.data.historyData.atEnd) {
+      setLatestmessage(dat.data.channelId, dat.data.historyData.history[0]);
+    }
 
     //履歴取得中であることを無効化
     const { getAppStatus } = storeToRefs(useAppStatus());
