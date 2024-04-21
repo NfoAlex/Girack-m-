@@ -36,13 +36,6 @@ export default function fetchHistory(socket:Socket):void {
         }
       );
     }
-    
-    //履歴をStoreへ格納
-    insertHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
-
-    //履歴取得中であることを無効化
-    const { getAppStatus } = storeToRefs(useAppStatus());
-    getAppStatus.value.fetchingHistory = false;
 
     //履歴の位置データ保存
     setAvailability(dat.data.channelId,
@@ -54,6 +47,13 @@ export default function fetchHistory(socket:Socket):void {
         latestFetchedHistoryLength: dat.data.historyData.history.length
       }
     );
+    
+    //履歴をStoreへ格納
+    insertHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
+
+    //履歴取得中であることを無効化
+    const { getAppStatus } = storeToRefs(useAppStatus());
+    getAppStatus.value.fetchingHistory = false;
 
     //最新既読Idと最後のメッセージ比較して新着を設定
     const { setHasNewMessage, getHistoryFromChannel } = useHistory();
