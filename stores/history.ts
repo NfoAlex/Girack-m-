@@ -1,12 +1,13 @@
 //履歴保存、管理
 import { defineStore } from "pinia";
+import { useMessageReadId } from "./messageReadId";
 
 import type message from "~/types/message";
 
 export const useHistory = defineStore("history", {
   state: () => 
   ({
-    _History: {
+    _History: { //履歴データ
       /*
       "0001": [
         {
@@ -18,7 +19,7 @@ export const useHistory = defineStore("history", {
       ]
       */
     },
-    _Availability: {
+    _Availability: { //履歴の取得状態
       /*
       "0001": {
         atTop: false,
@@ -27,9 +28,19 @@ export const useHistory = defineStore("history", {
       }
       */
     },
-    _HasNewMessage: {
+    _HasNewMessage: { //新着があるかどうか状態
       /*
       "0001":false
+      }
+      */
+    },
+    _LatestMessage: { //それぞれのチャンネルの最新メッセージになるもの
+      /*
+      "0001": {
+        messageId: "98172389",
+        userId: "011198289",
+        content: "asdf",
+        ...
       }
       */
     }
@@ -46,6 +57,9 @@ export const useHistory = defineStore("history", {
     },
     _HasNewMessage: {
       [key: string]: boolean
+    },
+    _LatestMessage: {
+      [key: string]: message
     }
   }),
   
@@ -55,7 +69,13 @@ export const useHistory = defineStore("history", {
       //もし特定のチャンネル用の履歴JSONが空なら作る
       if (state._History[channelId] === undefined) {
         state._History[channelId] = [];
+        state._Availability[channelId] = {
+          atTop: false,
+          atEnd: false,
+          latestFetchedHistoryLength: 0
+        };
       }
+
       return state._History[channelId];
     },
 
@@ -82,6 +102,25 @@ export const useHistory = defineStore("history", {
       }
       //そのまま返す
       return state._HasNewMessage[channelId];
+    },
+
+    //対象チャンネルの最新のメッセージ取得
+    getLatestMessage:(state) => (channelId:string) => {
+      //undefinedでないならそのまま返す、そうならホルダー作成してそれを返す
+      if (state._LatestMessage[channelId] !== undefined) {
+        return state._LatestMessage[channelId];
+      } else {
+        const blankMessage:message = {
+          messageId: "UNDEFINED",
+          channelId: "UNDEFINED",
+          userId: "UNDEFINED",
+          content: "",
+          time: "",
+          reaction: {}
+        };
+
+        return blankMessage;
+      }
     }
   },
 
@@ -90,7 +129,7 @@ export const useHistory = defineStore("history", {
     addMessage(message:message) {
       //もし特定のチャンネル用の履歴JSONが空なら作る
       if (this._History[message.channelId] === undefined) {
-        this._History[message.channelId] = [];
+        return;
       }
 
       //履歴の最新にいるときのみ更新する
@@ -102,6 +141,9 @@ export const useHistory = defineStore("history", {
           this._History[message.channelId].splice(60);
           this._Availability[message.channelId].atTop = false;
         }
+
+        //最新メッセージを更新
+        this._LatestMessage[message.channelId] = message;
       }
     },
 
@@ -149,6 +191,11 @@ export const useHistory = defineStore("history", {
         return;
       }
 
+      //もし挿入先が0からそのまま代入
+      if (this._History[channelId].length === 0) {
+        this._History[channelId] = historyInserting;
+      }
+
       // console.log("history :: insertHistory : 時間の比較 履歴データ最新->", parseInt(this._History[channelId][0].time),
       //   " 挿入データの最後->", parseInt(historyInserting[1].time)
       // );
@@ -165,7 +212,7 @@ export const useHistory = defineStore("history", {
         //console.log("history :: insertHistory : 新しいのを挿入した履歴の長さ->", this._History[channelId].length);
 
         //履歴データが60以上あるなら古い方を削る
-        if (this._History[channelId].length > 61) {
+        if (this._History[channelId].length >= 65) {
           this._History[channelId].splice(30);
           //削っているので最後にいるかどうかは必ずfalseになるはず
           this._Availability[channelId].atTop = false;
@@ -177,7 +224,7 @@ export const useHistory = defineStore("history", {
         //console.log("history :: insertHistory : 古いのを挿入した履歴の長さ->", this._History[channelId].length);
 
         //履歴データが60以上あるなら新しい方を削る
-        if (this._History[channelId].length > 61) {
+        if (this._History[channelId].length >= 65) {
           this._History[channelId].splice(0,30);
           //削っているので先頭にいるかどうかは必ずfalseになるはず
           this._Availability[channelId].atEnd = false;
@@ -210,6 +257,19 @@ export const useHistory = defineStore("history", {
     //新着があるかを設定
     setHasNewMessage(channelId:string, hasNewMessage:boolean) {
       this._HasNewMessage[channelId] = hasNewMessage;
+    },
+
+    //最新メッセを更新する
+    setLatestmessage(channelId:string, message:message) {
+      this._LatestMessage[channelId] = message;
+    },
+
+    //指定のチャンネルのデータ削除
+    deleteHistoryData(channelId:string) {
+      delete this._History[channelId];
+      delete this._Availability[channelId];
+      delete this._HasNewMessage[channelId];
+      delete this._LatestMessage[channelId];
     }
   }
 });

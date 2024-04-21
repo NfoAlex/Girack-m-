@@ -37,7 +37,7 @@ const parseVNode = () => {
     if (URLFilteringRegex === null) return;
 
     for (let index in URLMatched.value) {
-      console.log("URL->", URLMatched.value[index]);
+      //console.log("URL->", URLMatched.value[index]);
       //レンダーするURL要素を追加
       VNodeRenderingIndex.value["Index" + index] = {
         type: "link",
@@ -90,7 +90,7 @@ const createRegex = ():RegExp|null => {
   //URLがnullならnullで返す
   if (UrlMatchedArr === null) return null;
 
-  console.log("createRegex :: UrlMatched->", UrlMatchedArr.length - 1);
+  //console.log("createRegex :: UrlMatched->", UrlMatchedArr.length - 1);
 
   for (let index in UrlMatchedArr) {
     //Regexに追加する用URLの変数

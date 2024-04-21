@@ -30,7 +30,7 @@ export default function receiveMessage(socket: Socket): void {
       //ウィンドウへのフォーカスを取得
       const windowFocused = useWindowFocus()
       
-      //判別
+      //新着判別
       if (
         route.params.id === message.channelId
         &&

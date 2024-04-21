@@ -19,10 +19,10 @@ const roleLevel:{
 */
 
 export default function calcMyRole() {
-  //自分が持っている権限データ取得
-  const roleDataChecking = getMyRolePower();
-
   try {
+
+    //自分が持っている権限データ取得
+    const roleDataChecking = getMyRolePower();
 
     //権限をそれぞれ調べてレベルを返す
     if (roleDataChecking.ServerManage) {

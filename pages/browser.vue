@@ -93,17 +93,30 @@ const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
  * チャンネル参加結果受け取り
  * @param dat
  */
-const SOCKETjoinChannel = (dat:{result:string, data:boolean}) => {
+const SOCKETjoinChannel = (dat:{result:string, data:string}) => {
   console.log("browser :: SOCKETjoinChannel : dat->", dat);
-  //成功なら自分のユーザー情報を取得して更新する
+  //成功なら自分のユーザー情報と履歴を取得して更新する
   if (dat.result === "SUCCESS") {
-    //取得
+    //自分情報取得
     socket.emit("fetchUserInfo", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
         sessionId: getSessionId.value
       },
       userId: getMyUserinfo.value.userId
+    });
+    //履歴
+    socket.emit("fetchHistory", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      channelId: dat.data,
+      fetchingPosition: {
+        positionMessageId: '',
+        includeThisPosition: true,
+        fetchDirection: "older"
+      }
     });
   }
 }

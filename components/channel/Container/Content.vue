@@ -71,6 +71,7 @@ const fetchOlderHistory = () => {
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
       positionMessageId: oldestMessageId,
+      includeThisPosition: false,
       fetchDirection: "older"
     }
   });
@@ -117,6 +118,7 @@ const fetchNewerHistory = () => {
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
       positionMessageId: newestMessageId,
+      includeThisPosition: false,
       fetchDirection: "newer"
     }
   });
@@ -229,7 +231,7 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 
 //最新のメッセージにいるかどうか
 watch(atLatestMessage, function (newValue, oldValue) {
-  console.log("/channel/:id :: watch(atLatestMessage) : 最新にいそうだな->", newValue);
+  //console.log("/channel/:id :: watch(atLatestMessage) : 最新にいそうだな->", newValue);
 
   //最新メッセから離れたときを除く
   if (newValue) {
@@ -353,6 +355,7 @@ watch(props, (newProp, oldProp) => {
     // }
 
     console.log("/channel/:id :: 最新既読Idへ", "#msg" + getMessageReadId(props.channelInfo.channelId));
+    //最新既読Idへスクロール、ないなら一番古いやつへ
     if (
       document.getElementById("#msg" + getMessageReadId(props.channelInfo.channelId))
         !==
@@ -366,6 +369,20 @@ watch(props, (newProp, oldProp) => {
         offset: 10
         }
       );
+    } else {
+      //このチャンネルの履歴長取得
+      const historyLength = getHistoryFromChannel(props.channelInfo.channelId).length;
+      //空じゃないならスクロール
+      if (historyLength !== 0) {
+        const oldestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[historyLength-1];
+        goTo(
+          "#msg" + oldestMessageId,
+          {
+            duration: 0,
+            container: "#ChannelContainerContent",
+          }
+        );
+      }
     }
 
     //もし履歴の最後にいるなら新着を消す

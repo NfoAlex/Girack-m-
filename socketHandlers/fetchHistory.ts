@@ -23,7 +23,13 @@ export default function fetchHistory(socket:Socket):void {
   ) => {
     console.log("fetchHistory :: socketon(fetchHistory) : dat->", dat);
 
-    const { getHistoryAvailability, insertHistory, setAvailability } = useHistory(); //piniaのActionsインポート
+    const {
+      getHistoryAvailability,
+      getLatestMessage,
+      insertHistory,
+      setAvailability,
+      setLatestmessage
+    } = useHistory(); //piniaのActionsインポート
 
     //もし履歴データがnullならホルダーだけ作って終わり
     if (dat.data.historyData === null) {
@@ -36,13 +42,6 @@ export default function fetchHistory(socket:Socket):void {
         }
       );
     }
-    
-    //履歴をStoreへ格納
-    insertHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
-
-    //履歴取得中であることを無効化
-    const { getAppStatus } = storeToRefs(useAppStatus());
-    getAppStatus.value.fetchingHistory = false;
 
     //履歴の位置データ保存
     setAvailability(dat.data.channelId,
@@ -54,18 +53,39 @@ export default function fetchHistory(socket:Socket):void {
         latestFetchedHistoryLength: dat.data.historyData.history.length
       }
     );
+    
+    //履歴をStoreへ格納
+    insertHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
+    //この履歴が一番最新のものなら最新メッセージを更新
+    if (dat.data.historyData.atEnd) {
+      setLatestmessage(dat.data.channelId, dat.data.historyData.history[0]);
+    }
+
+    //履歴取得中であることを無効化
+    const { getAppStatus } = storeToRefs(useAppStatus());
+    getAppStatus.value.fetchingHistory = false;
 
     //最新既読Idと最後のメッセージ比較して新着を設定
     const { setHasNewMessage, getHistoryFromChannel } = useHistory();
     const { getMessageReadId } = useMessageReadId();
-    if (getHistoryAvailability(dat.data.channelId).atEnd) {
+    if (
+      getHistoryAvailability(dat.data.channelId).atEnd
+        &&
+      getHistoryFromChannel(dat.data.channelId).length !== 0
+    ) {
       if (
-        getHistoryFromChannel(dat.data.channelId)[0].messageId
+        getLatestMessage(dat.data.channelId).messageId
           !==
         getMessageReadId(dat.data.channelId)
       ) {
         setHasNewMessage(dat.data.channelId, true);
       }
+    } else if ( //履歴取得時にこれが最初の格納で、最新でないなら新着と設定
+      !getHistoryAvailability(dat.data.channelId).atEnd
+        &&
+      getLatestMessage(dat.data.channelId).messageId === "UNDEFINED"
+    ) {
+      setHasNewMessage(dat.data.channelId, true);
     }
   });
 }
