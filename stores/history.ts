@@ -127,6 +127,9 @@ export const useHistory = defineStore("history", {
           this._History[message.channelId].splice(60);
           this._Availability[message.channelId].atTop = false;
         }
+
+        //最新メッセージを更新
+        this._LatestMessage[message.channelId] = message;
       }
     },
 
