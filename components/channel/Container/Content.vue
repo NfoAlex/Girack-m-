@@ -231,7 +231,7 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 
 //最新のメッセージにいるかどうか
 watch(atLatestMessage, function (newValue, oldValue) {
-  console.log("/channel/:id :: watch(atLatestMessage) : 最新にいそうだな->", newValue);
+  //console.log("/channel/:id :: watch(atLatestMessage) : 最新にいそうだな->", newValue);
 
   //最新メッセから離れたときを除く
   if (newValue) {
