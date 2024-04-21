@@ -62,6 +62,12 @@ export const useMessageReadId = defineStore("messagereadid", {
       //ひとつ前の最新既読Idを更新
       this._MessageReadIdBefore[channelId] = this._MessageReadId[channelId];
     },
+
+    //最新メッセージを削除
+    deleteMessageReadId(channelId:string) {
+      delete this._MessageReadId[channelId];
+      delete this._MessageReadIdBefore[channelId];
+    }
   }
 });
 

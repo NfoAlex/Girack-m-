@@ -2,6 +2,8 @@
 
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useMyUserinfo } from "~/stores/userinfo";
+import { useHistory } from "~/stores/history";
+import { useMessageReadId } from "~/stores/messageReadId";
 
 export default function leaveChannel(socket: Socket): void {
   const { getMyUserinfo } = storeToRefs(useMyUserinfo());
@@ -21,6 +23,11 @@ export default function leaveChannel(socket: Socket): void {
         ...getMyUserinfo.value,
         channelJoined: channelJoinedSpliced
       });
+      //履歴Storeと最新既読Idのデータを削除
+      const { deleteHistoryData } = useHistory();
+      const { deleteMessageReadId } = useMessageReadId();
+      deleteHistoryData(dat.data);
+      deleteMessageReadId(dat.data);
     }
   });
 }
