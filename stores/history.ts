@@ -177,6 +177,11 @@ export const useHistory = defineStore("history", {
         return;
       }
 
+      //もし履歴の最後なのなら最新メッセを更新
+      if (this._Availability[channelId].atEnd) {
+        this._LatestMessage[channelId] = historyInserting[0];
+      }
+
       // console.log("history :: insertHistory : 時間の比較 履歴データ最新->", parseInt(this._History[channelId][0].time),
       //   " 挿入データの最後->", parseInt(historyInserting[1].time)
       // );
