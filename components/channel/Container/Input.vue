@@ -19,6 +19,9 @@ const messageInput = ref<string>("");
  * Enterキーの処理
  */
 const triggerEnter = (event:Event) => {
+  //メッセージが空なら停止
+  if (messageInput.value === "" || messageInput.value === " ") return;
+
   //console.log("/channel/:id :: triggerEnter : Enterメッセージ->", messageInput.value, event, props);
   socket.emit("sendMessage", {
     RequestSender: {
