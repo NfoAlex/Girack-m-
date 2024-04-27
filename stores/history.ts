@@ -138,15 +138,16 @@ export const useHistory = defineStore("history", {
       //履歴の最新にいるときのみ更新する
       if (this._Availability[message.channelId].atEnd) {
         //もし履歴の一番最後が最新既読と一緒なら停止
-        const { getMessageReadId } = useMessageReadId();
-        if (
-          this._History[message.channelId][this._History[message.channelId].length-1].messageId
-            ===
-          getMessageReadId(message.channelId)
-        ) {
-          return;
-        }
-
+        try {
+          const { getMessageReadId } = useMessageReadId();
+          if (
+            this._History[message.channelId][this._History[message.channelId].length-1].messageId
+              ===
+            getMessageReadId(message.channelId)
+          ) {
+            return;
+          }
+        } catch(e) {}
 
         //履歴が61以上あるなら古い方を1つ削除してトップにいないと設定
         if (this._History[message.channelId].length > 61) {
