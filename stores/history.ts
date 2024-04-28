@@ -149,7 +149,9 @@ export const useHistory = defineStore("history", {
             ) {
               return;
             }
-          } catch(e) {}
+          } catch(e) {
+            console.log("store(history) :: addMessage : 履歴追加を停止");
+          }
           
           this._History[message.channelId].splice(60);
           this._Availability[message.channelId].atTop = false;
