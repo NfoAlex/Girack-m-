@@ -41,6 +41,8 @@ export default function fetchHistory(socket:Socket):void {
           latestFetchedHistoryLength: 0
         }
       );
+
+      return;
     }
 
     //履歴の位置データ保存
