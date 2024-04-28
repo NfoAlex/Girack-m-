@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
+import getMyRolePower from '~/composables/getMyRolePower';
 import { useElementBounding, useWindowSize  } from '@vueuse/core';
 import { useMyUserinfo } from '~/stores/userinfo';
 
@@ -93,6 +94,7 @@ const deleteIt = () => {
       />
       <div class="virtualDivider mx-1" />
       <v-btn
+        v-if="getMyRolePower().MessageDelete"
         @click="deleteIt"
         size="small"
         color="error"
