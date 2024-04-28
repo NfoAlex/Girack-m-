@@ -44,6 +44,13 @@ const reactIt = (emoji:any) => {
   });
 }
 
+/**
+ * メッセージを削除する
+ */
+const deleteIt = () => {
+
+}
+
 </script>
 
 <template>
@@ -66,7 +73,7 @@ const reactIt = (emoji:any) => {
     />
 
     <v-card
-      class="pa-1"
+      class="pa-1 d-flex align-center"
       rounded="pill"
       height="fit-content"
     >
@@ -84,6 +91,23 @@ const reactIt = (emoji:any) => {
         icon="mdi-pencil"
         class="pa-2"
       />
+      <div class="virtualDivider mx-1" />
+      <v-btn
+        @click="deleteIt"
+        size="small"
+        color="error"
+        variant="text"
+        icon="mdi-delete"
+        class="pa-2"
+      />
     </v-card>
   </span>
 </template>
+
+<style scoped>
+.virtualDivider {
+  border-right:2px solid rgb(var(--v-theme-messageHovered));
+  height:1.25rem;
+  width:1px;
+}
+</style>
