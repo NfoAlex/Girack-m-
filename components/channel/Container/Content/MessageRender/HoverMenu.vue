@@ -49,7 +49,14 @@ const reactIt = (emoji:any) => {
  * メッセージを削除する
  */
 const deleteIt = () => {
-
+  socket.emit("deleteMessage", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    channelId: propsMessage.message.channelId,
+    messageId: propsMessage.message.messageId
+  });
 }
 
 </script>
