@@ -102,7 +102,7 @@ const deleteIt = () => {
       <div class="virtualDivider mx-1" />
       <v-btn
         v-if="getMyRolePower().MessageDelete"
-        @click="deleteIt"
+        @dblclick="deleteIt"
         size="small"
         color="error"
         variant="text"
