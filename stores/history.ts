@@ -293,7 +293,7 @@ export const useHistory = defineStore("history", {
       for (let index in this._History[channelId]) {
         //IDが一致するメッセージを探して削除
         if (this._History[channelId][index].messageId === messageId) {
-          delete this._History[channelId][index];
+          this._History[channelId].splice(parseInt(index), 1);
           break;
         }
       }
