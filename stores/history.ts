@@ -285,6 +285,18 @@ export const useHistory = defineStore("history", {
       delete this._Availability[channelId];
       delete this._HasNewMessage[channelId];
       delete this._LatestMessage[channelId];
+    },
+
+    //メッセージを削除
+    deleteMessage(channelId:string, messageId:string) {
+      //履歴分ループ
+      for (let index in this._History[channelId]) {
+        //IDが一致するメッセージを探して削除
+        if (this._History[channelId][index].messageId === messageId) {
+          this._History[channelId].splice(parseInt(index), 1);
+          break;
+        }
+      }
     }
   }
 });
