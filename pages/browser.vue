@@ -271,7 +271,7 @@ onUnmounted(() => {
     @click="displayCreateChannel = true"
     position="absolute"
     style="right:5%; bottom: 5%;"
-    color="secondary"
+    color="primary"
     icon="mdi:mdi-plus"
     size="x-large"
     rounded="xl"
