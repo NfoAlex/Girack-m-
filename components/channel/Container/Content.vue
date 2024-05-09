@@ -337,27 +337,6 @@ watch(props, (newProp, oldProp) => {
     //取り出したものを数値化、nullなら0へ
     const scrollPositionCalculated = parseInt(scrollPosition);
 
-    //スクロールする、もともと一番下なら最新既読メッセIDへスクロール
-    // if (scrollPositionCalculated !== 0) {
-    //   goTo(
-    //     scrollPositionCalculated,
-    //     {
-    //     duration: 0,
-    //     container: "#ChannelContainerContent"
-    //     }
-    //   );
-    // } else {
-    //   console.log("/channel/:id :: 最新既読Idへ", "#msg" + getMessageReadId(props.channelInfo.channelId));
-    //   goTo(
-    //     "#msg" + getMessageReadId(props.channelInfo.channelId),
-    //     {
-    //     duration: 0,
-    //     container: "#ChannelContainerContent"
-    //     }
-    //   );
-    // }
-
-    console.log("/channel/:id :: 最新既読Idへ", "#msg" + getMessageReadId(props.channelInfo.channelId));
     //最新既読Idへスクロール、ないなら一番古いやつへ
     if (
       document.getElementById("#msg" + getMessageReadId(props.channelInfo.channelId))
