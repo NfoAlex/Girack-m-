@@ -362,6 +362,15 @@ watch(props, (newProp, oldProp) => {
       undefined
     ) {
       goTo(
+        scrollPositionCalculated,
+        {
+        duration: 0,
+        container: "#ChannelContainerContent",
+        offset: 10
+        }
+      );
+    } else {
+      goTo(
         "#msg" + getMessageReadId(props.channelInfo.channelId),
         {
         duration: 0,
