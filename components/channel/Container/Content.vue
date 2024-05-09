@@ -79,6 +79,7 @@ const fetchOlderHistory = () => {
   //履歴を取得中であるとグローバルで設定
   getAppStatus.value.fetchingHistory = true;
 
+  /*
   console.log("/channel/:id :: fetchOlderHistory : 送信したもの->", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
@@ -90,6 +91,7 @@ const fetchOlderHistory = () => {
       fetchDirection: "older"
     }
   });
+  */
 }
 
 /**
@@ -126,6 +128,7 @@ const fetchNewerHistory = () => {
   //履歴を取得中であるとグローバルで設定
   getAppStatus.value.fetchingHistory = true;
 
+  /*
   console.log("/channel/:id :: fetchNewerHistory : 送信したもの->", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
@@ -137,6 +140,7 @@ const fetchNewerHistory = () => {
       fetchDirection: "newer"
     }
   });
+  */
 }
 
 /**
