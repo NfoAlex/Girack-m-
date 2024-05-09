@@ -270,7 +270,8 @@ watch(
 
           goTo("#msg" + messageScrolledPosition, {
             duration: 0,
-            container: "#ChannelContainerContent"
+            container: "#ChannelContainerContent",
+            offset: -50
           });
         } catch(e) {
           //なにもしない
