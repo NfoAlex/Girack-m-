@@ -79,6 +79,7 @@ const fetchOlderHistory = () => {
   //履歴を取得中であるとグローバルで設定
   getAppStatus.value.fetchingHistory = true;
 
+  /*
   console.log("/channel/:id :: fetchOlderHistory : 送信したもの->", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
@@ -90,6 +91,7 @@ const fetchOlderHistory = () => {
       fetchDirection: "older"
     }
   });
+  */
 }
 
 /**
@@ -126,6 +128,7 @@ const fetchNewerHistory = () => {
   //履歴を取得中であるとグローバルで設定
   getAppStatus.value.fetchingHistory = true;
 
+  /*
   console.log("/channel/:id :: fetchNewerHistory : 送信したもの->", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
@@ -137,6 +140,7 @@ const fetchNewerHistory = () => {
       fetchDirection: "newer"
     }
   });
+  */
 }
 
 /**
@@ -270,7 +274,8 @@ watch(
 
           goTo("#msg" + messageScrolledPosition, {
             duration: 0,
-            container: "#ChannelContainerContent"
+            container: "#ChannelContainerContent",
+            offset: -50
           });
         } catch(e) {
           //なにもしない
@@ -310,6 +315,9 @@ watch(y, () => {
 // *************  チャンネル情報  ************* //
 //チャンネル情報の変更を監視してスクロール位置を戻す
 watch(props, (newProp, oldProp) => {
+  //ロード状態を解除
+  stateLoaded.value = false;
+
   nextTick(() => {
 
     //スクロール位置を取り出し
@@ -333,33 +341,21 @@ watch(props, (newProp, oldProp) => {
     //取り出したものを数値化、nullなら0へ
     const scrollPositionCalculated = parseInt(scrollPosition);
 
-    //スクロールする、もともと一番下なら最新既読メッセIDへスクロール
-    // if (scrollPositionCalculated !== 0) {
-    //   goTo(
-    //     scrollPositionCalculated,
-    //     {
-    //     duration: 0,
-    //     container: "#ChannelContainerContent"
-    //     }
-    //   );
-    // } else {
-    //   console.log("/channel/:id :: 最新既読Idへ", "#msg" + getMessageReadId(props.channelInfo.channelId));
-    //   goTo(
-    //     "#msg" + getMessageReadId(props.channelInfo.channelId),
-    //     {
-    //     duration: 0,
-    //     container: "#ChannelContainerContent"
-    //     }
-    //   );
-    // }
-
-    console.log("/channel/:id :: 最新既読Idへ", "#msg" + getMessageReadId(props.channelInfo.channelId));
     //最新既読Idへスクロール、ないなら一番古いやつへ
     if (
       document.getElementById("#msg" + getMessageReadId(props.channelInfo.channelId))
         !==
       undefined
     ) {
+      goTo(
+        scrollPositionCalculated,
+        {
+        duration: 0,
+        container: "#ChannelContainerContent",
+        offset: 10
+        }
+      );
+    } else {
       goTo(
         "#msg" + getMessageReadId(props.channelInfo.channelId),
         {
@@ -368,20 +364,6 @@ watch(props, (newProp, oldProp) => {
         offset: 10
         }
       );
-    } else {
-      //このチャンネルの履歴長取得
-      const historyLength = getHistoryFromChannel(props.channelInfo.channelId).length;
-      //空じゃないならスクロール
-      if (historyLength !== 0) {
-        const oldestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[historyLength-1];
-        goTo(
-          "#msg" + oldestMessageId,
-          {
-            duration: 0,
-            container: "#ChannelContainerContent",
-          }
-        );
-      }
     }
 
     //もし履歴の最後にいるなら新着を消す
