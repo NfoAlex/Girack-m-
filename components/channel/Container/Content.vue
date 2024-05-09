@@ -311,6 +311,9 @@ watch(y, () => {
 // *************  チャンネル情報  ************* //
 //チャンネル情報の変更を監視してスクロール位置を戻す
 watch(props, (newProp, oldProp) => {
+  //ロード状態を解除
+  stateLoaded.value = false;
+
   nextTick(() => {
 
     //スクロール位置を取り出し
