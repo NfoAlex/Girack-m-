@@ -80,6 +80,18 @@ const deleteChannel = (channelIdDeleting:string) => {
 }
 
 /**
+ * チャンネルリストの取得
+ */
+const fetchChannelListTrigger = () => {
+  socket.emit("fetchChannelList", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    }
+  });
+}
+
+/**
  * チャンネルリストを受信
  * @param dat
  */
@@ -161,12 +173,7 @@ onMounted(() => {
   socket.on("RESULT::deleteChannel", SOCKETdeleteChannel);
 
   //チャンネルリストの取得
-  socket.emit("fetchChannelList", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
-  });
+  fetchChannelListTrigger();
 });
 
 onUnmounted(() => {
@@ -211,7 +218,16 @@ onUnmounted(() => {
 
   <div class="pt-5 px-5 d-flex flex-column" style="height:100%;">
     
-    <p class="text-h5">チャンネルブラウザ</p>
+    <span class="d-flex align-center">
+      <p class="text-h5">チャンネルブラウザ</p>
+      <v-btn
+        @click="fetchChannelListTrigger"
+        color="primary"
+        class="ml-auto"
+        icon="mdi:mdi-refresh"
+        rounded="lg"
+      />
+    </span>
     <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
     <div class="pt-3 px-2" style="overflow-y:auto; padding-bottom:15vh;">
       <!-- チャンネルロード中表示 -->
@@ -271,9 +287,9 @@ onUnmounted(() => {
     @click="displayCreateChannel = true"
     position="absolute"
     style="right:5%; bottom: 5%;"
-    color="secondary"
+    color="primary"
     icon="mdi:mdi-plus"
     size="x-large"
-    rounded="xl"
+    rounded="lg"
   />
 </template>
