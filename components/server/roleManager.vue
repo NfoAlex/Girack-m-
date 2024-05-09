@@ -173,7 +173,7 @@ onUnmounted(() => {
       />
   </Teleport>
 
-  <div style="overflow-y:auto;">
+  <div class="pb-5" style="overflow-y:auto;">
 
     <m-card>
       <v-alert
