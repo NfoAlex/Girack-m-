@@ -3,7 +3,7 @@ import getMyRolePower from "~/composables/getMyRolePower";
 </script>
 
 <template>
-  <div class="py-4 d-flex">
+  <div class="pt-4 d-flex">
 
     <!-- 左部分(サイドバー) -->
     <div class="d-flex flex-column flex-grow-1 flex-shrink-0" style="width:30%; max-width:250px;">
