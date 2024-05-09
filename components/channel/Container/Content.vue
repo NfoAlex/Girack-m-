@@ -368,7 +368,7 @@ watch(props, (newProp, oldProp) => {
         offset: 10
         }
       );
-    } else {
+    } /*else {
       //このチャンネルの履歴長取得
       const historyLength = getHistoryFromChannel(props.channelInfo.channelId).length;
       //空じゃないならスクロール
@@ -382,7 +382,7 @@ watch(props, (newProp, oldProp) => {
           }
         );
       }
-    }
+    } */
 
     //もし履歴の最後にいるなら新着を消す
     if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
