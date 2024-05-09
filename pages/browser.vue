@@ -274,5 +274,6 @@ onUnmounted(() => {
     color="secondary"
     icon="mdi:mdi-plus"
     size="x-large"
+    rounded="xl"
   />
 </template>
