@@ -4,7 +4,6 @@ import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 import { useConfig } from "../stores/config";
 import { useAppStatus } from "../stores/AppStatus";
-import type { MyUserinfo } from "~/types/user";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -171,37 +170,10 @@ const SOCKEtauthSession = (dat:{result:string, dat:boolean}) => {
   }
 };
 
-/**
- * 登録結果の受け取りと処理
- * @param dat
- */
-const SOCKETRESULTauthRegister = (
-  dat: {
-    result: string;
-    data:{datUser:MyUserinfo, password:string}
-  }
-) => {
-  console.log("auth :: SOCKETRESULTauthRegister : dat->", dat);
-  //結果処理
-  if (dat.result === "SUCCESS") {
-    passwordRegistered.value = dat.data.password; //結果用パスワードを格納
-    resultDisplay.value = "SUCCESS"; //結果成功ととして表示
-    resultRegisterDone.value = true; //結果成功ととして表示
-  } else {
-    resultDisplay.value = "FAILED";
-    resultRegisterDone.value = false; //結果成功ととして表示
-  }
-
-  //認証状態中を解除
-  processingAuth.value = false;
-};
-
 onMounted(() => {
   //認証結果受け取り
   socket.on("RESULT::authLogin", SOCKETRESULTauthLogin);
   socket.on("RESULT::authSession", SOCKEtauthSession);
-  //登録ができたと受信したときの処理
-  socket.on("RESULT::authRegister", SOCKETRESULTauthRegister);
 
   console.log("/auth :: onMounted : session->", useCookie("session").value);
 
@@ -231,7 +203,6 @@ onUnmounted(() => {
   //socketハンドラ解除
   socket.off("RESULT::authLogin", SOCKETRESULTauthLogin);
   socket.off("RESULT::authSession", SOCKEtauthSession);
-  socket.off("RESULT::authRegister", SOCKETRESULTauthRegister);
 });
 </script>
 

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { socket } from "../../socketHandlers/socketInit";
 
+import type { MyUserinfo } from "~/types/user";
+
 /**
  * data
  */
@@ -28,6 +30,41 @@ const register = () => {
     inviteCode: invitecode.value,
   });
 };
+
+/**
+ * 登録結果の受け取りと処理
+ * @param dat
+ */
+ const SOCKETRESULTauthRegister = (
+  dat: {
+    result: string;
+    data:{datUser:MyUserinfo, password:string}
+  }
+) => {
+  console.log("auth :: SOCKETRESULTauthRegister : dat->", dat);
+  //結果処理
+  if (dat.result === "SUCCESS") {
+    passwordRegistered.value = dat.data.password; //結果用パスワードを格納
+    resultDisplay.value = "SUCCESS"; //結果成功ととして表示
+    resultRegisterDone.value = true; //結果成功ととして表示
+  } else {
+    resultDisplay.value = "FAILED";
+    resultRegisterDone.value = false; //結果成功ととして表示
+  }
+
+  //認証状態中を解除
+  processingAuth.value = false;
+};
+
+onMounted(() => {
+  //登録ができたと受信したときの処理
+  socket.on("RESULT::authRegister", SOCKETRESULTauthRegister);
+});
+
+onUnmounted(() => {
+  //socketハンドラ解除
+  socket.off("RESULT::authRegister", SOCKETRESULTauthRegister);
+});
 </script>
 
 <template>
