@@ -20,35 +20,12 @@ definePageMeta({
 /**
  * data
  */
-const authMode = ref<string>("LOGIN"); // "LOGIN" | "REGISTER"
+const authMode = ref<"LOGIN"|"REGISTER">("LOGIN"); // "LOGIN" | "REGISTER"
 const processingAuth = ref<boolean>(false); //ボタンの処理中表示用
-// text-field用
-const username = ref<string>("");
-const password = ref<string>("");
-const invitecode = ref<string>("");
 // 結果用
 const resultDisplay = ref<string>("");
 const resultRegisterDone = ref<boolean>(false);
 const passwordRegistered = ref<string>("");
-
-/**
- * ログイン処理
- */
-const login = () => {
-  //処理中と設定
-  processingAuth.value = true;
-  //認証結果を初期化
-  resultDisplay.value = "";
-
-  //認証
-  socket.emit(
-    "authLogin",
-    {
-      username: username.value,
-      password: password.value,
-    }
-  );
-};
 
 /**
  * ログイン後のGirack-m-準備処理
@@ -108,22 +85,6 @@ const initialize = (userId:string, sessionId:string) => {
 
   //トップページへ移動
   router.push("/");
-};
-
-/**
- * 新規登録
- */
-const register = () => {
-  //処理中と設定
-  processingAuth.value = true;
-  //認証結果を初期化
-  resultDisplay.value = "";
-
-  //登録
-  socket.emit("authRegister", {
-    username: username.value,
-    inviteCode: invitecode.value,
-  });
 };
 
 /**
