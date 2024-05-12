@@ -84,25 +84,9 @@ const SOCKETRESULTauthLogin = (
   processingAuth.value = false;
 };
 
-/**
- * セッション認証結果の受け取り
- * @param dat
- */
-const SOCKEtauthSession = (dat:{result:string, dat:boolean}) => {
-  console.log("/auth :: SOCKETauthSession : dat->", dat);
-
-  //成功なら初期ロード開始
-  if (dat.result === "SUCCESS") {
-    //ロード開始
-    //initialize(getMyUserinfo.value.userId, getSessionId.value);
-    emitInitializeProxy();
-  }
-};
-
 onMounted(() => {
   //認証結果受け取り
   socket.on("RESULT::authLogin", SOCKETRESULTauthLogin);
-  socket.on("RESULT::authSession", SOCKEtauthSession);
 
   console.log("/auth :: onMounted : session->", useCookie("session").value);
 });
@@ -110,7 +94,6 @@ onMounted(() => {
 onUnmounted(() => {
   //socketハンドラ解除
   socket.off("RESULT::authLogin", SOCKETRESULTauthLogin);
-  socket.off("RESULT::authSession", SOCKEtauthSession);
 });
 </script>
 
