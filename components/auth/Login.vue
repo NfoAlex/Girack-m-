@@ -8,6 +8,15 @@ const router = useRouter();
 
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+const { updateSessionId } = useMyUserinfo();
+
+//emit用
+const emit = defineEmits<{
+  (e: 'initialize', userId:string, sessionId:string): void
+}>();
+const emitInitializeProxy = ():void => {
+  emit("initialize", getMyUserinfo.value.userId, getSessionId.value)
+};
 
 /**
  * data
@@ -70,7 +79,8 @@ const SOCKETRESULTauthLogin = (
     });
 
     //準備処理開始
-    initialize(dat.data.UserInfo.userId, dat.data.sessionId);
+    //initialize(dat.data.UserInfo.userId, dat.data.sessionId);
+    emitInitializeProxy();
   } else {
     //エラーを表示
     resultDisplay.value = "FAILED";
@@ -116,7 +126,8 @@ const SOCKEtauthSession = (dat:{result:string, dat:boolean}) => {
   //成功なら初期ロード開始
   if (dat.result === "SUCCESS") {
     //ロード開始
-    initialize(getMyUserinfo.value.userId, getSessionId.value);
+    //initialize(getMyUserinfo.value.userId, getSessionId.value);
+    emitInitializeProxy();
   }
 };
 

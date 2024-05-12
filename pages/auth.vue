@@ -100,7 +100,6 @@ const getSessionFromCookie = ():{
   }
 }
 
-
 /**
  * セッション認証結果の受け取り
  * @param dat
@@ -179,7 +178,7 @@ onUnmounted(() => {
         >
       </div>
       <!-- 真ん中表示部分 -->
-      <AuthLogin v-if="authMode === 'LOGIN'" />
+      <AuthLogin v-if="authMode === 'LOGIN'" @initialize="initialize" />
       <AuthRegister v-if="authMode === 'REGISTER'" />
     </v-card>
   </div>
