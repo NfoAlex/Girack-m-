@@ -20,9 +20,6 @@ definePageMeta({
  * data
  */
 const authMode = ref<"LOGIN"|"REGISTER">("LOGIN"); // "LOGIN" | "REGISTER"
-const processingAuth = ref<boolean>(false); //ボタンの処理中表示用
-// 結果用
-const resultDisplay = ref<string>("");
 
 /**
  * ログイン後のGirack-m-準備処理
@@ -69,14 +66,6 @@ const initialize = (userId:string, sessionId:string) => {
     });
   }
 
-  // //メッセージの最新既読Idを取得
-  // socket.emit("getMessageReadId", {
-  //   RequestSender: {
-  //     userId: userId,
-  //     sessionId: sessionId
-  //   }
-  // });
-
   //ログイン状態を完了と設定
   getAppStatus.value.profile.authDone = true;
 
@@ -111,48 +100,6 @@ const getSessionFromCookie = ():{
   }
 }
 
-/**
- * 認証結果の受け取りと処理
- * @param dat
- */
-const SOCKETRESULTauthLogin = (
-  dat: {
-    result: string;
-    data: { UserInfo: any; sessionId: string };
-  }
-) => {
-  console.log("auth :: SOCKETRESULTauthLogin : dat->", dat);
-  //ログインできたらユーザー情報設定、ページ移動
-  if (dat.result === "SUCCESS") {
-    //成功
-    resultDisplay.value = "SUCCESS";
-    //自ユーザー情報更新
-    const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
-    updateMyUserinfo({
-      userName: dat.data.UserInfo.userName,
-      userId: dat.data.UserInfo.userId,
-      role: dat.data.UserInfo.role, //文字列で渡されるためここで配列にする
-      banned: dat.data.UserInfo.banned,
-      channelJoined: dat.data.UserInfo.channelJoined, //文字列で渡されるためここで配列にする
-    });
-    //セッションID更新
-    updateSessionId(dat.data.sessionId);
-
-    //セッション情報をクッキーへ保存
-    useCookie("session", {maxAge:1.296e+6}).value = JSON.stringify({
-      userId: dat.data.UserInfo.userId,
-      sessionId: dat.data.sessionId,
-    });
-
-    //準備処理開始
-    initialize(dat.data.UserInfo.userId, dat.data.sessionId);
-  } else {
-    //エラーを表示
-    resultDisplay.value = "FAILED";
-  }
-  //認証状態中を解除
-  processingAuth.value = false;
-};
 
 /**
  * セッション認証結果の受け取り
@@ -170,7 +117,6 @@ const SOCKEtauthSession = (dat:{result:string, dat:boolean}) => {
 
 onMounted(() => {
   //認証結果受け取り
-  socket.on("RESULT::authLogin", SOCKETRESULTauthLogin);
   socket.on("RESULT::authSession", SOCKEtauthSession);
 
   console.log("/auth :: onMounted : session->", useCookie("session").value);
@@ -199,7 +145,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   //socketハンドラ解除
-  socket.off("RESULT::authLogin", SOCKETRESULTauthLogin);
   socket.off("RESULT::authSession", SOCKEtauthSession);
 });
 </script>
