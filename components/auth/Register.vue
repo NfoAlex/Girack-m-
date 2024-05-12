@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { socket } from "../../socketHandlers/socketInit";
+import { useServerinfo } from "~/stores/serverinfo";
 
 import type { MyUserinfo } from "~/types/user";
+
+const { getServerinfo } = storeToRefs(useServerinfo());
 
 /**
  * data
