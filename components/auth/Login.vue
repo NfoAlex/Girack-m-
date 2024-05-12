@@ -80,66 +80,6 @@ const SOCKETRESULTauthLogin = (
 };
 
 /**
- * ログイン後のGirack-m-準備処理
- */
- const initialize = (userId:string, sessionId:string) => {
-  //全ロールを取得
-  socket.emit("fetchRoles", {
-    RequestSender: {
-      userId: userId,
-      sessionId: sessionId,
-    },
-  });
-
-  //ユーザー情報取得
-  socket.emit("fetchUserInfo", {
-    RequestSender: {
-      userId: userId,
-      sessionId: sessionId,
-    },
-    userId: userId,
-  });
-
-  //localStorageから設定を読み込む
-  const datConfigLocal = getConfigLocal();
-  if (datConfigLocal !== null) {
-    //同期設定がONなら設定取得
-    if (datConfigLocal.sync || datConfigLocal.config === null) {
-      //設定データを取得する
-      socket.emit("fetchUserConfig", {
-        userId: userId,
-        sessionId: sessionId,
-      });
-    } else {
-      //localStorageにある設定データをそのまま適用
-      useConfig().updateConfig(datConfigLocal.config);
-      //同期設定をオフとして設定
-      useConfig().updateConfigSyncStatus(false);
-    }
-  } else { //設定データがないなら絶対取得
-    //設定データを取得する
-    socket.emit("fetchUserConfig", {
-      userId: userId,
-      sessionId: sessionId,
-    });
-  }
-
-  // //メッセージの最新既読Idを取得
-  // socket.emit("getMessageReadId", {
-  //   RequestSender: {
-  //     userId: userId,
-  //     sessionId: sessionId
-  //   }
-  // });
-
-  //ログイン状態を完了と設定
-  getAppStatus.value.profile.authDone = true;
-
-  //トップページへ移動
-  router.push("/");
-};
-
-/**
  * Cookieからセッションデータを取得
  */
  const getSessionFromCookie = ():{
