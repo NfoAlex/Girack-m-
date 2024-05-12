@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { socket } from "~/socketHandlers/socketInit";
 import { useConfig } from "~/stores/config";
-import { useAppStatus } from "../stores/AppStatus";
+import { useAppStatus } from "~/stores/AppStatus";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 const router = useRouter();
 
 const { getAppStatus } = storeToRefs(useAppStatus());
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 /**
  * data
