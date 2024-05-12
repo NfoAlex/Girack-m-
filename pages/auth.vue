@@ -315,7 +315,8 @@ onUnmounted(() => {
         >
       </div>
       <!-- 真ん中表示部分 -->
-      
+      <AuthLogin v-if="authMode === 'LOGIN'" />
+      <AuthRegister v-if="authMode === 'REGISTER'" />
     </v-card>
   </div>
 </template>
