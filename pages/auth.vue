@@ -23,8 +23,6 @@ const authMode = ref<"LOGIN"|"REGISTER">("LOGIN"); // "LOGIN" | "REGISTER"
 const processingAuth = ref<boolean>(false); //ボタンの処理中表示用
 // 結果用
 const resultDisplay = ref<string>("");
-const resultRegisterDone = ref<boolean>(false);
-const passwordRegistered = ref<string>("");
 
 /**
  * ログイン後のGirack-m-準備処理
@@ -215,17 +213,6 @@ onUnmounted(() => {
     <v-card class="panel pa-6 rounded-e-0 d-flex flex-column justify-center">
       <!-- Girackタイトル -->
       <p class="text-h4 text-center my-5">Girack</p>
-      <!-- 認証結果の表示 -->
-      <div>
-        <v-alert
-          v-if="resultDisplay === 'FAILED'"
-          type="error"
-          class="flex-shrink-1 flex-grow-0"
-          style="min-height: max-content"
-        >
-          <v-alert-title>認証に失敗しました</v-alert-title>
-        </v-alert>
-      </div>
       <!-- ログイン/登録ボタン -->
       <div class="d-flex justify-center py-4">
         <m-btn

@@ -59,5 +59,17 @@ const resultDisplay = ref<string>("");
     >
       ログイン!
     </m-btn>
+
+    <!-- 認証結果の表示 -->
+    <div>
+      <v-alert
+        v-if="resultDisplay === 'FAILED'"
+        type="error"
+        class="flex-shrink-1 flex-grow-0"
+        style="min-height: max-content"
+      >
+        <v-alert-title>認証に失敗しました</v-alert-title>
+      </v-alert>
+    </div>
   </div>
 </template>
