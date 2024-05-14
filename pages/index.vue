@@ -7,6 +7,7 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 </script>
 
 <template>
+  <!-- 新規登録ユーザー用 -->
   <Welcome />
 
   <div class="header pa-5">
