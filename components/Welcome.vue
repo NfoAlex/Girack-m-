@@ -1,8 +1,10 @@
 <script setup lang="ts">
+const router = useRouter();//ページ移動用
 
-const page = ref<number>(1);
-
-const router = useRouter();
+/**
+ * data
+ */
+const page = ref<number>(1); //画面のページ
 </script>
 
 <template>
