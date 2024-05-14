@@ -149,12 +149,16 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="d-flex" style="height: 100%; width: 100vw">
-    <!-- カバー画像 -->
-    <div class="instanceImage me-auto mr-n5">ここが画像になる</div>
+  <div
+    class="instanceImage d-flex flex-column"
+    style="height:100%; width:100vw"
+  >
 
     <!-- ログイン/登録用パネル -->
-    <v-card class="panel pa-6 rounded-e-0 d-flex flex-column justify-center">
+    <v-card
+      class="panel mx-auto my-auto pa-6 d-flex flex-column justify-center"
+      style="width:75vw; max-width:550px; height:85vh; max-height:700px;"
+    >
       <!-- Girackタイトル -->
       <p class="text-h4 text-center my-5">Girack</p>
       <!-- ログイン/登録ボタン -->
@@ -196,11 +200,8 @@ onUnmounted(() => {
 }
 
 .panel {
-  width: 35vw;
-  min-width: 400px;
-  max-width: 500px;
 
-  border-radius: 28px 0 0 28px !important;
+  border-radius: 28px !important;
 
   background-color: rgb(var(--v-theme-background));
 
