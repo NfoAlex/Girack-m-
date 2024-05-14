@@ -4,11 +4,16 @@ import { useMyUserinfo } from "../stores/userinfo";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+
+const route = useRoute();
 </script>
 
 <template>
   <!-- 新規登録ユーザー用 -->
-  <Welcome />
+  <Welcome
+    v-if="route.query['firstTime']"
+    v-model="route.query['firstTime']"
+  />
 
   <div class="header pa-5">
     <h3 class="text-h3">
