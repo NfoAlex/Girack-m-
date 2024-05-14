@@ -116,7 +116,12 @@ export default defineNuxtConfig({
     }
   },
   googleFonts: {
-    families: { Inter: true }, download: true, inject: true
+    families: {
+      "Noto Sans JP": true,
+      Inter: true,
+    },
+    download: true,
+    inject: true
   },
   devtools: { enabled: true },
 });
