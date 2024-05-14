@@ -127,7 +127,7 @@ const bindUserName = (userNameNew:string) => {
 
   //格納
   sharedUserName.value = userNameNew;
-}
+};
 
 /**
  * セッション認証結果の受け取り
