@@ -13,7 +13,7 @@ const router = useRouter();
         <li>しゃべろう！</li>
       </v-card-body>
       <v-card-actions class="mt-auto d-flex flex-row-reverse">
-        <m-btn @click="page=2" color="primary">次へ</m-btn>
+        <m-btn @click="page=2" variant="tonal">次へ</m-btn>
       </v-card-actions>
     </m-card>
     <m-card v-if="page===2" height="100%" width="100%" class="pa-7">
