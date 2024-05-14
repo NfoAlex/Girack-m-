@@ -7,6 +7,8 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 </script>
 
 <template>
+  <Welcome />
+
   <div class="header pa-5">
     <h3 class="text-h3">
       {{ getServerinfo.servername }}
