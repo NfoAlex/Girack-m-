@@ -115,11 +115,8 @@ const getSessionFromCookie = ():{
  * @param userNameNew
  */
 const bindUserName = (userNameNew:string) => {
-
-  console.log("これから変更", userNameNew);
   //現セッションで登録していて...
   if (registrationData.value.done) {
-    console.log("/auth :: bindUserName : registrationData.value.userName !== userNameNew->", registrationData.value.userName !== userNameNew);
     //もし入力するユーザー名が違うなら新ユーザーじゃないと設定、逆なら逆
     if (registrationData.value.userName !== userNameNew) {
       isNewUser.value = false;
