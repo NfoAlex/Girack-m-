@@ -3,7 +3,7 @@ import vue from "@vitejs/plugin-vue";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   css: ["@/assets/styles/main.scss"],
-  modules: ["@pinia/nuxt", "vuetify-nuxt-module", "@vueuse/nuxt"],
+  modules: ["@pinia/nuxt", "vuetify-nuxt-module", "@vueuse/nuxt", "@nuxtjs/google-fonts"],
   pinia: {
     storesDirs: ['./stores/**'],
   },
@@ -114,6 +114,9 @@ export default defineNuxtConfig({
         }
       }
     }
+  },
+  googleFonts: {
+    families: { Inter: true }, download: true, inject: true
   },
   devtools: { enabled: true },
 });
