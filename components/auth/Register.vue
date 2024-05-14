@@ -18,6 +18,24 @@ const resultDisplay = ref<string>("");
 const resultRegisterDone = ref<boolean>(false);
 const passwordRegistered = ref<string>("");
 
+//emit
+const emits = defineEmits<{
+  (e:"applyChangeUserName", username:string):void,
+  (e:"registered", username:string):void
+}>();
+
+//prop
+const props = defineProps<{
+  sharedUserName: string
+}>();
+
+/**
+ * ユーザー名の変更監視
+ */
+const applyChangeUserName = () => {
+  emits("applyChangeUserName", username.value);
+}
+
 /**
  * 新規登録
  */
@@ -38,7 +56,7 @@ const register = () => {
  * 登録結果の受け取りと処理
  * @param dat
  */
- const SOCKETRESULTauthRegister = (
+const SOCKETRESULTauthRegister = (
   dat: {
     result: string;
     data:{datUser:MyUserinfo, password:string}
@@ -50,6 +68,7 @@ const register = () => {
     passwordRegistered.value = dat.data.password; //結果用パスワードを格納
     resultDisplay.value = "SUCCESS"; //結果成功ととして表示
     resultRegisterDone.value = true; //結果成功ととして表示
+    emits("registered", username.value); //登録したと親へ伝える
   } else {
     resultDisplay.value = "FAILED";
     resultRegisterDone.value = false; //結果成功ととして表示
@@ -62,6 +81,9 @@ const register = () => {
 onMounted(() => {
   //登録ができたと受信したときの処理
   socket.on("RESULT::authRegister", SOCKETRESULTauthRegister);
+
+  //ユーザー名を適用
+  username.value = props.sharedUserName;
 });
 
 onUnmounted(() => {
@@ -77,6 +99,7 @@ onUnmounted(() => {
     <div v-if="!resultRegisterDone">
       <v-text-field
         v-model="username"
+        @change="applyChangeUserName"
         variant="outlined"
         rounded="lg"
         label="ユーザー名"
