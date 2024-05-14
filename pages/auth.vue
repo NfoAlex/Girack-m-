@@ -20,6 +20,12 @@ definePageMeta({
  * data
  */
 const authMode = ref<"LOGIN"|"REGISTER">("LOGIN"); // "LOGIN" | "REGISTER"
+const sharedUserName = ref<string>("");
+const isNewUser = ref<boolean>(false); //新規登録者かどうか
+const registrationData = ref<{userName:string, done:boolean}>({
+  userName: "",
+  done: false
+});
 
 /**
  * ログイン後のGirack-m-準備処理
@@ -70,7 +76,11 @@ const initialize = (userId:string, sessionId:string) => {
   getAppStatus.value.profile.authDone = true;
 
   //トップページへ移動
-  router.push("/");
+  if (isNewUser.value) {
+    router.push("/?firstTime=true");
+  } else {
+    router.push("/");
+  }
 };
 
 /**
@@ -99,6 +109,25 @@ const getSessionFromCookie = ():{
     return undefined;
   }
 }
+
+/**
+ * 共有用ユーザー名を格納
+ * @param userNameNew
+ */
+const bindUserName = (userNameNew:string) => {
+  //現セッションで登録していて...
+  if (registrationData.value.done) {
+    //もし入力するユーザー名が違うなら新ユーザーじゃないと設定、逆なら逆
+    if (registrationData.value.userName !== userNameNew) {
+      isNewUser.value = false;
+    } else {
+      isNewUser.value = true;
+    }
+  }
+
+  //格納
+  sharedUserName.value = userNameNew;
+};
 
 /**
  * セッション認証結果の受け取り
@@ -182,8 +211,23 @@ onUnmounted(() => {
         >
       </div>
       <!-- 真ん中表示部分 -->
-      <AuthLogin v-if="authMode === 'LOGIN'" @initialize="initialize" />
-      <AuthRegister v-if="authMode === 'REGISTER'" />
+      <AuthLogin
+        v-if="authMode === 'LOGIN'"
+        @initialize="initialize"
+        @applyChangeUserName="(username)=>bindUserName(username)"
+        :sharedUserName
+      />
+      <AuthRegister
+        v-if="authMode === 'REGISTER'"
+        @applyChangeUserName="(username)=>bindUserName(username)"
+        @registered="
+          (username)=>{
+            isNewUser=true;
+            registrationData.done=true;
+            registrationData.userName=username;
+          }"
+        :sharedUserName
+      />
     </v-card>
   </div>
 </template>

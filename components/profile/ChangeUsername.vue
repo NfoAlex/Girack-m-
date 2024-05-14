@@ -164,6 +164,7 @@ onUnmounted(() => {
         <!-- 結果表示 -->
         <v-alert
           :type="resultNewUsernameAlertDisplay"
+          variant="tonal"
         >
           <p v-if="stateUsernameSearching">検索中...</p>
           <span v-else>

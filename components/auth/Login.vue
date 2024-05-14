@@ -6,11 +6,8 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { updateSessionId } = useMyUserinfo();
 
 //emit用
-const emit = defineEmits<{
-  (e: 'initialize', userId:string, sessionId:string): void
-}>();
 const emitInitializeProxy = ():void => {
-  emit("initialize", getMyUserinfo.value.userId, getSessionId.value)
+  emits("initialize", getMyUserinfo.value.userId, getSessionId.value)
 };
 
 /**
@@ -20,6 +17,17 @@ const username = ref<string>("");
 const password = ref<string>("");
 const processingAuth = ref<boolean>(false); //ボタンの処理中表示用
 const resultDisplay = ref<string>("");
+
+//emit
+const emits = defineEmits<{
+  (e:"applyChangeUserName", username:string):void,
+  (e: 'initialize', userId:string, sessionId:string): void
+}>();
+
+//prop
+const props = defineProps<{
+  sharedUserName: string
+}>();
 
 /**
  * ログイン処理
@@ -87,6 +95,8 @@ const SOCKETRESULTauthLogin = (
 onMounted(() => {
   //認証結果受け取り
   socket.on("RESULT::authLogin", SOCKETRESULTauthLogin);
+  //ユーザー名を適用
+  username.value = props.sharedUserName;
 
   console.log("/auth :: onMounted : session->", useCookie("session").value);
 });
@@ -101,6 +111,7 @@ onUnmounted(() => {
   <div class="d-flex flex-column">
     <v-text-field
       v-model="username"
+      @change="emits('applyChangeUserName',username)"
       variant="outlined"
       rounded="lg"
       label="ユーザー名"
@@ -128,12 +139,14 @@ onUnmounted(() => {
     </m-btn>
 
     <!-- 認証結果の表示 -->
-    <div>
+    <div class="mt-3">
       <v-alert
         v-if="resultDisplay === 'FAILED'"
         type="error"
-        class="flex-shrink-1 flex-grow-0"
+        class=""
         style="min-height: max-content"
+        width="100%"
+        variant="tonal"
       >
         <v-alert-title>認証に失敗しました</v-alert-title>
       </v-alert>
