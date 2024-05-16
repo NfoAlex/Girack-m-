@@ -1,13 +1,26 @@
 <script setup lang="ts">
-import getMyRolePower from "~/composables/getMyRolePower";
 import { useMyUserinfo } from "~/stores/userinfo";
+import { useUserIndex } from "~/stores/userindex";
+import getMyRolePower from "~/composables/getMyRolePower";
+
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+const { getOnlineUsers } = storeToRefs(useUserIndex());
 </script>
 
 <template>
   <div class="d-flex ma-0 pa-0">
     <!-- サイドバー -->
     <div class="d-flex flex-column pa-3 flex-grow-1 flex-shrink-0" style="overflow-y: auto;">
+      
+      <!-- オンラインユーザー数 -->
+      <span
+        class="text-center text-disabled flex justify-space-around align-center"
+        style="font-size:12px;"
+      >
+        <v-icon color="green" size="small" class="mr-1">mdi:mdi-circle</v-icon>
+        <span>{{ getOnlineUsers.length }}</span>
+      </span>
+      
       <!-- ホームボタン -->
       <span>
         <NuxtLink to="/">
