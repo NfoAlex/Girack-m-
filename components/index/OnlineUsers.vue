@@ -6,8 +6,13 @@ const { getUserinfo, getOnlineUsers } = storeToRefs(useUserIndex());
 <template>
     <div class="mt-12">
       <h4>オンラインユーザー</h4>
-      <v-chip v-for="userId of getOnlineUsers" size="large" variant="flat">
-        <v-avatar class="mr-2" size="x-small">
+      <v-chip
+        v-for="userId of getOnlineUsers"
+        class="mr-1"
+        size="large"
+        variant="flat"
+      >
+        <v-avatar class="mr-2" size="24">
           <v-img
             :src="'/icon/' + userId"
             alt="John"
