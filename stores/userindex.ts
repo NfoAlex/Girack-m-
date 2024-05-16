@@ -18,14 +18,17 @@ export const useUserIndex = defineStore("userindex", {
         channelJoined: ["0001"]
       }
       */
-    }
+    },
+    _OnlineUsers: []
   } as {
     _UserIndex: {
       [key: string]: MyUserinfo
     };
+    _OnlineUsers: string[];
   }),
 
   getters: {
+    //指定したユーザー情報を返す
     getUserinfo: (state) => (userId:string):MyUserinfo => {
       //空じゃなければそのデータを返す、空ならホルダー作成して情報取得
       if (state._UserIndex[userId] !== undefined) {
@@ -56,11 +59,21 @@ export const useUserIndex = defineStore("userindex", {
         return state._UserIndex[userId];
       }
     },
+
+    //オンラインユーザーリストを返す
+    getOnlineUsers: (state) => {
+      return state._OnlineUsers;
+    }
   },
   
   actions: {
     setUserIndex(Userinfo: MyUserinfo) {
       this._UserIndex[Userinfo.userId] = Userinfo;
+    },
+
+    //オンラインユーザーリストを格納
+    bindOnlineUsers(onlineUsers: string[]) {
+      this._OnlineUsers = onlineUsers;
     }
   }
 });
