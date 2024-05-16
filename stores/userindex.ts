@@ -47,7 +47,7 @@ export const useUserIndex = defineStore("userindex", {
           //RequestSender用
         const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
           //WS通信
-        socket.emit("fetchUser", {
+        socket.emit("fetchUserInfo", {
           RequestSender: {
             userId: getMyUserinfo.value.userId,
             sessionId: getSessionId.value
