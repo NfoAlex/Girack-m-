@@ -5,6 +5,8 @@ import connect from "./connect";
 import disconnect from "./disconnect";
 
 import fetchOnlineUsers from "./fetchOnlineUsers";
+import removeOnlineUser from "./removeOnlineUser";
+import addOnlineUser from "./addOnlineUser";
 
 import infoServer from "./InfoServer";
 
@@ -46,6 +48,8 @@ export function loadSocket() {
   disconnect(socket); //切断検知用
 
   fetchOnlineUsers(socket); //オンラインユーザーの受け取り
+  removeOnlineUser(socket); //オンラインユーザーによる切断者と受け取り
+  addOnlineUser(socket); //オンラインユーザーの追加
 
   infoServer(socket); //サーバー情報
 

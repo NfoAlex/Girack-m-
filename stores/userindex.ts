@@ -74,6 +74,19 @@ export const useUserIndex = defineStore("userindex", {
     //オンラインユーザーリストを格納
     bindOnlineUsers(onlineUsers: string[]) {
       this._OnlineUsers = onlineUsers;
+    },
+
+    //オンラインユーザーリストへ一人追加
+    addOnlineUser(userId: string) {
+      this._OnlineUsers.push(userId);
+    },
+
+    //オンラインユーザーリストから一人削除
+    removeOnlineUserSingle(userId: string) {
+      //削除するユーザーIdの場所
+      const index = this._OnlineUsers.indexOf(userId);
+      //そのユーザーIdを削除
+      this._OnlineUsers.splice(index, 1);
     }
   }
 });
