@@ -4,7 +4,12 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 export default defineEventHandler(async (event) => {
   const url = event.node.req.url;
   // APIパスが複数ある場合
-  const apiPaths = ['/socket.io','/icon'];
+  const apiPaths = [
+    '/socket.io',
+    '/icon',
+    '/uploadProfileIcon'
+  ];
+  
   // APIのパスと指定したもの以外は処理を止める止めないと他のパスに影響が出る
   const isContained = typeof url === 'string' && apiPaths.some((apiPath: string) => new RegExp(`^${apiPath}([/?]|$)`).test(url));
   if (!isContained) {
