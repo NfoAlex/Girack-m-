@@ -4,6 +4,8 @@ import { Socket, io } from "socket.io-client"; //ウェブソケット通信用
 import connect from "./connect";
 import disconnect from "./disconnect";
 
+import fetchOnlineUsers from "./fetchOnlineUsers";
+
 import infoServer from "./InfoServer";
 
 import fetchChannelInfo from "./fetchChannelInfo";
@@ -42,6 +44,8 @@ export function loadSocket() {
 
   connect(socket); //接続検知用
   disconnect(socket); //切断検知用
+
+  fetchOnlineUsers(socket); //オンラインユーザーの受け取り
 
   infoServer(socket); //サーバー情報
 

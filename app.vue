@@ -24,7 +24,7 @@ watch(getConfig, async () => {
 //リロード時にチャンネルごとに記憶されたスクロール位置を消去するように
 onMounted(() => {
   sessionStorage.clear();
-})
+});
 </script>
 
 <template>
