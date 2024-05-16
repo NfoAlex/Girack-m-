@@ -1,8 +1,6 @@
 import { useRole } from "~/stores/role";
 import { useMyUserinfo } from "~/stores/userinfo";
 
-const { getMyUserinfo } = storeToRefs(useMyUserinfo());
-
 interface onlyRolePower {
   name?: string,
   color?: string,
@@ -30,6 +28,7 @@ export default function getMyRolePower():onlyRolePower {
     MessageAttatchFile: false
   };
   //自分が持っているロールのID配列
+  const { getMyUserinfo } = storeToRefs(useMyUserinfo());
   const myRoleArr:string[] = getMyUserinfo.value.role;
   
   //ロールIDの数分調べて権限割り当て

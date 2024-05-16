@@ -19,18 +19,7 @@ const route = useRoute();
     <h3 class="text-h3">
       {{ getServerinfo.servername }}
     </h3>
-    <div class="mt-12">
-      <h4>オンラインユーザー</h4>
-      <v-chip size="large" variant="flat">
-        <v-avatar class="mr-2" size="x-small">
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/john.jpg"
-            alt="John"
-          ></v-img>
-        </v-avatar>
-        {{ getMyUserinfo.userName }}
-      </v-chip>
-    </div>
+    <IndexOnlineUsers />
   </div>
   <div class="pa-5">
     <div class="text-h4 my-3">ここがホーム</div>

@@ -75,6 +75,14 @@ const initialize = (userId:string, sessionId:string) => {
   //ログイン状態を完了と設定
   getAppStatus.value.profile.authDone = true;
 
+  //オンラインユーザーリストを取得
+  socket.emit("fetchOnlineUsers", {
+    RequestSender: {
+      userId: userId,
+      sessionId: sessionId,
+    },
+  });
+
   //トップページへ移動
   if (isNewUser.value) {
     router.push("/?firstTime=true");
