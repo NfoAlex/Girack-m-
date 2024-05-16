@@ -78,15 +78,18 @@ export const useUserIndex = defineStore("userindex", {
 
     //オンラインユーザーリストへ一人追加
     addOnlineUser(userId: string) {
-      this._OnlineUsers.push(userId);
+      //存在しないことを確認してから格納
+      if (this._OnlineUsers.indexOf(userId) === -1) {
+        this._OnlineUsers.push(userId);
+      }
     },
 
     //オンラインユーザーリストから一人削除
     removeOnlineUserSingle(userId: string) {
       //削除するユーザーIdの場所
       const index = this._OnlineUsers.indexOf(userId);
-      //そのユーザーIdを削除
-      this._OnlineUsers.splice(index, 1);
+      //存在するならそのユーザーIdを削除
+      if (index !== -1) this._OnlineUsers.splice(index, 1);
     },
 
     //オンラインユーザーStoreの中身を丸ごと削除
