@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useMyUserinfo } from "~/stores/userinfo";
 import { useUserIndex } from "~/stores/userindex";
+import { useAppStatus } from "~/stores/AppStatus";
 import getMyRolePower from "~/composables/getMyRolePower";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 const { getOnlineUsers } = storeToRefs(useUserIndex());
+const { getAppStatus } = storeToRefs(useAppStatus());
 </script>
 
 <template>
@@ -17,10 +19,14 @@ const { getOnlineUsers } = storeToRefs(useUserIndex());
         class="text-center text-disabled flex justify-space-around align-center"
         style="font-size:12px;"
       >
-        <v-icon color="green" size="small" class="mr-1">mdi:mdi-circle</v-icon>
+        <v-icon
+          :color="getAppStatus.connected?'green':'red'"
+          size="small"
+          class="mr-1"
+        >mdi:mdi-circle</v-icon>
         <span>{{ getOnlineUsers.length }}</span>
       </span>
-      
+
       <!-- ホームボタン -->
       <span>
         <NuxtLink to="/">
