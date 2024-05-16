@@ -87,6 +87,11 @@ export const useUserIndex = defineStore("userindex", {
       const index = this._OnlineUsers.indexOf(userId);
       //そのユーザーIdを削除
       this._OnlineUsers.splice(index, 1);
+    },
+
+    //オンラインユーザーStoreの中身を丸ごと削除
+    removeOnlineUsers() {
+      this._OnlineUsers = [];
     }
   }
 });

@@ -11,6 +11,7 @@ export default function disconnect(socket: Socket): void {
   socket.on("disconnect", () => {
     console.log("disconnect :: 切断検知");
     
+    //切断と設定
     getAppStatus.value.connected = false;
   });
 }
