@@ -80,6 +80,10 @@ const submit = async () => {
     })
     .catch((err:Error) => {
       console.log("/profile :: submit : アップロードエラー->", err);
+      console.log("無理だったわ");
+      uploadResult.value = "ERROR";
+
+      return;
     });
 
     if (result.status === 200) {
