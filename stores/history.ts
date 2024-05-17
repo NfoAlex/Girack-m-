@@ -279,6 +279,16 @@ export const useHistory = defineStore("history", {
     //新着があるかを設定
     setHasNewMessage(channelId:string, hasNewMessage:boolean) {
       this._HasNewMessage[channelId] = hasNewMessage;
+
+      //チャンネルをループして１つでも新着があるか調べて全体での新着を設定
+      for (let channelId in this._HasNewMessage) {
+        if (this._HasNewMessage[channelId]) {
+          this._ThereIsNewMessage = true;
+          return;
+        }
+      }
+      //普通にループ抜けたら全体通知を解除
+      this._ThereIsNewMessage = false;
     },
 
     //最新メッセを更新する
