@@ -284,11 +284,19 @@ export const useHistory = defineStore("history", {
       for (let channelId in this._HasNewMessage) {
         if (this._HasNewMessage[channelId]) {
           this._ThereIsNewMessage = true;
+          //タイトルに新着表示
+          useHead({
+            titleTemplate: '[*]Girack',
+          });
           return;
         }
       }
       //普通にループ抜けたら全体通知を解除
       this._ThereIsNewMessage = false;
+      //タイトルをデフォルトに
+      useHead({
+        titleTemplate: 'Girack',
+      });
     },
 
     //最新メッセを更新する
