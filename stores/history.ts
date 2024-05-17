@@ -28,6 +28,7 @@ export const useHistory = defineStore("history", {
       }
       */
     },
+    _ThereIsNewMessage: false, //全体で新着が1つでもあるかどうか
     _HasNewMessage: { //新着があるかどうか状態
       /*
       "0001":false
@@ -55,6 +56,7 @@ export const useHistory = defineStore("history", {
         latestFetchedHistoryLength: number, //最後に取得した履歴の長さ
       }
     },
+    _ThereIsNewMessage: boolean,
     _HasNewMessage: {
       [key: string]: boolean
     },
@@ -91,6 +93,11 @@ export const useHistory = defineStore("history", {
       }
       //返す
       return state._Availability[channelId]
+    },
+
+    //全体で新着があるかどうか
+    getThereIsNewMessage:(state) => {
+      return state._ThereIsNewMessage;
     },
 
     //そのチャンネルの新着があるかどうかを取得(データ操作もここでやる)
