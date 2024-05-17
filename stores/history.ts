@@ -28,6 +28,7 @@ export const useHistory = defineStore("history", {
       }
       */
     },
+    _ThereIsNewMessage: false, //全体で新着が1つでもあるかどうか
     _HasNewMessage: { //新着があるかどうか状態
       /*
       "0001":false
@@ -55,6 +56,7 @@ export const useHistory = defineStore("history", {
         latestFetchedHistoryLength: number, //最後に取得した履歴の長さ
       }
     },
+    _ThereIsNewMessage: boolean,
     _HasNewMessage: {
       [key: string]: boolean
     },
@@ -91,6 +93,11 @@ export const useHistory = defineStore("history", {
       }
       //返す
       return state._Availability[channelId]
+    },
+
+    //全体で新着があるかどうか
+    getThereIsNewMessage:(state) => {
+      return state._ThereIsNewMessage;
     },
 
     //そのチャンネルの新着があるかどうかを取得(データ操作もここでやる)
@@ -272,6 +279,24 @@ export const useHistory = defineStore("history", {
     //新着があるかを設定
     setHasNewMessage(channelId:string, hasNewMessage:boolean) {
       this._HasNewMessage[channelId] = hasNewMessage;
+
+      //チャンネルをループして１つでも新着があるか調べて全体での新着を設定
+      for (let channelId in this._HasNewMessage) {
+        if (this._HasNewMessage[channelId]) {
+          this._ThereIsNewMessage = true;
+          //タイトルに新着表示
+          useHead({
+            titleTemplate: '[*]Girack',
+          });
+          return;
+        }
+      }
+      //普通にループ抜けたら全体通知を解除
+      this._ThereIsNewMessage = false;
+      //タイトルをデフォルトに
+      useHead({
+        titleTemplate: 'Girack',
+      });
     },
 
     //最新メッセを更新する
