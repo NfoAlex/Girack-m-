@@ -20,6 +20,7 @@ definePageMeta({
  * data
  */
 const authMode = ref<"LOGIN"|"REGISTER">("LOGIN"); // "LOGIN" | "REGISTER"
+const stateProcesingWithCookie = ref<boolean>(true); //クッキーでログイン処理中かどうか
 const sharedUserName = ref<string>("");
 const isNewUser = ref<boolean>(false); //新規登録者かどうか
 const registrationData = ref<{userName:string, done:boolean}>({
@@ -176,6 +177,9 @@ onMounted(() => {
       userId: sessionData.userId,
       sessionId: sessionData.sessionId
     });
+  } else {
+    //クッキーがないなら認証画面を表示するためにクッキー処理状態を解除
+    stateProcesingWithCookie.value = false;
   }
 });
 
@@ -218,24 +222,31 @@ onUnmounted(() => {
           >新規登録</m-btn
         >
       </div>
-      <!-- 真ん中表示部分 -->
-      <AuthLogin
-        v-if="authMode === 'LOGIN'"
-        @initialize="initialize"
-        @applyChangeUserName="(username)=>bindUserName(username)"
-        :sharedUserName
-      />
-      <AuthRegister
-        v-if="authMode === 'REGISTER'"
-        @applyChangeUserName="(username)=>bindUserName(username)"
-        @registered="
-          (username)=>{
-            isNewUser=true;
-            registrationData.done=true;
-            registrationData.userName=username;
-          }"
-        :sharedUserName
-      />
+      <!-- クッキー読み取り処理中じゃなければログイン/登録画面表示 -->
+      <span v-if="!stateProcesingWithCookie">
+        <!-- 真ん中表示部分 -->
+        <AuthLogin
+          v-if="authMode === 'LOGIN'"
+          @initialize="initialize"
+          @applyChangeUserName="(username)=>bindUserName(username)"
+          :sharedUserName
+        />
+        <AuthRegister
+          v-if="authMode === 'REGISTER'"
+          @applyChangeUserName="(username)=>bindUserName(username)"
+          @registered="
+            (username)=>{
+              isNewUser=true;
+              registrationData.done=true;
+              registrationData.userName=username;
+            }"
+          :sharedUserName
+        />
+      </span>
+      <!-- ロード表示 -->
+      <span v-else class="mx-auto">
+        <v-progress-circular indeterminate :size="75" :width="10" />
+      </span>
     </v-card>
   </div>
 </template>
