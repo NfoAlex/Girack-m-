@@ -2,11 +2,13 @@
 import { useMyUserinfo } from "~/stores/userinfo";
 import { useUserIndex } from "~/stores/userindex";
 import { useAppStatus } from "~/stores/AppStatus";
+import { useHistory } from "~/stores/history";
 import getMyRolePower from "~/composables/getMyRolePower";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 const { getOnlineUsers } = storeToRefs(useUserIndex());
 const { getAppStatus } = storeToRefs(useAppStatus());
+const { getThereIsNewMessage } = storeToRefs(useHistory());
 </script>
 
 <template>
@@ -72,7 +74,18 @@ const { getAppStatus } = storeToRefs(useAppStatus());
       <!-- チャンネルボタン -->
       <span class="mt-4">
         <NuxtLink to="/channel">
+          <v-badge v-if="getThereIsNewMessage" dot color="primary">
+            <v-btn
+              icon=""
+              :variant="$route.path.startsWith('/channel') ? 'tonal' : 'text'"
+              :color="$route.path.startsWith('/channel') ? 'primary' : ''"
+              rounded="lg"
+            >
+              <v-icon size="large">mdi:mdi-pound</v-icon>
+            </v-btn>
+          </v-badge>
           <v-btn
+            v-else
             icon=""
             :variant="$route.path.startsWith('/channel') ? 'tonal' : 'text'"
             :color="$route.path.startsWith('/channel') ? 'primary' : ''"
