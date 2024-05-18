@@ -14,7 +14,7 @@ const processingAuth = ref<boolean>(false); //ボタンの処理中表示用
 const username = ref<string>("");
 const invitecode = ref<string>("");
 // 結果用
-const resultDisplay = ref<string>("");
+const resultDisplay = ref<"SUCCESS"|"FAILED"|"">("");
 const resultRegisterDone = ref<boolean>(false);
 const passwordRegistered = ref<string>("");
 
@@ -59,7 +59,7 @@ const register = () => {
 const SOCKETRESULTauthRegister = (
   dat: {
     result: string;
-    data:{datUser:MyUserinfo, password:string}
+    data: {datUser:MyUserinfo, password:string}
   }
 ) => {
   console.log("auth :: SOCKETRESULTauthRegister : dat->", dat);
@@ -126,6 +126,11 @@ onUnmounted(() => {
       >
         登録する
       </m-btn>
+
+      <!-- 失敗だった時の表示 -->
+      <v-alert v-if="resultDisplay==='FAILED'">
+        登録に失敗しました。しばらくしてからまた試してください。
+      </v-alert>
     </div>
     <!-- 登録完了後 -->
     <div v-if="resultRegisterDone">
