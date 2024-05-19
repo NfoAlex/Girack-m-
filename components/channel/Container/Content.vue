@@ -246,9 +246,10 @@ const calculateMessageBorder = (messageIndex:number) => {
       return timeDiffs.next ? "messageSingle" : "messageBottom";
     }
   } else if (messageAvailable.next === null) { //最初でなく、次のメッセージがなければ(最後)
+    //次(下)のメッセージと送信者が同じなら
     if (messageAvailable.before.userId === messageAvailable.here.userId) {
       return "messageTop";
-    } else {
+    } else { //違うなら
       return "messageSingle";
     }
   } else { //最初でも最後のメッセージでもないなら
