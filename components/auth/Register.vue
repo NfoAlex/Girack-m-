@@ -128,7 +128,11 @@ onUnmounted(() => {
       </m-btn>
 
       <!-- 失敗だった時の表示 -->
-      <v-alert v-if="resultDisplay==='FAILED'">
+      <v-alert
+        v-if="resultDisplay==='FAILED'"
+        type="error"
+        class="mt-3"
+      >
         登録に失敗しました。しばらくしてからまた試してください。
       </v-alert>
     </div>
