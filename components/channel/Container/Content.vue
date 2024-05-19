@@ -167,7 +167,7 @@ const calculateTimeDiff = (messageIndex:number) => {
           new Date(messageAvailable.before.time).valueOf() - new Date(messageAvailable.here.time).valueOf()
         ) / 1000 / 60
           >
-        2
+        5
       ) {
         //console.log("時差 -> ", (new Date(messageAvailable.before.time).valueOf() - new Date(messageAvailable.here.time).valueOf()) / 1000 / 60);
 
@@ -181,7 +181,7 @@ const calculateTimeDiff = (messageIndex:number) => {
           new Date(messageAvailable.here.time).valueOf() - new Date(messageAvailable.next.time).valueOf()
         ) / 1000 / 60
           >
-        2
+        5
       ) {
         //console.log("時差 -> ", (new Date(messageAvailable.before.time).valueOf() - new Date(messageAvailable.here.time).valueOf()) / 1000 / 60);
 
