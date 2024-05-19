@@ -85,6 +85,8 @@ const deleteIt = () => {
       rounded="pill"
       height="fit-content"
     >
+      <p class="ml-2 text-disabled">{{ new Date(propsMessage.message.time).toLocaleString() }}</p>
+
       <v-btn
         @click="displayEmojiPicker = !displayEmojiPicker;"
         size="small"
