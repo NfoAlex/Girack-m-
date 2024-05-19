@@ -528,7 +528,6 @@ watch(props, (newProp, oldProp) => {
         "
         :key="message.messageId"
         :id="'msg' + message.messageId"
-        position="relative"
       >
 
         <!-- 日付が違うとき用線 -->
