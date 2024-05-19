@@ -528,6 +528,7 @@ watch(props, (newProp, oldProp) => {
         "
         :key="message.messageId"
         :id="'msg' + message.messageId"
+        class="d-flex flex-column"
       >
 
         <!-- 日付が違うとき用線 -->
