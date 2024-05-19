@@ -212,6 +212,7 @@ const calculateDateDiffFromNext = (messageIndex:number) => {
       here: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex]
     };
 
+    //ひとつ前のメッセージがnullじゃないなら計算、nullなら日付線を表示させる
     if (messageAvailable.next !== null) {
       if (
           new Date(messageAvailable.here.time).getDate() !== new Date(messageAvailable.next.time).getDate()
@@ -219,14 +220,12 @@ const calculateDateDiffFromNext = (messageIndex:number) => {
 
         return true;
       }
+    } else {
+      return true;
     }
-
-    return false;
-
   } catch (e) {
     return false;
   }
-
 };
 
 /**
