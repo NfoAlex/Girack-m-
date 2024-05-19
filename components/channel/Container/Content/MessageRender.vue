@@ -74,7 +74,7 @@ const propsMessage = defineProps<{
             class="d-flex align-center"
           >
             <p>{{ getUserinfo(message.userId).userName }}</p>
-            <p class="text-medium-emphasis text-subtitle-2 ml-2">
+            <p class="text-medium-emphasis text-caption ml-2">
               {{ new Date(message.time).toLocaleString() }}
             </p>
           </span>
