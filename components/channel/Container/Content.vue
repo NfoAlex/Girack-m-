@@ -143,6 +143,10 @@ const fetchNewerHistory = () => {
   */
 }
 
+/**
+ * 前後のメッセージからの時差が5分以上あるか計算
+ * @param messageIndex
+ */
 const calculateTimeDiff = (messageIndex:number) => {
   try {
     //メッセージの前後を取得
@@ -198,6 +202,7 @@ const calculateTimeDiff = (messageIndex:number) => {
 
 /**
  * メッセージ枠のスタイル計算用
+ * @param messageIndex
  */
 const calculateMessageBorder = (messageIndex:number) => {
   //メッセージの前後を取得
@@ -227,7 +232,10 @@ const calculateMessageBorder = (messageIndex:number) => {
   } else if (messageAvailable.next === null) { //最初でなく、次のメッセージがなければ(最後)
     //次(下)のメッセージと送信者が同じなら
     if (messageAvailable.before.userId === messageAvailable.here.userId) {
-      return "messageTop";
+      //時差計算
+      const timeDiffs = calculateTimeDiff(messageIndex);
+      
+      return timeDiffs.before ? "messageSingle" : "messageTop";
     } else { //違うなら
       return "messageSingle";
     }
@@ -237,6 +245,7 @@ const calculateMessageBorder = (messageIndex:number) => {
 
       //かつ次のメッセージとも同じなら
       if (messageAvailable.before.userId === messageAvailable.here.userId) {
+        //時差計算
         const timeDiffs = calculateTimeDiff(messageIndex);
         //ひとつ前から時差があるなら
         if (timeDiffs.next && timeDiffs.before) {
