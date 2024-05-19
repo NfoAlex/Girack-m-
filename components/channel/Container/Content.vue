@@ -201,6 +201,35 @@ const calculateTimeDiff = (messageIndex:number) => {
 };
 
 /**
+ * 前のメッセージと日付が違うかどうか
+ * @param messageIndex
+ */
+const calculateDateDiffFromNext = (messageIndex:number) => {
+  try {
+    //メッセージの前後を取得
+    const messageAvailable = {
+      next: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1] || null,
+      here: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex]
+    };
+
+    if (messageAvailable.next !== null) {
+      if (
+          new Date(messageAvailable.here.time).getDate() !== new Date(messageAvailable.next.time).getDate()
+      ) {
+
+        return true;
+      }
+    }
+
+    return false;
+
+  } catch (e) {
+    return false;
+  }
+
+};
+
+/**
  * メッセージ枠のスタイル計算用
  * @param messageIndex
  */
@@ -502,6 +531,13 @@ watch(props, (newProp, oldProp) => {
         :id="'msg' + message.messageId"
         position="relative"
       >
+
+        <!-- 日付が違うとき用線 -->
+        <div v-if="calculateDateDiffFromNext(index)" class="d-flex flex-row align-center">
+          <v-divider class="flex-shrink-1" />
+          <p class="flex-grow-1 flex-shrink-0">{{ new Date(message.time).toLocaleDateString() }}</p>
+          <v-divider class="flex-shrink-1" />
+        </div>
 
         <span v-if="index===0" ref="latestMessageAnchor">
           <MessageRender
