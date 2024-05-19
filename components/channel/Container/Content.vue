@@ -207,27 +207,6 @@ const calculateMessageBorder = (messageIndex:number) => {
     before: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex - 1] || null,
   };
 
-  //前のメッセージと同じ送信者で、かつ時差があるなら強制でアバター(TopBorder)を表示させる
-  /*
-  if (messageAvailable.next !== null) {
-    if (calculateTimeDiff(messageIndex).before) {
-      //かつ次のメッセージがないなら単独として送信
-      if (messageAvailable.before === null) return "messageSingle";
-
-      //次のメッセージが違う送信者なら
-      if (messageAvailable.before.userId === messageAvailable.here.userId) {
-        return "messageTop";
-      } else {
-        return "messageSingle";
-      }
-    } else {
-      //console.log('時差 : ', (new Date(messageAvailable.next.time).valueOf() - new Date(messageAvailable.here.time).valueOf()) /1000 /60);
-    }
-  }
-  */
-
-  //const nextIsFar = calculateTimeDiff(messageIndex - 1);
-
   //最初のメッセージだったら
   if (messageIndex === 0) {
     // console.log("/channel/:id :: calculateMessageBorder : 次のメッセージ->",
