@@ -99,16 +99,22 @@ const deleteIt = () => {
         icon="mdi-pencil"
         class="pa-2"
       />
-      <div class="virtualDivider mx-1" />
-      <v-btn
-        v-if="getMyRolePower().MessageDelete"
-        @dblclick="deleteIt"
-        size="small"
-        color="error"
-        variant="text"
-        icon="mdi-delete"
-        class="pa-2"
-      />
+
+      <span
+        v-if="getMyRolePower().MessageDelete || getMyUserinfo.userId === propsMessage.message.userId"
+        class="d-flex align-center"
+      >
+        <div class="virtualDivider mx-1" />
+        <v-btn
+          
+          @dblclick="deleteIt"
+          size="small"
+          color="error"
+          variant="text"
+          icon="mdi-delete"
+          class="pa-2"
+        />
+      </span>
     </v-card>
   </span>
 </template>
