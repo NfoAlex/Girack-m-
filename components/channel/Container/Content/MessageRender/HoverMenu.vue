@@ -94,6 +94,8 @@ const deleteIt = () => {
         icon="mdi-emoticon-happy-outline"
         class="pa-2"
       />
+      
+      <!-- 
       <v-btn
         @click=""
         size="small"
@@ -101,6 +103,7 @@ const deleteIt = () => {
         icon="mdi-pencil"
         class="pa-2"
       />
+      -->
 
       <span
         v-if="getMyRolePower().MessageDelete || getMyUserinfo.userId === propsMessage.message.userId"
@@ -108,7 +111,6 @@ const deleteIt = () => {
       >
         <div class="virtualDivider mx-1" />
         <v-btn
-          
           @dblclick="deleteIt"
           size="small"
           color="error"
