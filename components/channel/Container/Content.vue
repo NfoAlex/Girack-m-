@@ -534,9 +534,9 @@ watch(props, (newProp, oldProp) => {
 
         <!-- 日付が違うとき用線 -->
         <div v-if="calculateDateDiffFromNext(index)" class="d-flex flex-row align-center">
-          <v-divider class="flex-shrink-1" />
-          <p class="flex-grow-1 flex-shrink-0">{{ new Date(message.time).toLocaleDateString() }}</p>
-          <v-divider class="flex-shrink-1" />
+          <v-divider class="flex-shrink-1" :thickness="3" />
+          <p class="flex-grow-1 flex-shrink-0 mx-3">{{ new Date(message.time).toLocaleDateString() }}</p>
+          <v-divider class="flex-shrink-1" :thickness="3" />
         </div>
 
         <span v-if="index===0" ref="latestMessageAnchor">
