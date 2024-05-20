@@ -22,8 +22,20 @@ export default defineEventHandler(async (event) => {
     target: API_URL,
     changeOrigin: true,
     ws: true,
-    logger: console,
-    pathFilter: apiPaths
+    //logger: console,
+    pathFilter: apiPaths,
+    onError: (err, req, res) => {
+      console.error('Proxy Error:', err);
+      // res.writeHead(500, {
+      //   'Content-Type': 'text/plain'
+      // });
+      //res.end('Something went wrong. And we are reporting a custom error message.');
+    },
+    onProxyReqWs: (proxyReq, req, socket, options, head) => {
+      socket.on('error', (err) => {
+        console.error('socket(error) :: エラー! ->', err);
+      });
+    }
   });
 
   //ここでプロキシ適用
@@ -38,4 +50,4 @@ export default defineEventHandler(async (event) => {
 
     myProxy(event.req, event.res, next);
   })
-})
+});
