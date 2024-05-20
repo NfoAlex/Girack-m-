@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
       //res.end('Something went wrong. And we are reporting a custom error message.');
     },
     onProxyReqWs: (proxyReq, req, socket, options, head) => {
-      socket.on('error', (err) => {
+      socket.on('connect_error', (err) => {
         console.error('socket(error) :: エラー! ->', err);
       });
     }
