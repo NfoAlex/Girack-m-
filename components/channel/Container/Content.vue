@@ -144,14 +144,100 @@ const fetchNewerHistory = () => {
 }
 
 /**
+ * 前後のメッセージからの時差が5分以上あるか計算
+ * @param messageIndex
+ */
+const calculateTimeDiff = (messageIndex:number) => {
+  try {
+    //メッセージの前後を取得
+    const messageAvailable = {
+      next: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1] || null,
+      here: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex],
+      before: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex - 1] || null,
+    };
+
+    const result = {
+      next: false,
+      before: false
+    };
+
+    if (messageAvailable.before !== null) {
+      if (
+        (
+          new Date(messageAvailable.before.time).valueOf() - new Date(messageAvailable.here.time).valueOf()
+        ) / 1000 / 60
+          >
+        5
+      ) {
+        //console.log("時差 -> ", (new Date(messageAvailable.before.time).valueOf() - new Date(messageAvailable.here.time).valueOf()) / 1000 / 60);
+
+        result.before = true;
+      }
+    }
+
+    if (messageAvailable.next !== null) {
+      if (
+        (
+          new Date(messageAvailable.here.time).valueOf() - new Date(messageAvailable.next.time).valueOf()
+        ) / 1000 / 60
+          >
+        5
+      ) {
+        //console.log("時差 -> ", (new Date(messageAvailable.before.time).valueOf() - new Date(messageAvailable.here.time).valueOf()) / 1000 / 60);
+
+        result.next = true;
+      }
+    }
+
+    return result;
+
+  } catch (e) {
+    return {
+      next: false,
+      before: false
+    };
+  }
+
+};
+
+/**
+ * 前のメッセージと日付が違うかどうか
+ * @param messageIndex
+ */
+const calculateDateDiffFromNext = (messageIndex:number) => {
+  try {
+    //メッセージの前後を取得
+    const messageAvailable = {
+      next: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1] || null,
+      here: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex]
+    };
+
+    //ひとつ前のメッセージがnullじゃないなら計算、nullなら日付線を表示させる
+    if (messageAvailable.next !== null) {
+      if (
+          new Date(messageAvailable.here.time).getDate() !== new Date(messageAvailable.next.time).getDate()
+      ) {
+
+        return true;
+      }
+    } else {
+      return true;
+    }
+  } catch (e) {
+    return false;
+  }
+};
+
+/**
  * メッセージ枠のスタイル計算用
+ * @param messageIndex
  */
 const calculateMessageBorder = (messageIndex:number) => {
   //メッセージの前後を取得
   const messageAvailable = {
-    before: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex - 1] || null,
-    here: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex],
     next: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1] || null,
+    here: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex],
+    before: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex - 1] || null,
   };
 
   //最初のメッセージだったら
@@ -167,29 +253,58 @@ const calculateMessageBorder = (messageIndex:number) => {
     if (messageAvailable.next.userId !== messageAvailable.here.userId) {
       return "messageSingle";
     } else {
-      return "messageBottom";
+      //時差計算
+      const timeDiffs = calculateTimeDiff(messageIndex);
+      return timeDiffs.next ? "messageSingle" : "messageBottom";
     }
   } else if (messageAvailable.next === null) { //最初でなく、次のメッセージがなければ(最後)
+    //次(下)のメッセージと送信者が同じなら
     if (messageAvailable.before.userId === messageAvailable.here.userId) {
-      return "messageTop";
-    } else {
+      //時差計算
+      const timeDiffs = calculateTimeDiff(messageIndex);
+      
+      return timeDiffs.before ? "messageSingle" : "messageTop";
+    } else { //違うなら
       return "messageSingle";
     }
   } else { //最初でも最後のメッセージでもないなら
-    //次のメッセージと同じ送信者で
+    //前のメッセージと同じ送信者で
     if (messageAvailable.next.userId === messageAvailable.here.userId) {
-      //かつ前のメッセージとも同じなら
+
+      //かつ次のメッセージとも同じなら
       if (messageAvailable.before.userId === messageAvailable.here.userId) {
+        //時差計算
+        const timeDiffs = calculateTimeDiff(messageIndex);
+        //ひとつ前から時差があるなら
+        if (timeDiffs.next && timeDiffs.before) {
+          return "messageSingle";
+        } else if (timeDiffs.next) {
+          return "messageTop";
+        } else if (timeDiffs.before) {
+          return "messageBottom";
+        }
         return "messageMiddle";
       } else {
-        return "messageBottom";
+        //時差計算
+        const timeDiffs = calculateTimeDiff(messageIndex);
+        return timeDiffs.next ? "messageSingle" : "messageBottom";
       }
-    } else {
+
+    } else { //前のメッセージが違う送信者
+
+      //次のメッセージが同じ送信者なら
       if (messageAvailable.before.userId === messageAvailable.here.userId) {
+        //時差計算
+        const timeDiffs = calculateTimeDiff(messageIndex);
+        //一つ後から時差があるなら
+        if (timeDiffs.before) {
+          return "messageSingle";
+        }
         return "messageTop";
       } else {
         return "messageSingle";
       }
+
     }
   }
 }
@@ -383,8 +498,6 @@ watch(props, (newProp, oldProp) => {
 </script>
 
 <template>
-  
-
   <div style="overflow-y:auto;">
 
     <div
@@ -415,8 +528,15 @@ watch(props, (newProp, oldProp) => {
         "
         :key="message.messageId"
         :id="'msg' + message.messageId"
-        position="relative"
+        class="d-flex flex-column"
       >
+
+        <!-- 日付が違うとき用線 -->
+        <div v-if="calculateDateDiffFromNext(index)" class="d-flex flex-row align-center">
+          <v-divider class="flex-shrink-1" :thickness="3" />
+          <p class="flex-grow-1 flex-shrink-0 mx-3">{{ new Date(message.time).toLocaleDateString() }}</p>
+          <v-divider class="flex-shrink-1" :thickness="3" />
+        </div>
 
         <span v-if="index===0" ref="latestMessageAnchor">
           <MessageRender

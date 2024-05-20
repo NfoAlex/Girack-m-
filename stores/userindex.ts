@@ -18,14 +18,17 @@ export const useUserIndex = defineStore("userindex", {
         channelJoined: ["0001"]
       }
       */
-    }
+    },
+    _OnlineUsers: []
   } as {
     _UserIndex: {
       [key: string]: MyUserinfo
     };
+    _OnlineUsers: string[];
   }),
 
   getters: {
+    //指定したユーザー情報を返す
     getUserinfo: (state) => (userId:string):MyUserinfo => {
       //空じゃなければそのデータを返す、空ならホルダー作成して情報取得
       if (state._UserIndex[userId] !== undefined) {
@@ -44,7 +47,7 @@ export const useUserIndex = defineStore("userindex", {
           //RequestSender用
         const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
           //WS通信
-        socket.emit("fetchUser", {
+        socket.emit("fetchUserInfo", {
           RequestSender: {
             userId: getMyUserinfo.value.userId,
             sessionId: getSessionId.value
@@ -56,11 +59,42 @@ export const useUserIndex = defineStore("userindex", {
         return state._UserIndex[userId];
       }
     },
+
+    //オンラインユーザーリストを返す
+    getOnlineUsers: (state) => {
+      return state._OnlineUsers;
+    }
   },
   
   actions: {
     setUserIndex(Userinfo: MyUserinfo) {
       this._UserIndex[Userinfo.userId] = Userinfo;
+    },
+
+    //オンラインユーザーリストを格納
+    bindOnlineUsers(onlineUsers: string[]) {
+      this._OnlineUsers = onlineUsers;
+    },
+
+    //オンラインユーザーリストへ一人追加
+    addOnlineUser(userId: string) {
+      //存在しないことを確認してから格納
+      if (this._OnlineUsers.indexOf(userId) === -1) {
+        this._OnlineUsers.push(userId);
+      }
+    },
+
+    //オンラインユーザーリストから一人削除
+    removeOnlineUserSingle(userId: string) {
+      //削除するユーザーIdの場所
+      const index = this._OnlineUsers.indexOf(userId);
+      //存在するならそのユーザーIdを削除
+      if (index !== -1) this._OnlineUsers.splice(index, 1);
+    },
+
+    //オンラインユーザーStoreの中身を丸ごと削除
+    removeOnlineUsers() {
+      this._OnlineUsers = [];
     }
   }
 });

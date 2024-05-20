@@ -71,7 +71,7 @@ const addMoreReaction = (emojiId:string) => {
 </script>
 
 <template>
-  <span>
+  <span class="mt-1">
     <v-chip
       v-for="(reaction,key) of props.reaction"
       @click="addMoreReaction(key.toString())"

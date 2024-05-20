@@ -85,6 +85,8 @@ const deleteIt = () => {
       rounded="pill"
       height="fit-content"
     >
+      <p class="ml-2 text-disabled">{{ new Date(propsMessage.message.time).toLocaleString() }}</p>
+
       <v-btn
         @click="displayEmojiPicker = !displayEmojiPicker;"
         size="small"
@@ -92,6 +94,8 @@ const deleteIt = () => {
         icon="mdi-emoticon-happy-outline"
         class="pa-2"
       />
+      
+      <!-- 
       <v-btn
         @click=""
         size="small"
@@ -99,16 +103,22 @@ const deleteIt = () => {
         icon="mdi-pencil"
         class="pa-2"
       />
-      <div class="virtualDivider mx-1" />
-      <v-btn
-        v-if="getMyRolePower().MessageDelete"
-        @dblclick="deleteIt"
-        size="small"
-        color="error"
-        variant="text"
-        icon="mdi-delete"
-        class="pa-2"
-      />
+      -->
+
+      <span
+        v-if="getMyRolePower().MessageDelete || getMyUserinfo.userId === propsMessage.message.userId"
+        class="d-flex align-center"
+      >
+        <div class="virtualDivider mx-1" />
+        <v-btn
+          @dblclick="deleteIt"
+          size="small"
+          color="error"
+          variant="text"
+          icon="mdi-delete"
+          class="pa-2"
+        />
+      </span>
     </v-card>
   </span>
 </template>

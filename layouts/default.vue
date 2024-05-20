@@ -1,13 +1,34 @@
 <script setup lang="ts">
-import getMyRolePower from "~/composables/getMyRolePower";
 import { useMyUserinfo } from "~/stores/userinfo";
+import { useUserIndex } from "~/stores/userindex";
+import { useAppStatus } from "~/stores/AppStatus";
+import { useHistory } from "~/stores/history";
+import getMyRolePower from "~/composables/getMyRolePower";
+
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+const { getOnlineUsers } = storeToRefs(useUserIndex());
+const { getAppStatus } = storeToRefs(useAppStatus());
+const { getThereIsNewMessage } = storeToRefs(useHistory());
 </script>
 
 <template>
   <div class="d-flex ma-0 pa-0">
     <!-- サイドバー -->
     <div class="d-flex flex-column pa-3 flex-grow-1 flex-shrink-0" style="overflow-y: auto;">
+      
+      <!-- オンラインユーザー数 -->
+      <span
+        class="text-center text-disabled flex justify-space-around align-center"
+        style="font-size:12px;"
+      >
+        <v-icon
+          :color="getAppStatus.connected?'green':'red'"
+          size="small"
+          class="mr-1"
+        >mdi:mdi-circle</v-icon>
+        <span>{{ getOnlineUsers.length }}</span>
+      </span>
+
       <!-- ホームボタン -->
       <span>
         <NuxtLink to="/">
@@ -53,7 +74,18 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
       <!-- チャンネルボタン -->
       <span class="mt-4">
         <NuxtLink to="/channel">
+          <v-badge v-if="getThereIsNewMessage" dot color="primary">
+            <v-btn
+              icon=""
+              :variant="$route.path.startsWith('/channel') ? 'tonal' : 'text'"
+              :color="$route.path.startsWith('/channel') ? 'primary' : ''"
+              rounded="lg"
+            >
+              <v-icon size="large">mdi:mdi-pound</v-icon>
+            </v-btn>
+          </v-badge>
           <v-btn
+            v-else
             icon=""
             :variant="$route.path.startsWith('/channel') ? 'tonal' : 'text'"
             :color="$route.path.startsWith('/channel') ? 'primary' : ''"

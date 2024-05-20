@@ -2,6 +2,7 @@ import vue from "@vitejs/plugin-vue";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: false,
   css: ["@/assets/styles/main.scss"],
   modules: ["@pinia/nuxt", "vuetify-nuxt-module", "@vueuse/nuxt", "@nuxtjs/google-fonts"],
   pinia: {
@@ -123,5 +124,5 @@ export default defineNuxtConfig({
     download: true,
     inject: true
   },
-  devtools: { enabled: true },
+  devtools: { enabled: false },
 });

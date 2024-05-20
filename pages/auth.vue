@@ -20,6 +20,13 @@ definePageMeta({
  * data
  */
 const authMode = ref<"LOGIN"|"REGISTER">("LOGIN"); // "LOGIN" | "REGISTER"
+const stateProcesingWithCookie = ref<boolean>(true); //クッキーでログイン処理中かどうか
+const sharedUserName = ref<string>("");
+const isNewUser = ref<boolean>(false); //新規登録者かどうか
+const registrationData = ref<{userName:string, done:boolean}>({
+  userName: "",
+  done: false
+});
 
 /**
  * ログイン後のGirack-m-準備処理
@@ -69,8 +76,20 @@ const initialize = (userId:string, sessionId:string) => {
   //ログイン状態を完了と設定
   getAppStatus.value.profile.authDone = true;
 
+  //オンラインユーザーリストを取得
+  socket.emit("fetchOnlineUsers", {
+    RequestSender: {
+      userId: userId,
+      sessionId: sessionId,
+    },
+  });
+
   //トップページへ移動
-  router.push("/");
+  if (isNewUser.value) {
+    router.push("/?firstTime=true");
+  } else {
+    router.push("/");
+  }
 };
 
 /**
@@ -99,6 +118,25 @@ const getSessionFromCookie = ():{
     return undefined;
   }
 }
+
+/**
+ * 共有用ユーザー名を格納
+ * @param userNameNew
+ */
+const bindUserName = (userNameNew:string) => {
+  //現セッションで登録していて...
+  if (registrationData.value.done) {
+    //もし入力するユーザー名が違うなら新ユーザーじゃないと設定、逆なら逆
+    if (registrationData.value.userName !== userNameNew) {
+      isNewUser.value = false;
+    } else {
+      isNewUser.value = true;
+    }
+  }
+
+  //格納
+  sharedUserName.value = userNameNew;
+};
 
 /**
  * セッション認証結果の受け取り
@@ -139,6 +177,9 @@ onMounted(() => {
       userId: sessionData.userId,
       sessionId: sessionData.sessionId
     });
+  } else {
+    //クッキーがないなら認証画面を表示するためにクッキー処理状態を解除
+    stateProcesingWithCookie.value = false;
   }
 });
 
@@ -181,9 +222,31 @@ onUnmounted(() => {
           >新規登録</m-btn
         >
       </div>
-      <!-- 真ん中表示部分 -->
-      <AuthLogin v-if="authMode === 'LOGIN'" @initialize="initialize" />
-      <AuthRegister v-if="authMode === 'REGISTER'" />
+      <!-- クッキー読み取り処理中じゃなければログイン/登録画面表示 -->
+      <span v-if="!stateProcesingWithCookie">
+        <!-- 真ん中表示部分 -->
+        <AuthLogin
+          v-if="authMode === 'LOGIN'"
+          @initialize="initialize"
+          @applyChangeUserName="(username)=>bindUserName(username)"
+          :sharedUserName
+        />
+        <AuthRegister
+          v-if="authMode === 'REGISTER'"
+          @applyChangeUserName="(username)=>bindUserName(username)"
+          @registered="
+            (username)=>{
+              isNewUser=true;
+              registrationData.done=true;
+              registrationData.userName=username;
+            }"
+          :sharedUserName
+        />
+      </span>
+      <!-- ロード表示 -->
+      <span v-else class="mx-auto">
+        <v-progress-circular indeterminate :size="75" :width="10" />
+      </span>
     </v-card>
   </div>
 </template>
