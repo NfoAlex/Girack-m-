@@ -23,6 +23,8 @@ const channelInfo = ref<channel>({ //チャンネルデータ
   speakableRole: ''
 });
 const tabPage = ref<"INFO"|"MANAGE">("INFO"); //表示するタブ指定用
+const stateNameEditing = ref<boolean>(false); //チャンネル名編集モードトグル
+const tempNameEditing = ref<string>(""); //チャンネル名編集用
 const tempDescriptionEditing = ref<string>(""); //チャンネル概要文編集用
 
 /**
@@ -38,6 +40,7 @@ const updateChannel = () => {
     channelId: props.channelId,
     channelInfo: {
       ...channelInfo.value,
+      channelName: tempNameEditing.value,
       description: tempDescriptionEditing.value
     }
   });
@@ -61,6 +64,7 @@ const SOCKETfetchChannelInfo = (
   if (dat.result === "SUCCESS") {
     //チャンネルデータ格納
     channelInfo.value = dat.data.channelInfo;
+    tempNameEditing.value = dat.data.channelInfo.channelName;
     tempDescriptionEditing.value = dat.data.channelInfo.description;
   }
 };
@@ -88,7 +92,41 @@ onUnmounted(() => {
     <m-card style="height:100%;" class="pt-8 d-flex">
       <span class="d-flex align-center mb-2">
         <v-icon size="large" class="mr-1">mdi-pound</v-icon>
-        <p class="text-h5 text-truncate">{{ channelInfo.channelName }}</p>
+        <!-- チャンネル名編集モードON -->
+        <v-text-field
+          v-if="stateNameEditing"
+          v-model="tempNameEditing"
+          label="チャンネル名"
+          variant="outlined"
+          hide-details
+        >
+          <template v-slot:append-inner>
+            <m-btn
+              @click="updateChannel"
+              icon="mdi-check"
+              :disabled="tempNameEditing===''"
+              size="x-small"
+              variant="text"
+            ></m-btn>
+            <m-btn
+              @click="stateNameEditing=false; tempNameEditing=channelInfo.channelName"
+              icon="mdi-close"
+              size="x-small"
+              variant="text"
+            ></m-btn>
+          </template>
+        </v-text-field>
+        <!-- チャンネル名編集モードOFF -->
+        <p v-else class="text-h5 text-truncate">{{ channelInfo.channelName }}</p>
+        <!-- チャンネル名編集ボタン -->
+        <m-btn
+          v-if="!stateNameEditing"
+          @click="stateNameEditing=true"
+          variant="text"
+          icon="mdi-pencil"
+          size="small"
+          class="ml-auto"
+        />
       </span>
 
       <!-- タブ -->
