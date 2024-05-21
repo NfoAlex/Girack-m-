@@ -18,10 +18,20 @@ const props = defineProps<{
     <!-- チャンネルページ -->
     <Channelinfo v-model="displayChannelinfo" v-if="displayChannelinfo" :channel-id="props.channelInfo.channelId" />
     <!-- 表示される部分 -->
-    <m-card @click="displayChannelinfo=true" class="d-flex align-center py-0">
-      <p>{{ props.channelInfo.channelName }}</p>
+    <m-card
+      width="100%"
+      class="d-flex align-center py-0"
+    >
+      <p class="text-truncate flex-shrink-0">{{ props.channelInfo.channelName }}</p>
       <div class="virtualDivider mx-2 my-3" />
-      <p>{{ props.channelInfo.description }}</p>
+      <p class="text-truncate">{{ props.channelInfo.description }}</p>
+      <m-btn
+        @click="displayChannelinfo=true"
+        icon="mdi-information"
+        variant="text"
+        size="small"
+        class="ml-auto"
+      />
     </m-card>
   </div>
 
