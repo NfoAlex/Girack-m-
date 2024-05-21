@@ -210,6 +210,7 @@ onUnmounted(() => {
           size="large"
           :color="authMode === 'LOGIN' ? 'primary' : null"
           :variant="authMode === 'LOGIN' ? 'tonal' : 'text'"
+          style="font-weight:700;"
           >ログイン</m-btn
         >
         <m-btn
@@ -219,6 +220,7 @@ onUnmounted(() => {
           size="large"
           :color="authMode === 'REGISTER' ? 'primary' : null"
           :variant="authMode === 'REGISTER' ? 'tonal' : 'text'"
+          style="font-weight:700;"
           >新規登録</m-btn
         >
       </div>

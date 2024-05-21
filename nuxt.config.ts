@@ -118,7 +118,7 @@ export default defineNuxtConfig({
   },
   googleFonts: {
     families: {
-      "Noto Sans JP": [400, 600],
+      "Noto Sans JP": [500, 700],
       Inter: true,
     },
     download: true,

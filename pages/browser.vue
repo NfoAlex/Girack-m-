@@ -221,7 +221,7 @@ onUnmounted(() => {
     <span class="d-flex align-center">
       <p
         class="text-h5"
-        style="font-weight:600;"
+        style="font-weight:700;"
       >チャンネルブラウザ</p>
       <v-btn
         @click="fetchChannelListTrigger"

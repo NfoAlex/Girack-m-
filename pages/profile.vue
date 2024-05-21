@@ -86,7 +86,7 @@ onMounted(() => {
   />
 
   <div class="pa-4">
-    <p class="text-h5 pa-2" style="font-weight:600;">あなた</p>
+    <p class="text-h5 pa-2" style="font-weight:700;">あなた</p>
     <v-divider class="my-2"></v-divider>
     <m-card class="mx-auto" width="80%" style="max-width: 600px">
       <div class="d-flex justify-start" style="width: 100%">
