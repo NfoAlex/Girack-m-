@@ -7,7 +7,7 @@ import getMyRolePower from "~/composables/getMyRolePower";
 
     <!-- 左部分(サイドバー) -->
     <div class="d-flex flex-column flex-grow-1 flex-shrink-0" style="width:30%; max-width:250px;">
-      <p class="text-h5 py-4 px-8">サーバー管理</p>
+      <p class="text-h5 py-4 px-8" style="font-weight:600;">サーバー管理</p>
 
       <span class="pl-2">
         <NuxtLink v-if="getMyRolePower().ServerManage" to="/server">

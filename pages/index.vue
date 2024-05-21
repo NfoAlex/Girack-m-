@@ -22,7 +22,10 @@ const route = useRoute();
     <IndexOnlineUsers />
   </div>
   <div class="pa-5">
-    <div class="text-h4 my-3">ここがホーム</div>
+    <div
+      class="text-h5"
+      style="font-weight:600;"
+    >ここがホーム</div>
     <p>piniaデータ :</p>
     <m-card>
       <p>Serverinfo :</p>

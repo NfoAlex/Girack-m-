@@ -30,7 +30,7 @@ watch(getConfig.value, () => {
 
     <!-- 左部分(サイドバー) -->
     <div class="d-flex flex-column" style="width:20%; max-width:250px;">
-      <p class="text-h5 py-4 px-8">設定</p>
+      <p class="text-h5 py-4 px-8" style="font-weight:600;">設定</p>
 
       <!-- 全般 -->
       <span class="pl-2">
