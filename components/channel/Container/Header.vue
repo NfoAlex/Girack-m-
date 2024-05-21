@@ -22,7 +22,7 @@ const props = defineProps<{
       width="100%"
       class="d-flex align-center py-0"
     >
-      <p class="text-truncate flex-shrink-0">{{ props.channelInfo.channelName }}</p>
+      <p class="text-truncate flex-shrink-0" style="max-width:85%">{{ props.channelInfo.channelName }}</p>
       <div class="virtualDivider mx-2 my-3" />
       <p class="text-truncate">{{ props.channelInfo.description }}</p>
       <m-btn
@@ -30,7 +30,7 @@ const props = defineProps<{
         icon="mdi-information"
         variant="text"
         size="small"
-        class="ml-auto"
+        class="ml-auto flex-shrink-0"
       />
     </m-card>
   </div>
