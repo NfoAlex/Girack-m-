@@ -34,7 +34,10 @@ const bindChannelInfo = () => {
     //取得したものがundefinedじゃなければ格納、そうなら初期化
     if (channelInfoTemp !== undefined) {
       //格納
-      channelInfo.value = channelInfoTemp;
+      channelInfo.value = {
+        ...channelInfo.value,
+        ...channelInfoTemp
+      };
     } else {
       //ホルダー...
       channelInfo.value = {
