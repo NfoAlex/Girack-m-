@@ -4,7 +4,7 @@ import vue from "@vitejs/plugin-vue";
 export default defineNuxtConfig({
   ssr: false,
   css: ["@/assets/styles/main.scss"],
-  modules: ["@pinia/nuxt", "vuetify-nuxt-module", "@vueuse/nuxt"],
+  modules: ["@pinia/nuxt", "vuetify-nuxt-module", "@vueuse/nuxt", "@nuxtjs/google-fonts"],
   pinia: {
     storesDirs: ['./stores/**'],
   },
@@ -115,6 +115,14 @@ export default defineNuxtConfig({
         }
       }
     }
+  },
+  googleFonts: {
+    families: {
+      "Noto Sans JP": [500, 700],
+      Inter: true,
+    },
+    download: true,
+    inject: true
   },
   devtools: { enabled: false },
 });

@@ -118,7 +118,7 @@ onUnmounted(() => {
   />
 
   <div class="pa-4 mx-auto d-flex flex-column" style="max-width:1200px; height:100%;">
-    <p class="text-h5 pa-2">ユーザーリスト</p>
+    <p class="text-h5 pa-2" style="font-weight:700;">ユーザーリスト</p>
     <v-divider class="my-2"></v-divider>
     <m-card class="mx-auto d-flex flex-column" :loading="stateLoading" style="width:100%; height:100%;">
       <p class="mb-2">ユーザー数 : {{ userCount }}</p>

@@ -58,6 +58,10 @@ html {
   overflow-y: hidden;
 }
 
+* {
+  font-family: 'Noto Sans JP', sans-serif !important;
+}
+
 ::-webkit-scrollbar {
   background: #000;
   width: 5px;
