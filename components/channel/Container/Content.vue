@@ -462,15 +462,13 @@ watch(props, (newProp, oldProp) => {
         !==
       undefined
     ) {
-      goTo(
-        scrollPositionCalculated,
-        {
-        duration: 0,
-        container: "#ChannelContainerContent",
-        offset: 10
-        }
-      );
+      //console.log("scrolling to ...->", scrollPositionCalculated);
+      //VuetifyのgoToだと数値での移動ができないためscrollTo
+      document.getElementById("ChannelContainerContent")?.scrollTo({
+        top: scrollPositionCalculated
+      });
     } else {
+      //最新既読Idへ
       goTo(
         "#msg" + getMessageReadId(props.channelInfo.channelId),
         {
