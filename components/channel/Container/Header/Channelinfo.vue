@@ -135,7 +135,7 @@ onUnmounted(() => {
           @click="tabPage='INFO'"
           :variant="tabPage==='INFO'?'tonal':'text'"
         >
-          情報
+          概要
         </m-btn>
         <m-btn
           @click="tabPage='MANAGE'"
@@ -182,6 +182,10 @@ onUnmounted(() => {
               size="small"
             />
           </m-card-compact>
+        </div>
+
+        <div v-if="tabPage==='MANAGE'">
+          <p>Coming soon...</p>
         </div>
 
       </m-card>
