@@ -102,7 +102,7 @@ onUnmounted(() => {
         >
           <template v-slot:append-inner>
             <m-btn
-              @click="updateChannel"
+              @click="updateChannel(); stateNameEditing=false"
               icon="mdi-check"
               :disabled="tempNameEditing===''"
               size="x-small"
