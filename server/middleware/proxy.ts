@@ -4,7 +4,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 export default defineEventHandler(async (event) => {
   const url = event.node.req.url;
   // APIパスが複数ある場合
-  const apiPaths = [
+  const apiPaths:string[] = [
     '/socket.io',
     '/icon',
     '/uploadProfileIcon'
@@ -26,16 +26,7 @@ export default defineEventHandler(async (event) => {
     pathFilter: apiPaths,
     onError: (err, req, res) => {
       console.error('Proxy Error:', err);
-      // res.writeHead(500, {
-      //   'Content-Type': 'text/plain'
-      // });
-      //res.end('Something went wrong. And we are reporting a custom error message.');
     },
-    onProxyReqWs: (proxyReq, req, socket, options, head) => {
-      socket.on('connect_error', (err) => {
-        console.error('socket(error) :: エラー! ->', err);
-      });
-    }
   });
 
   //ここでプロキシ適用

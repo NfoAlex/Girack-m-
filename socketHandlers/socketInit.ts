@@ -26,6 +26,9 @@ import getMessageReadId from "./getMessageReadId";
 import fetchRoles from "./fetchRoles";
 import fetchRoleSingle from "./fetchRoleSingle";
 
+import EventEmitter from 'events';
+EventEmitter.defaultMaxListeners = 25; // 新しいリスナーの上限を25に設定
+
 console.log("socketInit :: INITIALIZED");
 
 //Socket接続

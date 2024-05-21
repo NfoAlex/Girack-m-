@@ -25,13 +25,30 @@ export default function connect(socket: Socket): void {
     const { removeOnlineUsers } = useUserIndex();
     removeOnlineUsers();
 
-    //オンラインユーザーリストを取得
+    //セッション認証とオンラインユーザーリスト取得用
     const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+
+    //セッション認証用の結果受け取りハンドラ
+    const tempSessionCheck = (dat:{result:string, data:boolean}) => {
+      console.log("socket(reconnect) :: tempSessionCheck : 再接続の認証->", dat);
+      if (dat.result !== "SUCCESS") window.location.reload();
+      //このハンドラを解除
+      socket.off("RESULT::authSession", tempSessionCheck);
+    };
+    socket.on("RESULT::authSession", tempSessionCheck);
+
+    //Socketチャンネルへ参加するためのセッション認証
+    socket.emit("authSession", {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    });
+    //オンラインユーザーリストを取得
     socket.emit("fetchOnlineUsers", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
         sessionId: getSessionId.value
       }
     });
+    
   });
 }
