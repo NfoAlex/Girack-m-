@@ -42,13 +42,19 @@ export default defineEventHandler(async (event) => {
   await new Promise((resolve, reject) => {
     const next = (err?: unknown) => {
       if (err) {
+        console.log("PROXY :: エラー->", err);
         reject(err);
       } else {
         resolve(true);
       }
     }
 
-    myProxy(event.req, event.res, next);
+    try {
+      myProxy(event.req, event.res, next);
+    } catch(e) {
+      console.log("PROXY :: エラー->", e);
+      reject(e);
+    }
   })
 });
 
