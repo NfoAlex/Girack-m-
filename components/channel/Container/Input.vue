@@ -163,6 +163,8 @@ const SOCKETsearchUserInfo = (
   console.log("/channel/[id] :: SOCKETsearchUserInfo : dat->", dat);
   //ユーザーリストを格納
   userAtHere.value = dat.data;
+  //初期結果にも格納する
+  searchDataResult.value = dat.data;
 }
 
 onMounted(() => {
