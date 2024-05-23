@@ -140,7 +140,7 @@ const insertResult = (targetId:string) => {
   if (searchData.value.query === "") {
     messageInput.value =
       messageInput.value.substring(0, searchData.value.searchStartingAt) +
-      ("@/" + targetId + "/ ") +
+      ("@<" + targetId + "> ") +
       messageInput.value.substring(searchData.value.searchStartingAt + 1);
   } else {
     messageInput.value = messageInput.value.replace(
@@ -176,6 +176,7 @@ onUnmounted(() => {
 
 <template>
   <div style="height:fit-content;">
+    <!-- メンションウィンドウ -->
     <m-card
       v-if="searchData.searching"
       position="relative"
