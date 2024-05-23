@@ -135,7 +135,7 @@ const triggerEnter = (event:Event) => {
  * メンション、あるいはチャンネルデータ(未実装)を挿入する
  * @param targetId 
  */
-const insertQuery = (targetId:string) => {
+const insertResult = (targetId:string) => {
   //入力テキストの@部分をメンション文で代入
   if (searchData.value.query === "") {
     messageInput.value =
@@ -189,7 +189,10 @@ onUnmounted(() => {
         :items="searchDataResult"
       >
         <template v-slot:default="{ item }">
-          <span class="d-flex align-center mb-2">
+          <span
+            @click="insertResult(item.userId)"
+            class="d-flex align-center mb-2"
+          >
             <v-avatar class="mr-3" :size="28">
               <v-img
                 :alt="item.userId"
