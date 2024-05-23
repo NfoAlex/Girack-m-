@@ -1,73 +1,27 @@
 <script setup lang="ts">
-import { socket } from "~/socketHandlers/socketInit";
 import { useChannelinfo } from "~/stores/channel";
-import type { channel } from "~/types/channel";
 
 //チャンネル情報取得
-//const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
-const { getChannelinfoSingle } = useChannelinfo();
+const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
 
 const route = useRoute();
+const router = useRouter();
 
 /**
- * data
+ * 現在いるチャンネルIdを取得する
  */
-const channelInfo = ref<channel>({
-  channelId: "",
-  channelName: "",
-  createdBy: "",
-  description: "",
-  isPrivate: false,
-  speakableRole: ""
-});
-
-/**
- * チャンネル情報を設定
- */
-const bindChannelInfo = () => {
-  //チャンネルID取得
+const getChannelPath = computed(() => {
+  //チャンネルIdをルーターオブジェクトから取得
   const channelId = route.params.id;
-  //routeからのチャンネルIDがオブジェクトじゃなければチャンネル情報取得、格納
-  if (typeof channelId !== "object") {
-    //チャンネル情報取得
-    const channelInfoTemp:channel|undefined = getChannelinfoSingle(channelId);
-    //取得したものがundefinedじゃなければ格納、そうなら初期化
-    if (channelInfoTemp !== undefined) {
-      //格納
-      channelInfo.value = {
-        ...channelInfo.value,
-        ...channelInfoTemp
-      };
-    } else {
-      //ホルダー...
-      channelInfo.value = {
-        channelId: "",
-        channelName: "",
-        createdBy: "",
-        description: "",
-        isPrivate: false,
-        speakableRole: ""
-      };
-    }
+
+  //取得したチャンネルIdがシンプル文字列ならそれを返す
+  if (typeof(channelId) !== "object") {
+    return channelId;
+  } else {
+    alert("致命的エラー :: リロードしてください");
+    router.push("/");
+    return "";
   }
-}
-
-/**
- * チャンネル情報を再取得させるだけ
- */
-const updateChannelInfo = () => {
-  bindChannelInfo();
-}
-
-onMounted(() => {
-  //チャンネル情報を設定する
-  bindChannelInfo();
-  //チャンネル情報を受け取ったときにまた再取得させる
-  socket.on("RESULT::fetchChannelInfo", updateChannelInfo);
-});
-onUnmounted(() => {
-  //ただのoff
-  socket.off("RESULT::fetchChannelInfo", updateChannelInfo);
 });
 </script>
 
@@ -75,9 +29,9 @@ onUnmounted(() => {
   <div class="d-flex flex-column" style="width:0">
     <ChannelContainerHeader
       class="flex-shrink-0"
-      :channel-info="channelInfo"
+      :channel-info="getChannelinfoSingle(getChannelPath)"
     />
-    <ChannelContainerContent :channel-info="channelInfo" class="flex-grow-1" />
-    <ChannelContainerInput :channel-info="channelInfo" class="flex-shrink-0"/>
+    <ChannelContainerContent :channel-info="getChannelinfoSingle(getChannelPath)" class="flex-grow-1" />
+    <ChannelContainerInput :channel-info="getChannelinfoSingle(getChannelPath)" class="flex-shrink-0"/>
   </div>
 </template>
