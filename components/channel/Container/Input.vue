@@ -36,6 +36,60 @@ const searchData = ref<SearchData>({ //検索データ
 });
 
 /**
+ * 入力テキストの監視
+ */
+watch(messageInput, (() => {
+  //console.log("/channel/[id] :: watch(messageInput) : 入力検知->", messageInput.value);
+
+  //検索モードを有効化する
+  if (
+    messageInput.value[messageInput.value.length - 1]
+      ===
+    "@"
+  ) {
+    //検索を有効化
+    searchData.value.searching = true;
+    //どの位置から始まっているか
+    searchData.value.searchStartingAt = messageInput.value.length - 1;
+    console.log("/channel/[id] :: watch(messageInput) : 検索モードON");
+  }
+
+  //スペースが入力された、あるいは文字が空になったら検索モードを終了
+  if (
+    messageInput.value[messageInput.value.length - 1] === " " ||
+    messageInput.value[messageInput.value.length - 1] === "　" ||
+    messageInput.value.length === 0
+  ) {
+    searchData.value.searching = false;
+    console.log("/channel/[id] :: watch(messageInput) : 検索モードOFF");
+  }
+
+  //検索モードに入っているなら検索する
+  if (searchData.value.searching) {
+    //検索文字列の範囲終わりを取得
+    searchData.value.searchEndingAt =
+      messageInput.value.length -
+      searchData.value.txtLengthWhenStartSearching +
+      searchData.value.searchStartingAt;
+    //もし開始文字位置と検索範囲終わり位置がかたよったら検索モードを無効化して関数を止める
+    if (
+      searchData.value.searchStartingAt + 1 >
+      searchData.value.searchEndingAt
+    ) {
+      searchData.value.searching = false;
+      return;
+    }
+
+    //検索文字列を取得
+    searchData.value.query = messageInput.value.substring(
+      searchData.value.searchStartingAt + 1,
+      searchData.value.searchEndingAt
+    );
+    console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
+  }
+}));
+
+/**
  * Enterキーの処理
  */
 const triggerEnter = (event:Event) => {
