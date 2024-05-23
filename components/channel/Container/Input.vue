@@ -132,6 +132,25 @@ const triggerEnter = (event:Event) => {
 }
 
 /**
+ * メンション、あるいはチャンネルデータ(未実装)を挿入する
+ * @param targetId 
+ */
+const insertQuery = (targetId:string) => {
+  //入力テキストの@部分をメンション文で代入
+  if (searchData.value.query === "") {
+    messageInput.value =
+      messageInput.value.substring(0, searchData.value.searchStartingAt) +
+      ("@/" + targetId + "/ ") +
+      messageInput.value.substring(searchData.value.searchStartingAt + 1);
+  } else {
+    messageInput.value = messageInput.value.replace(
+      "@" + searchData.value.query,
+      "@<" + targetId + "> "
+    );
+  }
+}
+
+/**
  * ユーザーデータ受け取り
  * @param dat
  */
@@ -165,19 +184,22 @@ onUnmounted(() => {
       width="100%"
       color="messageHovered"
     >
-      <p
-        v-for="(user,index) in searchDataResult"
-        :key="index"
-        class="d-flex align-center mb-1"
+      <v-virtual-scroll
+        height="100%"
+        :items="searchDataResult"
       >
-        <v-avatar class="mr-3">
-          <v-img
-            :alt="user.userId"
-            :src="'/icon/' + user.userId"
-          ></v-img>
-        </v-avatar>
-        <p>{{ user.userName }}</p>
-      </p>
+        <template v-slot:default="{ item }">
+          <span class="d-flex align-center mb-2">
+            <v-avatar class="mr-3" :size="28">
+              <v-img
+                :alt="item.userId"
+                :src="'/icon/' + item.userId"
+              ></v-img>
+            </v-avatar>
+            <p>{{ item.userName }}</p>
+          </span>
+        </template>
+      </v-virtual-scroll>
     </m-card>
     <v-text-field
       v-model="messageInput"
