@@ -24,6 +24,12 @@ export default defineEventHandler(async (event) => {
     ws: true,
     //logger: console,
     pathFilter: apiPaths,
+    cache: {
+      // キャッシュの有効期限（ミリ秒単位）
+      maxAge: 60000, // 1分
+      // キャッシュの最大サイズ（バイト単位）
+      maxSize: 1024 * 1024, // 1MB
+    },
     onError: (err, req, res) => {
       console.error('Proxy Error:', err);
     },
