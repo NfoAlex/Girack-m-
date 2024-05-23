@@ -2,6 +2,7 @@
 import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
 import type { channel } from '~/types/channel';
+import { MyUserinfo } from '~/types/user';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -34,6 +35,7 @@ const searchData = ref<SearchData>({ //検索データ
   txtLengthWhenStartSearching: 0,
   searchingTerm: 'user'
 });
+const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リスト
 
 /**
  * 入力テキストの監視
@@ -52,6 +54,17 @@ watch(messageInput, (() => {
     //どの位置から始まっているか
     searchData.value.searchStartingAt = messageInput.value.length - 1;
     console.log("/channel/[id] :: watch(messageInput) : 検索モードON");
+
+    //このチャンネルに参加するユーザーを取得
+    socket.emit("searchUserInfo", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      userName: "", //全員取得するため空
+      rule: "PARTIAL",
+      channelId: props.channelInfo.channelId
+    });
   }
 
   //スペースが入力された、あるいは文字が空になったら検索モードを終了
@@ -111,6 +124,28 @@ const triggerEnter = (event:Event) => {
   //入力欄を初期化
   messageInput.value = "";
 }
+
+/**
+ * ユーザーデータ受け取り
+ * @param dat
+ */
+const SOCKETsearchUserInfo = (
+  dat: {
+    result: string,
+    data: MyUserinfo[]
+  }
+) => {
+  console.log("/channel/[id] :: SOCKETsearchUserInfo : dat->", dat);
+  userAtHere.value = dat.data;
+}
+
+onMounted(() => {
+  socket.on("RESULT::searchUserInfo", SOCKETsearchUserInfo);
+});
+
+onUnmounted(() => {
+  socket.off("RESULT::searchUserInfo", SOCKETsearchUserInfo);
+})
 </script>
 
 <template>
