@@ -35,6 +35,7 @@ const searchData = ref<SearchData>({ //検索データ
   txtLengthWhenStartSearching: 0,
   searchingTerm: 'user'
 });
+const searchDataResult = ref<MyUserinfo[]>([]);
 const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リスト
 
 /**
@@ -99,6 +100,10 @@ watch(messageInput, (() => {
       searchData.value.searchEndingAt
     );
     console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
+
+    searchDataResult.value = userAtHere.value.filter(
+      user=>user.userName.includes(searchData.value.query)
+    );
   }
 }));
 
@@ -145,11 +150,23 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::searchUserInfo", SOCKETsearchUserInfo);
-})
+});
 </script>
 
 <template>
-  <div>
+  <div style="height:fit-content;">
+    <m-card
+      v-if="searchData.searching"
+      position="relative"
+      style="bottom:0%; z-index:999999; overflow-y:auto;"
+      maxHeight="30vh"
+      width="100%"
+      color="messageHovered"
+    >
+      <p v-for="(user,index) in searchDataResult" :key="index">
+        {{ user.userName }}
+      </p>
+    </m-card>
     <v-text-field
       v-model="messageInput"
       @keydown.enter="triggerEnter"
