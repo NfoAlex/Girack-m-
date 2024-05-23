@@ -192,7 +192,8 @@ onUnmounted(() => {
         <template v-slot:default="{ item }">
           <span
             @click="insertResult(item.userId)"
-            class="d-flex align-center mb-2"
+            class="d-flex align-center my-1 px-1 cursor-pointer rounded-pill"
+            v-ripple
           >
             <v-avatar class="mr-3" :size="28">
               <v-img
