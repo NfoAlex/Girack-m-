@@ -165,8 +165,18 @@ onUnmounted(() => {
       width="100%"
       color="messageHovered"
     >
-      <p v-for="(user,index) in searchDataResult" :key="index">
-        {{ user.userName }}
+      <p
+        v-for="(user,index) in searchDataResult"
+        :key="index"
+        class="d-flex align-center mb-1"
+      >
+        <v-avatar class="mr-3">
+          <v-img
+            :alt="user.userId"
+            :src="'/icon/' + user.userId"
+          ></v-img>
+        </v-avatar>
+        <p>{{ user.userName }}</p>
       </p>
     </m-card>
     <v-text-field
