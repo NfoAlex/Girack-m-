@@ -54,6 +54,8 @@ export const useChannelinfo = defineStore("channelinfo", {
           channelId: channelId
         });
         console.log("store(channel) :: getChannelinfoSingle : 送信した");
+
+        return state._Channelinfo[channelId];
       } else {
         return state._Channelinfo[channelId];
       }
