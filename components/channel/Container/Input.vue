@@ -101,8 +101,9 @@ watch(messageInput, (() => {
     );
     console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
 
+    //クエリーでユーザーリストへフィルターかけて結果格納
     searchDataResult.value = userAtHere.value.filter(
-      user=>user.userName.includes(searchData.value.query)
+      user=>(user.userName).toLocaleLowerCase().includes(searchData.value.query.toLocaleLowerCase())
     );
   }
 }));
@@ -141,6 +142,7 @@ const SOCKETsearchUserInfo = (
   }
 ) => {
   console.log("/channel/[id] :: SOCKETsearchUserInfo : dat->", dat);
+  //ユーザーリストを格納
   userAtHere.value = dat.data;
 }
 
