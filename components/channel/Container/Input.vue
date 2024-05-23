@@ -2,7 +2,7 @@
 import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
 import type { channel } from '~/types/channel';
-import { MyUserinfo } from '~/types/user';
+import type { MyUserinfo } from '~/types/user';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
