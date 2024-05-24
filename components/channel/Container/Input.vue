@@ -109,7 +109,7 @@ watch(messageInput, (() => {
 }));
 
 /**
- * Enterキーの処理
+ * Enterキー入力の処理
  */
 const triggerEnter = (event:Event) => {
   //メッセージが空なら停止
@@ -129,6 +129,13 @@ const triggerEnter = (event:Event) => {
   
   //入力欄を初期化
   messageInput.value = "";
+}
+
+/**
+ * 十字キー入力の処理
+ */
+const arrowHandler = (direction:"UP"|"DOWN") => {
+
 }
 
 /**
@@ -211,6 +218,8 @@ onUnmounted(() => {
     <v-text-field
       v-model="messageInput"
       @keydown.enter="triggerEnter"
+      @keydown.up="arrowHandler('UP')"
+      @keydown.down="arrowHandler('DOWN')"
       variant="solo-filled"
       rounded
     />
