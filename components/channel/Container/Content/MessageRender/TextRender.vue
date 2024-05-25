@@ -2,6 +2,7 @@
 import type { VNode } from 'vue';
 import { defineComponent, h } from 'vue'
 import URLChip from './TextRender/URLChip.vue';
+import UserChip from './TextRender/UserChip.vue';
 
 const URLRegex:RegExp = /((https|http)?:\/\/[^\s]+)/g;
 const MentionRegex:RegExp = /@<([0-9]*)>/g;
@@ -88,7 +89,7 @@ const parseVNode = () => {
       //メンション
       if (ObjectIndex[index].type === "userId") {
         MessageRenderingFinal.value.push(
-          h("span", ObjectIndex[index].context)
+          h(UserChip, {userId:ObjectIndex[index].context})
         );
       }
     }
