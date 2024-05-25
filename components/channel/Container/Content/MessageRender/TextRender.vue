@@ -12,17 +12,11 @@ const MentionMatched = ref<RegExpMatchArray|null>(null);
 /**
  * data
  */
-const MessageRenderingFinal = ref<VNode[]>([]);
-const VNodeRenderingIndex = ref<{
-  [key: string]: {
-    type: "userId"|"link",
-    data: string
-  }
-}>({});
+const MessageRenderingFinal = ref<VNode[]>([]); //最終レンダーに使うVNode用配列
 
 //props
 const props = defineProps<{
-  content: string
+  content: string //メッセージ本文
 }>();
 
 /**
@@ -100,42 +94,6 @@ const parseVNode = () => {
     }
 
   }
-}
-
-/**
- * 検知したURL用のRegexを作る
- */
-const createRegex = ():RegExp|null => {
-  //URL抽出したもの
-  let UrlMatchedArr = props.content.match(URLRegex);
-  //Regexにする文字列格納用変数
-  let URLFilteringRegex = "";
-  //URLがnullならnullで返す
-  if (UrlMatchedArr === null) return null;
-
-  //console.log("createRegex :: UrlMatched->", UrlMatchedArr.length - 1);
-
-  for (let index in UrlMatchedArr) {
-    //Regexに追加する用URLの変数
-    let urlUsing = "";
-    //httpかhttpsかでRegex用にURL文字列を改変
-    if (UrlMatchedArr[index].indexOf("https") !== -1) {
-      urlUsing = UrlMatchedArr[index].replace("https://", "https:\\/\\/");
-    } else {
-      UrlMatchedArr[index].replace("http://", "http:\\/\\/");
-    }
-
-    //改変したものをRegexにするための文を前後に追加
-    URLFilteringRegex += "(?:" + urlUsing + ")";
-
-    //最後のURLじゃないなら"|"を追加
-    if (parseInt(index) !== UrlMatchedArr.length-1) {
-      URLFilteringRegex += "|";
-    }
-  }
-
-  //Regex化して返す
-  return new RegExp(URLFilteringRegex);
 }
 
 /**
