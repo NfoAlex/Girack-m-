@@ -237,9 +237,9 @@ onUnmounted(() => {
         <template v-slot:default="{ item, index }">
           <span
             @click="insertResult(item.userId)"
-            class="d-flex align-center my-1 px-1 cursor-pointer rounded-pill"
+            class="d-flex align-center my-0 px-1 py-1 cursor-pointer rounded-pill"
             v-ripple
-            :style="'background-color:' + (index===searchData.selectedIndex ? 'rgba(var(--v-theme-primary))' : '')"
+            :style="'background-color:' + (index===searchData.selectedIndex ? 'rgba(var(--v-theme-primary), 0.3)' : '')"
           >
             <v-avatar class="mr-3" :size="28">
               <v-img
