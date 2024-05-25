@@ -135,7 +135,27 @@ const triggerEnter = (event:Event) => {
  * 十字キー入力の処理
  */
 const arrowHandler = (direction:"UP"|"DOWN") => {
+  //IndexがUPトリガーだと引かれているのはリストが上から下へ順で表示されているから
 
+  //下キーの処理
+  if (
+    direction === "DOWN"
+      &&
+    searchDataResult.value.length > searchData.value.selectedIndex + 1 //Indexを足すときにまだ結果配列長より下なら
+  ) {
+    searchData.value.selectedIndex++;
+  }
+
+  //上キーの処理
+  if (
+    direction === "UP"
+      &&
+    0 <= searchData.value.selectedIndex - 1 //Indexを引くときに0以上なら
+  ) {
+    searchData.value.selectedIndex--;
+  }
+
+  console.log("/channel/[id] :: Input : searchData.value.selectedIndex->", searchData.value.selectedIndex, direction);
 }
 
 /**
@@ -198,11 +218,12 @@ onUnmounted(() => {
         height="100%"
         :items="searchDataResult"
       >
-        <template v-slot:default="{ item }">
+        <template v-slot:default="{ item, index }">
           <span
             @click="insertResult(item.userId)"
             class="d-flex align-center my-1 px-1 cursor-pointer rounded-pill"
             v-ripple
+            :style="'background-color:' + (index===searchData.selectedIndex ? 'rgba(var(--v-theme-primary))' : '')"
           >
             <v-avatar class="mr-3" :size="28">
               <v-img
