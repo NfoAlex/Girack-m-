@@ -132,30 +132,35 @@ const triggerEnter = (event:Event) => {
 }
 
 /**
- * 十字キー入力の処理
+ * 上キーによる検索結果上の選択カーソル移動
+ * @param e 
  */
-const arrowHandler = (direction:"UP"|"DOWN") => {
-  //IndexがUPトリガーだと引かれているのはリストが上から下へ順で表示されているから
-
-  //下キーの処理
-  if (
-    direction === "DOWN"
-      &&
-    searchDataResult.value.length > searchData.value.selectedIndex + 1 //Indexを足すときにまだ結果配列長より下なら
-  ) {
-    searchData.value.selectedIndex++;
-  }
-
+const triggerUp = (e:any) => {
   //上キーの処理
   if (
-    direction === "UP"
-      &&
     0 <= searchData.value.selectedIndex - 1 //Indexを引くときに0以上なら
+      &&
+    searchData.value.searching
   ) {
+    e.preventDefault();
     searchData.value.selectedIndex--;
   }
+}
 
-  console.log("/channel/[id] :: Input : searchData.value.selectedIndex->", searchData.value.selectedIndex, direction);
+/**
+ * 下キーによる検索結果上の選択カーソル移動
+ * @param e 
+ */
+const triggerDown = (e:any) => {  
+  //下キーの処理
+  if (
+    searchDataResult.value.length > searchData.value.selectedIndex + 1 //Indexを足すときにまだ結果配列長より下なら
+      &&
+    searchData.value.searching
+  ) {
+    e.preventDefault();
+    searchData.value.selectedIndex++;
+  }
 }
 
 /**
@@ -238,9 +243,9 @@ onUnmounted(() => {
     </m-card>
     <v-text-field
       v-model="messageInput"
-      @keydown.enter="triggerEnter"
-      @keydown.up="arrowHandler('UP')"
-      @keydown.down="arrowHandler('DOWN')"
+      @keydown.enter.prevent="triggerEnter"
+      @keydown.up="triggerUp"
+      @keydown.down="triggerDown"
       variant="solo-filled"
       rounded
     />
