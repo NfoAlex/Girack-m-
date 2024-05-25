@@ -31,17 +31,17 @@ const props = defineProps<{
 const parseVNode = () => {
   //それぞれの要素の位置と種類を記録する要素データ配列
   const ObjectIndex:{
-    context: string,
-    type: "link"|"userId",
-    index: number
+    context: string, //内容(URLあるいはユーザーId)
+    type: "link"|"userId", //要素がリンク用かメンション用か
+    index: number //メッセ上の位置
   }[] = [];
 
-  //URLを抽出
+  //メッセからURLを抽出
   URLMatched.value = props.content.match(URLRegex);
-  //メンションを抽出
+  //メッセからメンションを抽出
   MentionMatched.value = props.content.match(MentionRegex);
 
-  //URL、nullじゃなければindexを取得して格納
+  //URLがnullじゃなければindexを取得して格納
   if (URLMatched.value !== null) {
     for (let url of URLMatched.value) {
       ObjectIndex.push({
@@ -51,7 +51,7 @@ const parseVNode = () => {
       });
     }
   }
-  //userId(メンション用)、nullじゃなければindexを取得して格納
+  //userId(メンション用)がnullじゃなければindexを取得して格納
   if (MentionMatched.value !== null) {
     for (let userId of MentionMatched.value) {
       ObjectIndex.push({
@@ -65,14 +65,14 @@ const parseVNode = () => {
   //要素データ配列をindexでソートする
   ObjectIndex = ObjectIndex.sort((obj1,obj2) => obj1.index>obj2.index);
 
-  //メッセージ本文分ける配列
+  //メッセージ本文を分ける配列
   let content:string[] = [props.content];
   //要素データ配列をループしてメッセージから排除した状態で配列にする
   for (let j of ObjectIndex) {
     content = content.join("").split(j.context);
   }
 
-  //ループして最終レンダー用配列へVNodeを処理しながら格納
+  //ループして最終レンダー用配列へVNodeを格納
   for (let index in content) {
 
     //最初に本文追加
@@ -83,7 +83,7 @@ const parseVNode = () => {
       )
     );
 
-    //そして存在するならタイプに合わせて要素データ配列から追加
+    //そしてそのindexに存在するならタイプに合わせて要素データ配列から追加
     if (ObjectIndex[index] !== undefined) {
       //リンク
       if (ObjectIndex[index].type === "link") {
@@ -92,7 +92,6 @@ const parseVNode = () => {
         );
       }
       //メンション
-      //リンク
       if (ObjectIndex[index].type === "userId") {
         MessageRenderingFinal.value.push(
           h("span", ObjectIndex[index].context)
