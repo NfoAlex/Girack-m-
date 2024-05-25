@@ -29,55 +29,77 @@ const props = defineProps<{
  * メッセージをVNodeにパースしてレンダーできる形にする
  */
 const parseVNode = () => {
+  //それぞれの要素の位置と種類を記録する要素データ配列
+  const ObjectIndex:{
+    context: string,
+    type: "link"|"userId",
+    index: number
+  }[] = [];
+
   //URLを抽出
   URLMatched.value = props.content.match(URLRegex);
-  //もしURLがnullじゃないならパース処理
+  //メンションを抽出
+  MentionMatched.value = props.content.match(MentionRegex);
+
+  //URL、nullじゃなければindexを取得して格納
   if (URLMatched.value !== null) {
-    //この文字列用のURLRegexを作成する
-    const URLFilteringRegex = createRegex();
-    //console.log("/channel/:id :: TextRender :: parseVNode : URLFilteringRegex->", URLFilteringRegex);
-    if (URLFilteringRegex === null) return;
-
-    for (let index in URLMatched.value) {
-      //console.log("URL->", URLMatched.value[index]);
-      //レンダーするURL要素を追加
-      VNodeRenderingIndex.value["Index" + index] = {
+    for (let url of URLMatched.value) {
+      ObjectIndex.push({
+        context: url,
         type: "link",
-        data: URLMatched.value[index]
-      };
+        index: props.content.indexOf(url)
+      });
     }
-
-    //メッセージ本文からsplitでこのURLを取り除いて格納
-    const contentFiltered = props.content.split(URLFilteringRegex);
-
-    //console.log("/channel/:id :: TextRender :: watch(props) : contentFiltered->", contentFiltered);
-
-    //URL抜いたcontent配列をループ、VNode化して格納
-    for (let index in contentFiltered) {
-      //普通の文字列追加
-      MessageRenderingFinal.value.push(
-        h(
-          "span",
-          contentFiltered[index]
-        )
-      );
-      //もしURLがあるならそれもVNodeで追加
-      if (VNodeRenderingIndex.value["Index"+index] !== undefined) {
-        MessageRenderingFinal.value.push(
-          h(
-            URLChip,
-            {url: VNodeRenderingIndex.value["Index"+index].data}
-          )
-        );
-      }
+  }
+  //userId(メンション用)、nullじゃなければindexを取得して格納
+  if (MentionMatched.value !== null) {
+    for (let userId of MentionMatched.value) {
+      ObjectIndex.push({
+        context: userId,
+        type: "userId",
+        index: props.content.indexOf(userId)
+      });
     }
-  } else {
+  }
+
+  //要素データ配列をindexでソートする
+  ObjectIndex = ObjectIndex.sort((obj1,obj2) => obj1.index>obj2.index);
+
+  //メッセージ本文分ける配列
+  let content:string[] = [props.content];
+  //要素データ配列をループしてメッセージから排除した状態で配列にする
+  for (let j of ObjectIndex) {
+    content = content.join("").split(j.context);
+  }
+
+  //ループして最終レンダー用配列へVNodeを処理しながら格納
+  for (let index in content) {
+
+    //最初に本文追加
     MessageRenderingFinal.value.push(
       h(
         "span",
-        props.content
+        content[index]
       )
     );
+
+    //そして存在するならタイプに合わせて要素データ配列から追加
+    if (ObjectIndex[index] !== undefined) {
+      //リンク
+      if (ObjectIndex[index].type === "link") {
+        MessageRenderingFinal.value.push(
+          h(URLChip, {url: ObjectIndex[index].context})
+        );
+      }
+      //メンション
+      //リンク
+      if (ObjectIndex[index].type === "userId") {
+        MessageRenderingFinal.value.push(
+          h("span", ObjectIndex[index].context)
+        );
+      }
+    }
+
   }
 }
 
