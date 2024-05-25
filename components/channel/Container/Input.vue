@@ -115,6 +115,17 @@ const triggerEnter = (event:Event) => {
   //メッセージが空なら停止
   if (messageInput.value === "" || messageInput.value === " ") return;
 
+  //検索中なら指定のユーザーIdあるいはチャンネルIdを挿入
+  if (searchData.value.searching) {
+    //挿入
+    insertResult(searchDataResult.value[searchData.value.selectedIndex].userId);
+    //改行防止
+    event.preventDefault();
+    //選択インデックス初期化
+    searchData.value.selectedIndex = 0;
+    return;
+  }
+
   //console.log("/channel/:id :: triggerEnter : Enterメッセージ->", messageInput.value, event, props);
   socket.emit("sendMessage", {
     RequestSender: {
@@ -135,7 +146,7 @@ const triggerEnter = (event:Event) => {
  * 上キーによる検索結果上の選択カーソル移動
  * @param e 
  */
-const triggerUp = (e:any) => {
+const triggerUp = (e:Event) => {
   //上キーの処理
   if (
     0 <= searchData.value.selectedIndex - 1 //Indexを引くときに0以上なら
@@ -151,7 +162,7 @@ const triggerUp = (e:any) => {
  * 下キーによる検索結果上の選択カーソル移動
  * @param e 
  */
-const triggerDown = (e:any) => {  
+const triggerDown = (e:Event) => {  
   //下キーの処理
   if (
     searchDataResult.value.length > searchData.value.selectedIndex + 1 //Indexを足すときにまだ結果配列長より下なら
