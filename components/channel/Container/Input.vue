@@ -225,8 +225,9 @@ onUnmounted(() => {
     <m-card
       v-if="searchData.searching"
       position="relative"
-      style="bottom:0%; z-index:999999; overflow-y:auto;"
+      style="bottom:0%; z-index:999999; overflow-y:auto; padding:8px 4px !important"
       maxHeight="30vh"
+      rounded="xl"
       width="100%"
       color="messageHovered"
     >
@@ -237,7 +238,7 @@ onUnmounted(() => {
         <template v-slot:default="{ item, index }">
           <span
             @click="insertResult(item.userId)"
-            class="d-flex align-center my-0 px-1 py-1 cursor-pointer rounded-pill"
+            class="d-flex align-center px-1 py-1 cursor-pointer rounded-pill"
             v-ripple
             :style="'background-color:' + (index===searchData.selectedIndex ? 'rgba(var(--v-theme-primary), 0.3)' : '')"
           >
