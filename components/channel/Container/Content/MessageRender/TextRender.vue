@@ -58,7 +58,7 @@ const parseVNode = () => {
   }
 
   //要素データ配列をindexでソートする
-  ObjectIndex = ObjectIndex.sort((obj1,obj2) => obj1.index>obj2.index);
+  ObjectIndex.sort((obj1,obj2) => obj1.index-obj2.index);
 
   //メッセージ本文を分ける配列
   let content:string[] = [props.content];
