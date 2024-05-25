@@ -4,8 +4,10 @@ import { defineComponent, h } from 'vue'
 import URLChip from './TextRender/URLChip.vue';
 
 const URLRegex:RegExp = /((https|http)?:\/\/[^\s]+)/g;
-//let URLFilteringRegex:RegExp|string = "";
+const MentionRegex:RegExp = /@<([0-9]*)>/g;
+
 const URLMatched = ref<RegExpMatchArray|null>(null);
+const MentionMatched = ref<RegExpMatchArray|null>(null);
 
 /**
  * data
