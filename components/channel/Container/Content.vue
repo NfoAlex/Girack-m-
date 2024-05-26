@@ -380,20 +380,33 @@ watch(
       //履歴を取り終えたとき、履歴を取得した位置からスクロールする
       if (displayDirection.value === "newer" && !newValue.fetchingHistory) {
         try {
-          //履歴追加をし始めた位置
+          //履歴追加をし始めたメッセージId
           const messageScrolledPosition = getHistoryFromChannel(
               props.channelInfo.channelId
             )[
-              getHistoryAvailability(props.channelInfo.channelId).latestFetchedHistoryLength - 1
+              getHistoryAvailability(props.channelInfo.channelId).latestFetchedHistoryLength - 3
             ].messageId;
 
-          goTo("#msg" + messageScrolledPosition, {
-            duration: 0,
-            container: "#ChannelContainerContent",
-            offset: -50
-          });
+          console.log("/channel/[id] :: watch(getAppStatus) : 要素->",
+            document.getElementById("msg" + messageScrolledPosition),
+          );
+
+          //その要素へスクロールする
+            //要素DOMオブジェクト取得
+          const el = document.getElementById("msg" + messageScrolledPosition);
+            //要素がnullじゃないならその要素へスクロール
+          if (el !== null) {
+            console.log("/channel/[id] :: watch(getAppStatus) : 要素のtop->",
+              el.getBoundingClientRect().top
+            );
+
+            document.getElementById("ChannelContainerContent")?.scrollTo({
+              top: el.getBoundingClientRect().top
+            });
+          }
         } catch(e) {
           //なにもしない
+          console.log("/channel/[id] :: watch(getAppStatus) : エラー->", e);
         }
       }
     });
