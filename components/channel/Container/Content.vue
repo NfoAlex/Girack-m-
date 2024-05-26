@@ -62,6 +62,9 @@ const fetchOlderHistory = () => {
 
   //console.log("/channel/:id :: fetchOlderHistory : oldestMessageId->", oldestMessageId);
 
+  //履歴を取得中であるとグローバルで設定
+  getAppStatus.value.fetchingHistory = true;
+
   //履歴を取得
   socket.emit("fetchHistory", {
     RequestSender: {
@@ -75,9 +78,6 @@ const fetchOlderHistory = () => {
       fetchDirection: "older"
     }
   });
-
-  //履歴を取得中であるとグローバルで設定
-  getAppStatus.value.fetchingHistory = true;
 
   /*
   console.log("/channel/:id :: fetchOlderHistory : 送信したもの->", {
@@ -111,6 +111,9 @@ const fetchNewerHistory = () => {
 
   //console.log("/channel/:id :: fetchNewerHistory : newestMessageId->", newestMessageId);
 
+  //履歴を取得中であるとグローバルで設定
+  getAppStatus.value.fetchingHistory = true;
+
   //履歴を取得
   socket.emit("fetchHistory", {
     RequestSender: {
@@ -124,9 +127,6 @@ const fetchNewerHistory = () => {
       fetchDirection: "newer"
     }
   });
-
-  //履歴を取得中であるとグローバルで設定
-  getAppStatus.value.fetchingHistory = true;
 
   /*
   console.log("/channel/:id :: fetchNewerHistory : 送信したもの->", {
