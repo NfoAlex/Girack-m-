@@ -2,13 +2,20 @@
 const props = defineProps<{
   userId: string
 }>();
+
+/**
+ * @<123...>から数字のユーザーIdのみを取り出す
+ */
+const formatedUserId = computed(() => {
+  return props.userId.split("@<").join("").split(">")[0];
+});
 </script>
 
 <template>
     <span
       class="px-1 py-1 userIdStringContainer"
     >
-      @{{ props.userId }}
+      @{{ formatedUserId }}
     </span>
 </template>
 
