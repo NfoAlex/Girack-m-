@@ -24,17 +24,28 @@ const formatedUserId = computed(() => {
 </script>
 
 <template>
-  <Userinfo
-    v-if="displayUserinfo"
-    v-model="displayUserinfo"
-    :userId="formatedUserId"
-  />
-  <span
-    @click="()=>{displayUserinfo=true;}"
-    class="px-2 py-1 userIdStringContainer cursor-pointer"
-    :class="formatedUserId===getMyUserinfo.userId ? 'userIdMentioningMe':null"
-  >
-    @{{ getUserinfo(formatedUserId).userName }}
+  <span>
+    <Userinfo
+      v-if="displayUserinfo"
+      v-model="displayUserinfo"
+      :userId="formatedUserId"
+    />
+    <span
+      @click="()=>{displayUserinfo=true;}"
+      class="px-2 py-1 userIdStringContainer cursor-pointer"
+      :class="formatedUserId===getMyUserinfo.userId ? 'userIdMentioningMe':null"
+      style="width:fit-content"
+    >
+      <span>@</span>
+      <span>
+        <v-avatar v-bind="props" size="18" class="mx-1 mb-1">
+          <v-img
+            :src="'/icon/' + formatedUserId"
+          ></v-img>
+        </v-avatar>
+      </span>
+      <span>{{ getUserinfo(formatedUserId).userName }}</span>
+    </span>
   </span>
 </template>
 
