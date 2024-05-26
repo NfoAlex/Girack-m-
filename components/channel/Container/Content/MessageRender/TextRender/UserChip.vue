@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { useUserIndex } from '~/stores/userindex';
+import { useMyUserinfo } from '~/stores/userinfo';
+
+const { getUserinfo } = storeToRefs(useUserIndex());
+const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+
 const props = defineProps<{
   userId: string
 }>();
@@ -13,9 +19,10 @@ const formatedUserId = computed(() => {
 
 <template>
     <span
-      class="px-1 py-1 userIdStringContainer"
+      class="px-2 py-1 userIdStringContainer"
+      :class="formatedUserId===getMyUserinfo.userId ? 'userIdMentioningMe':null"
     >
-      @{{ formatedUserId }}
+      @{{ getUserinfo(formatedUserId).userName }}
     </span>
 </template>
 
@@ -24,5 +31,9 @@ const formatedUserId = computed(() => {
   border-radius: 99999px;
   background-color: rgba(var(--v-theme-cardInner),0.2);
   font-size:12px;
+}
+
+.userIdMentioningMe {
+  background-color: rgba(var(--v-theme-warning),0.2);
 }
 </style>
