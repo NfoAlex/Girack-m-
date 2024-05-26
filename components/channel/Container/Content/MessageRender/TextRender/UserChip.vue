@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUserIndex } from '~/stores/userindex';
 import { useMyUserinfo } from '~/stores/userinfo';
+import Userinfo from '~/components/Userinfo.vue';
 
 const { getUserinfo } = storeToRefs(useUserIndex());
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
@@ -8,6 +9,11 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 const props = defineProps<{
   userId: string
 }>();
+
+/**
+ * data
+ */
+const displayUserinfo = ref<boolean>(false); //ユーザーページを表示するかどうか
 
 /**
  * @<123...>から数字のユーザーIdのみを取り出す
@@ -18,12 +24,29 @@ const formatedUserId = computed(() => {
 </script>
 
 <template>
+  <span>
+    <Userinfo
+      v-if="displayUserinfo"
+      v-model="displayUserinfo"
+      :userId="formatedUserId"
+    />
     <span
-      class="px-2 py-1 userIdStringContainer"
+      @click="()=>{displayUserinfo=true;}"
+      class="px-2 py-1 userIdStringContainer cursor-pointer"
       :class="formatedUserId===getMyUserinfo.userId ? 'userIdMentioningMe':null"
+      style="width:fit-content"
     >
-      @{{ getUserinfo(formatedUserId).userName }}
+      <span>@</span>
+      <span>
+        <v-avatar v-bind="props" size="18" class="mx-1 mb-1">
+          <v-img
+            :src="'/icon/' + formatedUserId"
+          ></v-img>
+        </v-avatar>
+      </span>
+      <span>{{ getUserinfo(formatedUserId).userName }}</span>
     </span>
+  </span>
 </template>
 
 <style scoped>
