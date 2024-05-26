@@ -377,7 +377,7 @@ watch(
 
       //履歴を取り終えたとき、履歴を取得した位置からスクロールする
       if (displayDirection.value === "newer" && !newValue.fetchingHistory) {
-        console.log("/channe/[id] :: watch(getAppStatus) : 最後->", getHistoryAvailability(props.channelInfo.channelId).atEnd);
+        //console.log("/channe/[id] :: watch(getAppStatus) : 最後->", getHistoryAvailability(props.channelInfo.channelId).atEnd);
         try {
           //履歴追加をし始めたメッセージId
           const messageScrolledPosition = getHistoryFromChannel(
@@ -395,10 +395,6 @@ watch(
           const el = document.getElementById("msg" + messageScrolledPosition);
             //要素がnullじゃないならその要素へスクロール
           if (el !== null) {
-            // console.log("/channel/[id] :: watch(getAppStatus) : 要素のtop->",
-            //   el.getBoundingClientRect().top
-            // );
-
             document.getElementById("ChannelContainerContent")?.scrollTo({
               top: el.getBoundingClientRect().top
             });
@@ -408,33 +404,10 @@ watch(
           console.log("/channel/[id] :: watch(getAppStatus) : エラー->", e);
         }
       }
-
-      //console.log("/channel/[id] :: watch(getAppStatus) : 一番下にいる？->", atSkeletonNewer.value);
-      //console.log("/channel/[id] :: watch(getAppStatus) : 一番上にいる？->", atSkeletonOlder.value);
-      console.log("/channel/[id] :: watch(getAppStatus) : どこにいる？->", y.value,
-        " あと一番上、下か->",
-        arrivedState.top, arrivedState.bottom
-      );
       
       //上方向での処理
       if (displayDirection.value === "older" && !newValue.fetchingHistory) {
-
-        //console.log("", document.getElementById("ChannelContainerContent")?.clientHeight);
-
-        //履歴追加をし始めたメッセージId
-        const messageIdOldest = getHistoryFromChannel(
-            props.channelInfo.channelId
-          )[
-            getHistoryFromChannel(props.channelInfo.channelId).length - 1
-          ].messageId;
-
-        
-
         //履歴を取得できた時に一番下にいるなら再度取得
-        // if (atSkeletonNewer.value) {
-        //   atSkeletonNewer.value = false;
-        //   fetchNewerHistory();
-        // }
         if (arrivedState.top) {
           fetchOlderHistory();
         }
@@ -464,81 +437,15 @@ watch(windowFocused, (newValue, oldValue) => {
   }
 });
 
-// *************  スクロール関係  ************* //
-//スクロール位置の変更監視して記憶するように
-/*
-watch(y, () => {
-  //console.log("/channel/:id :: watch(y) : y.value->", y.value);
-  sessionStorage.setItem('scrollPositionY::'+props.channelInfo.channelId, y.value.toString());
-});
-*/
-
-// *************  チャンネル情報  ************* //
-//チャンネル情報の変更を監視してスクロール位置を戻す
-/*
-watch(props, (newProp, oldProp) => {
-  //ロード状態を解除
-  stateLoaded.value = false;
-
-
-  //スクロール位置を取り出し
-  const scrollPosition = sessionStorage.getItem(
-    "scrollPositionY::" + oldProp.channelInfo.channelId
-  );
-  console.log("/channel/[id] :: watch(props) : スクロール記憶位置->", scrollPosition);
-
-  //取り出したものを数値化、nullなら0へ
-  //const scrollPositionCalculated = parseInt(scrollPosition);
-
-  //最新既読Idの要素を取得
-  const latestReadEl = document.getElementById("msg" + getMessageReadId(props.channelInfo.channelId));
-
-  //最新既読Idへスクロール、ないなら一番古いやつへ
-  if (
-    scrollPosition !== null
-  ) {
-    //console.log("scrolling to ...->", scrollPositionCalculated);
-    //VuetifyのgoToだと数値での移動ができないためscrollTo
-    console.log("/channel/[id] :: watch(props) : (記憶位置)スクロールします->", scrollPosition);
-    document.getElementById("ChannelContainerContent")?.scrollTo({
-      top: parseInt(scrollPosition)
-    });
-  } else if (latestReadEl !== null) {
-    console.log("/channel/[id] :: watch(props) : (最新既読Id)スクロールします->", scrollPosition);
-    //最新既読Idへ
-    document.getElementById("ChannelContainerContent")?.scrollTo({
-      top: latestReadEl.getBoundingClientRect().top
-    });
-  } else {
-    console.log("/channel/[id] :: watch(props) : 条件結果->", 
-      scrollPosition !== null,
-      latestReadEl !== null
-    );
-  }
-
-  //もし履歴の最後にいるなら新着を消す
-  if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
-    setHasNewMessage(props.channelInfo.channelId, false);
-  }
-
-  //移動前のチャンネル用の最新既読IdBeforeを更新
-  updateMessageReadIdBefore(oldProp.channelInfo.channelId);
-
-  //ロードできたと設定
-  stateLoaded.value = true;
-});
-*/
-
 onMounted(() => {
   console.log("/channel/[id] :: マウントされた？");
   //ロード状態を解除
   stateLoaded.value = false;
 
   //最後にいたチャンネルId抽出
-  //let latestChannelId = sessionStorage.getItem("latestChannel");
   let latestChannelId = props.channelInfo.channelId;
 
-  console.log("/channel/[id] :: onMounted : 最後にいたチャンネル->", latestChannelId);
+  //console.log("/channel/[id] :: onMounted : 最後にいたチャンネル->", latestChannelId);
 
   nextTick(() => {
 
@@ -546,10 +453,7 @@ onMounted(() => {
     const scrollPosition = sessionStorage.getItem(
       "scrollPositionY::" + latestChannelId
     );
-    console.log("/channel/[id] :: onMounted : スクロール記憶位置->", scrollPosition);
-
-    //取り出したものを数値化、nullなら0へ
-    //const scrollPositionCalculated = parseInt(scrollPosition);
+    //console.log("/channel/[id] :: onMounted : スクロール記憶位置->", scrollPosition);
 
     //最新既読Idの要素を取得
     const latestReadEl = document.getElementById("msg" + getMessageReadId(props.channelInfo.channelId));
@@ -599,11 +503,13 @@ onBeforeUnmount(() => {
   sessionStorage.setItem('scrollPositionY::'+props.channelInfo.channelId, y.value.toString());
 
   //DEBUG :: スクロール位置を取り出し
+  /*
   const scrollPosition = sessionStorage.getItem(
     "scrollPositionY::" + props.channelInfo.channelId
   );
   console.log("/channel/[id] :: onBeforeUnmount : スクロール記憶位置->", scrollPosition);
   console.log("=========================================================");
+  */
 });
 
 
