@@ -2,6 +2,7 @@
 import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
 import type { channel } from '~/types/channel';
+import type { MyUserinfo } from '~/types/user';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -10,17 +11,120 @@ const props = defineProps<{
   channelInfo: channel
 }>();
 
+//メンションデータ用interface
+interface SearchData {
+  query: string, //検索文字列
+  searching: boolean, //検索モードに入っているかどうか
+  selectedIndex: number, //選択しているもの
+  searchStartingAt: number, //検索モードに入った文字位置
+  searchEndingAt: number, //検索文字列の範囲終わり(文字列全体の長さ - searchStartingAt)
+  txtLengthWhenStartSearching: number, //検索をし始めたときの文字列全体の長さ
+  searchingTerm: "user"|"channel", //ToDo::(!現在未使用!)検索するもの("user" | "channel")
+};
+
 /**
  * data
  */
-const messageInput = ref<string>("");
+const messageInput = ref<string>(""); //メッセージ入力用変数
+const searchData = ref<SearchData>({ //検索データ
+  query: '',
+  searching: false,
+  selectedIndex: 0,
+  searchStartingAt: 0,
+  searchEndingAt: 0,
+  txtLengthWhenStartSearching: 0,
+  searchingTerm: 'user'
+});
+const searchDataResult = ref<MyUserinfo[]>([]);
+const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リスト
 
 /**
- * Enterキーの処理
+ * 入力テキストの監視
+ */
+watch(messageInput, (() => {
+  //console.log("/channel/[id] :: watch(messageInput) : 入力検知->", messageInput.value);
+
+  //検索モードを有効化する
+  if (
+    messageInput.value[messageInput.value.length - 1]
+      ===
+    "@"
+  ) {
+    //検索を有効化
+    searchData.value.searching = true;
+    //どの位置から始まっているか
+    searchData.value.searchStartingAt = messageInput.value.length - 1;
+    console.log("/channel/[id] :: watch(messageInput) : 検索モードON");
+
+    //このチャンネルに参加するユーザーを取得
+    socket.emit("searchUserInfo", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      userName: "", //全員取得するため空
+      rule: "PARTIAL",
+      channelId: props.channelInfo.channelId
+    });
+  }
+
+  //スペースが入力された、あるいは文字が空になったら検索モードを終了
+  if (
+    messageInput.value[messageInput.value.length - 1] === " " ||
+    messageInput.value[messageInput.value.length - 1] === "　" ||
+    messageInput.value.length === 0
+  ) {
+    searchData.value.searching = false;
+    console.log("/channel/[id] :: watch(messageInput) : 検索モードOFF");
+  }
+
+  //検索モードに入っているなら検索する
+  if (searchData.value.searching) {
+    //検索文字列の範囲終わりを取得
+    searchData.value.searchEndingAt =
+      messageInput.value.length -
+      searchData.value.txtLengthWhenStartSearching +
+      searchData.value.searchStartingAt;
+    //もし開始文字位置と検索範囲終わり位置がかたよったら検索モードを無効化して関数を止める
+    if (
+      searchData.value.searchStartingAt + 1 >
+      searchData.value.searchEndingAt
+    ) {
+      searchData.value.searching = false;
+      return;
+    }
+
+    //検索文字列を取得
+    searchData.value.query = messageInput.value.substring(
+      searchData.value.searchStartingAt + 1,
+      searchData.value.searchEndingAt
+    );
+    console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
+
+    //クエリーでユーザーリストへフィルターかけて結果格納
+    searchDataResult.value = userAtHere.value.filter(
+      user=>(user.userName).toLocaleLowerCase().includes(searchData.value.query.toLocaleLowerCase())
+    );
+  }
+}));
+
+/**
+ * Enterキー入力の処理
  */
 const triggerEnter = (event:Event) => {
   //メッセージが空なら停止
   if (messageInput.value === "" || messageInput.value === " ") return;
+
+  //検索中なら指定のユーザーIdあるいはチャンネルIdを挿入
+  if (searchData.value.searching) {
+    //挿入
+    insertResult(searchDataResult.value[searchData.value.selectedIndex].userId);
+    //改行防止
+    event.preventDefault();
+    //選択インデックス初期化
+    searchData.value.selectedIndex = 0;
+    return;
+  }
 
   //console.log("/channel/:id :: triggerEnter : Enterメッセージ->", messageInput.value, event, props);
   socket.emit("sendMessage", {
@@ -37,13 +141,123 @@ const triggerEnter = (event:Event) => {
   //入力欄を初期化
   messageInput.value = "";
 }
+
+/**
+ * 上キーによる検索結果上の選択カーソル移動
+ * @param e 
+ */
+const triggerUp = (e:Event) => {
+  //上キーの処理
+  if (
+    0 <= searchData.value.selectedIndex - 1 //Indexを引くときに0以上なら
+      &&
+    searchData.value.searching
+  ) {
+    e.preventDefault();
+    searchData.value.selectedIndex--;
+  }
+}
+
+/**
+ * 下キーによる検索結果上の選択カーソル移動
+ * @param e 
+ */
+const triggerDown = (e:Event) => {  
+  //下キーの処理
+  if (
+    searchDataResult.value.length > searchData.value.selectedIndex + 1 //Indexを足すときにまだ結果配列長より下なら
+      &&
+    searchData.value.searching
+  ) {
+    e.preventDefault();
+    searchData.value.selectedIndex++;
+  }
+}
+
+/**
+ * メンション、あるいはチャンネルデータ(未実装)を挿入する
+ * @param targetId 
+ */
+const insertResult = (targetId:string) => {
+  //入力テキストの@部分をメンション文で代入
+  if (searchData.value.query === "") {
+    messageInput.value =
+      messageInput.value.substring(0, searchData.value.searchStartingAt) +
+      ("@<" + targetId + "> ") +
+      messageInput.value.substring(searchData.value.searchStartingAt + 1);
+  } else {
+    messageInput.value = messageInput.value.replace(
+      "@" + searchData.value.query,
+      "@<" + targetId + "> "
+    );
+  }
+}
+
+/**
+ * ユーザーデータ受け取り
+ * @param dat
+ */
+const SOCKETsearchUserInfo = (
+  dat: {
+    result: string,
+    data: MyUserinfo[]
+  }
+) => {
+  console.log("/channel/[id] :: SOCKETsearchUserInfo : dat->", dat);
+  //ユーザーリストを格納
+  userAtHere.value = dat.data;
+  //初期結果にも格納する
+  searchDataResult.value = dat.data;
+}
+
+onMounted(() => {
+  socket.on("RESULT::searchUserInfo", SOCKETsearchUserInfo);
+});
+
+onUnmounted(() => {
+  socket.off("RESULT::searchUserInfo", SOCKETsearchUserInfo);
+});
 </script>
 
 <template>
-  <div>
+  <div style="height:fit-content;">
+    <!-- メンションウィンドウ -->
+    <m-card
+      v-if="searchData.searching"
+      position="relative"
+      style="bottom:0%; z-index:999999; overflow-y:auto; padding:8px 4px !important"
+      maxHeight="30vh"
+      rounded="xl"
+      width="100%"
+      color="messageHovered"
+    >
+      <v-virtual-scroll
+        height="100%"
+        :items="searchDataResult"
+      >
+        <template v-slot:default="{ item, index }">
+          <span
+            @click="insertResult(item.userId)"
+            class="d-flex align-center px-1 py-1 cursor-pointer rounded-pill"
+            v-ripple
+            :style="'background-color:' + (index===searchData.selectedIndex ? 'rgba(var(--v-theme-primary), 0.3)' : '')"
+          >
+            <v-avatar class="mr-3" :size="28">
+              <v-img
+                :alt="item.userId"
+                :src="'/icon/' + item.userId"
+              ></v-img>
+            </v-avatar>
+            <p>{{ item.userName }}</p>
+          </span>
+        </template>
+      </v-virtual-scroll>
+    </m-card>
     <v-text-field
       v-model="messageInput"
-      @keydown.enter="triggerEnter"
+      @keydown.enter.prevent="triggerEnter"
+      @keydown.up="triggerUp"
+      @keydown.down="triggerDown"
       variant="solo-filled"
       rounded
     />

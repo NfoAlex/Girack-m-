@@ -2,11 +2,15 @@
 
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useHistory } from "~/stores/history";
+import { useMyUserinfo } from "~/stores/userinfo";
 import { useMessageReadId } from "~/stores/messageReadId";
 import updateMessageReadIdCloudAndLocal from "~/composables/updateMessageReadIdCloudAndLocal";
 import { useWindowFocus } from '@vueuse/core'
 
 import type message from "~/types/message";
+
+//通知イベント格納用
+let NoticationHolder:null|Notification = null;
 
 export default function receiveMessage(socket: Socket): void {
   //メッセージ追加を取得
@@ -48,6 +52,24 @@ export default function receiveMessage(socket: Socket): void {
         //新着があると設定
         const { setHasNewMessage } = useHistory();
         setHasNewMessage(message.channelId, true);
+
+        //もし自分宛てのメンションが入っているなら通知
+        const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+        if (message.content.includes("@<" + getMyUserinfo.value.userId + ">")) {
+          //もし通知イベントがすでに起きているなら閉じる
+          try {
+            NoticationHolder?.close();
+          } catch(e) {}
+
+          //通知を出す
+          NoticationHolder = new Notification(
+            message.userId,
+            {
+              body: message.content,
+              icon: "/icon/" + message.userId
+            }
+          );
+        }
       }
     }
   });
