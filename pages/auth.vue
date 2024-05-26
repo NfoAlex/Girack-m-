@@ -32,6 +32,8 @@ const registrationData = ref<{userName:string, done:boolean}>({
  * ログイン後のGirack-m-準備処理
  */
 const initialize = (userId:string, sessionId:string) => {
+  console.log("/auth :: initialize : INITIALIZEするね");
+
   //全ロールを取得
   socket.emit("fetchRoles", {
     RequestSender: {
@@ -157,36 +159,42 @@ onMounted(() => {
   socket.on("RESULT::authSession", SOCKEtauthSession);
 
   console.log("/auth :: onMounted : session->", useCookie("session").value);
-
-  //クッキーからセッションデータを取得、格納
-  const sessionData = getSessionFromCookie();
-
-  //クッキーがあればそのまま認証
-  if (sessionData !== undefined) {
-    //セッションIDをstoreへ登録
-    updateSessionId(sessionData.sessionId);
-    //ユーザーIDをあらかじめマージ
-    const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
-    updateMyUserinfo({
-      ...useMyUserinfo().getMyUserinfo,
-      userId: sessionData.userId,
-    });
-
-    //セッション認証
-    socket.emit("authSession", {
-      userId: sessionData.userId,
-      sessionId: sessionData.sessionId
-    });
-  } else {
-    //クッキーがないなら認証画面を表示するためにクッキー処理状態を解除
-    stateProcesingWithCookie.value = false;
-  }
 });
 
 onUnmounted(() => {
   //socketハンドラ解除
   socket.off("RESULT::authSession", SOCKEtauthSession);
 });
+
+//アプリ全体のロードを待ってから認証処理
+onNuxtReady(() => {
+  //クッキーからセッションデータを取得、格納
+  const sessionData = getSessionFromCookie();
+
+  //レンダーを待ってから認証処理
+  nextTick(() => {
+    //クッキーがあればそのまま認証
+    if (sessionData !== undefined) {
+      //セッションIDをstoreへ登録
+      updateSessionId(sessionData.sessionId);
+      //ユーザーIDをあらかじめマージ
+      const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
+      updateMyUserinfo({
+        ...useMyUserinfo().getMyUserinfo,
+        userId: sessionData.userId,
+      });
+
+      //セッション認証
+      socket.emit("authSession", {
+        userId: sessionData.userId,
+        sessionId: sessionData.sessionId
+      });
+    } else {
+      //クッキーがないなら認証画面を表示するためにクッキー処理状態を解除
+      stateProcesingWithCookie.value = false;
+    }
+  });
+})
 </script>
 
 <template>
