@@ -113,8 +113,12 @@ const parseVNode = () => {
       contextLength + contextPositionNow
     );
 
-    //結果を結合
-    DEBUGcontent = [...DEBUGcontent.slice(0, parseInt(index)), resultPartedLeft, resultPartedRight];
+    //結果を結合、最初のループなら配列をマージせず、そのまま追加
+    if (parseInt(index) === 0) {
+      DEBUGcontent = [resultPartedLeft, resultPartedRight];
+    } else {
+      DEBUGcontent = [...DEBUGcontent.slice(0, parseInt(index)), resultPartedLeft, resultPartedRight];
+    }
   }
   console.log("/channel/[id] :: TextRender : contentの分裂結果->", content);
 
