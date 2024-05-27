@@ -66,6 +66,59 @@ const parseVNode = () => {
   for (let j of ObjectIndex) {
     content = content.join("").split(j.context);
   }
+  console.log("/channel/[id] :: TextRender : contentの分裂結果->", content);
+
+  // DEBUG ///////
+  
+  let DEBUGcontent:string[] = [props.content];
+  for (let index in ObjectIndex) {
+    //分裂用配列の最後の中での抜き出し文の位置
+    const contextPositionNow = DEBUGcontent[index].indexOf(ObjectIndex[index].context);
+    //抜き出す文の長さ
+    const contextLength = ObjectIndex[index].context.length;
+
+    //ここから抜き出し文のslice
+    /**
+     * index = ループの番号
+     * 抜き出し文 = "<abc>"
+     * 現在のcontent = ["asdf<abc>1234"]
+     * 
+     * 抜き出し文の位置 : 4 (contextPositionNow)
+     * 抜き出し文の長さ : 5 (contextLength)
+     * 
+     * 左分の分裂: 
+     * slice(0 , contextPositionNow)
+     * ↓
+     * slice(0, 4)
+     *   ↓---↓
+     * ["asdf<abc>1234"]
+     * 左分の結果 :: "asdf"
+     * 
+     * 右分の分裂: 
+     * slice(contextLength + contextPositionNow)
+     * ↓
+     * slice(9)
+     *            ↓---
+     * ["asdf<abc>1234"]
+     * 右分の結果 :: "1234"
+     * 
+     * 最終結果 :: [...content.slice(0,parseInt(index)), 左分結果, 右分結果] -> ["", "asdf", "1234"]
+     */
+    //抜き出し文で分裂させた左の部分
+    const resultPartedLeft =  DEBUGcontent[index].slice(
+      0, contextPositionNow
+    );
+    //抜き出し文で分裂させた右の部分
+    const resultPartedRight =  DEBUGcontent[index].slice(
+      contextLength + contextPositionNow
+    );
+
+    //結果を結合
+    DEBUGcontent = [...DEBUGcontent.slice(0, parseInt(index)), resultPartedLeft, resultPartedRight];
+  }
+  console.log("/channel/[id] :: TextRender : contentの分裂結果->", content);
+
+  ////////////////
 
   //ループして最終レンダー用配列へVNodeを格納
   for (let index in content) {
