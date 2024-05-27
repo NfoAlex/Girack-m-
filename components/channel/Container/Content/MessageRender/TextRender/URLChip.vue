@@ -17,7 +17,7 @@ const props = defineProps<{
 <style scoped>
 .urlStringContainer {
   border-radius: 99999px;
-  background-color: rgba(var(--v-theme-primary),0.2);
-  font-size:12px;
+  color: rgba(var(--v-theme-primary),0.9);
+  font-size: 14px;
 }
 </style>

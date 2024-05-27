@@ -53,7 +53,7 @@ const formatedUserId = computed(() => {
 .userIdStringContainer {
   border-radius: 99999px;
   background-color: rgba(var(--v-theme-cardInner),0.2);
-  font-size:12px;
+  font-size:14px;
 }
 
 .userIdMentioningMe {
