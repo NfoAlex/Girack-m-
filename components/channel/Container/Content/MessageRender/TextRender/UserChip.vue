@@ -32,7 +32,7 @@ const formatedUserId = computed(() => {
     />
     <span
       @click="()=>{displayUserinfo=true;}"
-      class="px-2 py-1 mx-1 userIdStringContainer cursor-pointer"
+      class="px-2 py-1 userIdStringContainer cursor-pointer"
       :class="formatedUserId===getMyUserinfo.userId ? 'userIdMentioningMe':null"
       style="width:fit-content;"
     >
@@ -53,7 +53,7 @@ const formatedUserId = computed(() => {
 .userIdStringContainer {
   border-radius: 99999px;
   background-color: rgba(var(--v-theme-cardInner),0.2);
-  font-size:12px;
+  font-size:14px;
 }
 
 .userIdMentioningMe {

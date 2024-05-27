@@ -38,42 +38,57 @@ const parseVNode = () => {
 
   //URLがnullじゃなければindexを取得して格納
   if (URLMatched.value !== null) {
+    //複数回の検索に対応させるために検索終えた文を排除するため、排除する文字の長さを貯める
+    let removedLengthTotal = 0;
+    let contentCloned = props.content;
+
     for (let url of URLMatched.value) {
       ObjectIndex.push({
         context: url,
         type: "link",
-        index: props.content.indexOf(url)
+        index: contentCloned.indexOf(url) + removedLengthTotal
       });
+
+      //これから排除する文の長さを貯める
+      removedLengthTotal += url.length;
+      //メッセージからURLを排除
+      contentCloned =
+        contentCloned.slice(0,contentCloned.indexOf(url))
+          +
+        contentCloned.slice(contentCloned.indexOf(url) + url.length);
     }
   }
   //userId(メンション用)がnullじゃなければindexを取得して格納
   if (MentionMatched.value !== null) {
+    //複数回の検索に対応させるために検索終えた文を排除するため、排除する文字の長さを貯める
+    let removedLengthTotal = 0;
+    let contentCloned = props.content;
+
     for (let userId of MentionMatched.value) {
       ObjectIndex.push({
         context: userId,
         type: "userId",
-        index: props.content.indexOf(userId)
+        index: contentCloned.indexOf(userId) + removedLengthTotal
       });
+
+      //これから排除する文の長さを貯める
+      removedLengthTotal += userId.length;
+      //メッセージからuserIdを排除
+      contentCloned =
+        contentCloned.slice(0,contentCloned.indexOf(userId))
+          +
+        contentCloned.slice(contentCloned.indexOf(userId) + userId.length);
     }
   }
 
   //要素データ配列をindexでソートする
   ObjectIndex.sort((obj1,obj2) => obj1.index-obj2.index);
-
-  //メッセージ本文を分ける配列
-  let content:string[] = [props.content];
-  //要素データ配列をループしてメッセージから排除した状態で配列にする
-  for (let j of ObjectIndex) {
-    content = content.join("").split(j.context);
-  }
-  console.log("/channel/[id] :: TextRender : contentの分裂結果->", content);
-
-  // DEBUG ///////
   
-  let DEBUGcontent:string[] = [props.content];
+  //メッセージ本文からVNode用要素を抜いて配列化する
+  let content:string[] = [props.content];
   for (let index in ObjectIndex) {
     //分裂用配列の最後の中での抜き出し文の位置
-    const contextPositionNow = DEBUGcontent[index].indexOf(ObjectIndex[index].context);
+    const contextPositionNow = content[index].indexOf(ObjectIndex[index].context);
     //抜き出す文の長さ
     const contextLength = ObjectIndex[index].context.length;
 
@@ -118,24 +133,21 @@ const parseVNode = () => {
      */
 
     //抜き出し文で分裂させた左の部分
-    const resultPartedLeft =  DEBUGcontent[index].slice(
+    const resultPartedLeft =  content[index].slice(
       0, contextPositionNow
     );
     //抜き出し文で分裂させた右の部分
-    const resultPartedRight =  DEBUGcontent[index].slice(
+    const resultPartedRight =  content[index].slice(
       contextLength + contextPositionNow
     );
 
     //結果を結合、最初のループなら配列をマージせず、そのまま追加
     if (parseInt(index) === 0) {
-      DEBUGcontent = [resultPartedLeft, resultPartedRight];
+      content = [resultPartedLeft, resultPartedRight];
     } else {
-      DEBUGcontent = [...DEBUGcontent.slice(0, parseInt(index)), resultPartedLeft, resultPartedRight];
+      content = [...content.slice(0, parseInt(index)), resultPartedLeft, resultPartedRight];
     }
   }
-  console.log("/channel/[id] :: TextRender : contentの分裂結果->", content);
-
-  ////////////////
 
   //ループして最終レンダー用配列へVNodeを格納
   for (let index in content) {
