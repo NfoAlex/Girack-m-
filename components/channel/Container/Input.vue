@@ -54,7 +54,7 @@ watch(messageInput, (() => {
     searchData.value.searching = true;
     //どの位置から始まっているか
     searchData.value.searchStartingAt = messageInput.value.length - 1;
-    console.log("/channel/[id] :: watch(messageInput) : 検索モードON");
+    //console.log("/channel/[id] :: watch(messageInput) : 検索モードON");
 
     //このチャンネルに参加するユーザーを取得
     socket.emit("searchUserInfo", {
@@ -75,7 +75,7 @@ watch(messageInput, (() => {
     messageInput.value.length === 0
   ) {
     searchData.value.searching = false;
-    console.log("/channel/[id] :: watch(messageInput) : 検索モードOFF");
+    //console.log("/channel/[id] :: watch(messageInput) : 検索モードOFF");
   }
 
   //検索モードに入っているなら検索する
@@ -99,7 +99,7 @@ watch(messageInput, (() => {
       searchData.value.searchStartingAt + 1,
       searchData.value.searchEndingAt
     );
-    console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
+    //console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
 
     //クエリーでユーザーリストへフィルターかけて結果格納
     searchDataResult.value = userAtHere.value.filter(
