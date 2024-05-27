@@ -84,6 +84,7 @@ const parseVNode = () => {
   //要素データ配列をindexでソートする
   ObjectIndex.sort((obj1,obj2) => obj1.index-obj2.index);
   
+  //メッセージ本文からVNode用要素を抜いて配列化する
   let content:string[] = [props.content];
   for (let index in ObjectIndex) {
     //分裂用配列の最後の中での抜き出し文の位置
