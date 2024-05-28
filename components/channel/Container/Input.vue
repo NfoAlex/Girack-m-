@@ -121,6 +121,7 @@ const triggerEnter = (event:any) => {
     const breakLinesFound = messageInput.value.match(/\n/g);
     //改行の数に合わせて入力欄の行数を調整
     if (breakLinesFound === null) {
+      //改行がないなら１行
       inputRowNum.value = 1;
     } else {
       //５以上の行数表示を認めない
@@ -281,6 +282,7 @@ onUnmounted(() => {
       @keydown.down="triggerDown"
       variant="solo-filled"
       :rows="inputRowNum"
+      autofocus
       rounded
     />
   </div>
