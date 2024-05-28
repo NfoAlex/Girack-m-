@@ -160,6 +160,7 @@ const triggerEnter = (event:any) => {
   
   //入力欄を初期化
   messageInput.value = "";
+  inputRowNum.value = 1;
 }
 
 /**
