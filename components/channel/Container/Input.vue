@@ -26,6 +26,7 @@ interface SearchData {
  * data
  */
 const messageInput = ref<string>(""); //メッセージ入力用変数
+const inputRowNum = ref<number>(1); //入力欄の行数
 const searchData = ref<SearchData>({ //検索データ
   query: '',
   searching: false,
@@ -253,12 +254,13 @@ onUnmounted(() => {
         </template>
       </v-virtual-scroll>
     </m-card>
-    <v-text-field
+    <v-textarea
       v-model="messageInput"
       @keydown.enter.prevent="triggerEnter"
       @keydown.up="triggerUp"
       @keydown.down="triggerDown"
       variant="solo-filled"
+      :rows="inputRowNum"
       rounded
     />
   </div>
