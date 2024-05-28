@@ -33,7 +33,13 @@ export default defineEventHandler(async (event) => {
   ];
   
   // APIのパスと指定したもの以外は処理を止める止めないと他のパスに影響が出る
-  const isContained = typeof url === 'string' && apiPaths.some((apiPath: string) => new RegExp(`^${apiPath}([/?]|$)`).test(url));
+  const isContained =
+    typeof url === 'string'
+      &&
+    apiPaths.some(
+      (apiPath: string) => new RegExp(`^${apiPath}([/?]|$)`).test(url)
+    );
+  
   if (!isContained) {
     return;
   }
