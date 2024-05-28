@@ -112,7 +112,26 @@ watch(messageInput, (() => {
 /**
  * Enterキー入力の処理
  */
-const triggerEnter = (event:Event) => {
+const triggerEnter = (event:any) => {
+  //Shiftキーを押されているならシンプルに改行
+  if (event.shiftKey) {
+     
+    /* ToDo :: 改行を挿入する */
+
+    const breakLinesFound = messageInput.value.match(/\n/g);
+    //改行の数に合わせて入力欄の行数を調整
+    if (breakLinesFound === null) {
+      inputRowNum.value = 1;
+    } else {
+      //５以上の行数表示を認めない
+      inputRowNum.value =
+        breakLinesFound.length>5 ? 5 : breakLinesFound.length;
+    }
+
+    //関数終了
+    return;
+  }
+
   //メッセージが空なら停止
   if (messageInput.value === "" || messageInput.value === " ") return;
 
