@@ -125,7 +125,7 @@ const triggerEnter = (event:any) => {
     } else {
       //５以上の行数表示を認めない
       inputRowNum.value =
-        breakLinesFound.length>5 ? 5 : breakLinesFound.length;
+        breakLinesFound.length>5 ? 5 : breakLinesFound.length+1;
     }
 
     //関数終了
