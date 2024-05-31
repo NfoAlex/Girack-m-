@@ -82,7 +82,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <v-dialog width="50vw" max-width="600px" height="55vh" max-height="750px">
+  <v-dialog width="50vw" max-width="500px" height="55vh" max-height="750px">
     <m-card class="d-flex flex-column" style="height:100%; padding: 0 !important;">
       <v-alert
         v-if="Userinfo.banned"
