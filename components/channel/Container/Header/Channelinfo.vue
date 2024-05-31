@@ -26,6 +26,28 @@ const tabPage = ref<"INFO"|"MANAGE">("INFO"); //表示するタブ指定用
 const stateNameEditing = ref<boolean>(false); //チャンネル名編集モードトグル
 const tempNameEditing = ref<string>(""); //チャンネル名編集用
 const tempDescriptionEditing = ref<string>(""); //チャンネル概要文編集用
+const tempIsPrivate = ref<boolean>(false); //チャンネルプライベートトグル用
+
+/**
+ * プライベートスイッチの監視
+ */
+watch(tempIsPrivate, (newSwtich, oldSwitch) => {
+  //値が変わっているならチャンネルを更新
+  if (newSwtich !== oldSwitch) {
+    //プライベート設定を適用させる
+    socket.emit("updateChannel", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    channelId: props.channelId,
+    channelInfo: {
+      ...channelInfo.value,
+      isPrivate: tempIsPrivate.value
+    }
+  });
+  }
+});
 
 /**
  * チャンネル更新
@@ -66,6 +88,7 @@ const SOCKETfetchChannelInfo = (
     channelInfo.value = dat.data.channelInfo;
     tempNameEditing.value = dat.data.channelInfo.channelName;
     tempDescriptionEditing.value = dat.data.channelInfo.description;
+    tempIsPrivate.value = dat.data.channelInfo.isPrivate;
   }
 };
 
@@ -186,6 +209,7 @@ onUnmounted(() => {
 
         <div v-if="tabPage==='MANAGE'">
           <p>Coming soon...</p>
+          <v-switch v-model="tempIsPrivate" label="プライベートチャンネル" />
         </div>
 
       </m-card>
