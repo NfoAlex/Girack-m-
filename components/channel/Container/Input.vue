@@ -289,6 +289,7 @@ onUnmounted(() => {
       @keydown.down="triggerDown"
       variant="solo-filled"
       rows="1"
+      maxRows="5"
       ref="elInput"
       autoGrow
       autofocus
