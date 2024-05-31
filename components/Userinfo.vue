@@ -82,7 +82,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <v-dialog width="70vw" max-width="900px" height="50vh" max-height="750px">
+  <v-dialog width="50vw" max-width="600px" height="55vh" max-height="750px">
     <m-card class="d-flex flex-column" style="height:100%; padding: 0 !important;">
       <v-alert
         v-if="Userinfo.banned"
@@ -95,14 +95,14 @@ onUnmounted(() => {
       </v-alert>
       
       <div
-        class="d-flex align-center mt-3 pa-5 text-truncate"
+        class="d-flex flex-column align-center mt-3 pa-5 text-truncate"
         style="width:100%;"
       >
-        <v-avatar class="mr-5" size="104">
+        <v-avatar size="104">
           <v-img :src="'/icon/' + Userinfo.userId" :alt="Userinfo.userId">
           </v-img>
         </v-avatar>
-        <div class="text-truncate">
+        <div class="text-truncate mt-2 text-center">
           <p class="text-disabled text-caption">#{{ Userinfo.userId }}</p>
           <p class="text-h4 text-truncate">
             {{ Userinfo.userName }}
