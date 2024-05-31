@@ -6,9 +6,11 @@ import UserChip from './TextRender/UserChip.vue';
 
 const URLRegex:RegExp = /((https|http)?:\/\/[^\s]+)/g;
 const MentionRegex:RegExp = /@<([0-9]*)>/g;
+const BrRegex:RegExp = /\n/g;
 
 const URLMatched = ref<RegExpMatchArray|null>(null);
 const MentionMatched = ref<RegExpMatchArray|null>(null);
+const BrMatched = ref<RegExpMatchArray|null>(null);
 
 /**
  * data
@@ -27,7 +29,7 @@ const parseVNode = () => {
   //それぞれの要素の位置と種類を記録する要素データ配列
   const ObjectIndex:{
     context: string, //内容(URLあるいはユーザーId)
-    type: "link"|"userId", //要素がリンク用かメンション用か
+    type: "link"|"userId"|"breakLine", //要素がリンク用かメンション用か改行用か
     index: number //メッセ上の位置
   }[] = [];
 
@@ -35,6 +37,8 @@ const parseVNode = () => {
   URLMatched.value = props.content.match(URLRegex);
   //メッセからメンションを抽出
   MentionMatched.value = props.content.match(MentionRegex);
+  //メッセから改行を抽出
+  BrMatched.value = props.content.match(BrRegex);
 
   //URLがnullじゃなければindexを取得して格納
   if (URLMatched.value !== null) {
@@ -78,6 +82,28 @@ const parseVNode = () => {
         contentCloned.slice(0,contentCloned.indexOf(userId))
           +
         contentCloned.slice(contentCloned.indexOf(userId) + userId.length);
+    }
+  }
+  //<br>(改行用)がnullじゃなければindexを取得して格納
+  if (BrMatched.value !== null) {
+    //複数回の検索に対応させるために検索終えた文を排除するため、排除する文字の長さを貯める
+    let removedLengthTotal = 0;
+    let contentCloned = props.content;
+
+    for (let br of BrMatched.value) {
+      ObjectIndex.push({
+        context: br,
+        type: "breakLine",
+        index: contentCloned.indexOf(br) + removedLengthTotal
+      });
+
+      //これから排除する文の長さを貯める
+      removedLengthTotal += br.length;
+      //メッセージからuserIdを排除
+      contentCloned =
+        contentCloned.slice(0,contentCloned.indexOf(br))
+          +
+        contentCloned.slice(contentCloned.indexOf(br) + br.length);
     }
   }
 
@@ -174,6 +200,12 @@ const parseVNode = () => {
           h(UserChip, {userId:ObjectIndex[index].context})
         );
       }
+      //改行
+      if (ObjectIndex[index].type === "breakLine") {
+        MessageRenderingFinal.value.push(
+          h("br")
+        );
+      }
     }
 
   }
@@ -199,7 +231,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <p class="text-medium-emphasis" style="word-break: break-all;">
+  <span class="text-medium-emphasis" style="word-break: break-all;">
     <ContentRenderParsed />
-  </p>
+  </span>
 </template>

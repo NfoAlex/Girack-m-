@@ -26,6 +26,8 @@ interface SearchData {
  * data
  */
 const messageInput = ref<string>(""); //メッセージ入力用変数
+const elInput = ref(null); //入力欄要素を取得するためのref
+const inputRowNum = ref<number>(1); //入力欄の行数
 const searchData = ref<SearchData>({ //検索データ
   query: '',
   searching: false,
@@ -111,7 +113,33 @@ watch(messageInput, (() => {
 /**
  * Enterキー入力の処理
  */
-const triggerEnter = (event:Event) => {
+const triggerEnter = (event:any) => {
+  //Shiftキーを押されているならシンプルに改行
+  if (event.shiftKey) {
+    //もし要素が取得できなかったら停止
+    if (elInput.value === null) return;
+
+    //console.log("/channel/[id] :: Input : 要素->", elInput.value.selectionStart);
+
+    //現在の入力欄上のカーソル位置
+    const currentTxtCursor:number = elInput.value.selectionStart;
+
+    //テキストを現在のカーソル位置をもとに分裂させる
+    let txtBefore = messageInput.value.slice(0, currentTxtCursor);
+    let txtAfter = messageInput.value.slice(currentTxtCursor);
+
+    //改行を挿入
+    messageInput.value = txtBefore + "\n" + txtAfter;
+
+    //カーソル位置を改行のすぐ次へ移動
+    nextTick(() => {
+      elInput.value.setSelectionRange(currentTxtCursor + 1, currentTxtCursor + 1);
+    });
+
+    //関数終了
+    return;
+  }
+
   //メッセージが空なら停止
   if (messageInput.value === "" || messageInput.value === " ") return;
 
@@ -140,6 +168,7 @@ const triggerEnter = (event:Event) => {
   
   //入力欄を初期化
   messageInput.value = "";
+  inputRowNum.value = 1;
 }
 
 /**
@@ -253,12 +282,18 @@ onUnmounted(() => {
         </template>
       </v-virtual-scroll>
     </m-card>
-    <v-text-field
+    <v-textarea
       v-model="messageInput"
       @keydown.enter.prevent="triggerEnter"
       @keydown.up="triggerUp"
       @keydown.down="triggerDown"
       variant="solo-filled"
+      rows="1"
+      maxRows="5"
+      ref="elInput"
+      no-resize
+      autoGrow
+      autofocus
       rounded
     />
   </div>

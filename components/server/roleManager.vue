@@ -149,9 +149,9 @@ onUnmounted(() => {
         <p>次のロールを削除してよろしいですか？</p>
         <p class="text-center text-h5 pa-5">{{ roleEditingClone.name }}</p>
       </v-card-text>
-      <v-card-action class="d-flex flex-row-reverse">
+      <v-card-actions class="d-flex flex-row-reverse">
         <m-btn @click="deleteRole" color="error">削除する</m-btn>
-      </v-card-action>
+      </v-card-actions>
     </m-card>
   </v-dialog>
 
