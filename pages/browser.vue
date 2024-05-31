@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
+import { useUserIndex } from '~/stores/userindex';
 import getMyRolePower from '~/composables/getMyRolePower';
 
 import type { channel } from '~/types/channel';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+const { getUserinfo } = storeToRefs(useUserIndex());
 
 /**
  * data
@@ -280,7 +282,7 @@ onUnmounted(() => {
           </span>
         </span>
         <v-divider />
-        <p class="text-disabled text-caption">作成者 : {{ channel.createdBy }}</p>
+        <p class="text-disabled text-caption">作成者 : {{ getUserinfo(channel.createdBy).userName }}</p>
 
       </m-card>
     </div>
