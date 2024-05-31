@@ -15,9 +15,7 @@ const roleEditing = ref<role>({ //編集用のロールデータ
   color: '',
   ServerManage: false,
   RoleManage: false,
-  ChannelRename: false,
-  ChannelViewPrivate: false,
-  ChannelCreateAndDelete: false,
+  ChannelManage: false,
   UserManage: false,
   MessageDelete: false,
   MessageAttatchFile: false

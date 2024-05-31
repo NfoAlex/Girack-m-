@@ -7,9 +7,7 @@ interface onlyRolePower {
   roleId?: string,
   ServerManage: boolean,
   RoleManage: boolean,
-  ChannelRename: boolean,
-  ChannelViewPrivate: boolean,
-  ChannelCreateAndDelete: boolean,
+  ChannelManage: boolean,
   UserManage: boolean,
   MessageDelete: boolean,
   MessageAttatchFile: boolean
@@ -20,9 +18,7 @@ export default function getMyRolePower():onlyRolePower {
   let rolePower:onlyRolePower = {
     ServerManage: false,
     RoleManage: false,
-    ChannelRename: false,
-    ChannelViewPrivate: false,
-    ChannelCreateAndDelete: false,
+    ChannelManage: false,
     UserManage: false,
     MessageDelete: false,
     MessageAttatchFile: false
@@ -39,9 +35,7 @@ export default function getMyRolePower():onlyRolePower {
     rolePower = {
       ServerManage: rolePowerForThis.ServerManage?true:rolePower.ServerManage,
       RoleManage: rolePowerForThis.RoleManage?true:rolePower.RoleManage,
-      ChannelRename: rolePowerForThis.ChannelRename?true:rolePower.ChannelRename,
-      ChannelViewPrivate: rolePowerForThis.ChannelViewPrivate?true:rolePower.ChannelViewPrivate,
-      ChannelCreateAndDelete: rolePowerForThis.ChannelCreateAndDelete?true:rolePower.ChannelCreateAndDelete,
+      ChannelManage: rolePowerForThis.ChannelManage?true:rolePower.ChannelManage,
       UserManage: rolePowerForThis.UserManage?true:rolePower.UserManage,
       MessageDelete: rolePowerForThis.MessageDelete?true:rolePower.MessageDelete,
       MessageAttatchFile: rolePowerForThis.MessageAttatchFile?true:rolePower.MessageAttatchFile

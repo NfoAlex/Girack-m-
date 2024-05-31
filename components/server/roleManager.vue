@@ -21,9 +21,7 @@ const roleEditingClone = ref<role>({ //編集用のロールデータ
   color: '',
   ServerManage: false,
   RoleManage: false,
-  ChannelRename: false,
-  ChannelViewPrivate: false,
-  ChannelCreateAndDelete: false,
+  ChannelManage: false,
   UserManage: false,
   MessageDelete: false,
   MessageAttatchFile: false
@@ -222,9 +220,7 @@ onUnmounted(() => {
       <v-divider class="my-2" />
 
       <p>チャンネル管理</p>
-      <v-checkbox v-model="roleEditingClone.ChannelCreateAndDelete" label="チャンネルの作成、削除" />
-      <v-checkbox v-model="roleEditingClone.ChannelRename" label="チャンネル名の編集" />
-      <v-checkbox v-model="roleEditingClone.ChannelViewPrivate" label="プライベートチャンネルの閲覧、参加" />
+      <v-checkbox v-model="roleEditingClone.ChannelManage" label="チャンネルの管理" />
 
       <v-divider class="my-2" />
 
