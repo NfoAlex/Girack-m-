@@ -250,7 +250,7 @@ onUnmounted(() => {
           <p class="text-truncate">{{ channel.description }}</p>
           <span class="ml-auto">
             <m-btn
-              v-if="getMyUserinfo.role.includes('HOST')"
+              v-if="getMyRolePower().ChannelManage"
               @click="
                 displayDeleteChannel = true;
                 channelInfoDeleting = {
