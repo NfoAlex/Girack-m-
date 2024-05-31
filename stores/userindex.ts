@@ -75,6 +75,7 @@ export const useUserIndex = defineStore("userindex", {
   
   actions: {
     setUserIndex(Userinfo: MyUserinfo) {
+      if (Userinfo === null) return;
       this._UserIndex[Userinfo.userId] = Userinfo;
     },
 
