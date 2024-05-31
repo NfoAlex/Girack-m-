@@ -29,25 +29,27 @@ const tempDescriptionEditing = ref<string>(""); //チャンネル概要文編集
 const tempIsPrivate = ref<boolean>(false); //チャンネルプライベートトグル用
 
 /**
- * プライベートスイッチの監視
+ * プライベートスイッチの監視用関数
  */
-watch(tempIsPrivate, (newSwtich, oldSwitch) => {
-  //値が変わっているならチャンネルを更新
-  if (newSwtich !== oldSwitch) {
-    //プライベート設定を適用させる
+const updatePrivate = () => {
+  console.log("Channelinfo :: updatePrivate : tempIsPrivate->", tempIsPrivate.value);
+  //プライベート設定を適用させる
+  nextTick(() => {
+  
     socket.emit("updateChannel", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    channelId: props.channelId,
-    channelInfo: {
-      ...channelInfo.value,
-      isPrivate: tempIsPrivate.value
-    }
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      channelId: props.channelId,
+      channelInfo: {
+        ...channelInfo.value,
+        isPrivate: !tempIsPrivate.value
+      }
+    });
+  
   });
-  }
-});
+};
 
 /**
  * チャンネル更新
@@ -89,6 +91,8 @@ const SOCKETfetchChannelInfo = (
     tempNameEditing.value = dat.data.channelInfo.channelName;
     tempDescriptionEditing.value = dat.data.channelInfo.description;
     tempIsPrivate.value = dat.data.channelInfo.isPrivate;
+
+    //watchOnce(tempIsPrivate, (newValue,oldValue)=>watchIsPrivate(newValue, oldValue));
   }
 };
 
@@ -208,8 +212,11 @@ onUnmounted(() => {
         </div>
 
         <div v-if="tabPage==='MANAGE'">
-          <p>Coming soon...</p>
-          <v-switch v-model="tempIsPrivate" label="プライベートチャンネル" />
+          <v-switch
+            v-model="tempIsPrivate"
+            @click="updatePrivate"
+            label="プライベートチャンネル"
+          />
         </div>
 
       </m-card>
