@@ -121,6 +121,7 @@ onUnmounted(() => {
       <span class="px-4 d-flex flex-wrap">
         <m-btn
           @click="displayPage = 'joinedChannel'"
+          class="text-body-2"
           :variant="displayPage==='joinedChannel'?'tonal':'text'"
         >
           <v-icon>mdi:mdi-pound</v-icon>
@@ -128,6 +129,7 @@ onUnmounted(() => {
         </m-btn>
         <m-btn
           @click="displayPage = 'manage'"
+          class="text-body-2"
           :variant="displayPage==='manage'?'tonal':'text'"
         >
           <v-icon>mdi:mdi-shield-account</v-icon>
@@ -136,6 +138,7 @@ onUnmounted(() => {
         <m-btn
           @click="displayPage = 'JSON'"
           :variant="displayPage==='JSON'?'tonal':'text'"
+          class="text-body-2"
           color="orange"
         >
           <v-icon>mdi:mdi-bug</v-icon>
