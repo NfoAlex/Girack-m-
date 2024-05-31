@@ -15,18 +15,14 @@ const dialogChangeProfileIcon = ref<boolean>(false); //プロフィール画像�
 const myRolePower = ref<{ //自分の権力用
   ServerManage: boolean,
   RoleManage: boolean,
-  ChannelRename: boolean,
-  ChannelViewPrivate: boolean,
-  ChannelCreateAndDelete: boolean,
+  ChannelManage: boolean,
   UserManage: boolean,
   MessageDelete: boolean,
   MessageAttatchFile: boolean
 }>({
   ServerManage: false,
   RoleManage: false,
-  ChannelRename: false,
-  ChannelViewPrivate: false,
-  ChannelCreateAndDelete: false,
+  ChannelManage: false,
   UserManage: false,
   MessageDelete: false,
   MessageAttatchFile: false
@@ -163,18 +159,8 @@ onMounted(() => {
           <v-divider class="my-2" />
 
           <span>
-            チャンネル名の変更 : 
-            <v-icon v-if="myRolePower.ChannelRename" color="success">mdi-check</v-icon>
-            <v-icon v-else>mdi-close</v-icon>
-          </span>
-          <span>
-            プライベートチャンネルの閲覧 : 
-            <v-icon v-if="myRolePower.ChannelViewPrivate" color="success">mdi-check</v-icon>
-            <v-icon v-else>mdi-close</v-icon>
-          </span>
-          <span>
-            チャンネルの作成と削除 : 
-            <v-icon v-if="myRolePower.ChannelCreateAndDelete" color="success">mdi-check</v-icon>
+            チャンネルの管理 : 
+            <v-icon v-if="myRolePower.ChannelManage" color="success">mdi-check</v-icon>
             <v-icon v-else>mdi-close</v-icon>
           </span>
 

@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
+import { useUserIndex } from '~/stores/userindex';
+import getMyRolePower from '~/composables/getMyRolePower';
+
 import type { channel } from '~/types/channel';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+const { getUserinfo } = storeToRefs(useUserIndex());
 
 /**
  * data
@@ -248,7 +252,7 @@ onUnmounted(() => {
           <p class="text-truncate">{{ channel.description }}</p>
           <span class="ml-auto">
             <m-btn
-              v-if="getMyUserinfo.role.includes('HOST')"
+              v-if="getMyRolePower().ChannelManage"
               @click="
                 displayDeleteChannel = true;
                 channelInfoDeleting = {
@@ -278,7 +282,7 @@ onUnmounted(() => {
           </span>
         </span>
         <v-divider />
-        <p class="text-disabled text-caption">作成者 : {{ channel.createdBy }}</p>
+        <p class="text-disabled text-caption">作成者 : {{ getUserinfo(channel.createdBy).userName }}</p>
 
       </m-card>
     </div>
@@ -287,6 +291,7 @@ onUnmounted(() => {
 
   <!-- チャンネル作成ボタン -->
   <v-btn
+    v-if="getMyRolePower().ChannelManage"
     @click="displayCreateChannel = true"
     position="absolute"
     style="right:5%; bottom: 5%;"

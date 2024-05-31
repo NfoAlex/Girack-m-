@@ -18,6 +18,13 @@ export const useUserIndex = defineStore("userindex", {
         channelJoined: ["0001"]
       }
       */
+     "SYSTEM": {
+        userName: "SYSTEM",
+        role: ["HOST"],
+        userId: "SYSTEM",
+        banned: false,
+        channelJoined: []
+     }
     },
     _OnlineUsers: []
   } as {
@@ -68,6 +75,7 @@ export const useUserIndex = defineStore("userindex", {
   
   actions: {
     setUserIndex(Userinfo: MyUserinfo) {
+      if (Userinfo === null) return;
       this._UserIndex[Userinfo.userId] = Userinfo;
     },
 

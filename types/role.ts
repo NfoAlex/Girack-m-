@@ -4,9 +4,7 @@ export default interface role {
   color: string,
   ServerManage: boolean,
   RoleManage: boolean,
-  ChannelRename: boolean,
-  ChannelViewPrivate: boolean,
-  ChannelCreateAndDelete: boolean,
+  ChannelManage: boolean,
   UserManage: boolean,
   MessageDelete: boolean,
   MessageAttatchFile: boolean
