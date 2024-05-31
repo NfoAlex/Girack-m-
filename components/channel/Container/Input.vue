@@ -26,6 +26,7 @@ interface SearchData {
  * data
  */
 const messageInput = ref<string>(""); //メッセージ入力用変数
+const elInput = ref(null); //入力欄要素を取得するためのref
 const inputRowNum = ref<number>(1); //入力欄の行数
 const searchData = ref<SearchData>({ //検索データ
   query: '',
@@ -115,19 +116,25 @@ watch(messageInput, (() => {
 const triggerEnter = (event:any) => {
   //Shiftキーを押されているならシンプルに改行
   if (event.shiftKey) {
-     
-    /* ToDo :: 改行を挿入する */
+    //もし要素が取得できなかったら停止
+    if (elInput.value === null) return;
 
-    const breakLinesFound = messageInput.value.match(/\n/g);
-    //改行の数に合わせて入力欄の行数を調整
-    if (breakLinesFound === null) {
-      //改行がないなら１行
-      inputRowNum.value = 1;
-    } else {
-      //５以上の行数表示を認めない
-      inputRowNum.value =
-        breakLinesFound.length>5 ? 5 : breakLinesFound.length+1;
-    }
+    //console.log("/channel/[id] :: Input : 要素->", elInput.value.selectionStart);
+
+    //現在の入力欄上のカーソル位置
+    const currentTxtCursor:number = elInput.value.selectionStart;
+
+    //テキストを現在のカーソル位置をもとに分裂させる
+    let txtBefore = messageInput.value.slice(0, currentTxtCursor);
+    let txtAfter = messageInput.value.slice(currentTxtCursor);
+
+    //改行を挿入
+    messageInput.value = txtBefore + "\n" + txtAfter;
+
+    //カーソル位置を改行のすぐ次へ移動
+    nextTick(() => {
+      elInput.value.setSelectionRange(currentTxtCursor + 1, currentTxtCursor + 1);
+    });
 
     //関数終了
     return;
@@ -281,7 +288,9 @@ onUnmounted(() => {
       @keydown.up="triggerUp"
       @keydown.down="triggerDown"
       variant="solo-filled"
-      :rows="inputRowNum"
+      rows="1"
+      ref="elInput"
+      autoGrow
       autofocus
       rounded
     />
