@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
+import getMyRolePower from '~/composables/getMyRolePower';
+
 import type { channel } from '~/types/channel';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -287,6 +289,7 @@ onUnmounted(() => {
 
   <!-- チャンネル作成ボタン -->
   <v-btn
+    v-if="getMyRolePower().ChannelManage"
     @click="displayCreateChannel = true"
     position="absolute"
     style="right:5%; bottom: 5%;"
