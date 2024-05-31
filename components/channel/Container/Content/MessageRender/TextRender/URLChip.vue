@@ -7,7 +7,7 @@ const props = defineProps<{
 <template>
   <a :href="props.url" rel="noopener noreferrer" target="_blank">
     <span
-      class="px-2 py-1 urlStringContainer"
+      class="py-1 urlStringContainer"
     >
       {{ props.url }}
     </span>
