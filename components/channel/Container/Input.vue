@@ -291,6 +291,7 @@ onUnmounted(() => {
       rows="1"
       maxRows="5"
       ref="elInput"
+      no-resize
       autoGrow
       autofocus
       rounded
