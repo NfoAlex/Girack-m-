@@ -82,7 +82,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <v-dialog width="65vw" max-width="800px" height="75vh" max-height="900px">
+  <v-dialog width="70vw" max-width="900px" height="50vh" max-height="750px">
     <m-card class="d-flex flex-column" style="height:100%; padding: 0 !important;">
       <v-alert
         v-if="Userinfo.banned"
@@ -118,7 +118,7 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <span class="px-5 d-flex flex-wrap">
+      <span class="px-4 d-flex flex-wrap">
         <m-btn
           @click="displayPage = 'joinedChannel'"
           :variant="displayPage==='joinedChannel'?'tonal':'text'"
@@ -143,24 +143,28 @@ onUnmounted(() => {
         </m-btn>
       </span>
 
-      <m-card v-if="displayPage==='joinedChannel'" color="cardInner" class="mt-2 flex-grow-1">
-        <p>参加チャンネル</p>
-        {{ Userinfo.channelJoined }}
-      </m-card>
+      <m-card color="cardInner" class="mx-4 mb-4 mt-2 flex-grow-1">
 
-      <m-card v-if="displayPage==='manage'" color="cardInner" class="mt-2 flex-grow-1">
-        <span v-if="!Userinfo.banned">
-          <p class="text-caption text-disabled text-center">ダブルクリックでBAN</p>
-          <m-btn @dblclick="banUser" color="error" block>BAN</m-btn>
+        <span v-if="displayPage==='joinedChannel'">
+          <p>参加チャンネル</p>
+          {{ Userinfo.channelJoined }}
         </span>
-        <span v-else>
-          <p class="text-caption text-disabled text-center">ダブルクリックで解除</p>
-          <m-btn @dblclick="pardonUser" color="info" block>BANを解除する</m-btn>
-        </span>
-      </m-card>
 
-      <m-card v-if="displayPage==='JSON'" color="cardInner" class="mt-2 flex-grow-1">
-        {{ Userinfo }}
+        <span v-if="displayPage==='manage'">
+          <span v-if="!Userinfo.banned">
+            <p class="text-caption text-disabled text-center">ダブルクリックでBAN</p>
+            <m-btn @dblclick="banUser" color="error" block>BAN</m-btn>
+          </span>
+          <span v-else>
+            <p class="text-caption text-disabled text-center">ダブルクリックで解除</p>
+            <m-btn @dblclick="pardonUser" color="info" block>BANを解除する</m-btn>
+          </span>
+        </span>
+
+        <span v-if="displayPage==='JSON'">
+          {{ Userinfo }}
+        </span>
+
       </m-card>
     </m-card>
   </v-dialog>
