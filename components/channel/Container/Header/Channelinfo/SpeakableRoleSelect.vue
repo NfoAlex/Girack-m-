@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
+import { useRole } from '~/stores/role';
 
 import type { channel } from '~/types/channel';
 import type role from '~/types/role';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+const { getRoleSingle } = storeToRefs(useRole());
 
 /**
  * data
@@ -95,7 +97,7 @@ onUnmounted(() => {
           class="mr-2"
           :color="item.props.color"
         />
-        <span>{{ item.title }}</span>
+        <span>{{ getRoleSingle(item.props.value).name }}</span>
       </v-chip>
     </template>
 
