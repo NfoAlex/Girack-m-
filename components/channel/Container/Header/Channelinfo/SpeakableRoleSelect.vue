@@ -156,6 +156,7 @@ onUnmounted(() => {
     <!-- ロール表示 -->
     <template v-slot:item="{item, index, props}">
       <v-card
+        v-if="!tempSpeakableRole.includes(props.value)"
         @click="()=>{tempSpeakableRole.push(props.value); updateChannel();}"
         class="my-1 mx-2 pa-2 rounded-pill d-flex align-center"
       >
