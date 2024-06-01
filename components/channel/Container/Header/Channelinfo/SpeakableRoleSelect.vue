@@ -13,7 +13,13 @@ const { getRoleSingle } = storeToRefs(useRole());
  * data
  */
 const roleSearchedData = ref<role[]>([]); //ロール検索結果格納用
-const tempSpeakableRole = ref<string[]>([]);
+const tempSpeakableRole = ref<string[]>([]); //編集用話せるロール配列
+//ロール検索用クエリー保存データ
+const roleSearchInput = ref<{query:string, querySearched:string, pageIndex:number}>({
+  query: "",
+  querySearched: "",
+  pageIndex: 1
+});
 
 //prop
 const props = defineProps<{
@@ -41,20 +47,47 @@ const updateChannel = () => {
 };
 
 /**
+ * 検索クエリーでロールを検索する
+ */
+const searchRole = () => {
+  //検索したクエリーと入力クエリーが一緒なら停止
+  if (roleSearchInput.value.query === roleSearchInput.value.querySearched) return;
+
+  //取得
+  socket.emit("searchRole", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    searchQuery: roleSearchInput.value.query,
+    pageIndex: 1
+  });
+
+  //検索したクエリー文を上書き
+  roleSearchInput.value.querySearched = roleSearchInput.value.query;
+};
+
+/**
  * ロール検索データ受け取り
  * @param dat
  */
-const SOCKETsearchRole = (dat:{result:string, data:role[]}) => {
+const SOCKETsearchRole = (dat:{result:string, data:{role:role[], pageIndex:number}}) => {
   //成功なら検索結果を格納
   if (dat.result === "SUCCESS") {
-    roleSearchedData.value = [...roleSearchedData.value, ...dat.data];
-    console.log("roleSearchedData->", roleSearchedData.value);
+    if (dat.data.pageIndex === roleSearchInput.value.pageIndex + 1) {
+      roleSearchedData.value = [...roleSearchedData.value, ...dat.data.role];
+    } else {
+      roleSearchedData.value = dat.data.role;
+    }
+
+    console.log("dat->", dat);
   }
 };
 
 onMounted(() => {
   //propsからの値を適用
   tempSpeakableRole.value = props.speakableRole;
+  console.log("/channel/[id] :: SpeakableRoleSelect :: onMounted : props.speakableRole->", props.speakableRole);
 
   socket.on("RESULT::searchRole", SOCKETsearchRole);
 
@@ -104,13 +137,20 @@ onUnmounted(() => {
     <!-- ロール検索ボックス -->
     <template v-slot:['prepend-item']>
       <v-text-field
-        density="compact"
+        v-model="roleSearchInput.query"
         class="mx-3 my-2"
         variant="outlined"
         label="ロール名で検索"
-        hide-details
+        hint="空で検索すると全ロール検索"
         prepend-inner-icon="mdi-text-box-search-outline"
-      />
+      >
+        <template
+          v-slot:['append-inner']
+          v-if="roleSearchInput.query!==roleSearchInput.querySearched"
+        >
+          <v-btn @click="searchRole" icon="mdi-magnify" size="small"></v-btn>
+        </template>
+      </v-text-field>
     </template>
 
     <!-- ロール表示 -->
