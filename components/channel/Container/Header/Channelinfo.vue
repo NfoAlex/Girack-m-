@@ -30,7 +30,6 @@ const tempNameEditing = ref<string>(""); //チャンネル名編集用
 const tempDescriptionEditing = ref<string>(""); //チャンネル概要文編集用
 const tempIsPrivate = ref<boolean>(false); //チャンネルプライベートトグル用
 const tempSpeakableRole = ref<string[]>([]); //話せるロール
-const roleSearchedData = ref<role[]>([]); //ロール検索結果格納用
 
 /**
  * プライベートスイッチの監視用関数
@@ -101,22 +100,8 @@ const SOCKETfetchChannelInfo = (
   }
 };
 
-/**
- * ロール検索データ受け取り
- * @param dat
- */
-const SOCKETsearchRole = (dat:{result:string, data:role[]}) => {
-  //成功なら検索結果を格納
-  if (dat.result === "SUCCESS") {
-    roleSearchedData.value = [...roleSearchedData.value, ...dat.data];
-    console.log("roleSearchedData->", roleSearchedData.value);
-  }
-};
-
 onMounted(() => {
   socket.on("RESULT::fetchChannelInfo", SOCKETfetchChannelInfo);
-  socket.on("RESULT::searchRole", SOCKETsearchRole);
-  //socket.on("RESULT::updateChannel", SOCKETupdateChannel);
 
   //チャンネル情報を取得
   socket.emit("fetchChannelInfo", {
@@ -130,8 +115,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::fetchChannelInfo", SOCKETfetchChannelInfo);
-  socket.off("RESULT::searchRole", SOCKETsearchRole);
-  //socket.off("RESULT::updateChannel", SOCKETupdateChannel);
 });
 </script>
 
