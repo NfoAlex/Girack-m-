@@ -69,7 +69,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::searchRole", SOCKETsearchRole);
-})
+});
 </script>
 
 <template>
