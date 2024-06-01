@@ -123,7 +123,10 @@ onUnmounted(() => {
   >
 
     <template v-slot:chip="{item, index, props}">
-      <v-chip class="d-flex align-center" @click:close="tempSpeakableRole.splice(index,1)">
+      <v-chip
+        @click:close="()=>{tempSpeakableRole.splice(index,1); updateChannel();}"
+        class="d-flex align-center"
+      >
         <v-icon
           icon="mdi-circle"
           size="xs"
