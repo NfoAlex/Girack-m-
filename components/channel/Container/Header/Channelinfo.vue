@@ -74,6 +74,23 @@ const updateChannel = () => {
 }
 
 /**
+ * ロールを取得
+ */
+const fetchRole = () => {
+  //結果がすでにあるなら取得しない
+  if (roleSearchedData.value.length !== 0) return;
+  //取得
+  socket.emit("searchRole", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    searchQuery: "",
+    pageIndex: 1
+  });
+}
+
+/**
  * チャンネルデータ受け取り
  * @param dat 
  */
@@ -233,6 +250,7 @@ onUnmounted(() => {
             label="プライベートチャンネル"
           />
           <v-select
+            @click="fetchRole"
             v-model="tempSpeakableRole"
             :items="roleSearchedData"
             :item-props="(item)=>{
