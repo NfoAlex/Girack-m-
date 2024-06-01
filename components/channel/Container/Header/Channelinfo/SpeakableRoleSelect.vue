@@ -10,22 +10,13 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 /**
  * data
  */
- const channelInfo = ref<channel>({ //チャンネルデータ
-  channelId: '...',
-  channelName: '...',
-  createdBy: '',
-  description: '',
-  isPrivate: false,
-  speakableRole: []
-});
-const tempNameEditing = ref<string>(""); //チャンネル名編集用
-const tempDescriptionEditing = ref<string>(""); //チャンネル概要文編集用
-const tempSpeakableRole = ref<string[]>([]); //話せるロール
 const roleSearchedData = ref<role[]>([]); //ロール検索結果格納用
+const tempSpeakableRole = ref<string[]>([]);
 
 //prop
 const props = defineProps<{
   channelId: string,
+  channelInfo: channel,
   speakableRole: string[]
 }>();
 
@@ -41,9 +32,7 @@ const updateChannel = () => {
     },
     channelId: props.channelId,
     channelInfo: {
-      ...channelInfo.value,
-      channelName: tempNameEditing.value,
-      description: tempDescriptionEditing.value,
+      ...props.channelInfo,
       speakableRole: tempSpeakableRole.value
     }
   });

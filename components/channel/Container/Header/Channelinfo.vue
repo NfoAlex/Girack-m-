@@ -240,6 +240,7 @@ onUnmounted(() => {
 
           <!-- 話せるロール選択ボックス -->
           <SpeakableRoleSelect
+            :channel-info="channelInfo"
             :channel-id="props.channelId"
             :speakable-role="channelInfo.speakableRole"
           />
