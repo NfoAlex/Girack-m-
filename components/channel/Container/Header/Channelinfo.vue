@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
+import SpeakableRoleSelect from './Channelinfo/SpeakableRoleSelect.vue';
 
 import type { channel } from '~/types/channel';
 import type role from '~/types/role';
@@ -21,7 +22,7 @@ const channelInfo = ref<channel>({ //チャンネルデータ
   createdBy: '',
   description: '',
   isPrivate: false,
-  speakableRole: ''
+  speakableRole: []
 });
 const tabPage = ref<"INFO"|"MANAGE">("INFO"); //表示するタブ指定用
 const stateNameEditing = ref<boolean>(false); //チャンネル名編集モードトグル
@@ -71,24 +72,7 @@ const updateChannel = () => {
       description: tempDescriptionEditing.value
     }
   });
-}
-
-/**
- * ロールを取得
- */
-const fetchRole = () => {
-  //結果がすでにあるなら取得しない
-  if (roleSearchedData.value.length !== 0) return;
-  //取得
-  socket.emit("searchRole", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    searchQuery: "",
-    pageIndex: 1
-  });
-}
+};
 
 /**
  * チャンネルデータ受け取り
@@ -111,6 +95,7 @@ const SOCKETfetchChannelInfo = (
     tempNameEditing.value = dat.data.channelInfo.channelName;
     tempDescriptionEditing.value = dat.data.channelInfo.description;
     tempIsPrivate.value = dat.data.channelInfo.isPrivate;
+    tempSpeakableRole.value = dat.data.channelInfo.speakableRole;
 
     //watchOnce(tempIsPrivate, (newValue,oldValue)=>watchIsPrivate(newValue, oldValue));
   }
@@ -124,12 +109,14 @@ const SOCKETsearchRole = (dat:{result:string, data:role[]}) => {
   //成功なら検索結果を格納
   if (dat.result === "SUCCESS") {
     roleSearchedData.value = [...roleSearchedData.value, ...dat.data];
+    console.log("roleSearchedData->", roleSearchedData.value);
   }
 };
 
 onMounted(() => {
   socket.on("RESULT::fetchChannelInfo", SOCKETfetchChannelInfo);
   socket.on("RESULT::searchRole", SOCKETsearchRole);
+  //socket.on("RESULT::updateChannel", SOCKETupdateChannel);
 
   //チャンネル情報を取得
   socket.emit("fetchChannelInfo", {
@@ -144,6 +131,7 @@ onMounted(() => {
 onUnmounted(() => {
   socket.off("RESULT::fetchChannelInfo", SOCKETfetchChannelInfo);
   socket.off("RESULT::searchRole", SOCKETsearchRole);
+  //socket.off("RESULT::updateChannel", SOCKETupdateChannel);
 });
 </script>
 
@@ -249,17 +237,11 @@ onUnmounted(() => {
             @click="updatePrivate"
             label="プライベートチャンネル"
           />
-          <v-select
-            @click="fetchRole"
-            v-model="tempSpeakableRole"
-            :items="roleSearchedData"
-            :item-props="(item)=>{
-              return {title:item.name, value:item.roleId}
-            }"
-            class="mr-3 mt-3"
-            variant="outlined"
-            multiple
-            chips
+
+          <!-- 話せるロール選択ボックス -->
+          <SpeakableRoleSelect
+            :channel-id="props.channelId"
+            :speakable-role="channelInfo.speakableRole"
           />
         </div>
 
