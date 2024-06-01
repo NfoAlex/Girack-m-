@@ -3,6 +3,7 @@ import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
 
 import type { channel } from '~/types/channel';
+import type role from '~/types/role';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -27,6 +28,8 @@ const stateNameEditing = ref<boolean>(false); //チャンネル名編集モー�
 const tempNameEditing = ref<string>(""); //チャンネル名編集用
 const tempDescriptionEditing = ref<string>(""); //チャンネル概要文編集用
 const tempIsPrivate = ref<boolean>(false); //チャンネルプライベートトグル用
+const tempSpeakableRole = ref<string[]>([]); //話せるロール
+const roleSearchedData = ref<role[]>([]); //ロール検索結果格納用
 
 /**
  * プライベートスイッチの監視用関数
@@ -96,8 +99,20 @@ const SOCKETfetchChannelInfo = (
   }
 };
 
+/**
+ * ロール検索データ受け取り
+ * @param dat
+ */
+const SOCKETsearchRole = (dat:{result:string, data:role[]}) => {
+  //成功なら検索結果を格納
+  if (dat.result === "SUCCESS") {
+    roleSearchedData.value = [...roleSearchedData.value, ...dat.data];
+  }
+};
+
 onMounted(() => {
   socket.on("RESULT::fetchChannelInfo", SOCKETfetchChannelInfo);
+  socket.on("RESULT::searchRole", SOCKETsearchRole);
 
   //チャンネル情報を取得
   socket.emit("fetchChannelInfo", {
@@ -111,6 +126,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::fetchChannelInfo", SOCKETfetchChannelInfo);
+  socket.off("RESULT::searchRole", SOCKETsearchRole);
 });
 </script>
 
@@ -179,7 +195,6 @@ onUnmounted(() => {
         <div
           v-if="tabPage==='INFO'"
           style="margin:0; padding:0; height:100%;"
-          class=""
         >
           <v-textarea
             variant="plain"
@@ -216,6 +231,17 @@ onUnmounted(() => {
             v-model="tempIsPrivate"
             @click="updatePrivate"
             label="プライベートチャンネル"
+          />
+          <v-select
+            v-model="tempSpeakableRole"
+            :items="roleSearchedData"
+            :item-props="(item)=>{
+              return {title:item.name, value:item.roleId}
+            }"
+            class="mr-3 mt-3"
+            variant="outlined"
+            multiple
+            chips
           />
         </div>
 
