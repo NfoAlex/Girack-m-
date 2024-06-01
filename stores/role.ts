@@ -13,9 +13,7 @@ export const useRole = defineStore("role", {
         color: "#ffffff",
         ServerManage: false,
         RoleManage: false,
-        ChannelRename: false,
-        ChannelViewPrivate: false,
-        ChannelCreateAndDelete: false,
+        ChannelManage: false,
         UserManage: false,
         MessageDelete: false,
         MessageAttatchFile: false
@@ -26,9 +24,7 @@ export const useRole = defineStore("role", {
         color: "#7E097E",
         ServerManage: true,
         RoleManage: true,
-        ChannelRename: true,
-        ChannelViewPrivate: true,
-        ChannelCreateAndDelete: true,
+        ChannelManage: true,
         UserManage: true,
         MessageDelete: true,
         MessageAttatchFile: true
@@ -57,9 +53,7 @@ export const useRole = defineStore("role", {
           color: "#f00",
           ServerManage: false,
           RoleManage: false,
-          ChannelRename: false,
-          ChannelViewPrivate: false,
-          ChannelCreateAndDelete: false,
+          ChannelManage: false,
           UserManage: false,
           MessageDelete: false,
           MessageAttatchFile: false

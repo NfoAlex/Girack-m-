@@ -9,5 +9,5 @@ export interface channel {
   createdBy: string,
   description: string,
   isPrivate: boolean,
-  speakableRole: string
+  speakableRole: string[]
 };
