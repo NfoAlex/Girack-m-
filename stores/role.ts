@@ -49,6 +49,19 @@ export const useRole = defineStore("role", {
       if (state._Roles[roleId] !== undefined) {
         return state._Roles[roleId];
       } else {
+        //ホルダーとしてデータ追加
+        state._Roles[roleId] = {
+          roleId: roleId,
+          name: "ロール",
+          color: "#f00",
+          ServerManage: false,
+          RoleManage: false,
+          ChannelManage: false,
+          UserManage: false,
+          MessageDelete: false,
+          MessageAttatchFile: false
+        };
+
         //ロール情報を取得する
         //RequestSender用
         const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -61,17 +74,8 @@ export const useRole = defineStore("role", {
           roleId: roleId
         });
 
-        return {
-          roleId: roleId,
-          name: "エラー",
-          color: "#f00",
-          ServerManage: false,
-          RoleManage: false,
-          ChannelManage: false,
-          UserManage: false,
-          MessageDelete: false,
-          MessageAttatchFile: false
-        };
+        //ホルダーデータを返す
+        return state._Roles[roleId];
       }
     }
   },
