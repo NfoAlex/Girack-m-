@@ -1,5 +1,7 @@
 //ロール情報保存
 import { defineStore } from "pinia";
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "./userinfo";
 
 import type role from "~/types/role";
 
@@ -47,6 +49,18 @@ export const useRole = defineStore("role", {
       if (state._Roles[roleId] !== undefined) {
         return state._Roles[roleId];
       } else {
+        //ロール情報を取得する
+        //RequestSender用
+        const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+        //取得
+        socket.emit("fetchRoleSingle", {
+          RequestSender: {
+            userId: getMyUserinfo.value.userId,
+            sessionId: getSessionId.value
+          },
+          roleId: roleId
+        });
+
         return {
           roleId: roleId,
           name: "エラー",
