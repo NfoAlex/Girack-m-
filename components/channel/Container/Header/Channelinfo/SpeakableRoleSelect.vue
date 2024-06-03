@@ -186,7 +186,7 @@ onUnmounted(() => {
     </template>
 
     <!-- もっと読み込むボタン -->
-    <template v-slot:['append-inner']>
+    <template v-if="!roleSearchInput.reachedEnd" v-slot:['append-item']>
       <m-btn @click="searchRole(roleSearchInput.pageIndex+1)">
         もっと
       </m-btn>
