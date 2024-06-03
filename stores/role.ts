@@ -1,5 +1,7 @@
 //ロール情報保存
 import { defineStore } from "pinia";
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "./userinfo";
 
 import type role from "~/types/role";
 
@@ -13,9 +15,7 @@ export const useRole = defineStore("role", {
         color: "#ffffff",
         ServerManage: false,
         RoleManage: false,
-        ChannelRename: false,
-        ChannelViewPrivate: false,
-        ChannelCreateAndDelete: false,
+        ChannelManage: false,
         UserManage: false,
         MessageDelete: false,
         MessageAttatchFile: false
@@ -26,9 +26,7 @@ export const useRole = defineStore("role", {
         color: "#7E097E",
         ServerManage: true,
         RoleManage: true,
-        ChannelRename: true,
-        ChannelViewPrivate: true,
-        ChannelCreateAndDelete: true,
+        ChannelManage: true,
         UserManage: true,
         MessageDelete: true,
         MessageAttatchFile: true
@@ -51,19 +49,33 @@ export const useRole = defineStore("role", {
       if (state._Roles[roleId] !== undefined) {
         return state._Roles[roleId];
       } else {
-        return {
+        //ホルダーとしてデータ追加
+        state._Roles[roleId] = {
           roleId: roleId,
-          name: "エラー",
+          name: roleId,
           color: "#f00",
           ServerManage: false,
           RoleManage: false,
-          ChannelRename: false,
-          ChannelViewPrivate: false,
-          ChannelCreateAndDelete: false,
+          ChannelManage: false,
           UserManage: false,
           MessageDelete: false,
           MessageAttatchFile: false
         };
+
+        //ロール情報を取得する
+        //RequestSender用
+        const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+        //取得
+        socket.emit("fetchRoleSingle", {
+          RequestSender: {
+            userId: getMyUserinfo.value.userId,
+            sessionId: getSessionId.value
+          },
+          roleId: roleId
+        });
+
+        //ホルダーデータを返す
+        return state._Roles[roleId];
       }
     }
   },

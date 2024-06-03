@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
+import SpeakableRoleSelect from './Channelinfo/SpeakableRoleSelect.vue';
 
 import type { channel } from '~/types/channel';
+import type role from '~/types/role';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -20,12 +22,37 @@ const channelInfo = ref<channel>({ //チャンネルデータ
   createdBy: '',
   description: '',
   isPrivate: false,
-  speakableRole: ''
+  speakableRole: []
 });
 const tabPage = ref<"INFO"|"MANAGE">("INFO"); //表示するタブ指定用
 const stateNameEditing = ref<boolean>(false); //チャンネル名編集モードトグル
 const tempNameEditing = ref<string>(""); //チャンネル名編集用
 const tempDescriptionEditing = ref<string>(""); //チャンネル概要文編集用
+const tempIsPrivate = ref<boolean>(false); //チャンネルプライベートトグル用
+const tempSpeakableRole = ref<string[]>([]); //話せるロール
+
+/**
+ * プライベートスイッチの監視用関数
+ */
+const updatePrivate = () => {
+  console.log("Channelinfo :: updatePrivate : tempIsPrivate->", tempIsPrivate.value);
+  //プライベート設定を適用させる
+  nextTick(() => {
+  
+    socket.emit("updateChannel", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      channelId: props.channelId,
+      channelInfo: {
+        ...channelInfo.value,
+        isPrivate: !tempIsPrivate.value
+      }
+    });
+  
+  });
+};
 
 /**
  * チャンネル更新
@@ -44,7 +71,7 @@ const updateChannel = () => {
       description: tempDescriptionEditing.value
     }
   });
-}
+};
 
 /**
  * チャンネルデータ受け取り
@@ -66,6 +93,10 @@ const SOCKETfetchChannelInfo = (
     channelInfo.value = dat.data.channelInfo;
     tempNameEditing.value = dat.data.channelInfo.channelName;
     tempDescriptionEditing.value = dat.data.channelInfo.description;
+    tempIsPrivate.value = dat.data.channelInfo.isPrivate;
+    tempSpeakableRole.value = dat.data.channelInfo.speakableRole;
+
+    //watchOnce(tempIsPrivate, (newValue,oldValue)=>watchIsPrivate(newValue, oldValue));
   }
 };
 
@@ -152,7 +183,6 @@ onUnmounted(() => {
         <div
           v-if="tabPage==='INFO'"
           style="margin:0; padding:0; height:100%;"
-          class=""
         >
           <v-textarea
             variant="plain"
@@ -185,7 +215,18 @@ onUnmounted(() => {
         </div>
 
         <div v-if="tabPage==='MANAGE'">
-          <p>Coming soon...</p>
+          <v-switch
+            v-model="tempIsPrivate"
+            @click="updatePrivate"
+            label="プライベートチャンネル"
+          />
+
+          <!-- 話せるロール選択ボックス -->
+          <SpeakableRoleSelect
+            :channel-info="channelInfo"
+            :channel-id="props.channelId"
+            :speakable-role="channelInfo.speakableRole"
+          />
         </div>
 
       </m-card>

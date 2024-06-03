@@ -295,6 +295,7 @@ onUnmounted(() => {
       autoGrow
       autofocus
       rounded
+      :placeholder="props.channelInfo.channelName + ' へ送信'"
     />
   </div>
 </template>
