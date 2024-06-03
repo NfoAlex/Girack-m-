@@ -66,6 +66,8 @@ const searchRole = () => {
     pageIndex: 1
   });
 
+  //最後の結果まで検索した状態を解除
+  roleSearchInput.value.reachedEnd = false;
   //検索したクエリー文を上書き
   roleSearchInput.value.querySearched = roleSearchInput.value.query;
 };
