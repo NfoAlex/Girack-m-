@@ -53,8 +53,14 @@ const updateChannel = () => {
  * 検索クエリーでロールを検索する
  */
 const searchRole = (pageIndex:number=1) => {
-  //検索したクエリーと入力クエリーが一緒なら停止
-  if (roleSearchInput.value.query === roleSearchInput.value.querySearched) return;
+  //検索したクエリーと入力クエリー、ページ数と引数が一緒なら停止
+  if (
+    roleSearchInput.value.query === roleSearchInput.value.querySearched
+      &&
+    roleSearchInput.value.pageIndex === pageIndex
+  ) return;
+
+  console.log("/channel/[id] :: SpeakableRoleSelect :: searchRole : pageIndex->", toRaw(pageIndex));
 
   //取得
   socket.emit("searchRole", {
