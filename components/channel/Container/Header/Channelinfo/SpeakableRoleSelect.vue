@@ -185,5 +185,12 @@ onUnmounted(() => {
       </v-card>
     </template>
 
+    <!-- もっと読み込むボタン -->
+    <template v-slot:['append-inner']>
+      <m-btn @click="searchRole(roleSearchInput.pageIndex+1)">
+        もっと
+      </m-btn>
+    </template>
+
   </v-select>
 </template>
