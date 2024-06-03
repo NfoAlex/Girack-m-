@@ -85,6 +85,8 @@ const SOCKETsearchRole = (dat:{result:string, data:{role:role[], pageIndex:numbe
       roleSearchedData.value = dat.data.role;
     }
 
+    //どのページまで読み込んだかを保存
+    roleSearchInput.value.pageIndex = dat.data.pageIndex;
     //結果が空なら最後のページまで行ったと設定
     if (dat.data.role.length === 0) roleSearchInput.value.reachedEnd = true;
 
