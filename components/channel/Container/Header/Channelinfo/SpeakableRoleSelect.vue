@@ -52,7 +52,7 @@ const updateChannel = () => {
 /**
  * 検索クエリーでロールを検索する
  */
-const searchRole = () => {
+const searchRole = (pageIndex:number=1) => {
   //検索したクエリーと入力クエリーが一緒なら停止
   if (roleSearchInput.value.query === roleSearchInput.value.querySearched) return;
 
@@ -63,11 +63,13 @@ const searchRole = () => {
       sessionId: getSessionId.value
     },
     searchQuery: roleSearchInput.value.query,
-    pageIndex: 1
+    pageIndex: pageIndex
   });
 
-  //最後の結果まで検索した状態を解除
-  roleSearchInput.value.reachedEnd = false;
+  //再検索なら最後の結果まで検索した状態を解除
+  if (pageIndex === 1) {
+    roleSearchInput.value.reachedEnd = false;
+  }
   //検索したクエリー文を上書き
   roleSearchInput.value.querySearched = roleSearchInput.value.query;
 };
