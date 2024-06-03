@@ -15,10 +15,13 @@ const { getRoleSingle } = storeToRefs(useRole());
 const roleSearchedData = ref<role[]>([]); //ロール検索結果格納用
 const tempSpeakableRole = ref<string[]>([]); //編集用話せるロール配列
 //ロール検索用クエリー保存データ
-const roleSearchInput = ref<{query:string, querySearched:string, pageIndex:number}>({
-  query: "",
-  querySearched: "",
-  pageIndex: 1
+const roleSearchInput = ref<
+  {query:string, querySearched:string, pageIndex:number, reachedEnd:boolean}
+>({
+  query: "", //検索クエリー用
+  querySearched: "", //最後に結果を受け取った検索クエリー
+  pageIndex: 1, //ロール検索結果のページ番号
+  reachedEnd: false, //最後のページまで受け取ったかどうか
 });
 
 //prop
@@ -79,6 +82,9 @@ const SOCKETsearchRole = (dat:{result:string, data:{role:role[], pageIndex:numbe
     } else {
       roleSearchedData.value = dat.data.role;
     }
+
+    //結果が空なら最後のページまで行ったと設定
+    if (dat.data.role.length === 0) roleSearchInput.value.reachedEnd = true;
 
     console.log("dat->", dat);
   }
