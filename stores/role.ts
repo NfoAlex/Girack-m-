@@ -52,7 +52,7 @@ export const useRole = defineStore("role", {
         //ホルダーとしてデータ追加
         state._Roles[roleId] = {
           roleId: roleId,
-          name: "ロール",
+          name: roleId,
           color: "#f00",
           ServerManage: false,
           RoleManage: false,
