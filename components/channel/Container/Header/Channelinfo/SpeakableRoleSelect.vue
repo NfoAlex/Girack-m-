@@ -169,7 +169,7 @@ onUnmounted(() => {
           v-slot:['append-inner']
           v-if="roleSearchInput.query!==roleSearchInput.querySearched"
         >
-          <v-btn @click="searchRole" icon="mdi-magnify" size="small"></v-btn>
+          <v-btn @click="searchRole(1)" icon="mdi-magnify" size="small"></v-btn>
         </template>
       </v-text-field>
     </template>
