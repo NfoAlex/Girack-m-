@@ -111,6 +111,23 @@ watch(messageInput, (() => {
 }));
 
 /**
+ * ここで話せるかどうか
+ */
+const canISpeakHere = computed(():boolean => {
+  //もし配列が空なら話せると設定
+  if (props.channelInfo.speakableRole.length === 0) return true;
+
+  //自分のロールに話せるロールが含まれるか調べてboolで結果を返す
+  for (let role of props.channelInfo.speakableRole) {
+    console.log("/channel/[id] :: Input :: canISpeakHere : forロール->", role);
+    if (getMyUserinfo.value.role.includes(role)) return true;
+    break;
+  }
+
+  return false;
+});
+
+/**
  * Enterキー入力の処理
  */
 const triggerEnter = (event:any) => {
@@ -295,7 +312,13 @@ onUnmounted(() => {
       autoGrow
       autofocus
       rounded
-      :placeholder="props.channelInfo.channelName + ' へ送信'"
+      :disabled="!canISpeakHere"
+      :placeholder="
+        canISpeakHere ?
+          props.channelInfo.channelName + ' へ送信'
+        :
+          'このチャンネルで話せません。'
+      "
     />
   </div>
 </template>
