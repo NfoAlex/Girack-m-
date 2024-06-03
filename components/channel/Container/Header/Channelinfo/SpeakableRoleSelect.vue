@@ -130,7 +130,7 @@ onUnmounted(() => {
     v-model="tempSpeakableRole"
     :items="roleSearchedData"
     :item-props="(item)=>{
-      return {title:item.name, value:item.roleId, color:item.color}
+      return {title:item.name, value:item.roleId, color:item.color, rawId:item}
     }"
     class="mr-3 mt-3"
     variant="outlined"
@@ -151,7 +151,7 @@ onUnmounted(() => {
           class="mr-2"
           :color="item.props.color"
         />
-        <span>{{ getRoleSingle(item.props.value).name }}</span>
+        <span>{{ getRoleSingle(item.props.value || item.props.rawId).name }}</span>
       </v-chip>
     </template>
 
