@@ -20,7 +20,7 @@ export default interface message {
         contentType: string,
         favicons: string[]
       }
-  }|{},
+  }|null,
   time: string,
   reaction: {
     [key: string]: {
