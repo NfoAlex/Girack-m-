@@ -34,7 +34,16 @@ const linkDataKeyArr = computed(():string[] => {
         </v-img>
       </span>
       <span class="flex-shrink-1" style="overflow-y:scroll; height:100px;">
-        {{ props.linkData[index].title }}
+        <a :href="linkData[index].url" rel="noopener noreferrer" target="_blank">
+          <span v-if="props.linkData[index].title !== undefined">
+            {{ props.linkData[index].title.length>30
+              ? 
+                props.linkData[index].title.slice(30) + "..."
+                :
+                props.linkData[index].title
+            }}
+          </span>
+        </a>
         <v-divider />
         <span style="overflow-y:scroll; height:10px;">
           {{ props.linkData[index].description }}
