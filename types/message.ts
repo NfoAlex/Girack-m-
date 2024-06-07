@@ -10,6 +10,7 @@ export default interface message {
         mediaType: string,
         url: string,
         siteName: string,
+        title: string,
         description: string,
         images: string[]
       }
