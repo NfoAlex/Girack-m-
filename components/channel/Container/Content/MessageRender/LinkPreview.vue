@@ -55,8 +55,13 @@ const linkDataKeyArr = computed(():string[] => {
     </m-card>
 
     <!-- 画像用 -->
-    <span v-if="props.linkData[index].mediaType==='image'">
-      {{ props.linkData[index].url }}
+    <span v-if="props.linkData[index].mediaType==='image'" >
+      <img
+        :src="props.linkData[index].url"
+        style="max-height:150px; width:auto"
+        class="rounded-xl"
+        :alt="props.linkData[index].url"
+      />
     </span>
   </span>
 </template>
