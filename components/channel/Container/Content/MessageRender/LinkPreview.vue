@@ -29,7 +29,7 @@ const linkDataKeyArr = computed(():string[] => {
       <span
         v-if="props.linkData[index].images !== undefined"
         class="rounded-lg flex-grow-1 flex-shrink-0 d-flex flex-column align-center my-auto mr-3"
-        style="height:auto; width:40%; max-width:250px; border-radius:24px;"
+        style="height:auto; max-width:250px; border-radius:24px;"
       >
         <img
           :src="props.linkData[index].images[0].url"
