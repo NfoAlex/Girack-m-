@@ -19,9 +19,26 @@ const linkDataKeyArr = computed(():string[] => {
     v-if="props.linkData!==null"
   >
     <!-- 通常ウェブサイト用 -->
-    <m-card v-if="props.linkData[index].contentType==='text/html'" color="cardInner">
-      {{ props.linkData[index].title }} 
-      {{ props.linkData[index].images }}
+    <m-card
+      v-if="props.linkData[index].contentType==='text/html'"
+      color="cardInner"
+      class="d-flex align-center"
+    >
+      <span
+        v-for="image of props.linkData[index].images"
+        class="rounded-lg flex-grow-1 flex-shrink-0 d-flex flex-column align-center mr-3"
+        style="height:100%; width:40%; border-radius:24px;"
+      >
+        <v-img :src="image.url" style="width:100%;" rounded="xl">
+        </v-img>
+      </span>
+      <span class="flex-shrink-1" style="overflow-y:scroll; height:100px;">
+        {{ props.linkData[index].title }}
+        <v-divider />
+        <span style="overflow-y:scroll; height:10px;">
+          {{ props.linkData[index].description }}
+        </span>
+      </span>
     </m-card>
 
     <!-- 画像用 -->
