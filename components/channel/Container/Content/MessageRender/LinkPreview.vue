@@ -28,14 +28,17 @@ const linkDataKeyArr = computed(():string[] => {
 
       <span
         v-if="props.linkData[index].images !== undefined"
-        class="rounded-lg flex-grow-1 flex-shrink-0 d-flex flex-column align-center mr-3"
+        class="rounded-lg flex-grow-1 flex-shrink-0 d-flex flex-column align-center my-auto mr-3"
         style="height:auto; width:40%; max-width:250px; border-radius:24px;"
       >
-        <v-img :src="props.linkData[index].images[0].url" style="width:100%; height:100%;" rounded="xl">
-        </v-img>
+        <img
+          :src="props.linkData[index].images[0].url"
+          style="max-width:100%; height:auto; max-height:175px; border-radius: 20px !important;"
+        >
+        </img>
       </span>
 
-      <span class="flex-shrink-1" style="overflow-y:scroll;">
+      <span class="flex-shrink-1" style="overflow-y:scroll; max-height:90%">
         <span class="d-flex" style="width:100%;">
           <span v-if="props.linkData[index].favicon !== undefined" style="max-width:50px;" class="mr-1 mt-1">
             <v-img width="20px" height="auto" :src="props.linkData[index].favicon" />
