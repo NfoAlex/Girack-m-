@@ -23,7 +23,7 @@ const linkDataKeyArr = computed(():string[] => {
       v-if="props.linkData[index].contentType==='text/html'"
       color="cardInner"
       class="d-flex"
-      style="max-height:200px;"
+      style="max-height:200px; max-width:800px;"
     >
 
       <span
