@@ -45,7 +45,7 @@ const linkDataKeyArr = computed(():string[] => {
           </span>
         </a>
         <v-divider />
-        <span style="overflow-y:scroll; height:10px;">
+        <span class="text-disabled" style="overflow-y:scroll; height:10px;">
           {{ props.linkData[index].description }}
         </span>
       </span>
