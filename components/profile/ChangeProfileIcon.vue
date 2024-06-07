@@ -77,8 +77,7 @@ const submit = async () => {
       //console.log("/profile :: submit : アップロードが完了");
       //アップロード状態を解除
       stateUploading.value = false;
-    })
-    .catch((err:Error) => {
+    }).catch((err:Error) => {
       console.log("/profile :: submit : アップロードエラー->", err);
       console.log("無理だったわ");
       uploadResult.value = "ERROR";
