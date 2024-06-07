@@ -6,23 +6,22 @@ export default interface message {
   linkData: {
     [key: string]:
       {
-        contentType: "text/html",
+        contentType: "text/html"|"video",
         mediaType: string,
         url: string,
-        siteName: string,
-        title: string,
-        description: string,
-        images: string[],
-        favicon: string
+        siteName?: string,
+        title?: string,
+        description?: string,
+        favicon: string,
+        images?: {url:string, type:string}[]
       }
-        |
+      |
       {
-        mediaType: "image"|"video",
-        url: string,
-        contentType: string,
-        favicons: string[]
+        contentType: "image",
+        mediaType: "image",
+        url: string
       }
-  }|null,
+  },
   time: string,
   reaction: {
     [key: string]: {
