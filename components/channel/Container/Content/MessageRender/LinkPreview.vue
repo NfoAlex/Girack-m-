@@ -33,7 +33,7 @@ const linkDataKeyArr = computed(():string[] => {
       >
         <img
           :src="props.linkData[index].images[0].url"
-          style="max-width:100%; height:auto; max-height:175px; border-radius: 20px !important;"
+          style="max-width:97.5%; height:auto; max-height:170px; border-radius: 20px !important;"
         >
         </img>
       </span>
