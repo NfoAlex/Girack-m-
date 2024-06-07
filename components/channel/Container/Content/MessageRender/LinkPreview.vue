@@ -38,9 +38,9 @@ const linkDataKeyArr = computed(():string[] => {
       <span class="flex-shrink-1" style="overflow-y:scroll; height:100px;">
         <a :href="linkData[index].url" rel="noopener noreferrer" target="_blank">
           <span v-if="props.linkData[index].title !== undefined">
-            {{ props.linkData[index].title.length>30
+            {{ props.linkData[index].title.length>50
               ? 
-                props.linkData[index].title.slice(30) + "..."
+                props.linkData[index].title.slice(0,50) + "..."
                 :
                 props.linkData[index].title
             }}
