@@ -22,7 +22,7 @@ const linkDataKeyArr = computed(():string[] => {
     <m-card
       v-if="props.linkData[index].contentType==='text/html'"
       color="cardInner"
-      class="d-flex"
+      class="d-flex mt-1"
       style="max-height:200px; max-width:800px;"
     >
 
