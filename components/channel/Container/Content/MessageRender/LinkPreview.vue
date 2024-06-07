@@ -25,6 +25,7 @@ const linkDataKeyArr = computed(():string[] => {
       class="d-flex"
       style="max-height:200px;"
     >
+
       <span
         v-if="props.linkData[index].images[0] !== undefined"
         class="rounded-lg flex-grow-1 flex-shrink-0 d-flex flex-column align-center mr-3"
@@ -33,6 +34,7 @@ const linkDataKeyArr = computed(():string[] => {
         <v-img :src="props.linkData[index].images[0].url" style="width:100%;" rounded="xl">
         </v-img>
       </span>
+
       <span class="flex-shrink-1" style="overflow-y:scroll; height:100px;">
         <a :href="linkData[index].url" rel="noopener noreferrer" target="_blank">
           <span v-if="props.linkData[index].title !== undefined">
@@ -49,6 +51,7 @@ const linkDataKeyArr = computed(():string[] => {
           {{ props.linkData[index].description }}
         </span>
       </span>
+
     </m-card>
 
     <!-- 画像用 -->
