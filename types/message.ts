@@ -12,7 +12,8 @@ export default interface message {
         siteName: string,
         title: string,
         description: string,
-        images: string[]
+        images: string[],
+        favicon: string
       }
         |
       {
