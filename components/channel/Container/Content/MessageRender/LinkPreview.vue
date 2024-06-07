@@ -27,7 +27,7 @@ const linkDataKeyArr = computed(():string[] => {
     >
 
       <span
-        v-if="props.linkData[index].images[0] !== undefined"
+        v-if="props.linkData[index].images !== undefined"
         class="rounded-lg flex-grow-1 flex-shrink-0 d-flex flex-column align-center mr-3"
         style="height:100%; width:40%; max-width:250px; border-radius:24px;"
       >
