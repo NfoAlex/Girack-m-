@@ -4,6 +4,7 @@ import { useMessageReadId } from '~/stores/messageReadId';
 import HoverMenu from './MessageRender/HoverMenu.vue';
 import EmojiRender from './MessageRender/EmojiRender.vue';
 import TextRender from './MessageRender/TextRender.vue';
+import LinkPreview from './MessageRender/LinkPreview.vue';
 import type message from '~/types/message';
 
 const { getUserinfo } = useUserIndex();
@@ -81,6 +82,9 @@ const propsMessage = defineProps<{
           
           <!-- メッセージ文レンダー -->
           <TextRender :content="message.content" />
+
+          <!-- リンクプレビューレンダー -->
+          <LinkPreview :linkData="message.linkData" />
 
           <!-- 絵文字表示 -->
           <EmojiRender :channelId="message.channelId" :messageId="message.messageId" :reaction="message.reaction" />

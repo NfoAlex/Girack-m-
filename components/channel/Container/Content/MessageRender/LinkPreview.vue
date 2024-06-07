@@ -19,9 +19,10 @@ const linkDataKeyArr = computed(():string[] => {
     v-if="props.linkData!==null"
   >
     <!-- 通常ウェブサイト用 -->
-    <span v-if="props.linkData[index].contentType==='text/html'">
-      {{ props.linkData[index].siteName }}
-    </span>
+    <m-card v-if="props.linkData[index].contentType==='text/html'" color="cardInner">
+      {{ props.linkData[index].title }} 
+      {{ props.linkData[index].images }}
+    </m-card>
 
     <!-- 画像用 -->
     <span v-if="props.linkData[index].mediaType==='image'">
