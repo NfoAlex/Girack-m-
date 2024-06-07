@@ -22,7 +22,8 @@ const linkDataKeyArr = computed(():string[] => {
     <m-card
       v-if="props.linkData[index].contentType==='text/html'"
       color="cardInner"
-      class="d-flex align-center"
+      class="d-flex"
+      style="max-height:200px;"
     >
       <span
         v-if="props.linkData[index].images[0] !== undefined"
