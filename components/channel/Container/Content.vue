@@ -474,11 +474,6 @@ onMounted(() => {
       document.getElementById("ChannelContainerContent")?.scrollTo({
         top: latestReadEl.getBoundingClientRect().top
       });
-    } else {
-      console.log("/channel/[id] :: onMounted : 条件結果->", 
-        scrollPosition !== null,
-        latestReadEl !== null
-      );
     }
 
     //もし履歴の最後にいるなら新着を消す
