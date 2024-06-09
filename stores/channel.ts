@@ -68,7 +68,7 @@ export const useChannelinfo = defineStore("channelinfo", {
     },
 
     //チャンネル順序取得
-    getChannelOrder: (state) => () => {
+    getChannelOrder: (state) => {
       return state._ChannelOrder;
     }
   },
