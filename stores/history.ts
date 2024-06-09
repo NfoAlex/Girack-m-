@@ -234,7 +234,7 @@ export const useHistory = defineStore("history", {
 
         //console.log("history :: insertHistory : 新しいのを挿入した履歴の長さ->", this._History[channelId].length);
 
-        //履歴データが60以上あるなら古い方を削る
+        //履歴データが120以上あるなら古い方を削る
         if (this._History[channelId].length >= 120) {
           this._History[channelId].splice(30);
           //削っているので最後にいるかどうかは必ずfalseになるはず
@@ -246,7 +246,7 @@ export const useHistory = defineStore("history", {
 
         //console.log("history :: insertHistory : 古いのを挿入した履歴の長さ->", this._History[channelId].length);
 
-        //履歴データが60以上あるなら新しい方を削る
+        //履歴データが120以上あるなら新しい方を削る
         if (this._History[channelId].length >= 120) {
           this._History[channelId].splice(0,30);
           //削っているので先頭にいるかどうかは必ずfalseになるはず
