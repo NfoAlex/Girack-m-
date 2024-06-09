@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
-import { useGoTo } from 'vuetify'
 import { useAppStatus } from '~/stores/AppStatus';
 import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
@@ -22,7 +21,6 @@ const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getHistoryFromChannel, getHistoryAvailability, setHasNewMessage } = useHistory();
 const { getMessageReadId, updateMessageReadIdBefore } = useMessageReadId();
-const goTo = useGoTo();
 
 //props(チャンネル情報)
 const props = defineProps<{
