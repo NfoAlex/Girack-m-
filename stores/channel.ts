@@ -14,11 +14,17 @@ export const useChannelinfo = defineStore("channelinfo", {
         ...
       }
       */
-    }
+    },
+    _ChannelOrder: [
+      /*
+      {channelId:"0001", ...}
+      */
+    ]
   } as {
     _Channelinfo: {
       [key: string]: channel
-    }
+    },
+    _ChannelOrder: any[]
   }),
 
   getters: {
