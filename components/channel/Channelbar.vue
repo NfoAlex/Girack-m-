@@ -3,7 +3,6 @@ import { useMyUserinfo } from '~/stores/userinfo';
 import { useServerinfo } from '~/stores/serverinfo';
 import { useChannelinfo } from "~/stores/channel";
 import { useHistory } from '~/stores/history';
-import { useMessageReadId } from '~/stores/messageReadId';
 
 import draggable from 'vuedraggable';
 
@@ -112,9 +111,13 @@ onMounted(() => {
         item-key="channelId"
       >
         <template #item="{ element }">
-          <li>
+          <m-card-compact
+            :variant="currentPath===element.channelId?'tonal':'text'"
+            :color="currentPath===element.channelId?'primary':null"
+            class="d-flex align-center px-3 py-2 mb-1"
+          >
             {{ getChannelinfoSingle(element.channelId).channelName }}
-          </li>
+          </m-card-compact>
         </template>
       </draggable>
     </span>
