@@ -38,7 +38,7 @@ export const useChannelinfo = defineStore("channelinfo", {
           createdBy: "xxxxx",
           description: "...",
           isPrivate: false,
-          speakableRole: ""
+          speakableRole: []
         };
 
         //チャンネル情報を取得
