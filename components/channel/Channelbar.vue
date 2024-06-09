@@ -103,7 +103,9 @@ onMounted(() => {
         mdi-circle-medium
       </v-icon>
     </m-card-compact>
+
     <v-divider />
+
     <span>
       <p>ここからDEBUG</p>
       <draggable
@@ -121,5 +123,6 @@ onMounted(() => {
         </template>
       </draggable>
     </span>
+    
   </div>
 </template>
