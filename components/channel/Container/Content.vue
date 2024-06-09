@@ -383,7 +383,7 @@ watch(
           const messageScrolledPosition = getHistoryFromChannel(
               props.channelInfo.channelId
             )[
-              getHistoryAvailability(props.channelInfo.channelId).latestFetchedHistoryLength - 3
+              getHistoryAvailability(props.channelInfo.channelId).latestFetchedHistoryLength - 1
             ].messageId;
 
           // console.log("/channel/[id] :: watch(getAppStatus) : 要素->",
