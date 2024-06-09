@@ -1,6 +1,6 @@
 //チャンネル情報
 import { defineStore } from "pinia";
-import type { channel } from "~/types/channel";
+import type { channel, channelOrder } from "~/types/channel";
 
 import { socket } from "~/socketHandlers/socketInit";
 import { useMyUserinfo } from "./userinfo";
@@ -24,7 +24,7 @@ export const useChannelinfo = defineStore("channelinfo", {
     _Channelinfo: {
       [key: string]: channel
     },
-    _ChannelOrder: any[]
+    _ChannelOrder: channelOrder[]
   }),
 
   getters: {
@@ -80,7 +80,7 @@ export const useChannelinfo = defineStore("channelinfo", {
     },
 
     //チャンネル順序を更新(代入)
-    updateChannelOrder(channelOrder:any[]) {
+    updateChannelOrder(channelOrder:channelOrder[]) {
       this._ChannelOrder = channelOrder;
     },
 
