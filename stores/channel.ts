@@ -69,9 +69,14 @@ export const useChannelinfo = defineStore("channelinfo", {
   },
   
   actions: {
-    //チャンネル情報を更新
+    //チャンネル情報を更新(代入)
     updateChannelinfo(channelId:string, data: channel) {
       this._Channelinfo[channelId] = {...this._Channelinfo[channelId], ...data};
+    },
+
+    //チャンネル順序を更新(代入)
+    updateChannelOrder(channelOrder:any[]) {
+      this._ChannelOrder = channelOrder;
     },
 
     //チャンネル情報を削除
