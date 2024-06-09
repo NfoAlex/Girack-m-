@@ -236,7 +236,7 @@ export const useHistory = defineStore("history", {
 
         //履歴データが120以上あるなら古い方を削る
         if (this._History[channelId].length >= 120) {
-          this._History[channelId].splice(30);
+          this._History[channelId].splice(60);
           //削っているので最後にいるかどうかは必ずfalseになるはず
           this._Availability[channelId].atTop = false;
         }
