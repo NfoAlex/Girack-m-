@@ -65,6 +65,11 @@ export const useChannelinfo = defineStore("channelinfo", {
       } else {
         return state._Channelinfo[channelId];
       }
+    },
+
+    //チャンネル順序取得
+    getChannelOrder: (state) => () => {
+      return state._ChannelOrder;
     }
   },
   
