@@ -3,6 +3,13 @@ export interface getchannelList {
   id: string;
 }
 
+export interface channelOrder {
+  channelId: string,
+  isThread: boolean,
+  isFolder: [],
+  child?: any[]
+};
+
 export interface channel {
   channelId: string,
   channelName: string,
