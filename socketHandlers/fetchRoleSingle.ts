@@ -5,7 +5,6 @@ import { useRole } from "~/stores/role";
 import type role from "~/types/role";
 
 export default function fetchRoleSingle(socket: Socket): void {
-  //サーバー(インスタンス)情報
   socket.on("RESULT::fetchRoleSingle", (dat:{
     result: string,
     data: role
