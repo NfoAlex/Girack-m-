@@ -5,9 +5,12 @@ import { useChannelinfo } from "~/stores/channel";
 import { useHistory } from '~/stores/history';
 import { useMessageReadId } from '~/stores/messageReadId';
 
+import draggable from 'vuedraggable';
+
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
+const { getChannelOrder } = storeToRefs(useChannelinfo());
 const { getHasNewMessage } = useHistory();
 
 const router = useRouter();
@@ -17,6 +20,57 @@ const route = useRoute();
  * data
  */
 const currentPath = ref<string>(""); //チャンネルID
+const channelOrderedData =ref<any[]>([]);
+
+/**
+ * チャンネルリストを保存した順序にソートして返す
+ */
+const getChannelListOrdered = () => {
+  //チャンネル順序結果用配列
+  let channelOrderPushing:any[] = [];
+
+  //console.log('Channelbar :: getChannelListOrdered : getChannelOrder->', toRaw(getChannelOrder.value));
+
+  //まず保存されているチャンネル順序配列をプッシュ
+  try {
+    channelOrderPushing = [...toRaw(getChannelOrder.value)];
+  } catch(e) {}
+
+  //保存されていない順序データに無かったチャンネルId用配列
+  const channelNotUsed = [];
+
+  //順序に保存されていないチャンネルを調べる
+  for (let channelIdChecking of getMyUserinfo.value.channelJoined) {
+    //チャンネルがすでに順序データに入っているかどうかフラグ
+    let thisChannelIsIncluded = false;
+    //ループで一致したものを探す
+    for (let index in getChannelOrder.value) {
+      if (getChannelOrder.value[index].channelId === channelIdChecking) {
+        thisChannelIsIncluded = true;
+        break;
+      }
+    }
+
+    //フラグが無効なら使われていないチャンネルリストへ追加
+    if (!thisChannelIsIncluded) channelNotUsed.push(channelIdChecking);
+  }
+
+  //入ってなかった配列分プッシュ
+  for (let channelId of channelNotUsed) {
+    channelOrderPushing.push({
+      channelId: channelId,
+      isThread: false
+    });
+  }
+
+  //結果を適用
+  channelOrderedData.value = [...channelOrderedData.value, ...channelOrderPushing];
+};
+
+//チャンネルボタン用配列処理
+onBeforeMount(() => {
+  getChannelListOrdered();
+})
 
 onMounted(() => {
   //なぜかpathが配列ならブラウザへ
@@ -50,5 +104,19 @@ onMounted(() => {
         mdi-circle-medium
       </v-icon>
     </m-card-compact>
+    <v-divider />
+    <span>
+      <p>ここからDEBUG</p>
+      <draggable
+        :list="channelOrderedData"
+        item-key="channelId"
+      >
+        <template #item="{ element }">
+          <li>
+            {{ getChannelinfoSingle(element.channelId).channelName }}
+          </li>
+        </template>
+      </draggable>
+    </span>
   </div>
 </template>
