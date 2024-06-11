@@ -5,7 +5,7 @@ import { useHistory } from "~/stores/history";
 import { useMyUserinfo } from "~/stores/userinfo";
 import { useMessageReadId } from "~/stores/messageReadId";
 import updateMessageReadIdCloudAndLocal from "~/composables/updateMessageReadIdCloudAndLocal";
-import { useWindowFocus } from '@vueuse/core'
+import { useWindowFocus, useDocumentVisibility } from '@vueuse/core'
 
 import type message from "~/types/message";
 
@@ -28,17 +28,19 @@ export default function receiveMessage(socket: Socket): void {
       const scrollPosition:string|null = sessionStorage.getItem(
         "scrollPositionY::" + message.channelId
       );
-      //もしスクロールの値がないなら停止
-      //if (scrollPosition === null) return;
 
       //ウィンドウへのフォーカスを取得
       const windowFocused = useWindowFocus()
+      //タブへのフォーカスを取得
+      const tabFocused = useDocumentVisibility();
       
       //新着判別
       if (
         route.params.id === message.channelId
         &&
         parseInt(scrollPosition || "0") === 0
+        &&
+        tabFocused.value
         &&
         windowFocused.value
       ) {
@@ -47,7 +49,6 @@ export default function receiveMessage(socket: Socket): void {
         //最新Idに合わせてBeforeを設定
         const { updateMessageReadIdBefore } = useMessageReadId();
         updateMessageReadIdBefore(message.channelId);
-        
       } else {
         //新着があると設定
         const { setHasNewMessage } = useHistory();
@@ -55,7 +56,9 @@ export default function receiveMessage(socket: Socket): void {
 
         //もし自分宛てのメンションが入っているなら通知
         const { getMyUserinfo } = storeToRefs(useMyUserinfo());
-        if (message.content.includes("@<" + getMyUserinfo.value.userId + ">")) {
+        if (
+          message.content.includes("@<" + getMyUserinfo.value.userId + ">") //メンションが入っていて
+        ) {
           //もし通知イベントがすでに起きているなら閉じる
           try {
             NoticationHolder?.close();
