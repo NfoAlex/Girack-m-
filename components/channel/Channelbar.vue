@@ -129,7 +129,7 @@ onMounted(() => {
     <span>
       <p>ここからDEBUG</p>
       <draggable
-        :list="channelOrderedData"
+        v-model="channelOrderedData"
         item-key="channelId"
       >
         <template #item="{ element }">
