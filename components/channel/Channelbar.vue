@@ -105,40 +105,30 @@ onMounted(() => {
   <div class="d-flex flex-column">
     <p class="mt-2 text-h5 text-truncate">{{ getServerinfo.servername }}</p>
     <v-divider class="my-2" />
-    <m-card-compact
-      v-for="channelId of getMyUserinfo.channelJoined"
-      @click="router.push('/channel/' + channelId)"
-      :variant="currentPath===channelId?'tonal':'text'"
-      :color="currentPath===channelId?'primary':null"
-      class="d-flex align-center px-3 py-2 mb-1"
-      :ripple="false"
-      width="100%"
-    >
-      <v-icon class="mr-1" size="small">mdi-pound</v-icon>
-      <p class="flex-shrink-1 text-truncate">{{ getChannelinfoSingle(channelId)?.channelName }}</p>
-      <v-icon
-        v-if="getHasNewMessage(channelId)"
-        class="ml-auto flex-shrink-0"
-      >
-        mdi-circle-medium
-      </v-icon>
-    </m-card-compact>
-
-    <v-divider />
 
     <span>
-      <p>ここからDEBUG</p>
       <draggable
         v-model="channelOrderedData"
         item-key="channelId"
       >
         <template #item="{ element }">
           <m-card-compact
+            @click="router.push('/channel/' + element.channelId)"
             :variant="currentPath===element.channelId?'tonal':'text'"
             :color="currentPath===element.channelId?'primary':null"
+            :ripple="false"
             class="d-flex align-center px-3 py-2 mb-1"
           >
-            {{ getChannelinfoSingle(element.channelId).channelName }}
+            <v-icon class="mr-1" size="small">mdi-pound</v-icon>
+            <p class="flex-shrink-1 text-truncate">
+              {{ getChannelinfoSingle(element.channelId).channelName }}
+            </p>
+            <v-icon
+              v-if="getHasNewMessage(element.channelId)"
+              class="ml-auto flex-shrink-0"
+            >
+              mdi-circle-medium
+            </v-icon>
           </m-card-compact>
         </template>
       </draggable>
