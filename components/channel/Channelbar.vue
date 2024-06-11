@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { socket } from "~/socketHandlers/socketInit";
 import { useMyUserinfo } from '~/stores/userinfo';
 import { useServerinfo } from '~/stores/serverinfo';
 import { useChannelinfo } from "~/stores/channel";
@@ -8,7 +9,7 @@ import draggable from 'vuedraggable';
 import type { channelOrder } from '~/types/channel';
 
 const { getServerinfo } = storeToRefs(useServerinfo());
-const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
 const { getChannelOrder } = storeToRefs(useChannelinfo());
 const { getHasNewMessage } = useHistory();
@@ -21,6 +22,17 @@ const route = useRoute();
  */
 const currentPath = ref<string>(""); //チャンネルID
 const channelOrderedData =ref<any[]>([]);
+
+//チャンネル順序のソートを検知してサーバー上へ同期させる
+watch(channelOrderedData, (newValue, oldValue) => {
+  socket.emit("saveUserChannelOrder", {
+    RequestSender : {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    channelOrder: newValue
+  });
+});
 
 /**
  * チャンネルリストを保存した順序にソートして格納する
