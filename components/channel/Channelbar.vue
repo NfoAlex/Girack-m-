@@ -35,7 +35,7 @@ watch(channelOrderedData, (newValue, oldValue) => {
 });
 
 /**
- * チャンネルリストを保存した順序にソートして格納する
+ * チャンネルリストを保存した順序へ補完しつつソートして表示に使う格納する
  */
 const getChannelListOrdered = () => {
   //チャンネル順序結果用配列
