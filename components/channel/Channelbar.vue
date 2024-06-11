@@ -22,7 +22,7 @@ const currentPath = ref<string>(""); //チャンネルID
 const channelOrderedData =ref<any[]>([]);
 
 /**
- * チャンネルリストを保存した順序にソートして返す
+ * チャンネルリストを保存した順序にソートして格納する
  */
 const getChannelListOrdered = () => {
   //チャンネル順序結果用配列
