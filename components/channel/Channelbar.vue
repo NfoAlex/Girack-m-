@@ -12,6 +12,7 @@ const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
 const { getChannelOrder } = storeToRefs(useChannelinfo());
+const { updateChannelOrder } = useChannelinfo();
 const { getHasNewMessage } = useHistory();
 
 const router = useRouter();
@@ -72,7 +73,7 @@ const getChannelListOrdered = () => {
 //チャンネルボタン用配列処理
 onBeforeMount(() => {
   getChannelListOrdered();
-})
+});
 
 onMounted(() => {
   //なぜかpathが配列ならブラウザへ
@@ -81,6 +82,22 @@ onMounted(() => {
   } else {
     router.push("/browser");
   }
+
+  //チャンネル順序のソートを検知してサーバー上へ同期させる
+  watch(channelOrderedData, (newValue, oldValue) => {
+    //console.log("Channelbar :: watch(channelOrderData) : newValue->", newValue);
+
+    //チャンネル情報用Storeのチャンネル順序を更新させる
+    updateChannelOrder(newValue);
+
+    socket.emit("saveUserChannelOrder", {
+      RequestSender : {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      channelOrder: newValue
+    });
+  });
 });
 </script>
 
