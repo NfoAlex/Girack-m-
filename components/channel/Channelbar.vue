@@ -23,17 +23,6 @@ const route = useRoute();
 const currentPath = ref<string>(""); //チャンネルID
 const channelOrderedData =ref<any[]>([]);
 
-//チャンネル順序のソートを検知してサーバー上へ同期させる
-watch(channelOrderedData, (newValue, oldValue) => {
-  socket.emit("saveUserChannelOrder", {
-    RequestSender : {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    channelOrder: newValue
-  });
-});
-
 /**
  * チャンネルリストを保存した順序へ補完しつつソートして表示に使う格納する
  */
