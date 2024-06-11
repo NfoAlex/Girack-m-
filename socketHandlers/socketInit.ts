@@ -12,6 +12,7 @@ import infoServer from "./InfoServer";
 
 import fetchChannelInfo from "./fetchChannelInfo";
 import deleteChannel from "./deleteChannel";
+import fetchUserChannelOrder from "./fetchUserChannelOrder";
 
 import receiveMessage from "./receiveMessage";
 import fetchHistory from "./fetchHistory";
@@ -58,6 +59,7 @@ export function loadSocket() {
 
   fetchChannelInfo(socket); //チャンネル情報の受け取り
   deleteChannel(socket); //チャンネル削除通知の受け取り
+  fetchUserChannelOrder(socket); //チャンネル順序の受け取り
 
   receiveMessage(socket); //メッセージの受信
   fetchHistory(socket); //履歴の受信

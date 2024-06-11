@@ -88,6 +88,13 @@ const initialize = (userId:string, sessionId:string) => {
       sessionId: sessionId,
     },
   });
+  //チャンネル順序受け取り
+  socket.emit("fetchUserChannelOrder", {
+    RequestSender: {
+      userId: userId,
+      sessionId: sessionId,
+    },
+  });
 
   //トップページへ移動
   if (isNewUser.value) {
