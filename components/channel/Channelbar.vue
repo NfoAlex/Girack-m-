@@ -3,8 +3,9 @@ import { useMyUserinfo } from '~/stores/userinfo';
 import { useServerinfo } from '~/stores/serverinfo';
 import { useChannelinfo } from "~/stores/channel";
 import { useHistory } from '~/stores/history';
-
 import draggable from 'vuedraggable';
+
+import type { channelOrder } from '~/types/channel';
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
@@ -26,7 +27,7 @@ const channelOrderedData =ref<any[]>([]);
  */
 const getChannelListOrdered = () => {
   //チャンネル順序結果用配列
-  let channelOrderPushing:any[] = [];
+  let channelOrderPushing:channelOrder[] = [];
 
   //console.log('Channelbar :: getChannelListOrdered : getChannelOrder->', toRaw(getChannelOrder.value));
 
@@ -58,7 +59,8 @@ const getChannelListOrdered = () => {
   for (let channelId of channelNotUsed) {
     channelOrderPushing.push({
       channelId: channelId,
-      isThread: false
+      isThread: false,
+      isFolder: false
     });
   }
 

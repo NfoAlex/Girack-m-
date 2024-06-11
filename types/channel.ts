@@ -6,7 +6,7 @@ export interface getchannelList {
 export interface channelOrder {
   channelId: string,
   isThread: boolean,
-  isFolder: [],
+  isFolder: boolean,
   child?: any[]
 };
 
