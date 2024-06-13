@@ -29,3 +29,17 @@ export default interface message {
     }
   }
 }
+
+export interface inbox {
+  "mention": {
+    [key: string]: {
+      senderUserId: string,
+    }
+  },
+  "event": {
+    [key: string]: {
+      senderUserId: string,
+      channelId: string,
+    }
+  }
+}
