@@ -3,12 +3,14 @@ import { useMyUserinfo } from "~/stores/userinfo";
 import { useUserIndex } from "~/stores/userindex";
 import { useAppStatus } from "~/stores/AppStatus";
 import { useHistory } from "~/stores/history";
+import { useInbox } from "~/stores/inbox";
 import getMyRolePower from "~/composables/getMyRolePower";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 const { getOnlineUsers } = storeToRefs(useUserIndex());
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getThereIsNewMessage } = storeToRefs(useHistory());
+const { getMentionNum } = storeToRefs(useInbox());
 </script>
 
 <template>
@@ -74,7 +76,12 @@ const { getThereIsNewMessage } = storeToRefs(useHistory());
       <!-- チャンネルボタン -->
       <span class="mt-4">
         <NuxtLink to="/channel">
-          <v-badge v-if="getThereIsNewMessage" dot color="primary">
+          <v-badge
+            v-if="getThereIsNewMessage"
+            :dot="getMentionNum!==0"
+            :content="getMentionNum!==0 ? getMentionNum : undefined"
+            :color="getMentionNum!==0 ? 'error' : 'primary'"
+          >
             <v-btn
               icon=""
               :variant="$route.path.startsWith('/channel') ? 'tonal' : 'text'"
