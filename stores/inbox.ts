@@ -14,9 +14,15 @@ export const useInbox = defineStore("inbox", {
   }),
 
   getters: {
+    //通知Inboxを渡す
     getInbox: (state) => {
       return state._Inbox;
     },
+
+    //メンション数を渡す
+    getMentionNum: (state) => {
+      return Object.keys(state._Inbox.mention).length;
+    }
   },
   
   actions: {
