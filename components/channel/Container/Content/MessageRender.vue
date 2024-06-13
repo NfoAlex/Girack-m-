@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUserIndex } from '~/stores/userindex';
 import { useMessageReadId } from '~/stores/messageReadId';
+import { useInbox } from '~/stores/inbox';
 import HoverMenu from './MessageRender/HoverMenu.vue';
 import EmojiRender from './MessageRender/EmojiRender.vue';
 import TextRender from './MessageRender/TextRender.vue';
@@ -9,6 +10,7 @@ import type message from '~/types/message';
 
 const { getUserinfo } = useUserIndex();
 const { getMessageReadIdBefore } = useMessageReadId();
+const { getInbox } = storeToRefs(useInbox());
 
 const userIdForDialog = ref<string>("");
 const displayUserpage = ref<boolean>(false);
@@ -18,6 +20,13 @@ const propsMessage = defineProps<{
   index: number,
   borderClass: string,
 }>();
+
+//このメッセージが通知Inboxにあるかどうかを調べてその通知を消す
+onMounted(() => {
+  if (getInbox.value.mention[propsMessage.message.messageId]) {
+    console.log("メンションだね");
+  }
+});
 
 </script>
 
