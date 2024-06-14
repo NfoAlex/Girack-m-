@@ -26,22 +26,24 @@ const propsMessage = defineProps<{
 
 //このメッセージが通知Inboxにあるかどうかを調べてその通知を消す
 onMounted(() => {
-  if (
-    getInbox.value.mention[propsMessage.message.channelId].indexOf(
-      propsMessage.message.messageId
-    ) !== -1
-  ) {
-    console.log("メンションだね");
+  if (getInbox.value.mention[propsMessage.message.channelId] !== undefined) {
+    if (
+      getInbox.value.mention[propsMessage.message.channelId].indexOf(
+        propsMessage.message.messageId
+      ) !== -1
+    ) {
+      console.log("メンションだね");
 
-    socket.emit("removeFromUserInbox", {
-      RequestSender: {
-        userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
-      },
-      inboxCategory: "mention",
-      channelId: propsMessage.message.channelId,
-      inboxItemId: propsMessage.message.messageId
-    });
+      socket.emit("removeFromUserInbox", {
+        RequestSender: {
+          userId: getMyUserinfo.value.userId,
+          sessionId: getSessionId.value
+        },
+        inboxCategory: "mention",
+        channelId: propsMessage.message.channelId,
+        inboxItemId: propsMessage.message.messageId
+      });
+    }
   }
 });
 
