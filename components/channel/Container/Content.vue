@@ -484,10 +484,10 @@ onMounted(() => {
       updateMessageReadIdBefore(latestChannelId);
     }
 
-  });
+    //ロードできたと設定
+    stateLoaded.value = true;
 
-  //ロードできたと設定
-  stateLoaded.value = true;
+  });
 });
 
 //別のチャンネルへ移動する前に最後にいたチャンネルIdとスクロール位置を記録
