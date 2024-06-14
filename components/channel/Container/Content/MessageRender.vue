@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
 import { useUserIndex } from '~/stores/userindex';
 import { useMessageReadId } from '~/stores/messageReadId';
 import { useInbox } from '~/stores/inbox';
@@ -8,6 +10,7 @@ import TextRender from './MessageRender/TextRender.vue';
 import LinkPreview from './MessageRender/LinkPreview.vue';
 import type message from '~/types/message';
 
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getUserinfo } = useUserIndex();
 const { getMessageReadIdBefore } = useMessageReadId();
 const { getInbox } = storeToRefs(useInbox());
@@ -25,6 +28,15 @@ const propsMessage = defineProps<{
 onMounted(() => {
   if (getInbox.value.mention[propsMessage.message.messageId]) {
     console.log("メンションだね");
+    
+    socket.emit("removeFromUserInbox", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      inboxCategory: "mention",
+      inboxItemId: propsMessage.message.messageId
+    });
   }
 });
 
