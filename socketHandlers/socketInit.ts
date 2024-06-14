@@ -18,6 +18,7 @@ import receiveMessage from "./receiveMessage";
 import fetchHistory from "./fetchHistory";
 import updateMessage from "./updateMessage";
 import deleteMessage from "./deleteMessage";
+import newNotification from "./newNotification";
 
 import fetchUserInfo from "./fetchUserInfo";
 import fetchUserConfig from "./fetchUserConfig";
@@ -66,6 +67,7 @@ export function loadSocket() {
   fetchHistory(socket); //履歴の受信
   updateMessage(socket); //メッセージ更新の受信
   deleteMessage(socket); //メッセージの削除
+  newNotification(socket); //通知の受け取り
 
   fetchUserInfo(socket); //自ユーザー情報
   fetchUserConfig(socket); //設定データ
