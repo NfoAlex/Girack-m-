@@ -28,13 +28,14 @@ const propsMessage = defineProps<{
 onMounted(() => {
   if (getInbox.value.mention[propsMessage.message.messageId]) {
     console.log("メンションだね");
-    
+
     socket.emit("removeFromUserInbox", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
         sessionId: getSessionId.value
       },
       inboxCategory: "mention",
+      channelId: propsMessage.message.channelId,
       inboxItemId: propsMessage.message.messageId
     });
   }
