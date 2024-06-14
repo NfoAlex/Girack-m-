@@ -137,6 +137,7 @@ onMounted(() => {
             </v-icon>
             <v-badge
               v-if="getMentionNumOnChannel(element.channelId) !== 0"
+              class="ml-auto flex-shrink-0"
               :content="2"
               color="error"
               inline
