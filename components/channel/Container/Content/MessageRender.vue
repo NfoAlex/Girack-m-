@@ -26,7 +26,11 @@ const propsMessage = defineProps<{
 
 //このメッセージが通知Inboxにあるかどうかを調べてその通知を消す
 onMounted(() => {
-  if (getInbox.value.mention[propsMessage.message.messageId]) {
+  if (
+    getInbox.value.mention[propsMessage.message.channelId].indexOf(
+      propsMessage.message.messageId
+    ) !== -1
+  ) {
     console.log("メンションだね");
 
     socket.emit("removeFromUserInbox", {
