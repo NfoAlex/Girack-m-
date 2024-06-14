@@ -32,14 +32,9 @@ export default interface message {
 
 export interface inbox {
   "mention": {
-    [key: string]: {
-      senderUserId: string,
-    }
+    [key: string]: string[] //ここでのkeyはチャンネルId
   },
   "event": {
-    [key: string]: {
-      senderUserId: string,
-      channelId: string,
-    }
+    [key: string]: string[] //ここでのkeyはチャンネルId
   }
 }
