@@ -32,8 +32,6 @@ onMounted(() => {
         propsMessage.message.messageId
       ) !== -1
     ) {
-      console.log("メンションだね");
-
       socket.emit("removeFromUserInbox", {
         RequestSender: {
           userId: getMyUserinfo.value.userId,
