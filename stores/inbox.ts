@@ -32,7 +32,10 @@ export const useInbox = defineStore("inbox", {
     },
 
     //指定チャンネルのメンション数を渡す
-    getMentionNumOnChannel: (state) => (channelId:string):number => {
+    getMentionNumOnChannel: (state) => (channelId:string) => {
+      //そもそも指定チャンネルの配列が無いなら0
+      if (state._Inbox.mention[channelId] === undefined) return 0;
+
       return state._Inbox.mention[channelId].length;
     }
   },
