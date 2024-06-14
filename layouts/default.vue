@@ -10,7 +10,7 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 const { getOnlineUsers } = storeToRefs(useUserIndex());
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getThereIsNewMessage } = storeToRefs(useHistory());
-const { getMentionNum } = storeToRefs(useInbox());
+const { getMentionNumTotal } = storeToRefs(useInbox());
 </script>
 
 <template>
@@ -78,9 +78,9 @@ const { getMentionNum } = storeToRefs(useInbox());
         <NuxtLink to="/channel">
           <v-badge
             v-if="getThereIsNewMessage"
-            :dot="getMentionNum!==0"
-            :content="getMentionNum!==0 ? getMentionNum : undefined"
-            :color="getMentionNum!==0 ? 'error' : 'primary'"
+            :dot="getMentionNumTotal===0"
+            :content="getMentionNumTotal!==0 ? getMentionNumTotal : undefined"
+            :color="getMentionNumTotal!==0 ? 'error' : 'primary'"
           >
             <v-btn
               icon=""
