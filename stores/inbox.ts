@@ -19,9 +19,21 @@ export const useInbox = defineStore("inbox", {
       return state._Inbox;
     },
 
-    //メンション数を渡す
-    getMentionNum: (state) => {
-      return Object.keys(state._Inbox.mention).length;
+    //すべてのメンション数を渡す
+    getMentionNumTotal: (state):number => {
+      //通知数
+      let mentionNumTotal = 0;
+      //通知数を取り出す
+      for (let channelId of Object.keys(state._Inbox.mention)) {
+        mentionNumTotal += state._Inbox.mention[channelId].length;
+      }
+
+      return mentionNumTotal;
+    },
+
+    //指定チャンネルのメンション数を渡す
+    getMentionNumOnChannel: (state) => (channelId:string):number => {
+      return state._Inbox.mention[channelId].length;
     }
   },
   
