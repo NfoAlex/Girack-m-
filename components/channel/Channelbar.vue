@@ -4,6 +4,7 @@ import { useMyUserinfo } from '~/stores/userinfo';
 import { useServerinfo } from '~/stores/serverinfo';
 import { useChannelinfo } from "~/stores/channel";
 import { useHistory } from '~/stores/history';
+import { useInbox } from "~/stores/inbox";
 import draggable from 'vuedraggable';
 
 import type { channelOrder } from '~/types/channel';
@@ -12,6 +13,7 @@ const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
 const { getChannelOrder } = storeToRefs(useChannelinfo());
+const { getMentionNumOnChannel } = storeToRefs(useInbox());
 const { updateChannelOrder } = useChannelinfo();
 const { getHasNewMessage } = useHistory();
 
@@ -124,11 +126,22 @@ onMounted(() => {
               {{ getChannelinfoSingle(element.channelId).channelName }}
             </p>
             <v-icon
-              v-if="getHasNewMessage(element.channelId)"
+              v-if="
+                getHasNewMessage(element.channelId)
+                &&
+                getMentionNumOnChannel(element.channelId) === 0
+              "
               class="ml-auto flex-shrink-0"
             >
               mdi-circle-medium
             </v-icon>
+            <v-badge
+              v-if="getMentionNumOnChannel(element.channelId) !== 0"
+              :content="2"
+              color="error"
+              inline
+            >
+            </v-badge>
           </m-card-compact>
         </template>
       </draggable>
