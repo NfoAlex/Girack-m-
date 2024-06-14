@@ -13,10 +13,10 @@ export default function removeFromUserInbox(socket: Socket): void {
     if (dat.result === "SUCCESS") {
       //チャンネル脱退処理をする
       socket.emit("fetchUserInbox", {
-      RequestSender: {
-        userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
-      }
+        RequestSender: {
+          userId: getMyUserinfo.value.userId,
+          sessionId: getSessionId.value
+        }
       });
     }
   });
