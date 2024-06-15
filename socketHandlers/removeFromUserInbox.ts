@@ -10,14 +10,12 @@ export default function removeFromUserInbox(socket: Socket): void {
   socket.on("RESULT::removeFromUserInbox", (dat:{result:string, data:boolean}) => {
     console.log("socket(removeFromUserInbox) : 処理してる", dat);
 
-    if (dat.result === "SUCCESS") {
-      //チャンネル脱退処理をする
-      socket.emit("fetchUserInbox", {
-        RequestSender: {
-          userId: getMyUserinfo.value.userId,
-          sessionId: getSessionId.value
-        }
-      });
-    }
+    //新着Inboxを取得する
+    socket.emit("fetchUserInbox", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      }
+    });
   });
 }
