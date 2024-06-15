@@ -4,6 +4,7 @@ import { Socket } from "socket.io-client"; //クラス識別用
 import { useHistory } from "~/stores/history";
 import { useAppStatus } from '~/stores/AppStatus';
 import { useMessageReadId } from "~/stores/messageReadId";
+import { useMyUserinfo } from "~/stores/userinfo";
 import type message from "~/types/message";
 
 export default function fetchHistory(socket:Socket):void {
@@ -41,6 +42,20 @@ export default function fetchHistory(socket:Socket):void {
           latestFetchedHistoryLength: 0
         }
       );
+
+      //履歴を一番下から再取得する
+      const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+      socket.emit("fetchHistory", {
+        RequestSender: {
+          userId: getMyUserinfo.value.userId,
+          sessionId: getSessionId.value
+        },
+        channelId: dat.data.channelId,
+        fetchingPosition: {
+          positionMessageId: "",
+          fetchDirection: "older"
+        }
+      });
 
       return;
     }
