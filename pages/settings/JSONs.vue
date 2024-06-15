@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { useConfig } from '~/stores/config';
 import { useHistory } from '~/stores/history';
+import { useInbox } from '~/stores/inbox';
 
 const { getConfig, getConfigSyncStatus } = storeToRefs(useConfig());
 const { getHasNewMessage } = useHistory();
+const { getInbox } = storeToRefs(useInbox());
 </script>
 
 <template>
@@ -46,10 +48,10 @@ const { getHasNewMessage } = useHistory();
         </code>
       </m-card>
 
-      <p class="mt-3">新着状況 - history</p>
+      <p class="mt-3">メンション数(random) - inbox</p>
       <m-card>
         <code>
-          {{ getHasNewMessage("0001") }}
+          {{ getInbox }}
         </code>
       </m-card>
     </NuxtLayout>
