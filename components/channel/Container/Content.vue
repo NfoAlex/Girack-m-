@@ -475,8 +475,8 @@ onMounted(() => {
     }
 
     //もし履歴の最後にいるなら新着を消す
-    if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
-      setHasNewMessage(props.channelInfo.channelId, false);
+    if (getHistoryAvailability(latestChannelId).atEnd) {
+      setHasNewMessage(latestChannelId, false);
     }
 
     //移動前のチャンネル用の最新既読IdBeforeを更新
