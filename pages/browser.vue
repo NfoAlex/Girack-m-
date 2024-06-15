@@ -44,7 +44,7 @@ const joinChannel = (channelIdJoining:string) => {
     },
     channelId: channelIdJoining,
     fetchingPosition: {
-      positionMessageId: "", //最新からとるために空(将来的に既読時間からやるようにする)
+      positionMessageId: "", //最新からとるために空
       fetchDirection: "newer"
     }
   });
