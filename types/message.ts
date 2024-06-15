@@ -29,3 +29,12 @@ export default interface message {
     }
   }
 }
+
+export interface inbox {
+  "mention": {
+    [key: string]: string[] //ここでのkeyはチャンネルId
+  },
+  "event": {
+    [key: string]: string[] //ここでのkeyはチャンネルId
+  }
+}

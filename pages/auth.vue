@@ -88,6 +88,13 @@ const initialize = (userId:string, sessionId:string) => {
       sessionId: sessionId,
     },
   });
+  //通知受け取り
+  socket.emit("fetchUserInbox", {
+    RequestSender: {
+      userId: userId,
+      sessionId: sessionId,
+    },
+  });
   //チャンネル順序受け取り
   socket.emit("fetchUserChannelOrder", {
     RequestSender: {

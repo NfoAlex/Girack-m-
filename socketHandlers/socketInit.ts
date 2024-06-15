@@ -18,11 +18,14 @@ import receiveMessage from "./receiveMessage";
 import fetchHistory from "./fetchHistory";
 import updateMessage from "./updateMessage";
 import deleteMessage from "./deleteMessage";
+import newNotification from "./newNotification";
 
 import fetchUserInfo from "./fetchUserInfo";
 import fetchUserConfig from "./fetchUserConfig";
 import saveUserConfig from "./saveUserConfig";
 import getMessageReadId from "./getMessageReadId";
+import fetchUserInbox from "./fetchUserInbox";
+import removeFromUserInbox from "./removeFromUserInbox";
 
 import fetchRoles from "./fetchRoles";
 import fetchRoleSingle from "./fetchRoleSingle";
@@ -65,11 +68,14 @@ export function loadSocket() {
   fetchHistory(socket); //履歴の受信
   updateMessage(socket); //メッセージ更新の受信
   deleteMessage(socket); //メッセージの削除
+  newNotification(socket); //通知の受け取り
+  removeFromUserInbox(socket); //新着削除結果の受け取り
 
   fetchUserInfo(socket); //自ユーザー情報
   fetchUserConfig(socket); //設定データ
   saveUserConfig(socket); //設定データの保存結果
   getMessageReadId(socket); //最新既読Id取得
+  fetchUserInbox(socket); //通知Inbox受信
 
   fetchRoles(socket); //全ロール受け取り
   fetchRoleSingle(socket); //単一ロール受け取り
