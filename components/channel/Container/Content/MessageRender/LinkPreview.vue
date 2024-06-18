@@ -34,7 +34,7 @@ onErrorCaptured((err, instance, info) => {
     >
 
       <span
-        v-if="props.linkData[index].images !== undefined"
+        v-if="props.linkData[index].images[0] !== undefined"
         class="rounded-lg flex-grow-0 flex-shrink-0 d-flex flex-column align-center my-auto mr-3"
         style="height:auto; max-width:250px; border-radius:24px;"
       >
