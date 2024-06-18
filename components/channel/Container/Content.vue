@@ -213,7 +213,9 @@ const calculateDateDiffFromNext = (messageIndex:number) => {
     //ひとつ前のメッセージがnullじゃないなら計算、nullなら日付線を表示させる
     if (messageAvailable.next !== null) {
       if (
-          new Date(messageAvailable.here.time).getDate() !== new Date(messageAvailable.next.time).getDate()
+        new Date(messageAvailable.here.time).getDate()
+          !==
+        new Date(messageAvailable.next.time).getDate()
       ) {
 
         return true;
