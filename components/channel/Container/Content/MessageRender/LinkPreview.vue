@@ -36,7 +36,7 @@ onErrorCaptured((err, instance, info) => {
       style="max-height:200px; max-width:800px;"
     >
 
-      <span class="flex-shrink-1" style="overflow-y:scroll; max-height:90%">
+      <span class="flex-shrink-1" style="overflow-y:auto; max-height:90%">
         <span class="d-flex" style="width:100%;">
           <span v-if="props.linkData[index].favicon !== undefined" style="max-width:50px;" class="mr-1 mt-1">
             <v-img width="20px" height="auto" :src="props.linkData[index].favicon" />
