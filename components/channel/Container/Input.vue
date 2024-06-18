@@ -46,30 +46,6 @@ const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リ
 watch(messageInput, (() => {
   //console.log("/channel/[id] :: watch(messageInput) : 入力検知->", messageInput.value);
 
-  //検索モードを有効化する
-  if (
-    messageInput.value[messageInput.value.length - 1]
-      ===
-    "@"
-  ) {
-    //検索を有効化
-    searchData.value.searching = true;
-    //どの位置から始まっているか
-    searchData.value.searchStartingAt = messageInput.value.length - 1;
-    //console.log("/channel/[id] :: watch(messageInput) : 検索モードON");
-
-    //このチャンネルに参加するユーザーを取得
-    socket.emit("searchUserInfo", {
-      RequestSender: {
-        userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
-      },
-      userName: "", //全員取得するため空
-      rule: "PARTIAL",
-      channelId: props.channelInfo.channelId
-    });
-  }
-
   //スペースが入力された、あるいは文字が空になったら検索モードを終了
   if (
     messageInput.value[messageInput.value.length - 1] === " " ||
@@ -162,6 +138,16 @@ const triggerEnter = (event:any) => {
 
   //検索中なら指定のユーザーIdあるいはチャンネルIdを挿入
   if (searchData.value.searching) {
+    //検索位置の終わり取得
+    searchData.value.searchEndingAt = 
+      messageInput.value.length -
+      searchData.value.txtLengthWhenStartSearching -
+      searchData.value.searchStartingAt;
+    
+    if (searchData.value.searchStartingAt + 1 > searchData.value.searchEndingAt) {
+      searchData.value.searching = false;
+    }
+
     //挿入
     insertResult(searchDataResult.value[searchData.value.selectedIndex].userId);
     //改行防止
@@ -186,6 +172,33 @@ const triggerEnter = (event:any) => {
   //入力欄を初期化
   messageInput.value = "";
   inputRowNum.value = 1;
+}
+
+/**
+ * @ キーの入力の処理
+ */
+const AtsignTrigger = () => {
+  console.log("Input :: AtsignTrigger : @キー押された");
+
+  //このチャンネルに参加するユーザーを取得
+  socket.emit("searchUserInfo", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    userName: "", //全員取得するため空
+    rule: "PARTIAL",
+    channelId: props.channelInfo.channelId
+  });
+
+  //検索モードを有効化
+  searchData.value.searching = true;
+  //この時の文章の長さを格納
+  searchData.value.txtLengthWhenStartSearching = messageInput.value.length;
+  //選択を初期化
+  searchData.value.selectedIndex = 0;
+  //入力の開始位置を格納
+  searchData.value.searchStartingAt = elInput.value.selectionStart;
 }
 
 /**
@@ -237,6 +250,9 @@ const insertResult = (targetId:string) => {
       "@<" + targetId + "> "
     );
   }
+
+  //検索モードを終了する
+  searchData.value.searching = false;
 }
 
 /**
@@ -304,6 +320,7 @@ onUnmounted(() => {
       @keydown.enter.prevent="triggerEnter"
       @keydown.up="triggerUp"
       @keydown.down="triggerDown"
+      @keydown.@="AtsignTrigger"
       variant="solo-filled"
       rows="1"
       maxRows="5"
