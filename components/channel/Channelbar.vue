@@ -20,6 +20,10 @@ const { getHasNewMessage } = useHistory();
 const router = useRouter();
 const route = useRoute();
 
+definePageMeta({
+  keepalive: true
+});
+
 /**
  * data
  */
