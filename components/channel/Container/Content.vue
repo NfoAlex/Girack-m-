@@ -479,6 +479,15 @@ onMounted(() => {
       });
     }
 
+    /*
+    console.log("Content :: onMounted : props.channelInfo.channelId->",
+      props.channelInfo.channelId,
+      " atEnd->",
+      getHistoryAvailability(props.channelInfo.channelId).atEnd,
+      " y.value->", y.value
+    );
+    */
+
     //もし履歴の最後にいるなら新着を消す
     if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
       //console.log("Content :: onMounted : 既読に設定する");
