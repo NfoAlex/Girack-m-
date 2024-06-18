@@ -397,6 +397,11 @@ watch(
               top: el.getBoundingClientRect().top
             });
           }
+
+          //履歴取得時一番下なら新着削除
+          if (y.value === 0) {
+            setHasNewMessage(props.channelInfo.channelId, false);
+          }
         } catch(e) {
           //なにもしない
           console.log("/channel/[id] :: watch(getAppStatus) : エラー->", e);
