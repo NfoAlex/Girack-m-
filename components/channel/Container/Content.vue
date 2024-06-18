@@ -489,7 +489,11 @@ onMounted(() => {
     */
 
     //もし履歴の最後にいるなら新着を消す
-    if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
+    if (
+      getHistoryAvailability(props.channelInfo.channelId).atEnd
+      &&
+      y.value === 0
+    ) {
       //console.log("Content :: onMounted : 既読に設定する");
       setHasNewMessage(props.channelInfo.channelId, false);
     }
