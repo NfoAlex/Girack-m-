@@ -403,6 +403,10 @@ watch(
           //履歴取得時一番下なら新着削除
           if (y.value === 0) {
             setHasNewMessage(props.channelInfo.channelId, false);
+            //表示している内の最新のメッセージIDを取得
+            const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
+            //最新既読Idを更新
+            updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
           }
         } catch(e) {
           //なにもしない
@@ -496,8 +500,13 @@ onMounted(() => {
       &&
       y.value === 0
     ) {
-      //console.log("Content :: onMounted : 既読に設定する");
+      console.log("Content :: onMounted : 既読に設定する、同期も", props.channelInfo.channelName);
+      //新着削除
       setHasNewMessage(props.channelInfo.channelId, false);
+      //表示している内の最新のメッセージIDを取得
+      const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
+      //最新既読Idを更新
+      updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
     }
 
     //移動前のチャンネル用の最新既読IdBeforeを更新
