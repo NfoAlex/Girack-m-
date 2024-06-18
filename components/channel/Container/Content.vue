@@ -451,11 +451,6 @@ onMounted(() => {
   //ロード状態を解除
   stateLoaded.value = false;
 
-  //最後にいたチャンネルId抽出
-  let latestChannelId = props.channelInfo.channelId;
-
-  //console.log("/channel/[id] :: onMounted : 最後にいたチャンネル->", latestChannelId);
-
   nextTick(() => {
 
     //スクロール位置を取り出し
