@@ -36,18 +36,6 @@ onErrorCaptured((err, instance, info) => {
       style="max-height:200px; max-width:800px;"
     >
 
-      <span
-        v-if="props.linkData[index].images[0] !== undefined"
-        class="rounded-lg flex-grow-0 flex-shrink-0 d-flex flex-column align-center my-auto mr-3"
-        style="height:auto; max-width:250px; border-radius:24px;"
-      >
-        <img
-          :src="props.linkData[index].images[0].url"
-          style="max-width:97.5%; height:auto; max-height:170px; border-radius: 20px !important;"
-        >
-        </img>
-      </span>
-
       <span class="flex-shrink-1" style="overflow-y:scroll; max-height:90%">
         <span class="d-flex" style="width:100%;">
           <span v-if="props.linkData[index].favicon !== undefined" style="max-width:50px;" class="mr-1 mt-1">
@@ -69,6 +57,18 @@ onErrorCaptured((err, instance, info) => {
         <span class="text-disabled" style="overflow-y:scroll; height:10px;">
           {{ props.linkData[index].description }}
         </span>
+      </span>
+
+      <span
+        v-if="props.linkData[index].images[0] !== undefined"
+        class="rounded-lg flex-grow-0 flex-shrink-0 d-flex flex-column align-center my-auto mr-3"
+        style="height:auto; max-width:250px; border-radius:24px;"
+      >
+        <img
+          :src="props.linkData[index].images[0].url"
+          style="max-width:97.5%; height:auto; max-height:170px; border-radius: 20px !important;"
+        >
+        </img>
       </span>
 
     </m-card>
