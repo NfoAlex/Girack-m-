@@ -11,6 +11,13 @@ const linkDataKeyArr = computed(():string[] => {
   if (props.linkData === null) return [];
   return Object.keys(props.linkData);
 });
+
+onErrorCaptured((err, instance, info) => {
+  console.log("LinkPreview :: erron->", props.linkData);
+  console.log("LinkPreview :: err->", err);
+
+  return false;
+});
 </script>
 
 <template>
