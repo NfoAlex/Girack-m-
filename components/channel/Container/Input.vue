@@ -46,32 +46,6 @@ const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リ
 watch(messageInput, (() => {
   //console.log("/channel/[id] :: watch(messageInput) : 入力検知->", messageInput.value);
 
-  //検索モードを有効化する
-  /*
-  if (
-    messageInput.value[messageInput.value.length - 1]
-      ===
-    "@"
-  ) {
-    //検索を有効化
-    searchData.value.searching = true;
-    //どの位置から始まっているか
-    searchData.value.searchStartingAt = messageInput.value.length - 1;
-    //console.log("/channel/[id] :: watch(messageInput) : 検索モードON");
-
-    //このチャンネルに参加するユーザーを取得
-    socket.emit("searchUserInfo", {
-      RequestSender: {
-        userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
-      },
-      userName: "", //全員取得するため空
-      rule: "PARTIAL",
-      channelId: props.channelInfo.channelId
-    });
-  }
-  */
-
   //スペースが入力された、あるいは文字が空になったら検索モードを終了
   if (
     messageInput.value[messageInput.value.length - 1] === " " ||
