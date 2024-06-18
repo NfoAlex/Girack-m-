@@ -510,8 +510,9 @@ onMounted(() => {
     }
 
     //移動前のチャンネル用の最新既読IdBeforeを更新
-    if (latestChannelId !== null) {
-      updateMessageReadIdBefore(latestChannelId);
+    const channelBefore = sessionStorage.getItem("latestChannel");
+    if (channelBefore !== null) {
+      updateMessageReadIdBefore(channelBefore);
     }
 
     //ロードできたと設定
