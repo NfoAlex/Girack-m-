@@ -480,13 +480,14 @@ onMounted(() => {
     }
 
     //もし履歴の最後にいるなら新着を消す
-    if (getHistoryAvailability(latestChannelId).atEnd) {
-      setHasNewMessage(latestChannelId, false);
+    if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
+      //console.log("Content :: onMounted : 既読に設定する");
+      setHasNewMessage(props.channelInfo.channelId, false);
     }
 
     //移動前のチャンネル用の最新既読IdBeforeを更新
     if (latestChannelId !== null) {
-      updateMessageReadIdBefore(latestChannelId);
+      updateMessageReadIdBefore(props.channelInfo.channelId);
     }
 
     //ロードできたと設定
