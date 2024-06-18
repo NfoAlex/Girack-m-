@@ -12,6 +12,9 @@ const linkDataKeyArr = computed(():string[] => {
   return Object.keys(props.linkData);
 });
 
+/**
+ * エラーハンドラ
+ */
 onErrorCaptured((err, instance, info) => {
   console.log("LinkPreview :: erron->", props.linkData);
   console.log("LinkPreview :: err->", err);
