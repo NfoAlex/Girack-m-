@@ -213,7 +213,9 @@ const calculateDateDiffFromNext = (messageIndex:number) => {
     //ひとつ前のメッセージがnullじゃないなら計算、nullなら日付線を表示させる
     if (messageAvailable.next !== null) {
       if (
-          new Date(messageAvailable.here.time).getDate() !== new Date(messageAvailable.next.time).getDate()
+        new Date(messageAvailable.here.time).getDate()
+          !==
+        new Date(messageAvailable.next.time).getDate()
       ) {
 
         return true;
@@ -397,6 +399,15 @@ watch(
               top: el.getBoundingClientRect().top
             });
           }
+
+          //履歴取得時一番下なら新着削除
+          if (y.value === 0) {
+            setHasNewMessage(props.channelInfo.channelId, false);
+            //表示している内の最新のメッセージIDを取得
+            const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
+            //最新既読Idを更新
+            updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+          }
         } catch(e) {
           //なにもしない
           console.log("/channel/[id] :: watch(getAppStatus) : エラー->", e);
@@ -440,16 +451,11 @@ onMounted(() => {
   //ロード状態を解除
   stateLoaded.value = false;
 
-  //最後にいたチャンネルId抽出
-  let latestChannelId = props.channelInfo.channelId;
-
-  //console.log("/channel/[id] :: onMounted : 最後にいたチャンネル->", latestChannelId);
-
   nextTick(() => {
 
     //スクロール位置を取り出し
     const scrollPosition = sessionStorage.getItem(
-      "scrollPositionY::" + latestChannelId
+      "scrollPositionY::" + props.channelInfo.channelId
     );
     //console.log("/channel/[id] :: onMounted : スクロール記憶位置->", scrollPosition);
 
@@ -474,14 +480,34 @@ onMounted(() => {
       });
     }
 
+    /*
+    console.log("Content :: onMounted : props.channelInfo.channelId->",
+      props.channelInfo.channelId,
+      " atEnd->",
+      getHistoryAvailability(props.channelInfo.channelId).atEnd,
+      " y.value->", y.value
+    );
+    */
+
     //もし履歴の最後にいるなら新着を消す
-    if (getHistoryAvailability(latestChannelId).atEnd) {
-      setHasNewMessage(latestChannelId, false);
+    if (
+      getHistoryAvailability(props.channelInfo.channelId).atEnd
+      &&
+      y.value === 0
+    ) {
+      console.log("Content :: onMounted : 既読に設定する、同期も", props.channelInfo.channelName);
+      //新着削除
+      setHasNewMessage(props.channelInfo.channelId, false);
+      //表示している内の最新のメッセージIDを取得
+      const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
+      //最新既読Idを更新
+      updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
     }
 
     //移動前のチャンネル用の最新既読IdBeforeを更新
-    if (latestChannelId !== null) {
-      updateMessageReadIdBefore(latestChannelId);
+    const channelBefore = sessionStorage.getItem("latestChannel");
+    if (channelBefore !== null) {
+      updateMessageReadIdBefore(channelBefore);
     }
 
     //ロードできたと設定

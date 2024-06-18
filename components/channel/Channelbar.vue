@@ -125,6 +125,7 @@ onMounted(() => {
             <p class="flex-shrink-1 text-truncate">
               {{ getChannelinfoSingle(element.channelId).channelName }}
             </p>
+            
             <v-icon
               v-if="
                 getHasNewMessage(element.channelId)
