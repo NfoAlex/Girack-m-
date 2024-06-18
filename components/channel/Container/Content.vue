@@ -460,7 +460,7 @@ onMounted(() => {
 
     //スクロール位置を取り出し
     const scrollPosition = sessionStorage.getItem(
-      "scrollPositionY::" + latestChannelId
+      "scrollPositionY::" + props.channelInfo.channelId
     );
     //console.log("/channel/[id] :: onMounted : スクロール記憶位置->", scrollPosition);
 
