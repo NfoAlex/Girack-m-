@@ -500,7 +500,7 @@ onMounted(() => {
 
     //移動前のチャンネル用の最新既読IdBeforeを更新
     if (latestChannelId !== null) {
-      updateMessageReadIdBefore(props.channelInfo.channelId);
+      updateMessageReadIdBefore(latestChannelId);
     }
 
     //ロードできたと設定
