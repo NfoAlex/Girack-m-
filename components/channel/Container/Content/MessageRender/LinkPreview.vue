@@ -33,7 +33,7 @@ onErrorCaptured((err, instance, info) => {
       v-if="props.linkData[index].contentType==='text/html'"
       color="cardInner"
       class="d-flex mt-1"
-      style="max-height:200px; max-width:800px;"
+      style="max-height:200px; max-width:800px; width:fit-content;"
     >
 
       <span class="flex-shrink-1" style="overflow-y:auto; max-height:90%">
