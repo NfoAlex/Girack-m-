@@ -4,9 +4,11 @@ import { useAppStatus } from '~/stores/AppStatus';
 import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
 import { useMessageReadId } from "~/stores/messageReadId";
+import { useMessageReadTime } from '~/stores/messageReadTime';
 import updateMessageReadIdCloudAndLocal from "~/composables/updateMessageReadIdCloudAndLocal";
 import MessageRender from './Content/MessageRender.vue';
 import type { channel } from '~/types/channel';
+import type message from '~/types/message';
 
 import { useElementVisibility, useScroll, useWindowFocus } from '@vueuse/core';
 
@@ -21,6 +23,7 @@ const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getHistoryFromChannel, getHistoryAvailability, setHasNewMessage } = useHistory();
 const { getMessageReadId, updateMessageReadIdBefore } = useMessageReadId();
+const { getMessageReadTime, updateMessageReadTimeBefore } = useMessageReadTime();
 
 //props(チャンネル情報)
 const props = defineProps<{
@@ -140,6 +143,24 @@ const fetchNewerHistory = () => {
   });
   */
 }
+
+/**
+ * 最新既読時間から該当するメッセージデータを取得する
+ */
+const getLatestReadMessage = computed(():message|null => {
+  //このチャンネルの履歴分ループ
+  for (let index in getHistoryFromChannel(props.channelInfo.channelId)) {
+    if (
+      getHistoryFromChannel(props.channelInfo.channelId)[index].time
+      ===
+      getMessageReadTime(props.channelInfo.channelId)
+    ) {
+      return getHistoryFromChannel(props.channelInfo.channelId)[index];
+    }
+  }
+
+  return null;
+});
 
 /**
  * 前後のメッセージからの時差が5分以上あるか計算
@@ -460,7 +481,7 @@ onMounted(() => {
     //console.log("/channel/[id] :: onMounted : スクロール記憶位置->", scrollPosition);
 
     //最新既読Idの要素を取得
-    const latestReadEl = document.getElementById("msg" + getMessageReadId(props.channelInfo.channelId));
+    const latestReadEl = document.getElementById("msg" + getLatestReadMessage.value?.messageId);
 
     //最新既読Idへスクロール、ないなら一番古いやつへ
     if (
