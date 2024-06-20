@@ -5,6 +5,7 @@ import { useServerinfo } from '~/stores/serverinfo';
 import { useChannelinfo } from "~/stores/channel";
 import { useHistory } from '~/stores/history';
 import { useInbox } from "~/stores/inbox";
+import { useMessageReadTime } from "~/stores/messageReadTime";
 import draggable from 'vuedraggable';
 
 import type { channelOrder } from '~/types/channel';
@@ -15,7 +16,8 @@ const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
 const { getChannelOrder } = storeToRefs(useChannelinfo());
 const { getMentionNumOnChannel } = storeToRefs(useInbox());
 const { updateChannelOrder } = useChannelinfo();
-const { getHasNewMessage } = useHistory();
+const { getHasNewMessage, getHistoryFromChannel } = useHistory();
+const { getMessageReadTime } = storeToRefs(useMessageReadTime());
 
 const router = useRouter();
 const route = useRoute();
@@ -126,13 +128,30 @@ onMounted(() => {
               {{ getChannelinfoSingle(element.channelId).channelName }}
             </p>
             
+            <!--
+              <v-icon
+                v-if="
+                  getHasNewMessage(element.channelId)
+                  &&
+                  getMentionNumOnChannel(element.channelId) === 0
+                "
+                class="ml-auto flex-shrink-0"
+              >
+                mdi-circle-medium
+              </v-icon>
+            -->
             <v-icon
               v-if="
-                getHasNewMessage(element.channelId)
+                (
+                  new Date(getHistoryFromChannel(element.channelId)[0].time)
+                  >
+                  new Date(getMessageReadTime(element.channelId))
+                )
                 &&
                 getMentionNumOnChannel(element.channelId) === 0
               "
               class="ml-auto flex-shrink-0"
+              color="orange"
             >
               mdi-circle-medium
             </v-icon>
