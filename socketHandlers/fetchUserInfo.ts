@@ -24,7 +24,7 @@ export default function fetchUserInfo(socket:Socket):void {
 
       //もし初回の自情報ロードなら最新既読Idを取得
       if (!getAppStatus.value.profile.UserinfoLoaded) {
-        socket.emit("getMessageReadId", {
+        socket.emit("getMessageReadTime", {
           RequestSender: {
             userId: dat.data.userId,
             sessionId: getSessionId
