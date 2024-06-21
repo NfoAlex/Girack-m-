@@ -3,7 +3,6 @@ import { socket } from '~/socketHandlers/socketInit';
 import { useAppStatus } from '~/stores/AppStatus';
 import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
-//import { useMessageReadId } from "~/stores/messageReadId";
 import { useMessageReadTime } from '~/stores/messageReadTime';
 import updateMessageReadTimeCloudAndLocal from '~/composables/updateMessageReadTimeCloudAndLocal';
 import MessageRender from './Content/MessageRender.vue';
@@ -22,7 +21,6 @@ const windowFocused = useWindowFocus();
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getHistoryFromChannel, getHistoryAvailability, setHasNewMessage } = useHistory();
-//const { getMessageReadId, updateMessageReadIdBefore } = useMessageReadId();
 const { getMessageReadTime, updateMessageReadTimeBefore } = useMessageReadTime();
 
 //props(チャンネル情報)
