@@ -1,6 +1,6 @@
 //履歴保存、管理
 import { defineStore } from "pinia";
-import { useMessageReadId } from "./messageReadId";
+import { useMessageReadTime } from "./messageReadTime";
 
 import type message from "~/types/message";
 
@@ -146,20 +146,19 @@ export const useHistory = defineStore("history", {
       //履歴の最新にいるときのみ更新する
       if (this._Availability[message.channelId].atEnd) {
         //履歴が61以上あるなら古い方を1つ削除してトップにいないと設定
-        if (this._History[message.channelId].length > 61) {
+        if (this._History[message.channelId].length > 121) {
           //もし履歴の一番最後が最新既読と一緒なら停止
           try {
-            const { getMessageReadId } = useMessageReadId();
+            const { getMessageReadTime } = useMessageReadTime();
             if (
-              this._History[message.channelId][this._History[message.channelId].length-1].messageId
+              this._History[message.channelId][this._History[message.channelId].length-1].time
                 ===
-              getMessageReadId(message.channelId)
+              getMessageReadTime(message.channelId)
             ) {
+              console.log("store(history) :: addMessage : 履歴追加を停止");
               return;
             }
-          } catch(e) {
-            console.log("store(history) :: addMessage : 履歴追加を停止");
-          }
+          } catch(e) {}
           
           this._History[message.channelId].splice(60);
           this._Availability[message.channelId].atTop = false;
