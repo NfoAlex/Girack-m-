@@ -61,7 +61,7 @@ export const useHistory = defineStore("history", {
       [key: string]: boolean
     },
     _LatestMessage: {
-      [key: string]: message
+      [key: string]: message | null
     }
   }),
   
