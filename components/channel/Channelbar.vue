@@ -80,13 +80,7 @@ const getChannelListOrdered = () => {
  */
 const getThereIsNew = (channelId:string):boolean => {
   if (
-    (
-      new Date(getHistoryFromChannel.value(channelId)[0].time).valueOf()
-      >
-      new Date(getMessageReadTime.value(channelId)).valueOf()
-    )
-    ||
-    (
+    ( //最新メッセと時間を比較
       new Date(getLatestMessage.value(channelId)?.time || "").valueOf()
       >
       new Date(getMessageReadTime.value(channelId)).valueOf()
