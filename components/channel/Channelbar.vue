@@ -16,7 +16,7 @@ const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
 const { getChannelOrder } = storeToRefs(useChannelinfo());
 const { getMentionNumOnChannel } = storeToRefs(useInbox());
 const { updateChannelOrder } = useChannelinfo();
-const { getHistoryAvailability, getHistoryFromChannel } = storeToRefs(useHistory());
+const { getHistoryAvailability, getHistoryFromChannel, getLatestMessage } = storeToRefs(useHistory());
 const { getMessageReadTime } = storeToRefs(useMessageReadTime());
 
 const router = useRouter();
@@ -86,7 +86,11 @@ const getThereIsNew = (channelId:string):boolean => {
       new Date(getMessageReadTime.value(channelId)).valueOf()
     )
     ||
-    !getHistoryAvailability.value(channelId).atEnd
+    (
+      new Date(getLatestMessage.value(channelId)?.time || "").valueOf()
+      >
+      new Date(getMessageReadTime.value(channelId)).valueOf()
+    )
   ) {
     return true;
   } else {
