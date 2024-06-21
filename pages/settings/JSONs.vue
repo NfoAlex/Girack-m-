@@ -4,7 +4,7 @@ import { useHistory } from '~/stores/history';
 import { useInbox } from '~/stores/inbox';
 
 const { getConfig, getConfigSyncStatus } = storeToRefs(useConfig());
-const { getHasNewMessage } = useHistory();
+const { getHasNewMessage } = storeToRefs(useHistory());
 const { getInbox } = storeToRefs(useInbox());
 </script>
 
@@ -45,6 +45,13 @@ const { getInbox } = storeToRefs(useInbox());
       <m-card>
         <code>
           {{ getConfig.sidebar }}
+        </code>
+      </m-card>
+
+      <p class="mt-3">新着の状態 - history</p>
+      <m-card>
+        <code>
+          {{ getHasNewMessage }}
         </code>
       </m-card>
 
