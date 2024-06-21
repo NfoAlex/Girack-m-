@@ -128,18 +128,6 @@ onMounted(() => {
               {{ getChannelinfoSingle(element.channelId).channelName }}
             </p>
             
-            <!--
-              <v-icon
-                v-if="
-                  getHasNewMessage(element.channelId)
-                  &&
-                  getMentionNumOnChannel(element.channelId) === 0
-                "
-                class="ml-auto flex-shrink-0"
-              >
-                mdi-circle-medium
-              </v-icon>
-            -->
             <v-icon
               v-if="
                 (
@@ -155,7 +143,6 @@ onMounted(() => {
                 getMentionNumOnChannel(element.channelId) === 0
               "
               class="ml-auto flex-shrink-0"
-              color="orange"
             >
               mdi-circle-medium
             </v-icon>
