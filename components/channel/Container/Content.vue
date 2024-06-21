@@ -57,11 +57,16 @@ const fetchOlderHistory = () => {
     oldestMessageId = getHistoryFromChannel(
       props.channelInfo.channelId
     )[lengthOfHistory-1].messageId;
+    console.log("/channel/:id :: fetchOlderHistory : oldestMessageContent->", 
+      getHistoryFromChannel(
+        props.channelInfo.channelId
+      )[lengthOfHistory-1].content
+    );
   } catch(e) {
     return;
   }
 
-  //console.log("/channel/:id :: fetchOlderHistory : oldestMessageId->", oldestMessageId);
+  console.log("/channel/:id :: fetchOlderHistory : oldestMessageId->", oldestMessageId);
 
   //履歴を取得中であるとグローバルで設定
   getAppStatus.value.fetchingHistory = true;

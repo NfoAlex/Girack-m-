@@ -12,7 +12,7 @@ export default function getMessageReadTime(socket: Socket): void {
       [key: string]: string
     }
   }) => {
-    console.log("getMessageReadTime :: dat->", dat);
+    console.log("socket(getMessageReadTime) :: dat.data->", dat.data);
 
    const { setMessageReadTime } = useMessageReadTime();
    const { getAppStatus } = storeToRefs(useAppStatus());
@@ -33,7 +33,7 @@ export default function getMessageReadTime(socket: Socket): void {
         },
         channelId: channelId,
         fetchingPosition: {
-          positionMessageId: dat.data[channelId]===undefined?'':dat.data[channelId],
+          positionMessageTime: dat.data[channelId]===undefined?'':dat.data[channelId],
           includeThisPosition: true,
           fetchDirection: "older"
         }
