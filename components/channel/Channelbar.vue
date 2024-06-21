@@ -74,6 +74,26 @@ const getChannelListOrdered = () => {
   channelOrderedData.value = [...channelOrderedData.value, ...channelOrderPushing];
 };
 
+/**
+ * 指定のチャンネルに新着があるかどうかを判別する
+ * @param channelId 
+ */
+const getThereIsNew = (channelId:string):boolean => {
+  if (
+    (
+      new Date(getHistoryFromChannel.value(channelId)[0].time).valueOf()
+      >
+      new Date(getMessageReadTime.value(channelId)).valueOf()
+    )
+    ||
+    !getHistoryAvailability.value(channelId).atEnd
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 //チャンネルボタン用配列処理
 onBeforeMount(() => {
   getChannelListOrdered();
@@ -130,15 +150,7 @@ onMounted(() => {
             
             <v-icon
               v-if="
-                (
-                  (
-                    new Date(getHistoryFromChannel(element.channelId)[0].time).valueOf()
-                    >
-                    new Date(getMessageReadTime(element.channelId)).valueOf()
-                  )
-                  ||
-                  !getHistoryAvailability(element.channelId).atEnd
-                )
+                getThereIsNew(element.channelId)
                 &&
                 getMentionNumOnChannel(element.channelId) === 0
               "
