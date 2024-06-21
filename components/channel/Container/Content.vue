@@ -3,9 +3,9 @@ import { socket } from '~/socketHandlers/socketInit';
 import { useAppStatus } from '~/stores/AppStatus';
 import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
-import { useMessageReadId } from "~/stores/messageReadId";
+//import { useMessageReadId } from "~/stores/messageReadId";
 import { useMessageReadTime } from '~/stores/messageReadTime';
-import updateMessageReadIdCloudAndLocal from "~/composables/updateMessageReadIdCloudAndLocal";
+import updateMessageReadTimeCloudAndLocal from '~/composables/updateMessageReadTimeCloudAndLocal';
 import MessageRender from './Content/MessageRender.vue';
 import type { channel } from '~/types/channel';
 import type message from '~/types/message';
@@ -22,7 +22,7 @@ const windowFocused = useWindowFocus();
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getHistoryFromChannel, getHistoryAvailability, setHasNewMessage } = useHistory();
-const { getMessageReadId, updateMessageReadIdBefore } = useMessageReadId();
+//const { getMessageReadId, updateMessageReadIdBefore } = useMessageReadId();
 const { getMessageReadTime, updateMessageReadTimeBefore } = useMessageReadTime();
 
 //props(チャンネル情報)
@@ -376,14 +376,16 @@ watch(atLatestMessage, function (newValue, oldValue) {
   //最新メッセから離れたときを除く
   if (newValue) {
     //表示している内の最新のメッセージIDを取得
-    const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
+    //const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
 
     //もし履歴の最後にいるなら更新処理
     if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
       //新着があるという状態を解除
       setHasNewMessage(props.channelInfo.channelId, false);
-      //最新既読Idを更新
-      updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+      //表示している内の最新のメッセージ時間を取得
+      const latestMessageTime = getHistoryFromChannel(props.channelInfo.channelId)[0].time
+      //最新既読時間を更新
+      updateMessageReadTimeCloudAndLocal(props.channelInfo.channelId, latestMessageTime);
     }
   }
 });
@@ -424,10 +426,10 @@ watch(
           //履歴取得時一番下なら新着削除
           if (y.value === 0) {
             setHasNewMessage(props.channelInfo.channelId, false);
-            //表示している内の最新のメッセージIDを取得
-            const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
-            //最新既読Idを更新
-            updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+            //表示している内の最新のメッセージ時間を取得
+            const latestMessageTime = getHistoryFromChannel(props.channelInfo.channelId)[0].time;
+            //最新既読時間を更新
+            updateMessageReadTimeCloudAndLocal(props.channelInfo.channelId, latestMessageTime);
           }
         } catch(e) {
           //なにもしない
@@ -460,10 +462,10 @@ watch(windowFocused, (newValue, oldValue) => {
   ) {
     //新着状態を消す
     setHasNewMessage(props.channelInfo.channelId, false);
-    //最新メッセIDを取得
-    const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId;
+    //最新メッセ時間を取得
+    const latestMessageTime = getHistoryFromChannel(props.channelInfo.channelId)[0].time;
     //Storeとサーバーで同期
-    updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+    updateMessageReadTimeCloudAndLocal(props.channelInfo.channelId, latestMessageTime);
   }
 });
 
@@ -519,16 +521,16 @@ onMounted(() => {
       console.log("Content :: onMounted : 既読に設定する、同期も", props.channelInfo.channelName);
       //新着削除
       setHasNewMessage(props.channelInfo.channelId, false);
-      //表示している内の最新のメッセージIDを取得
-      const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
-      //最新既読Idを更新
-      updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+      //表示している内の最新のメッセージ時間を取得
+      const latestMessageTime = getHistoryFromChannel(props.channelInfo.channelId)[0].time;
+      //最新既読時間を更新
+      updateMessageReadTimeCloudAndLocal(props.channelInfo.channelId, latestMessageTime);
     }
 
     //移動前のチャンネル用の最新既読IdBeforeを更新
     const channelBefore = sessionStorage.getItem("latestChannel");
     if (channelBefore !== null) {
-      updateMessageReadIdBefore(channelBefore);
+      updateMessageReadTimeBefore(channelBefore);
     }
 
     //ロードできたと設定
