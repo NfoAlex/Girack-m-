@@ -2,7 +2,7 @@
 import { socket } from "~/socketHandlers/socketInit";
 import { useMyUserinfo } from "~/stores/userinfo";
 import { useUserIndex } from '~/stores/userindex';
-import { useMessageReadId } from '~/stores/messageReadId';
+import { useMessageReadTime } from "~/stores/messageReadTime";
 import { useInbox } from '~/stores/inbox';
 import HoverMenu from './MessageRender/HoverMenu.vue';
 import EmojiRender from './MessageRender/EmojiRender.vue';
@@ -12,7 +12,7 @@ import type message from '~/types/message';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getUserinfo } = useUserIndex();
-const { getMessageReadIdBefore } = useMessageReadId();
+const { getMessageReadTimeBefore } = storeToRefs(useMessageReadTime());
 const { getInbox } = storeToRefs(useInbox());
 
 const userIdForDialog = ref<string>("");
@@ -122,9 +122,9 @@ onMounted(() => {
       <span
         v-if="
           (
-            getMessageReadIdBefore(propsMessage.message.channelId)
+            getMessageReadTimeBefore(propsMessage.message.channelId)
               ===
-            propsMessage.message.messageId
+            propsMessage.message.time
           )
             &&
           propsMessage.index !== 0
