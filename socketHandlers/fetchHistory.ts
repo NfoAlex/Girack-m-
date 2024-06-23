@@ -3,7 +3,7 @@
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useHistory } from "~/stores/history";
 import { useAppStatus } from '~/stores/AppStatus';
-import { useMessageReadId } from "~/stores/messageReadId";
+//import { useMessageReadId } from "~/stores/messageReadId";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type message from "~/types/message";
 
@@ -95,23 +95,24 @@ export default function fetchHistory(socket:Socket):void {
 
     //最新既読Idと最後のメッセージ比較して新着を設定
     const { setHasNewMessage, getHistoryFromChannel } = useHistory();
-    const { getMessageReadId } = useMessageReadId();
+    //const { getMessageReadId } = useMessageReadId();
+    const { getMessageReadTime } = useMessageReadTime();
     if (
       getHistoryAvailability(dat.data.channelId).atEnd
         &&
       getHistoryFromChannel(dat.data.channelId).length !== 0
     ) {
       if (
-        getLatestMessage(dat.data.channelId).messageId
+        getLatestMessage(dat.data.channelId)?.time
           !==
-        getMessageReadId(dat.data.channelId)
+        getMessageReadTime(dat.data.channelId)
       ) {
         setHasNewMessage(dat.data.channelId, true);
       }
     } else if ( //履歴取得時にこれが最初の格納で、最新でないなら新着と設定
       !getHistoryAvailability(dat.data.channelId).atEnd
         &&
-      getLatestMessage(dat.data.channelId).messageId === "UNDEFINED"
+      getLatestMessage(dat.data.channelId)?.messageId === "UNDEFINED"
     ) {
       setHasNewMessage(dat.data.channelId, true);
     }
