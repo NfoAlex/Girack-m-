@@ -102,13 +102,16 @@ export default function fetchHistory(socket:Socket):void {
         &&
       getHistoryFromChannel(dat.data.channelId).length !== 0
     ) {
+
+      //既読時間と比較して新着にする
       if (
-        getLatestMessage(dat.data.channelId)?.time
-          !==
-        getMessageReadTime(dat.data.channelId)
+        new Date(getLatestMessage(dat.data.channelId)?.time || "").valueOf()
+        >
+        new Date(getMessageReadTime(dat.data.channelId)).valueOf()
       ) {
         setHasNewMessage(dat.data.channelId, true);
       }
+
     } else if ( //履歴取得時にこれが最初の格納で、最新でないなら新着と設定
       !getHistoryAvailability(dat.data.channelId).atEnd
         &&
