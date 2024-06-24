@@ -4,8 +4,6 @@ import { Socket } from "socket.io-client"; //クラス識別用
 import { useHistory } from "~/stores/history";
 
 export default function deleteMessage(socket: Socket): void {
-  const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-
   //メッセ削除
   socket.on("RESULT::deleteMessage", (
     dat: {
