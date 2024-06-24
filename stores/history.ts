@@ -1,6 +1,6 @@
 //履歴保存、管理
 import { defineStore } from "pinia";
-import { useMessageReadId } from "./messageReadId";
+import { useMessageReadTime } from "./messageReadTime";
 
 import type message from "~/types/message";
 
@@ -61,7 +61,7 @@ export const useHistory = defineStore("history", {
       [key: string]: boolean
     },
     _LatestMessage: {
-      [key: string]: message
+      [key: string]: message | null
     }
   }),
   
@@ -95,20 +95,14 @@ export const useHistory = defineStore("history", {
       return state._Availability[channelId]
     },
 
+    //指定チャンネルの新着を取得
+    getHasNewMessage:(state) => (channelId:string) => {
+      return state._HasNewMessage[channelId];
+    },
+
     //全体で新着があるかどうか
     getThereIsNewMessage:(state) => {
       return state._ThereIsNewMessage;
-    },
-
-    //そのチャンネルの新着があるかどうかを取得(データ操作もここでやる)
-    getHasNewMessage:(state) => (channelId:string) => {
-      //そもそもデータがないなら新たに作成
-      if (state._HasNewMessage[channelId] === undefined) {
-        state._HasNewMessage[channelId] = false;
-        return false;
-      }
-      //そのまま返す
-      return state._HasNewMessage[channelId];
     },
 
     //対象チャンネルの最新のメッセージ取得
@@ -146,20 +140,19 @@ export const useHistory = defineStore("history", {
       //履歴の最新にいるときのみ更新する
       if (this._Availability[message.channelId].atEnd) {
         //履歴が61以上あるなら古い方を1つ削除してトップにいないと設定
-        if (this._History[message.channelId].length > 61) {
+        if (this._History[message.channelId].length > 121) {
           //もし履歴の一番最後が最新既読と一緒なら停止
           try {
-            const { getMessageReadId } = useMessageReadId();
+            const { getMessageReadTime } = useMessageReadTime();
             if (
-              this._History[message.channelId][this._History[message.channelId].length-1].messageId
+              this._History[message.channelId][this._History[message.channelId].length-1].time
                 ===
-              getMessageReadId(message.channelId)
+              getMessageReadTime(message.channelId)
             ) {
+              console.log("store(history) :: addMessage : 履歴追加を停止");
               return;
             }
-          } catch(e) {
-            console.log("store(history) :: addMessage : 履歴追加を停止");
-          }
+          } catch(e) {}
           
           this._History[message.channelId].splice(60);
           this._Availability[message.channelId].atTop = false;
@@ -281,23 +274,28 @@ export const useHistory = defineStore("history", {
     setHasNewMessage(channelId:string, hasNewMessage:boolean) {
       this._HasNewMessage[channelId] = hasNewMessage;
 
-      //チャンネルをループして１つでも新着があるか調べて全体での新着を設定
-      for (let channelId in this._HasNewMessage) {
-        if (this._HasNewMessage[channelId]) {
-          this._ThereIsNewMessage = true;
-          //タイトルに新着表示
-          useHead({
-            titleTemplate: '[*]Girack',
-          });
-          return;
+      if (hasNewMessage) {
+        useHead({
+          titleTemplate: '[*]Girack',
+        });
+        this._ThereIsNewMessage = true;
+        return;
+      } else {
+        for (let channelId in this._HasNewMessage) {
+          if (this._HasNewMessage[channelId]) {
+            //タイトル更新
+            useHead({
+              titleTemplate: '[*]Girack',
+            });
+            this._ThereIsNewMessage = true;
+            return;
+          }
         }
+        useHead({
+          titleTemplate: 'Girack',
+        });
+        this._ThereIsNewMessage = false;
       }
-      //普通にループ抜けたら全体通知を解除
-      this._ThereIsNewMessage = false;
-      //タイトルをデフォルトに
-      useHead({
-        titleTemplate: 'Girack',
-      });
     },
 
     //最新メッセを更新する
@@ -320,7 +318,24 @@ export const useHistory = defineStore("history", {
         //IDが一致するメッセージを探して削除
         if (this._History[channelId][index].messageId === messageId) {
           this._History[channelId].splice(parseInt(index), 1);
-          break;
+
+          //もし履歴が最後まであるなら新着状態を確認
+          if (this._Availability[channelId].atEnd) {
+            //時間比較
+            const { getMessageReadTime } = useMessageReadTime();
+            if (
+              new Date(this._History[channelId][0]?.time || "").valueOf()
+              <=
+              new Date(getMessageReadTime(channelId)).valueOf()
+            ) {
+              useHead({
+                titleTemplate: 'Girack',
+              });
+              this.setHasNewMessage(channelId, false);
+            }
+          }
+
+          return;
         }
       }
     }

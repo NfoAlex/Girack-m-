@@ -3,10 +3,11 @@ import { socket } from '~/socketHandlers/socketInit';
 import { useAppStatus } from '~/stores/AppStatus';
 import { useHistory } from '~/stores/history';
 import { useMyUserinfo } from "~/stores/userinfo";
-import { useMessageReadId } from "~/stores/messageReadId";
-import updateMessageReadIdCloudAndLocal from "~/composables/updateMessageReadIdCloudAndLocal";
+import { useMessageReadTime } from '~/stores/messageReadTime';
+import updateMessageReadTimeCloudAndLocal from '~/composables/updateMessageReadTimeCloudAndLocal';
 import MessageRender from './Content/MessageRender.vue';
 import type { channel } from '~/types/channel';
+import type message from '~/types/message';
 
 import { useElementVisibility, useScroll, useWindowFocus } from '@vueuse/core';
 
@@ -20,7 +21,7 @@ const windowFocused = useWindowFocus();
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getHistoryFromChannel, getHistoryAvailability, setHasNewMessage } = useHistory();
-const { getMessageReadId, updateMessageReadIdBefore } = useMessageReadId();
+const { getMessageReadTime, updateMessageReadTimeBefore } = useMessageReadTime();
 
 //props(チャンネル情報)
 const props = defineProps<{
@@ -54,11 +55,16 @@ const fetchOlderHistory = () => {
     oldestMessageId = getHistoryFromChannel(
       props.channelInfo.channelId
     )[lengthOfHistory-1].messageId;
+    console.log("/channel/:id :: fetchOlderHistory : oldestMessageContent->", 
+      getHistoryFromChannel(
+        props.channelInfo.channelId
+      )[lengthOfHistory-1].content
+    );
   } catch(e) {
     return;
   }
 
-  //console.log("/channel/:id :: fetchOlderHistory : oldestMessageId->", oldestMessageId);
+  console.log("/channel/:id :: fetchOlderHistory : oldestMessageId->", oldestMessageId);
 
   //履歴を取得中であるとグローバルで設定
   getAppStatus.value.fetchingHistory = true;
@@ -140,6 +146,24 @@ const fetchNewerHistory = () => {
   });
   */
 }
+
+/**
+ * 最新既読時間から該当するメッセージデータを取得する
+ */
+const getLatestReadMessage = computed(():message|null => {
+  //このチャンネルの履歴分ループ
+  for (let index in getHistoryFromChannel(props.channelInfo.channelId)) {
+    if (
+      getHistoryFromChannel(props.channelInfo.channelId)[index].time
+      ===
+      getMessageReadTime(props.channelInfo.channelId)
+    ) {
+      return getHistoryFromChannel(props.channelInfo.channelId)[index];
+    }
+  }
+
+  return null;
+});
 
 /**
  * 前後のメッセージからの時差が5分以上あるか計算
@@ -313,7 +337,7 @@ const calculateMessageBorder = (messageIndex:number) => {
 //上のスケルトンローダーの位置変数の監視
 watch(atSkeletonOlder, function (newValue, oldValue) {
   //ロードできてないなら停止
-  if (!stateLoaded) return;
+  if (!stateLoaded.value) return;
 
   //すでに履歴を取得中の状態なら停止
   if (getAppStatus.value.fetchingHistory) return;
@@ -332,7 +356,7 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
 //下のスケルトンローダーの位置変数の監視
 watch(atSkeletonNewer, function (newValue, oldValue) {
   //ロードできてないなら停止
-  if (!stateLoaded) return;
+  if (!stateLoaded.value) return;
 
   //すでに履歴を取得中の状態なら停止
   if (getAppStatus.value.fetchingHistory) return;
@@ -355,14 +379,16 @@ watch(atLatestMessage, function (newValue, oldValue) {
   //最新メッセから離れたときを除く
   if (newValue) {
     //表示している内の最新のメッセージIDを取得
-    const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
+    //const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
 
     //もし履歴の最後にいるなら更新処理
     if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
       //新着があるという状態を解除
       setHasNewMessage(props.channelInfo.channelId, false);
-      //最新既読Idを更新
-      updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+      //表示している内の最新のメッセージ時間を取得
+      const latestMessageTime = getHistoryFromChannel(props.channelInfo.channelId)[0].time
+      //最新既読時間を更新
+      updateMessageReadTimeCloudAndLocal(props.channelInfo.channelId, latestMessageTime);
     }
   }
 });
@@ -403,10 +429,10 @@ watch(
           //履歴取得時一番下なら新着削除
           if (y.value === 0) {
             setHasNewMessage(props.channelInfo.channelId, false);
-            //表示している内の最新のメッセージIDを取得
-            const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
-            //最新既読Idを更新
-            updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+            //表示している内の最新のメッセージ時間を取得
+            const latestMessageTime = getHistoryFromChannel(props.channelInfo.channelId)[0].time;
+            //最新既読時間を更新
+            updateMessageReadTimeCloudAndLocal(props.channelInfo.channelId, latestMessageTime);
           }
         } catch(e) {
           //なにもしない
@@ -439,10 +465,10 @@ watch(windowFocused, (newValue, oldValue) => {
   ) {
     //新着状態を消す
     setHasNewMessage(props.channelInfo.channelId, false);
-    //最新メッセIDを取得
-    const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId;
+    //最新メッセ時間を取得
+    const latestMessageTime = getHistoryFromChannel(props.channelInfo.channelId)[0].time;
     //Storeとサーバーで同期
-    updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+    updateMessageReadTimeCloudAndLocal(props.channelInfo.channelId, latestMessageTime);
   }
 });
 
@@ -460,7 +486,7 @@ onMounted(() => {
     //console.log("/channel/[id] :: onMounted : スクロール記憶位置->", scrollPosition);
 
     //最新既読Idの要素を取得
-    const latestReadEl = document.getElementById("msg" + getMessageReadId(props.channelInfo.channelId));
+    const latestReadEl = document.getElementById("msg" + getLatestReadMessage.value?.messageId);
 
     //最新既読Idへスクロール、ないなら一番古いやつへ
     if (
@@ -468,12 +494,12 @@ onMounted(() => {
     ) {
       //console.log("scrolling to ...->", scrollPositionCalculated);
       //VuetifyのgoToだと数値での移動ができないためscrollTo
-      console.log("/channel/[id] :: onMounted : (記憶位置)スクロールします->", scrollPosition);
+      //console.log("/channel/[id] :: onMounted : (記憶位置)スクロールします->", scrollPosition);
       document.getElementById("ChannelContainerContent")?.scrollTo({
         top: parseInt(scrollPosition)
       });
     } else if (latestReadEl !== null) {
-      console.log("/channel/[id] :: onMounted : (最新既読Id)スクロールします->", scrollPosition);
+      //console.log("/channel/[id] :: onMounted : (最新既読Id)スクロールします->", scrollPosition);
       //最新既読Idへ
       document.getElementById("ChannelContainerContent")?.scrollTo({
         top: latestReadEl.getBoundingClientRect().top
@@ -495,19 +521,18 @@ onMounted(() => {
       &&
       y.value === 0
     ) {
-      console.log("Content :: onMounted : 既読に設定する、同期も", props.channelInfo.channelName);
       //新着削除
       setHasNewMessage(props.channelInfo.channelId, false);
-      //表示している内の最新のメッセージIDを取得
-      const latestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId
-      //最新既読Idを更新
-      updateMessageReadIdCloudAndLocal(props.channelInfo.channelId, latestMessageId);
+      //表示している内の最新のメッセージ時間を取得
+      const latestMessageTime = getHistoryFromChannel(props.channelInfo.channelId)[0].time;
+      //最新既読時間を更新
+      updateMessageReadTimeCloudAndLocal(props.channelInfo.channelId, latestMessageTime);
     }
 
     //移動前のチャンネル用の最新既読IdBeforeを更新
     const channelBefore = sessionStorage.getItem("latestChannel");
     if (channelBefore !== null) {
-      updateMessageReadIdBefore(channelBefore);
+      updateMessageReadTimeBefore(channelBefore);
     }
 
     //ロードできたと設定

@@ -3,8 +3,8 @@
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useHistory } from "~/stores/history";
 import { useMyUserinfo } from "~/stores/userinfo";
-import { useMessageReadId } from "~/stores/messageReadId";
-import updateMessageReadIdCloudAndLocal from "~/composables/updateMessageReadIdCloudAndLocal";
+import { useMessageReadTime } from "~/stores/messageReadTime";
+import updateMessageReadTimeCloudAndLocal from "~/composables/updateMessageReadTimeCloudAndLocal";
 import { useWindowFocus, useDocumentVisibility } from '@vueuse/core'
 
 import type message from "~/types/message";
@@ -44,11 +44,11 @@ export default function receiveMessage(socket: Socket): void {
         &&
         windowFocused.value
       ) {
-        //最新既読Idを更新
-        updateMessageReadIdCloudAndLocal(message.channelId, message.messageId);
-        //最新Idに合わせてBeforeを設定
-        const { updateMessageReadIdBefore } = useMessageReadId();
-        updateMessageReadIdBefore(message.channelId);
+        //最新既読時間を更新
+        updateMessageReadTimeCloudAndLocal(message.channelId, message.time);
+        //最新既読時間に合わせてBeforeを設定
+        const { updateMessageReadTimeBefore } = useMessageReadTime();
+        updateMessageReadTimeBefore(message.channelId);
       } else {
         //新着があると設定
         const { setHasNewMessage } = useHistory();

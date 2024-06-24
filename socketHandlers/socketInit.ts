@@ -23,7 +23,8 @@ import newNotification from "./newNotification";
 import fetchUserInfo from "./fetchUserInfo";
 import fetchUserConfig from "./fetchUserConfig";
 import saveUserConfig from "./saveUserConfig";
-import getMessageReadId from "./getMessageReadId";
+//import getMessageReadId from "./getMessageReadId";
+import getMessageReadTime from "./getMessageReadTime";
 import fetchUserInbox from "./fetchUserInbox";
 import removeFromUserInbox from "./removeFromUserInbox";
 
@@ -74,7 +75,8 @@ export function loadSocket() {
   fetchUserInfo(socket); //自ユーザー情報
   fetchUserConfig(socket); //設定データ
   saveUserConfig(socket); //設定データの保存結果
-  getMessageReadId(socket); //最新既読Id取得
+  //getMessageReadId(socket); //最新既読Id取得
+  getMessageReadTime(socket); //最新既読時間取得
   fetchUserInbox(socket); //通知Inbox受信
 
   fetchRoles(socket); //全ロール受け取り

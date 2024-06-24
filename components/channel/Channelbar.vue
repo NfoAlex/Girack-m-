@@ -5,6 +5,7 @@ import { useServerinfo } from '~/stores/serverinfo';
 import { useChannelinfo } from "~/stores/channel";
 import { useHistory } from '~/stores/history';
 import { useInbox } from "~/stores/inbox";
+import { useMessageReadTime } from "~/stores/messageReadTime";
 import draggable from 'vuedraggable';
 
 import type { channelOrder } from '~/types/channel';
@@ -15,7 +16,9 @@ const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
 const { getChannelOrder } = storeToRefs(useChannelinfo());
 const { getMentionNumOnChannel } = storeToRefs(useInbox());
 const { updateChannelOrder } = useChannelinfo();
-const { getHasNewMessage } = useHistory();
+const { getLatestMessage, getHasNewMessage } = storeToRefs(useHistory());
+const { setHasNewMessage } = useHistory();
+const { getMessageReadTime } = storeToRefs(useMessageReadTime());
 
 const router = useRouter();
 const route = useRoute();
@@ -71,6 +74,24 @@ const getChannelListOrdered = () => {
   //結果を適用
   channelOrderedData.value = [...channelOrderedData.value, ...channelOrderPushing];
 };
+
+/**
+ * 指定のチャンネルに新着があるかどうかを判別する
+ * @param channelId 
+ */
+const getThereIsNew = (channelId:string):boolean => {
+  if (
+    ( //最新メッセと時間を比較
+      new Date(getLatestMessage.value(channelId)?.time || "").valueOf()
+      >
+      new Date(getMessageReadTime.value(channelId)).valueOf()
+    )
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 //チャンネルボタン用配列処理
 onBeforeMount(() => {

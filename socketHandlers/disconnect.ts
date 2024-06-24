@@ -9,7 +9,7 @@ export default function disconnect(socket: Socket): void {
 
   //WSからの切断を検知
   socket.on("disconnect", () => {
-    console.log("disconnect :: 切断検知");
+    //console.log("disconnect :: 切断検知");
     
     //切断と設定
     getAppStatus.value.connected = false;
