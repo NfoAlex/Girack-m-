@@ -95,18 +95,14 @@ export const useHistory = defineStore("history", {
       return state._Availability[channelId]
     },
 
-    getHasNewMessage:(state) => {
-      return state._HasNewMessage;
+    //指定チャンネルの新着を取得
+    getHasNewMessage:(state) => (channelId:string) => {
+      return state._HasNewMessage[channelId];
     },
 
     //全体で新着があるかどうか
     getThereIsNewMessage:(state) => {
-      for (let channelId in state._HasNewMessage) {
-        if (state._HasNewMessage[channelId]) {
-          return true;
-        }
-      }
-      return false;
+      return state._ThereIsNewMessage;
     },
 
     //対象チャンネルの最新のメッセージ取得
@@ -278,10 +274,28 @@ export const useHistory = defineStore("history", {
     setHasNewMessage(channelId:string, hasNewMessage:boolean) {
       this._HasNewMessage[channelId] = hasNewMessage;
 
-      //タイトル更新
-      useHead({
-        titleTemplate: hasNewMessage?'[*]Girack':'Girack',
-      });
+      if (hasNewMessage) {
+        useHead({
+          titleTemplate: '[*]Girack',
+        });
+        this._ThereIsNewMessage = true;
+        return;
+      } else {
+        for (let channelId in this._HasNewMessage) {
+          if (this._HasNewMessage[channelId]) {
+            //タイトル更新
+            useHead({
+              titleTemplate: '[*]Girack',
+            });
+            this._ThereIsNewMessage = true;
+            return;
+          }
+        }
+        useHead({
+          titleTemplate: 'Girack',
+        });
+        this._ThereIsNewMessage = false;
+      }
     },
 
     //最新メッセを更新する
@@ -304,7 +318,24 @@ export const useHistory = defineStore("history", {
         //IDが一致するメッセージを探して削除
         if (this._History[channelId][index].messageId === messageId) {
           this._History[channelId].splice(parseInt(index), 1);
-          break;
+
+          //もし履歴が最後まであるなら新着状態を確認
+          if (this._Availability[channelId].atEnd) {
+            //時間比較
+            const { getMessageReadTime } = useMessageReadTime();
+            if (
+              new Date(this._History[channelId][0]?.time || "").valueOf()
+              <=
+              new Date(getMessageReadTime(channelId)).valueOf()
+            ) {
+              useHead({
+                titleTemplate: 'Girack',
+              });
+              this.setHasNewMessage(channelId, false);
+            }
+          }
+
+          return;
         }
       }
     }

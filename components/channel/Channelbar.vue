@@ -16,7 +16,8 @@ const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
 const { getChannelOrder } = storeToRefs(useChannelinfo());
 const { getMentionNumOnChannel } = storeToRefs(useInbox());
 const { updateChannelOrder } = useChannelinfo();
-const { getHistoryAvailability, getHistoryFromChannel, getLatestMessage } = storeToRefs(useHistory());
+const { getLatestMessage, getHasNewMessage } = storeToRefs(useHistory());
+const { setHasNewMessage } = useHistory();
 const { getMessageReadTime } = storeToRefs(useMessageReadTime());
 
 const router = useRouter();
@@ -148,7 +149,7 @@ onMounted(() => {
             
             <v-icon
               v-if="
-                getThereIsNew(element.channelId)
+                getHasNewMessage(element.channelId)
                 &&
                 getMentionNumOnChannel(element.channelId) === 0
               "
