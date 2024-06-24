@@ -5,7 +5,7 @@ import { useUserIndex } from "~/stores/userindex";
 
 export default function addOnlineUser(socket: Socket): void {
   socket.on("addOnlineUser", (dat:{data:string}) => {
-    console.log("socket(addOnlineUser) :: dat->", dat);
+    //console.log("socket(addOnlineUser) :: dat->", dat);
 
     //オンラインユーザーリストへユーザーId追加
     const { addOnlineUser } = useUserIndex();

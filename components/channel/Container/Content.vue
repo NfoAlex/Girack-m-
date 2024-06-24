@@ -494,12 +494,12 @@ onMounted(() => {
     ) {
       //console.log("scrolling to ...->", scrollPositionCalculated);
       //VuetifyのgoToだと数値での移動ができないためscrollTo
-      console.log("/channel/[id] :: onMounted : (記憶位置)スクロールします->", scrollPosition);
+      //console.log("/channel/[id] :: onMounted : (記憶位置)スクロールします->", scrollPosition);
       document.getElementById("ChannelContainerContent")?.scrollTo({
         top: parseInt(scrollPosition)
       });
     } else if (latestReadEl !== null) {
-      console.log("/channel/[id] :: onMounted : (最新既読Id)スクロールします->", scrollPosition);
+      //console.log("/channel/[id] :: onMounted : (最新既読Id)スクロールします->", scrollPosition);
       //最新既読Idへ
       document.getElementById("ChannelContainerContent")?.scrollTo({
         top: latestReadEl.getBoundingClientRect().top
@@ -521,7 +521,6 @@ onMounted(() => {
       &&
       y.value === 0
     ) {
-      console.log("Content :: onMounted : 既読に設定する、同期も", props.channelInfo.channelName);
       //新着削除
       setHasNewMessage(props.channelInfo.channelId, false);
       //表示している内の最新のメッセージ時間を取得
