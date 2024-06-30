@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
-import type { channel } from '~/types/channel';
-import type { MyUserinfo } from '~/types/user';
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
+import type { channel } from "~/types/channel";
+import type { MyUserinfo } from "~/types/user";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 //props(チャンネル情報)
 const props = defineProps<{
-  channelInfo: channel
+  channelInfo: channel;
 }>();
 
 //メンションデータ用interface
 interface SearchData {
-  query: string, //検索文字列
-  searching: boolean, //検索モードに入っているかどうか
-  selectedIndex: number, //選択しているもの
-  searchStartingAt: number, //検索モードに入った文字位置
-  searchEndingAt: number, //検索文字列の範囲終わり(文字列全体の長さ - searchStartingAt)
-  txtLengthWhenStartSearching: number, //検索をし始めたときの文字列全体の長さ
-  searchingTerm: "user"|"channel", //ToDo::(!現在未使用!)検索するもの("user" | "channel")
-};
+  query: string; //検索文字列
+  searching: boolean; //検索モードに入っているかどうか
+  selectedIndex: number; //選択しているもの
+  searchStartingAt: number; //検索モードに入った文字位置
+  searchEndingAt: number; //検索文字列の範囲終わり(文字列全体の長さ - searchStartingAt)
+  txtLengthWhenStartSearching: number; //検索をし始めたときの文字列全体の長さ
+  searchingTerm: "user" | "channel"; //ToDo::(!現在未使用!)検索するもの("user" | "channel")
+}
 
 /**
  * data
@@ -28,14 +28,15 @@ interface SearchData {
 const messageInput = ref<string>(""); //メッセージ入力用変数
 const elInput = ref(null); //入力欄要素を取得するためのref
 const inputRowNum = ref<number>(1); //入力欄の行数
-const searchData = ref<SearchData>({ //検索データ
-  query: '',
+const searchData = ref<SearchData>({
+  //検索データ
+  query: "",
   searching: false,
   selectedIndex: 0,
   searchStartingAt: 0,
   searchEndingAt: 0,
   txtLengthWhenStartSearching: 0,
-  searchingTerm: 'user'
+  searchingTerm: "user",
 });
 const searchDataResult = ref<MyUserinfo[]>([]);
 const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リスト
@@ -43,7 +44,7 @@ const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リ
 /**
  * 入力テキストの監視
  */
-watch(messageInput, (() => {
+watch(messageInput, () => {
   //console.log("/channel/[id] :: watch(messageInput) : 入力検知->", messageInput.value);
 
   //スペースが入力された、あるいは文字が空になったら検索モードを終了
@@ -80,16 +81,18 @@ watch(messageInput, (() => {
     //console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
 
     //クエリーでユーザーリストへフィルターかけて結果格納
-    searchDataResult.value = userAtHere.value.filter(
-      user=>(user.userName).toLocaleLowerCase().includes(searchData.value.query.toLocaleLowerCase())
+    searchDataResult.value = userAtHere.value.filter((user) =>
+      user.userName
+        .toLocaleLowerCase()
+        .includes(searchData.value.query.toLocaleLowerCase())
     );
   }
-}));
+});
 
 /**
  * ここで話せるかどうか
  */
-const canISpeakHere = computed(():boolean => {
+const canISpeakHere = computed((): boolean => {
   //もし配列が空なら話せると設定
   if (props.channelInfo.speakableRole.length === 0) return true;
 
@@ -106,7 +109,16 @@ const canISpeakHere = computed(():boolean => {
 /**
  * Enterキー入力の処理
  */
-const triggerEnter = (event:any) => {
+const triggerEnter = (event: KeyboardEvent) => {
+  //MacのIME入力中はEnterを無視
+  // 229はMacのIME入力中のキーコードです非推奨ですが、現状これで対応しています
+  if (
+    navigator.userAgent.toUpperCase().indexOf("MAC") >= 0 &&
+    event.keyCode === 229
+  ) {
+    return;
+  }
+
   //Shiftキーを押されているならシンプルに改行
   if (event.shiftKey) {
     //もし要素が取得できなかったら停止
@@ -115,7 +127,7 @@ const triggerEnter = (event:any) => {
     //console.log("/channel/[id] :: Input : 要素->", elInput.value.selectionStart);
 
     //現在の入力欄上のカーソル位置
-    const currentTxtCursor:number = elInput.value.selectionStart;
+    const currentTxtCursor: number = elInput.value.selectionStart;
 
     //テキストを現在のカーソル位置をもとに分裂させる
     let txtBefore = messageInput.value.slice(0, currentTxtCursor);
@@ -126,9 +138,11 @@ const triggerEnter = (event:any) => {
 
     //カーソル位置を改行のすぐ次へ移動
     nextTick(() => {
-      elInput.value.setSelectionRange(currentTxtCursor + 1, currentTxtCursor + 1);
+      elInput.value.setSelectionRange(
+        currentTxtCursor + 1,
+        currentTxtCursor + 1
+      );
     });
-
     //関数終了
     return;
   }
@@ -139,12 +153,15 @@ const triggerEnter = (event:any) => {
   //検索中なら指定のユーザーIdあるいはチャンネルIdを挿入
   if (searchData.value.searching) {
     //検索位置の終わり取得
-    searchData.value.searchEndingAt = 
+    searchData.value.searchEndingAt =
       messageInput.value.length -
       searchData.value.txtLengthWhenStartSearching -
       searchData.value.searchStartingAt;
-    
-    if (searchData.value.searchStartingAt + 1 > searchData.value.searchEndingAt) {
+
+    if (
+      searchData.value.searchStartingAt + 1 >
+      searchData.value.searchEndingAt
+    ) {
       searchData.value.searching = false;
     }
 
@@ -161,18 +178,18 @@ const triggerEnter = (event:any) => {
   socket.emit("sendMessage", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     message: {
       channelId: props.channelInfo.channelId,
-      content: messageInput.value
-    }
+      content: messageInput.value,
+    },
   });
-  
+
   //入力欄を初期化
   messageInput.value = "";
   inputRowNum.value = 1;
-}
+};
 
 /**
  * @ キーの入力の処理
@@ -184,11 +201,11 @@ const AtsignTrigger = () => {
   socket.emit("searchUserInfo", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     userName: "", //全員取得するため空
     rule: "PARTIAL",
-    channelId: props.channelInfo.channelId
+    channelId: props.channelInfo.channelId,
   });
 
   //検索モードを有効化
@@ -199,45 +216,43 @@ const AtsignTrigger = () => {
   searchData.value.selectedIndex = 0;
   //入力の開始位置を格納
   searchData.value.searchStartingAt = elInput.value.selectionStart;
-}
+};
 
 /**
  * 上キーによる検索結果上の選択カーソル移動
- * @param e 
+ * @param e
  */
-const triggerUp = (e:Event) => {
+const triggerUp = (e: Event) => {
   //上キーの処理
   if (
-    0 <= searchData.value.selectedIndex - 1 //Indexを引くときに0以上なら
-      &&
+    0 <= searchData.value.selectedIndex - 1 && //Indexを引くときに0以上なら
     searchData.value.searching
   ) {
     e.preventDefault();
     searchData.value.selectedIndex--;
   }
-}
+};
 
 /**
  * 下キーによる検索結果上の選択カーソル移動
- * @param e 
+ * @param e
  */
-const triggerDown = (e:Event) => {  
+const triggerDown = (e: Event) => {
   //下キーの処理
   if (
-    searchDataResult.value.length > searchData.value.selectedIndex + 1 //Indexを足すときにまだ結果配列長より下なら
-      &&
+    searchDataResult.value.length > searchData.value.selectedIndex + 1 && //Indexを足すときにまだ結果配列長より下なら
     searchData.value.searching
   ) {
     e.preventDefault();
     searchData.value.selectedIndex++;
   }
-}
+};
 
 /**
  * メンション、あるいはチャンネルデータ(未実装)を挿入する
- * @param targetId 
+ * @param targetId
  */
-const insertResult = (targetId:string) => {
+const insertResult = (targetId: string) => {
   //入力テキストの@部分をメンション文で代入
   if (searchData.value.query === "") {
     messageInput.value =
@@ -253,24 +268,19 @@ const insertResult = (targetId:string) => {
 
   //検索モードを終了する
   searchData.value.searching = false;
-}
+};
 
 /**
  * ユーザーデータ受け取り
  * @param dat
  */
-const SOCKETsearchUserInfo = (
-  dat: {
-    result: string,
-    data: MyUserinfo[]
-  }
-) => {
+const SOCKETsearchUserInfo = (dat: { result: string; data: MyUserinfo[] }) => {
   console.log("/channel/[id] :: SOCKETsearchUserInfo : dat->", dat);
   //ユーザーリストを格納
   userAtHere.value = dat.data;
   //初期結果にも格納する
   searchDataResult.value = dat.data;
-}
+};
 
 onMounted(() => {
   socket.on("RESULT::searchUserInfo", SOCKETsearchUserInfo);
@@ -282,33 +292,37 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div style="height:fit-content;">
+  <div style="height: fit-content">
     <!-- メンションウィンドウ -->
     <m-card
       v-if="searchData.searching"
       position="relative"
-      style="bottom:0%; z-index:999999; overflow-y:auto; padding:8px 4px !important"
+      style="
+        bottom: 0%;
+        z-index: 999999;
+        overflow-y: auto;
+        padding: 8px 4px !important;
+      "
       maxHeight="30vh"
       rounded="xl"
       width="100%"
       color="messageHovered"
     >
-      <v-virtual-scroll
-        height="100%"
-        :items="searchDataResult"
-      >
+      <v-virtual-scroll height="100%" :items="searchDataResult">
         <template v-slot:default="{ item, index }">
           <span
             @click="insertResult(item.userId)"
             class="d-flex align-center px-1 py-1 cursor-pointer rounded-pill"
             v-ripple
-            :style="'background-color:' + (index===searchData.selectedIndex ? 'rgba(var(--v-theme-primary), 0.3)' : '')"
+            :style="
+              'background-color:' +
+              (index === searchData.selectedIndex
+                ? 'rgba(var(--v-theme-primary), 0.3)'
+                : '')
+            "
           >
             <v-avatar class="mr-3" :size="28">
-              <v-img
-                :alt="item.userId"
-                :src="'/icon/' + item.userId"
-              ></v-img>
+              <v-img :alt="item.userId" :src="'/icon/' + item.userId"></v-img>
             </v-avatar>
             <p>{{ item.userName }}</p>
           </span>
@@ -331,10 +345,9 @@ onUnmounted(() => {
       rounded
       :disabled="!canISpeakHere"
       :placeholder="
-        canISpeakHere ?
-          props.channelInfo.channelName + ' へ送信'
-        :
-          'このチャンネルで話せません。'
+        canISpeakHere
+          ? props.channelInfo.channelName + ' へ送信'
+          : 'このチャンネルで話せません。'
       "
     />
   </div>
