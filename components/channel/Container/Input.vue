@@ -113,6 +113,7 @@ watch(messageInput, () => {
  */
 const canISpeakHere = computed((): boolean => {
   //もし配列が空なら話せると設定
+  //チャンネルに参加しているなら話せる
   if (props.channelInfo.speakableRole.length === 0) return true;
 
   //自分のロールに話せるロールが含まれるか調べてboolで結果を返す

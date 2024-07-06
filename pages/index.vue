@@ -10,45 +10,85 @@ const route = useRoute();
 
 <template>
   <!-- 新規登録ユーザー用 -->
-  <Welcome
-    v-if="route.query['firstTime']"
-    v-model="route.query['firstTime']"
-  />
+  <Welcome v-if="route.query['firstTime']" v-model="route.query['firstTime']" />
 
   <div class="header pa-5">
-    <h3 class="text-h3">
+    <h4 class="text-h4">
       {{ getServerinfo.servername }}
-    </h3>
+    </h4>
     <IndexOnlineUsers />
   </div>
   <div class="pa-5">
-    <div
-      class="text-h5"
-      style="font-weight:600;"
-    >ここがホーム</div>
-    <p>piniaデータ :</p>
-    <m-card>
-      <p>Serverinfo :</p>
-      <m-card variant="outlined">
-        {{ getServerinfo }}
-      </m-card>
-      <p>MyUserinfo :</p>
-      <m-card variant="outlined">
-        {{ getMyUserinfo }}
-      </m-card>
-      <p>セッションID :</p>
-      <m-card variant="outlined">
-        {{ getSessionId }}
-      </m-card>
-    </m-card>
+    <v-row>
+      <v-col>
+        <m-card class="mb-5">
+          <div
+            class="px-2 my-2"
+            style="font-weight: 600"
+            :style="{
+              'background-image':
+                'url(' + '/icon/' + getMyUserinfo.userId + ')',
+            }"
+          >
+            <v-avatar size="86" class="mr-3 mx-2">
+              <v-img
+                :alt="getMyUserinfo.userId"
+                :src="'/icon/' + getMyUserinfo.userId"
+              ></v-img>
+            </v-avatar>
+            <text class="algin-center ma-2 font-weight-black text-h5">
+              {{ getMyUserinfo.userName }}
+            </text>
+          </div>
+          <p>piniaデータ :</p>
+          <p>Serverinfo :</p>
+          <m-card variant="outlined">
+            {{ getServerinfo }}
+          </m-card>
+          <p>MyUserinfo :</p>
+          <m-card variant="outlined">
+            {{ getMyUserinfo }}
+          </m-card>
+          <p>セッションID :</p>
+          <m-card variant="outlined">
+            {{ getSessionId }}
+          </m-card>
+        </m-card>
+      </v-col>
+      <v-col>
+        <m-card>
+          <div class="text-h5 pa-2 border-b-lg" style="font-weight: 600">
+            Notification
+          </div>
+          <!-- mock -->
+        </m-card>
+      </v-col>
+      <v-col>
+        <m-card>
+          <div class="text-h5 pa-2 border-b-lg" style="font-weight: 600">
+            ここがホーム
+          </div>
+          <p>piniaデータ :</p>
+          <p>Serverinfo :</p>
+          <m-card variant="outlined">
+            {{ getServerinfo }}
+          </m-card>
+          <p>MyUserinfo :</p>
+          <m-card variant="outlined">
+            {{ getMyUserinfo }}
+          </m-card>
+          <p>セッションID :</p>
+          <m-card variant="outlined">
+            {{ getSessionId }}
+          </m-card>
+        </m-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <style scoped lang="css">
 .header {
   border-radius: 28px 0 0 28px;
-  min-height: 300px;
-  background-image: url(https://assets-fillet.girak.moe/thumbnail-42ebe2c7-bee2-442e-8b3a-53ac7991b0fa.webp);
-  background-size: cover;
 }
 </style>
