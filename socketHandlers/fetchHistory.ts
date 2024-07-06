@@ -37,12 +37,13 @@ export default function fetchHistory(socket:Socket):void {
       insertHistory(dat.data.channelId, []);
       setAvailability(dat.data.channelId, //履歴の位置データ
         {
-          atTop: true,
-          atEnd: true,
+          atTop: false,
+          atEnd: false,
           latestFetchedHistoryLength: 0
         }
       );
 
+      /*
       //履歴を一番下から再取得する
       const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
       socket.emit("fetchHistory", {
@@ -56,6 +57,7 @@ export default function fetchHistory(socket:Socket):void {
           fetchDirection: "older"
         }
       });
+      */
 
       return;
     }
