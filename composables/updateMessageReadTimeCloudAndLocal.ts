@@ -6,7 +6,16 @@ import { useMessageReadTime } from "~/stores/messageReadTime";
 export default function updateMessageReadTimeCloudAndLocal(channelId:string, dateString:string) {
   //最終既読時間をStoreにて更新
   //const { updateMessageReadId } = useMessageReadId();
-  const { updateMessageReadTime } = useMessageReadTime();
+  const { updateMessageReadTime, getMessageReadTime } = useMessageReadTime();
+
+  //今の既読時間と比較して更新する値が古いなら同期を停止
+    //今
+  const currentReadTime:number = new Date(getMessageReadTime(channelId)).valueOf();
+    //更新する予定の値
+  const newReadTime:number = new Date(dateString).valueOf();
+  if (newReadTime < currentReadTime) return;
+
+  //ローカルの既読時間更新させる
   updateMessageReadTime(
     channelId,
     dateString
