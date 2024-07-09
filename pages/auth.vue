@@ -168,6 +168,9 @@ const SOCKEtauthSession = (dat:{result:string, dat:boolean}) => {
   if (dat.result === "SUCCESS") {
     //ロード開始
     initialize(getMyUserinfo.value.userId, getSessionId.value);
+  } else {
+    //失敗ならクッキーでの認証中も考慮しロード中を解除
+    stateProcesingWithCookie.value = false;
   }
 };
 
