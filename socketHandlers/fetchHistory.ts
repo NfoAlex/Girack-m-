@@ -75,11 +75,14 @@ export default function fetchHistory(socket:Socket):void {
     );
     */
 
+    //今の履歴データの可用性取得
+    const historyAtTop = getHistoryAvailability(dat.data.channelId).atTop;
+    const historyAtEnd = getHistoryAvailability(dat.data.channelId).atEnd;
     //履歴の位置データ保存
     setAvailability(dat.data.channelId,
       { //falseの時のみ変更を適用する
-        atTop: dat.data.historyData.atTop,
-        atEnd: dat.data.historyData.atEnd,
+        atTop: historyAtTop===false ? dat.data.historyData.atTop : historyAtTop,
+        atEnd: historyAtEnd===false ? dat.data.historyData.atEnd : historyAtEnd,
         latestFetchedHistoryLength: dat.data.historyData.history.length
       }
     );
