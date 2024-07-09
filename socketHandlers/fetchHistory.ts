@@ -37,8 +37,8 @@ export default function fetchHistory(socket:Socket):void {
       insertHistory(dat.data.channelId, []);
       setAvailability(dat.data.channelId, //履歴の位置データ
         {
-          atTop: false,
-          atEnd: false,
+          atTop: true,
+          atEnd: true,
           latestFetchedHistoryLength: 0
         }
       );
