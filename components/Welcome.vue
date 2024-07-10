@@ -61,7 +61,7 @@ const testNotification = () => {
         </m-card>
       </v-card-body>
       <v-card-actions class="mt-auto">
-        <m-btn @click="page=2" variant="tonal">次へ</m-btn>
+        <m-btn @click="page=3" variant="tonal">次へ</m-btn>
       </v-card-actions>
     </m-card>
 
