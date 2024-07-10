@@ -3,6 +3,7 @@
 import { Socket } from "socket.io-client"; //クラス識別用
 import { useHistory } from "~/stores/history";
 import { useMyUserinfo } from "~/stores/userinfo";
+import { useConfig } from "~/stores/config";
 import { useMessageReadTime } from "~/stores/messageReadTime";
 import updateMessageReadTimeCloudAndLocal from "~/composables/updateMessageReadTimeCloudAndLocal";
 import { useWindowFocus, useDocumentVisibility } from '@vueuse/core'
@@ -56,8 +57,15 @@ export default function receiveMessage(socket: Socket): void {
 
         //もし自分宛てのメンションが入っているなら通知
         const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+        const { getConfig } = storeToRefs(useConfig());
         if (
-          message.content.includes("@<" + getMyUserinfo.value.userId + ">") //メンションが入っていて
+          getConfig.value.notification.notifyAllMessages //すべてで通知するか
+          ||
+          (
+            getConfig.value.notification.notifyMention //メンション通知が有効で
+            &&
+            message.content.includes("@<" + getMyUserinfo.value.userId + ">") //メンションが入っているなら
+          )
         ) {
           //もし通知イベントがすでに起きているなら閉じる
           try {
