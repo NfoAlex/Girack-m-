@@ -38,7 +38,6 @@ const testNotification = () => {
         <v-divider class="my-2" />
         <li>しゃべろう！</li>
       </v-card-body>
-      <v-card-actions class="mt-auto d-flex flex-row-reverse">
       <v-card-actions class="mt-auto">
         <m-btn @click="page=2" variant="tonal">次へ</m-btn>
       </v-card-actions>
