@@ -1,6 +1,5 @@
 export default interface Config {
   notification: {
-    enabled: boolean,
     notifyAllMessages: boolean,
     notifyMention: boolean
   },

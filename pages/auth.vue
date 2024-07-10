@@ -78,9 +78,6 @@ const initialize = (userId:string, sessionId:string) => {
   //ログイン状態を完了と設定
   getAppStatus.value.profile.authDone = true;
 
-  //メンション通知などのための通知許可取得
-  Notification.requestPermission();
-
   //オンラインユーザーリストを取得
   socket.emit("fetchOnlineUsers", {
     RequestSender: {

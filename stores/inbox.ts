@@ -8,9 +8,11 @@ export const useInbox = defineStore("inbox", {
     _Inbox: {
       "mention": {},
       "event": {}
-    }
+    },
+    _Notification: null
   } as {
     _Inbox: inbox;
+    _Notification: Notification | null
   }),
 
   getters: {

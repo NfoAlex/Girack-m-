@@ -54,6 +54,16 @@ watch(getConfig.value, () => {
             テーマ
           </v-card>
         </NuxtLink>
+        <NuxtLink to="/settings/notification">
+          <v-card
+            class="rounded-pill py-2 px-3 d-flex align-center"
+            :variant="$route.path==='/settings/notification'?'tonal':'text'"
+            :ripple="false"
+          >
+            <v-icon class="mr-2" size="small">mdi:mdi-bell</v-icon>
+            通知
+          </v-card>
+        </NuxtLink>
       </span>
 
       <!-- UIカテゴリ -->
