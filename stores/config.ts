@@ -8,7 +8,6 @@ export const useConfig = defineStore("config", {
     _SyncConfig: true,
     _Config: {
       notification: {
-        enabled: true,
         notifyAllMessages: false,
         notifyMention: true
       },
