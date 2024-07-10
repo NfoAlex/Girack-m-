@@ -57,7 +57,7 @@ const testNotification = () => {
         </m-btn>
 
         <m-card variant="outlined" class="text-center">
-          <p class="my-4">通知の許可状態 : {{ statusNotificationAllowed==='granted'?'許可!👍':'許可されていません...😑' }}</p>
+          <p class="my-3 text-h5">通知の許可状態 : {{ statusNotificationAllowed==='granted'?'許可!👍':'許可されていません...😑' }}</p>
         </m-card>
       </v-card-body>
       <v-card-actions class="mt-auto">
