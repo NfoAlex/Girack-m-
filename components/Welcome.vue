@@ -69,6 +69,7 @@ const testNotification = () => {
     <m-card v-if="page===3" height="100%" width="100%" class="pa-7">
       <v-card-body class="pt-5">
         <p class="text-center">早速チャンネルを探そう!</p>
+        <v-divider class="my-2" />
       </v-card-body>
       <v-card-actions class="mt-auto">
         <m-btn @click="router.push('/browser')" color="primary">行く！</m-btn>
