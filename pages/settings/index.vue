@@ -8,3 +8,9 @@ onMounted(() => {
 })
 
 </script>
+
+<template>
+  <div>
+    ロード中...
+  </div>
+</template>
