@@ -41,6 +41,7 @@ const updateMessage = () => {
     <v-textarea
       v-model="contentUpdating"
       variant="outlined"
+      :rows="contentUpdating.split('\n').length"
       autogrow
     />
     <m-card-compact
