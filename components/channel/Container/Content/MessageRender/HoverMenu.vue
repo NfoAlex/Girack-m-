@@ -100,6 +100,7 @@ const deleteIt = () => {
 
       <!-- 編集ボタン -->
       <v-btn
+        v-if="propsMessage.message.userId === getMyUserinfo.userId"
         @click="emits('enterEditing')"
         size="small"
         icon="mdi-pencil"
