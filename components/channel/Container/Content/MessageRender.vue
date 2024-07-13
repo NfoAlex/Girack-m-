@@ -117,6 +117,8 @@ onMounted(() => {
             v-else
             @leave-editing="stateEditingMessage = false"
             :content="message.content"
+            :channelId="message.channelId"
+            :messageId="message.messageId"
           />
 
           <!-- リンクプレビューレンダー -->
