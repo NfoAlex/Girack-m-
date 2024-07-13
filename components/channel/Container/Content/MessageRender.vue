@@ -111,7 +111,7 @@ onMounted(() => {
             </p>
           </span>
           
-          <!-- メッセージ文レンダー -->
+          <!-- メッセージ文レンダーあるいは編集枠 -->
           <TextRender v-if="!stateEditingMessage" :content="message.content" />
           <ContentEditing
             v-else

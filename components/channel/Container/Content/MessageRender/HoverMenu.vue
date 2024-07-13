@@ -89,6 +89,7 @@ const deleteIt = () => {
     >
       <p class="ml-2 text-disabled">{{ new Date(propsMessage.message.time).toLocaleString() }}</p>
 
+      <!-- リアクション用絵文字ウィンドウトグル -->
       <v-btn
         @click="displayEmojiPicker = !displayEmojiPicker;"
         size="small"
@@ -97,6 +98,7 @@ const deleteIt = () => {
         class="pa-2"
       />
 
+      <!-- 編集ボタン -->
       <v-btn
         @click="emits('enterEditing')"
         size="small"
