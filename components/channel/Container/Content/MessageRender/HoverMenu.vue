@@ -10,6 +10,8 @@ import "emoji-mart-vue-fast/css/emoji-mart.css";
 
 import type message from '~/types/message';
 
+const emits = defineEmits<{(e: 'enterEditing'): void}>();
+
 const pickerRef = ref(null);
 const { y } = useElementBounding(pickerRef);
 const { height } = useWindowSize();
@@ -96,6 +98,7 @@ const deleteIt = () => {
       />
 
       <v-btn
+        @click="emits('enterEditing')"
         size="small"
         icon="mdi-pencil"
         variant="text"

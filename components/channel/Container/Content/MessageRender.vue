@@ -7,6 +7,7 @@ import { useInbox } from '~/stores/inbox';
 import HoverMenu from './MessageRender/HoverMenu.vue';
 import EmojiRender from './MessageRender/EmojiRender.vue';
 import TextRender from './MessageRender/TextRender.vue';
+import ContentEditing from './MessageRender/ContentEditing.vue';
 import LinkPreview from './MessageRender/LinkPreview.vue';
 import type message from '~/types/message';
 
@@ -15,8 +16,12 @@ const { getUserinfo } = useUserIndex();
 const { getMessageReadTimeBefore } = storeToRefs(useMessageReadTime());
 const { getInbox } = storeToRefs(useInbox());
 
+/**
+ * data
+ */
 const userIdForDialog = ref<string>("");
 const displayUserpage = ref<boolean>(false);
+const stateEditingMessage = ref<boolean>(false);
 
 const propsMessage = defineProps<{
   message: message,
@@ -107,7 +112,12 @@ onMounted(() => {
           </span>
           
           <!-- メッセージ文レンダー -->
-          <TextRender :content="message.content" />
+          <TextRender v-if="!stateEditingMessage" :content="message.content" />
+          <ContentEditing
+            v-else
+            @leave-editing="stateEditingMessage = false"
+            :content="message.content"
+          />
 
           <!-- リンクプレビューレンダー -->
           <LinkPreview :linkData="message.linkData" />
@@ -151,7 +161,11 @@ onMounted(() => {
     </template>
 
     <!-- ホバーメニュー -->
-    <HoverMenu :message="propsMessage.message" style="width:fit-content;" />
+    <HoverMenu
+      :message="propsMessage.message"
+      @enter-editing="stateEditingMessage = true"
+      style="width:fit-content;"
+    />
 
   </v-menu>
 </template>
