@@ -38,12 +38,16 @@ const updateMessage = () => {
 <template>
   <div>
     <p>ここで編集する {{ propsMessage.channelId.toString() }}</p>
-    <v-textarea autogrow v-model="contentUpdating"></v-textarea>
+    <v-textarea
+      v-model="contentUpdating"
+      variant="outlined"
+      autogrow
+    />
     <m-card-compact
-      class="ml-auto d-flex flex-row justify-end py-1"
+      class="ml-auto mt-n3 d-flex flex-row justify-end py-1"
       color="sidebarBackground"
       width="fit-content"
-      style="position:sticky; bottom:0px; right:0;"
+      style="position:sticky; bottom:0; right:0;"
     >
       <m-btn
         @click="updateMessage"
