@@ -94,16 +94,13 @@ const deleteIt = () => {
         icon="mdi-emoticon-happy-outline"
         class="pa-2"
       />
-      
-      <!-- 
+
       <v-btn
-        @click=""
         size="small"
-        variant="text"
         icon="mdi-pencil"
+        variant="text"
         class="pa-2"
       />
-      -->
 
       <span
         v-if="getMyRolePower().MessageDelete || getMyUserinfo.userId === propsMessage.message.userId"
