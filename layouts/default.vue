@@ -124,7 +124,7 @@ const { getMentionNumTotal } = storeToRefs(useInbox());
               :color="$route.path.startsWith('/fileportal') ? 'primary' : ''"
               rounded="lg"
             >
-              <v-icon size="large">mdi:mdi-file-cloud</v-icon>
+              <v-icon size="large">mdi:mdi-folder</v-icon>
             </v-btn>
           </v-badge>
           <v-btn
@@ -134,7 +134,7 @@ const { getMentionNumTotal } = storeToRefs(useInbox());
             :color="$route.path.startsWith('/fileportal') ? 'primary' : ''"
             rounded="lg"
           >
-            <v-icon size="large">mdi:mdi-file-cloud</v-icon>
+            <v-icon size="large">mdi:mdi-folder</v-icon>
           </v-btn>
           <p
             class="text-caption text-center"
