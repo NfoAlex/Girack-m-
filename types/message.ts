@@ -2,6 +2,7 @@ export default interface message {
   messageId: string,
   channelId: string,
   userId: string,
+  isEdited: boolean,
   content: string,
   linkData: {
     [key: string]:

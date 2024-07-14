@@ -9,7 +9,7 @@ import MessageRender from './Content/MessageRender.vue';
 import type { channel } from '~/types/channel';
 import type message from '~/types/message';
 
-import { useElementVisibility, useScroll, useWindowFocus } from '@vueuse/core';
+import { useElementVisibility, useScroll, useWindowFocus, onKeyStroke } from '@vueuse/core';
 
 //スクロール位置取得用
 const ChannelContainerContent = ref<HTMLElement | null>(null);
@@ -40,6 +40,7 @@ const latestMessageAnchor = ref(null); //最新メッセージ要素監視用
 const atLatestMessage = useElementVisibility(latestMessageAnchor); //最終メッセージを見ているかどうか
 
 const stateLoaded = ref<boolean>(false); //履歴や処理準備ができたかどうか
+const messageIdEditing = ref<string>(""); //編集をするメッセージのId
 
 /**
  * 古い履歴の追加取得
@@ -535,6 +536,30 @@ onMounted(() => {
       updateMessageReadTimeBefore(channelBefore);
     }
 
+    //編集に入る用の上キー監視
+    onKeyStroke('ArrowUp', (e) => {
+      //編集中なら停止
+      if (messageIdEditing.value !== "") return;
+      //入力欄の要素取得、nullなら停止
+      const elInput = document.getElementById("elInput");
+      if (elInput === null) return;
+
+      //もしカーソル位置が最初にあるなら編集に入る
+      if (elInput.selectionStart === 0) {
+        //console.log("Content :: onMounted : 編集に入ります");
+
+        //履歴データをループして最新の自分のメッセージIdを探す
+        for (let message of getHistoryFromChannel(props.channelInfo.channelId)) {
+          if (message.userId === getMyUserinfo.value.userId) {
+            //console.log("一番最後の自分のメッセ", message.messageId);
+            //編集するメッセージIdへ格納
+            messageIdEditing.value = message.messageId;
+            break;
+          }
+        }
+      }
+    });
+
     //ロードできたと設定
     stateLoaded.value = true;
 
@@ -602,6 +627,8 @@ onBeforeUnmount(() => {
           <MessageRender
             :message="message"
             :index
+            :editThisMessage="messageIdEditing === message.messageId"
+            @leaveEditingParent="messageIdEditing = ''"
             :borderClass="calculateMessageBorder(index)"
           />
         </span>
@@ -609,6 +636,8 @@ onBeforeUnmount(() => {
           <MessageRender
             :message="message"
             :index
+            :editThisMessage="messageIdEditing === message.messageId"
+            @leaveEditingParent="messageIdEditing = ''"
             :borderClass="calculateMessageBorder(index)"
           />
         </span>

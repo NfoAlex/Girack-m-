@@ -331,6 +331,7 @@ onUnmounted(() => {
     </m-card>
     <v-textarea
       v-model="messageInput"
+      id="elInput"
       @keydown.enter.prevent="triggerEnter"
       @keydown.up="triggerUp"
       @keydown.down="triggerDown"

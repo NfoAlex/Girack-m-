@@ -7,6 +7,7 @@ import { useInbox } from '~/stores/inbox';
 import HoverMenu from './MessageRender/HoverMenu.vue';
 import EmojiRender from './MessageRender/EmojiRender.vue';
 import TextRender from './MessageRender/TextRender.vue';
+import ContentEditing from './MessageRender/ContentEditing.vue';
 import LinkPreview from './MessageRender/LinkPreview.vue';
 import type message from '~/types/message';
 
@@ -15,12 +16,19 @@ const { getUserinfo } = useUserIndex();
 const { getMessageReadTimeBefore } = storeToRefs(useMessageReadTime());
 const { getInbox } = storeToRefs(useInbox());
 
+/**
+ * data
+ */
 const userIdForDialog = ref<string>("");
 const displayUserpage = ref<boolean>(false);
+const stateEditingMessage = ref<boolean>(false);
+
+const emits = defineEmits<{(e: 'leaveEditingParent'): void}>();
 
 const propsMessage = defineProps<{
   message: message,
   index: number,
+  editThisMessage: boolean,
   borderClass: string,
 }>();
 
@@ -106,8 +114,18 @@ onMounted(() => {
             </p>
           </span>
           
-          <!-- メッセージ文レンダー -->
-          <TextRender :content="message.content" />
+          <!-- メッセージ文レンダーあるいは編集枠 -->
+          <TextRender v-if="!stateEditingMessage && !propsMessage.editThisMessage" :content="message.content" />
+          <ContentEditing
+            v-else
+            @leave-editing="stateEditingMessage=false; emits('leaveEditingParent');"
+            :content="message.content"
+            :channelId="message.channelId"
+            :messageId="message.messageId"
+          />
+
+          <!-- メッセージが編集されたものだった時の表示 -->
+          <span v-if="message.isEdited && !stateEditingMessage" class="text-disabled text-subtitle-2">編集済み</span>
 
           <!-- リンクプレビューレンダー -->
           <LinkPreview :linkData="message.linkData" />
@@ -151,7 +169,11 @@ onMounted(() => {
     </template>
 
     <!-- ホバーメニュー -->
-    <HoverMenu :message="propsMessage.message" style="width:fit-content;" />
+    <HoverMenu
+      :message="propsMessage.message"
+      @enter-editing="stateEditingMessage = true"
+      style="width:fit-content;"
+    />
 
   </v-menu>
 </template>

@@ -10,6 +10,8 @@ import "emoji-mart-vue-fast/css/emoji-mart.css";
 
 import type message from '~/types/message';
 
+const emits = defineEmits<{(e: 'enterEditing'): void}>();
+
 const pickerRef = ref(null);
 const { y } = useElementBounding(pickerRef);
 const { height } = useWindowSize();
@@ -87,6 +89,7 @@ const deleteIt = () => {
     >
       <p class="ml-2 text-disabled">{{ new Date(propsMessage.message.time).toLocaleString() }}</p>
 
+      <!-- リアクション用絵文字ウィンドウトグル -->
       <v-btn
         @click="displayEmojiPicker = !displayEmojiPicker;"
         size="small"
@@ -94,16 +97,16 @@ const deleteIt = () => {
         icon="mdi-emoticon-happy-outline"
         class="pa-2"
       />
-      
-      <!-- 
+
+      <!-- 編集ボタン -->
       <v-btn
-        @click=""
+        v-if="propsMessage.message.userId === getMyUserinfo.userId"
+        @click="emits('enterEditing')"
         size="small"
-        variant="text"
         icon="mdi-pencil"
+        variant="text"
         class="pa-2"
       />
-      -->
 
       <span
         v-if="getMyRolePower().MessageDelete || getMyUserinfo.userId === propsMessage.message.userId"
