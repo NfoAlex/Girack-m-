@@ -6,7 +6,7 @@ import type message from "~/types/message";
 
 export default function updateMessage(socket: Socket): void {
 
-  //WSからの切断を検知
+  //メッセージの更新受け取り
   socket.on("updateMessage", (dat:{result:string, data:message}
   ) => {
     //console.log("updateMessage :: dat->", dat);
