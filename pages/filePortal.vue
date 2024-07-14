@@ -46,17 +46,19 @@ const fileInput = () => {
  * ファイルをアップロードする
  */
 const uploadFiles = async () => {
+  const RequestSenderInString = JSON.stringify({
+      userId: getMyUserinfo.value.userId,
+      //sessionId: getSessionId.value
+      sessionId: "asdf"
+    });
 
   for (let fileIndex in fileItems.value) {
     //アップロードするデータフォームオブジェクト生成
     const formData = new FormData();
+    // JSONデータを文字列に変換して追加
+    formData.append('metadata', RequestSenderInString);
     //ファイルそのものを内包
     formData.append('file', fileItems.value[fileIndex]);
-    // JSONデータを文字列に変換して追加
-    formData.append('metadata', JSON.stringify({
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }));
 
     //ファイルをアップロード(結果はHTTPリスポンス)
     const result:Response|void = await fetch('/uploadfile', {
