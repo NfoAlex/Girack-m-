@@ -222,6 +222,7 @@ const ContentRenderParsed = defineComponent({
 
 //メッセージ本文の変更検知したときもパース処理する
 watch(props, () => {
+  MessageRenderingFinal.value = [];
   parseVNode();
 });
 
