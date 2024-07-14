@@ -551,7 +551,7 @@ onMounted(() => {
         //履歴データをループして最新の自分のメッセージIdを探す
         for (let message of getHistoryFromChannel(props.channelInfo.channelId)) {
           if (message.userId === getMyUserinfo.value.userId) {
-            console.log("一番最後の自分のメッセ", message.messageId);
+            //console.log("一番最後の自分のメッセ", message.messageId);
             //編集するメッセージIdへ格納
             messageIdEditing.value = message.messageId;
             break;
