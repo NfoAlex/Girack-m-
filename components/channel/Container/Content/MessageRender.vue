@@ -122,7 +122,7 @@ onMounted(() => {
           />
 
           <!-- メッセージが編集されたものだった時の表示 -->
-          <span v-if="message.isEdited" class="text-disabled text-subtitle-2">編集済み</span>
+          <span v-if="message.isEdited && !stateEditingMessage" class="text-disabled text-subtitle-2">編集済み</span>
 
           <!-- リンクプレビューレンダー -->
           <LinkPreview :linkData="message.linkData" />
