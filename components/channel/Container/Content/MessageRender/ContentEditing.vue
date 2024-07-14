@@ -33,12 +33,34 @@ const updateMessage = () => {
   emits("leaveEditing");
 }
 
+/**
+ * Enterキー処理
+ */
+const triggerEnter = (event:KeyboardEvent) => {
+  //MacのIME入力中はEnterを無視
+  // 229はMacのIME入力中のキーコードです非推奨ですが、現状これで対応しています
+  if (
+    navigator.userAgent.toUpperCase().indexOf("MAC") >= 0 &&
+    event.keyCode === 229
+  ) {
+    return;
+  }
+
+  //Shiftキーが押されていたら停止
+  if (event.shiftKey) return;
+
+  //メッセージを更新する
+  updateMessage();
+}
+
 </script>
 
 <template>
   <div>
     <v-textarea
       v-model="contentUpdating"
+      @keydown.esc="emits('leaveEditing')"
+      @keydown.enter="triggerEnter"
       variant="outlined"
       :rows="contentUpdating.split('\n').length"
       autogrow
