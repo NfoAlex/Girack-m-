@@ -42,6 +42,7 @@ const updateMessage = () => {
       variant="outlined"
       :rows="contentUpdating.split('\n').length"
       autogrow
+      autofocus
     />
     <m-card-compact
       class="ml-auto mt-n3 d-flex flex-row justify-end py-1"

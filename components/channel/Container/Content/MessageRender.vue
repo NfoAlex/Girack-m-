@@ -23,9 +23,12 @@ const userIdForDialog = ref<string>("");
 const displayUserpage = ref<boolean>(false);
 const stateEditingMessage = ref<boolean>(false);
 
+const emits = defineEmits<{(e: 'leaveEditingParent'): void}>();
+
 const propsMessage = defineProps<{
   message: message,
   index: number,
+  editThisMessage: boolean,
   borderClass: string,
 }>();
 
@@ -112,10 +115,10 @@ onMounted(() => {
           </span>
           
           <!-- メッセージ文レンダーあるいは編集枠 -->
-          <TextRender v-if="!stateEditingMessage" :content="message.content" />
+          <TextRender v-if="!stateEditingMessage && !propsMessage.editThisMessage" :content="message.content" />
           <ContentEditing
             v-else
-            @leave-editing="stateEditingMessage = false"
+            @leave-editing="stateEditingMessage=false; emits('leaveEditingParent');"
             :content="message.content"
             :channelId="message.channelId"
             :messageId="message.messageId"
