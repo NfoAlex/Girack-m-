@@ -109,6 +109,42 @@ const { getMentionNumTotal } = storeToRefs(useInbox());
         </NuxtLink>
       </span>
 
+      <!-- ファイルポータルボタン -->
+      <span class="mt-4">
+        <NuxtLink to="/fileportal">
+          <v-badge
+            v-if="getThereIsNewMessage"
+            :dot="getMentionNumTotal===0"
+            :content="getMentionNumTotal!==0 ? getMentionNumTotal : undefined"
+            :color="getMentionNumTotal!==0 ? 'error' : 'primary'"
+          >
+            <v-btn
+              icon=""
+              :variant="$route.path.startsWith('/fileportal') ? 'tonal' : 'text'"
+              :color="$route.path.startsWith('/fileportal') ? 'primary' : ''"
+              rounded="lg"
+            >
+              <v-icon size="large">mdi:mdi-file-cloud</v-icon>
+            </v-btn>
+          </v-badge>
+          <v-btn
+            v-else
+            icon=""
+            :variant="$route.path.startsWith('/fileportal') ? 'tonal' : 'text'"
+            :color="$route.path.startsWith('/fileportal') ? 'primary' : ''"
+            rounded="lg"
+          >
+            <v-icon size="large">mdi:mdi-file-cloud</v-icon>
+          </v-btn>
+          <p
+            class="text-caption text-center"
+            :class="$route.path.startsWith('/fileportal') ? 'text-primary' : null"
+          >
+            ファイル
+          </p>
+        </NuxtLink>
+      </span>
+
       <!-- ------ ここから下 ----- -->
 
       <v-divider class="mt-auto"></v-divider>
