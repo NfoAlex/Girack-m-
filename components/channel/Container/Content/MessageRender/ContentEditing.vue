@@ -30,8 +30,6 @@ const updateMessage = () => {
     contentUpdating: contentUpdating.value
   });
 
-  //メッセージ入力欄へフォーカスを戻す
-  document.getElementById("elInput")?.focus();
   //編集から抜け出す(親にて)
   emits("leaveEditing");
 }
@@ -53,9 +51,16 @@ const triggerEnter = (event:KeyboardEvent) => {
   if (event.shiftKey) return;
   //Enterキーによる改行を止める
   event.preventDefault();
+  //メッセージ入力欄へフォーカスを戻す
+  document.getElementById("elInput")?.focus();
 
-  //メッセージを更新する
-  updateMessage();
+  //編集内容が違ったらメッセージを更新する
+  if (contentUpdating.value !== propsMessage.content) {
+    updateMessage();
+  } else {
+    //内容が一緒ならシンプルに停止
+    emits('leaveEditing');
+  }
 }
 
 </script>
