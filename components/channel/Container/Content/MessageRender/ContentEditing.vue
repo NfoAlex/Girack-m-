@@ -52,6 +52,7 @@ const updateMessage = () => {
     >
       <m-btn
         @click="updateMessage"
+        :disabled="contentUpdating === ''"
         variant="text"
         icon="mdi-check"
         size="small"
