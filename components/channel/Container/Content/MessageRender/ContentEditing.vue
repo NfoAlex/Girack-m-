@@ -37,7 +37,6 @@ const updateMessage = () => {
 
 <template>
   <div>
-    <p>ここで編集する {{ propsMessage.channelId.toString() }}</p>
     <v-textarea
       v-model="contentUpdating"
       variant="outlined"
