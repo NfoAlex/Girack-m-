@@ -33,6 +33,7 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/uploadProfileIcon': { cors:true },
+    '/uploadfile': { cors:true },
     '/server/**': { ssr:false }
   },
   //ここでプロキシ適用(なぜかエラー扱い)

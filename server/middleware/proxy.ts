@@ -29,7 +29,8 @@ export default defineEventHandler(async (event) => {
   const apiPaths:string[] = [
     '/socket.io',
     '/icon',
-    '/uploadProfileIcon'
+    '/uploadProfileIcon',
+    '/uploadfile'
   ];
   
   // APIのパスと指定したもの以外は処理を止める止めないと他のパスに影響が出る
