@@ -31,14 +31,14 @@ import removeFromUserInbox from "./removeFromUserInbox";
 import fetchRoles from "./fetchRoles";
 import fetchRoleSingle from "./fetchRoleSingle";
 
-import EventEmitter from 'events';
+import EventEmitter from "events";
 EventEmitter.defaultMaxListeners = 25; // 新しいリスナーの上限を25に設定
 
 console.log("socketInit :: INITIALIZED");
 
 //Socket接続
-export const socket:Socket = io({
-  path: "/socket.io",
+export const socket: Socket = io("http://localhost:33333", {
+  withCredentials: true,
   reconnection: true,
   reconnectionDelay: 100,
   reconnectionDelayMax: 1000,
