@@ -13,13 +13,30 @@ const fileSelected =ref<file[]>([]);
 
 const header = [
   { title: 'ファイル名', value:'name' },
-  { title: 'サイズ (MB)', key:"size", value: (item: file) => (item.size / (1024 * 1024)).toFixed(2) + ' MB' },  // サイズをMB単位で表示
+  { title: 'サイズ', key:"size", value: (item: file) => convertToHumanSize(item.size) },  // サイズをMB単位で表示
   { title: 'アップロード日時', key:"uploadedDate", value: (item: file) => new Date(item.uploadedDate).toLocaleString() },  // 日付をフォーマットして表示
 ];
 
 const fileItems = ref<any[]>([]);
 const elFileInput = ref(null); //入力欄要素を取得するためのref
 const displayUpload = ref<boolean>(false);
+
+/**
+ * ファイル容量を単位表示に
+ * @param fileSize 
+ */
+const convertToHumanSize = (fileSize:number) => {
+  let sizeCalculated = fileSize;
+  let level = 0;
+  let sizeDisplay = ['B', 'KB', 'MB', 'GB', 'TB']
+
+  while (sizeCalculated > 1024) {
+    sizeCalculated = sizeCalculated / 1024;
+    level++;
+  }
+  
+  return Math.floor(sizeCalculated) + sizeDisplay[level];
+}
 
 /**
  * ファイルの入力を受け取る
