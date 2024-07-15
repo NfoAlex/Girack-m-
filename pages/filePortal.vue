@@ -9,7 +9,7 @@ import type { file } from '~/types/file';
  * data
  */
 const fileIndex = ref<file[]>([]);
-const fileSelected =ref<file[]>([]);
+const fileIdSelected =ref<string[]>([]);
 
 const header = [
   { title: 'ファイル名', value:'name' },
@@ -101,14 +101,12 @@ const uploadFiles = async () => {
   }
 
   //ファイルインデックスを取り直す
-  //ファイルインデックスを取得
   socket.emit("fetchFileIndex", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
       sessionId: getSessionId.value
     }
   });
-
 }
 
 /**
@@ -117,6 +115,22 @@ const uploadFiles = async () => {
 const clickUpload = () => {
   if (elFileInput !== null) {
     document.getElementById("elFileInput")?.click();
+  }
+}
+
+/**
+ * 選択したファイルを削除する
+ */
+const deleteSelectedFile = () => {
+  for (let fileId of fileIdSelected.value) {
+    console.log("filePortal :: deleteSelectedFile : 消そうとしているファイル->", fileId);
+    socket.emit("deleteFile", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      fileId: fileId
+    });
   }
 }
 
@@ -132,8 +146,26 @@ const SOCKETfetchFileIndex = (dat:{result:string, data:file[]}) => {
   }
 }
 
+/**
+ * ファイルインデックス受け取り
+ * @param dat 
+ */
+const SOCKETdeleteFile = (dat:{result:string, data:null}) => {
+  console.log("deleteFile :: dat->", dat);
+  if (dat.result === "SUCCESS") {
+    //ファイルインデックスを取り直す
+    socket.emit("fetchFileIndex", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      }
+    });
+  }
+}
+
 onMounted(() => {
   socket.on("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
+  socket.on("RESULT::deleteFile", SOCKETdeleteFile);
 
   //ファイルインデックスを取得
   socket.emit("fetchFileIndex", {
@@ -146,6 +178,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
+  socket.off("RESULT::deleteFile", SOCKETdeleteFile);
 });
 
 </script>
@@ -184,15 +217,16 @@ onUnmounted(() => {
     <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
 
     <m-card class="mt-3">
-      <div class="my-2">
+      <div class="my-2 d-flex align-center">
         <v-icon>mdi-plus</v-icon>
         asdf
+        <m-btn @click="deleteSelectedFile" class="mx-2">削除する</m-btn>
       </div>
 
       <v-data-table
-        v-model="fileSelected"
+        v-model="fileIdSelected"
         :items="fileIndex"
-        item-value="name"
+        item-value="id"
         :headers="header"
         show-select
       ></v-data-table>
