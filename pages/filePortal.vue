@@ -3,9 +3,20 @@ import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
+import type { file } from '~/types/file';
+
 /**
  * data
  */
+const fileIndex = ref<file[]>([]);
+const fileSelected =ref<file[]>([]);
+
+const header = [
+  { title: 'ファイル名', value: 'name' },
+  { title: 'サイズ', value: 'size' },
+  { title: 'アップロード日時', value: 'uploadedDate' },
+];
+
 const fileItems = ref<any[]>([]);
 const elFileInput = ref(null); //入力欄要素を取得するためのref
 const displayUpload = ref<boolean>(false);
@@ -72,6 +83,15 @@ const uploadFiles = async () => {
     console.log("filePortal :: uploadFiles(/uploadfile) : result->", result);
   }
 
+  //ファイルインデックスを取り直す
+  //ファイルインデックスを取得
+  socket.emit("fetchFileIndex", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    }
+  });
+
 }
 
 /**
@@ -83,9 +103,38 @@ const clickUpload = () => {
   }
 }
 
+/**
+ * ファイルインデックス受け取り
+ * @param dat 
+ */
+const SOCKETfetchFileIndex = (dat:{result:string, data:file[]}) => {
+  console.log("filePortal :: dat->", dat);
+  //成功ならファイルインデックスを格納
+  if (dat.result === "SUCCESS") {
+    fileIndex.value = dat.data;
+  }
+}
+
+onMounted(() => {
+  socket.on("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
+
+  //ファイルインデックスを取得
+  socket.emit("fetchFileIndex", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    }
+  });
+});
+
+onUnmounted(() => {
+  socket.off("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
+});
+
 </script>
 
 <template>
+  <!-- ファイルアップロード用 -->
   <v-dialog
     v-model="displayUpload"
     style="max-width: 750px; width: 85vw"
@@ -116,6 +165,22 @@ const clickUpload = () => {
       >ファイルポータル</p>
     </span>
     <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
+
+    <m-card class="mt-3">
+      <div class="my-2">
+        <v-icon>mdi-plus</v-icon>
+        asdf
+      </div>
+
+      <v-data-table
+        v-model="fileSelected"
+        :items="fileIndex"
+        item-value="name"
+        :headers="header"
+        show-select
+      ></v-data-table>
+    </m-card>
+
   </div>
 
   <!-- ファイル受け取り部分(非表示) -->
