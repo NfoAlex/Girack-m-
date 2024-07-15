@@ -12,9 +12,9 @@ const fileIndex = ref<file[]>([]);
 const fileSelected =ref<file[]>([]);
 
 const header = [
-  { title: 'ファイル名', value: 'name' },
-  { title: 'サイズ', value: 'size' },
-  { title: 'アップロード日時', value: 'uploadedDate' },
+  { title: 'ファイル名', value:'name' },
+  { title: 'サイズ (MB)', key:"size", value: (item: file) => (item.size / (1024 * 1024)).toFixed(2) + ' MB' },  // サイズをMB単位で表示
+  { title: 'アップロード日時', key:"uploadedDate", value: (item: file) => new Date(item.uploadedDate).toLocaleString() },  // 日付をフォーマットして表示
 ];
 
 const fileItems = ref<any[]>([]);
