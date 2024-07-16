@@ -61,12 +61,17 @@ onMounted(() => {
       userId: cookieLoaded.userId,
       sessionId: cookieLoaded.sessionId
     }
+    //ファイル情報取得
+    socket.emit("fetchFileInfo", {
+      RequestSender: RequestSenderLoaded,
+      fileId: route.params.id
+    });
+  } else {
+    //ファイル情報取得
+    socket.emit("fetchFileInfo", {
+      fileId: route.params.id
+    });
   }
-
-  socket.emit("fetchFileInfo", {
-    RequestSender: RequestSenderLoaded,
-    fileId: route.params.id
-  });
 });
 
 onUnmounted(() => {
