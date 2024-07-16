@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
+import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
 import { useMyUserinfo } from '~/stores/userinfo';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -15,27 +16,10 @@ const fileItems = ref<any[]>([]);
 const elFileInput = ref(null); //入力欄要素を取得するためのref
 const displayUpload = ref<boolean>(false);
 
-/**
- * ファイル容量を単位表示に
- * @param fileSize 
- */
-const convertToHumanSize = (fileSize:number) => {
-  let sizeCalculated = fileSize;
-  let level = 0;
-  let sizeDisplay = ['B', 'KB', 'MB', 'GB', 'TB']
-
-  while (sizeCalculated > 1024) {
-    sizeCalculated = sizeCalculated / 1024;
-    level++;
-  }
-  
-  return Math.floor(sizeCalculated) + sizeDisplay[level];
-}
-
 //ファイルインデックス表示ヘッダ
 const header = [
   { title: 'ファイル名', value:'name' },
-  { title: 'サイズ', key:"size", value: (item: file) => convertToHumanSize(item.size) },  // サイズを単位で表示
+  { title: 'サイズ', key:"size", value: (item: file) => calcSizeInHumanFormat(item.size) },  // サイズを単位で表示
   { title: 'アップロード日時', key:"uploadedDate", value: (item: file) => new Date(item.uploadedDate).toLocaleString() },  // 日付をフォーマットして表示
 ];
 

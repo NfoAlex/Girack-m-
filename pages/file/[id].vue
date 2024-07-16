@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
+import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
 import { useServerinfo } from '~/stores/serverinfo';
 import type { file } from '~/types/file';
 
@@ -103,7 +104,7 @@ onUnmounted(() => {
       >
         <p class="text-h5 text-center mb-3">{{ fileData.name }}</p>
         <span class="d-flex justify-space-evenly align-center">
-          <v-chip>{{ fileData.size }}</v-chip>
+          <v-chip>{{ calcSizeInHumanFormat(fileData.size) }}</v-chip>
           <v-icon color="gray">mdi-circle-small</v-icon>
           <span class="d-flex align-center">
             <p class="mr-1">日時 :  </p>
