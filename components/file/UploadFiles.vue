@@ -45,7 +45,7 @@ const elFileInput = ref(null); //入力欄要素を取得するためのref
 /**
  * ファイルをアップロードする
  */
-const uploadFiles = async () => {
+const _uploadFiles = async () => {
   //送信者情報の文字列化したもの
   const RequestSenderInString = JSON.stringify({
     userId: getMyUserinfo.value.userId,
@@ -81,13 +81,55 @@ const uploadFiles = async () => {
   });
 }
 
-/**
- * アップロード画面を呼び出し
- */
-const clickUpload = () => {
-  if (elFileInput !== null) {
-    document.getElementById("elFileInput")?.click();
+const uploadFiles = async () => {
+  //送信者情報の文字列化したもの
+  const RequestSenderInString = JSON.stringify({
+    userId: getMyUserinfo.value.userId,
+    sessionId: getSessionId.value
+  });
+
+  for (let fileIndex in fileItems.value) {
+    //アップロードするデータフォームオブジェクト生成
+    const formData = new FormData();
+    //送信者情報を付与
+    formData.append('metadata', RequestSenderInString);
+    //ファイルそのものを内包
+    formData.append('file', fileItems.value[fileIndex]);
+
+    //アップロード用のXHRインスタンス
+    const xhr = new XMLHttpRequest();
+    //アップロード状況追跡用
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) {
+        console.log(
+          "UploadFiles :: アップロード状況->",
+          Math.round((event.loaded / event.total) * 100)
+        );
+      }
+    });
+
+    //アップロードの結果表示用
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) {
+        console.log('UploadFiles :: 成功!->', xhr.responseText)
+      } else {
+        console.error('UploadFiles :: 失敗...->', xhr.statusText)
+      }
+    });
+
+    //アップロード先のURLを指定
+    xhr.open('POST', '/fileupload');
+    //アップロードする
+    xhr.send(formData);
   }
+
+  //ファイルインデックスを取り直す
+  socket.emit("fetchFileIndex", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    }
+  });
 }
 
 onMounted(() => {
