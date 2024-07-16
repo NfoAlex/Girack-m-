@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
+import SwitchTheme from '~/components/file/SwitchTheme.vue';
 import { useServerinfo } from '~/stores/serverinfo';
 import type { file } from '~/types/file';
 
@@ -120,15 +121,21 @@ onUnmounted(() => {
         </m-btn>
       </m-card>
 
-      <m-card v-if="fetchResult!=='SUCCESS' && fetchResult!==''" class="text-center" color="messageHovered">
+      <m-card
+        v-if="fetchResult!=='SUCCESS' && fetchResult!==''"
+        class="text-center my-auto"
+        color="messageHovered"
+      >
         <p>エラー :: {{ fetchResult }}</p>
       </m-card>
 
-    </v-container>
+      <m-card color="messageHovered" class="mx-auto d-flex align-center" style="width:500px;">
+        <p class="text-h6">{{ getServerinfo.servername }}</p>
+        <!-- テーマ切り替えようボタン -->
+        <SwitchTheme class="ml-auto" />
+      </m-card>
 
-    <m-card color="messageHovered" class="mx-auto d-flex">
-      <p>{{ getServerinfo.servername }}</p>
-    </m-card>
+    </v-container>
 
   </div>
 </template>
