@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
+import UploadFiles from '~/components/file/UploadFiles.vue';
 import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
 import { useMyUserinfo } from '~/stores/userinfo';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -171,25 +172,11 @@ onUnmounted(() => {
 <template>
   <!-- ファイルアップロード用 -->
   <v-dialog
+    v-if="displayUpload"
     v-model="displayUpload"
     style="max-width: 750px; width: 85vw"
   >
-    <m-card>
-      <v-card-title>
-        ファイルアップロード
-      </v-card-title>
-      <v-card-text>
-        ファイルをアップロードします
-      </v-card-text>
-      <v-card-actions>
-        <m-btn
-          @click="uploadFiles"
-          color="primary"
-        >
-          アップロードする
-        </m-btn>
-      </v-card-actions>
-    </m-card>
+    <upload-files />
   </v-dialog>
 
   <div class="pt-5 px-5 d-flex flex-column" style="height:100%;">
