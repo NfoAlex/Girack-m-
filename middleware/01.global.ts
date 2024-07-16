@@ -11,7 +11,7 @@ export default defineNuxtRouteMiddleware((to) => {
     (
       to.path !== "/auth"
       &&
-      !to.path.startsWith("/file")
+      !to.path.startsWith("/file/")
     )
     &&
     !getAppStatus.value.profile.authDone
