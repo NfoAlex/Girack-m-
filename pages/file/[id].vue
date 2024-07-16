@@ -89,6 +89,7 @@ onUnmounted(() => {
       style="max-width:500px; height:100vh;"
     >
 
+      <!-- ロード中表示 -->
       <m-card
         v-if="fetchResult === ''"
         style="width:100%;"
@@ -97,6 +98,7 @@ onUnmounted(() => {
         <p class="text-center text-disabled">ファイル取得中...</p>
       </m-card>
 
+      <!-- ファイル情報表示 -->
       <m-card
         v-if="fetchResult === 'SUCCESS'"
         class="my-auto my-3"
@@ -121,6 +123,7 @@ onUnmounted(() => {
         </m-btn>
       </m-card>
 
+      <!-- エラー表示用 -->
       <m-card
         v-if="fetchResult!=='SUCCESS' && fetchResult!==''"
         class="text-center my-auto"
@@ -129,6 +132,7 @@ onUnmounted(() => {
         <p>エラー :: {{ fetchResult }}</p>
       </m-card>
 
+      <!-- フッター -->
       <m-card color="messageHovered" class="mx-auto d-flex align-center" style="width:500px;">
         <p class="text-h6">{{ getServerinfo.servername }}</p>
         <!-- テーマ切り替えようボタン -->
