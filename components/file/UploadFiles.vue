@@ -9,7 +9,7 @@ import type { file } from '~/types/file';
  * data
  */
 
-const fileItems = ref<any[]>([]);
+const fileItems = ref<File[]>([]);
 const elFileInput = ref(null); //入力欄要素を取得するためのref
 
 /**
@@ -45,7 +45,7 @@ const elFileInput = ref(null); //入力欄要素を取得するためのref
 /**
  * ファイルをアップロードする
  */
- const uploadFiles = async () => {
+const uploadFiles = async () => {
   //送信者情報の文字列化したもの
   const RequestSenderInString = JSON.stringify({
     userId: getMyUserinfo.value.userId,
@@ -104,7 +104,9 @@ onMounted(() => {
     </v-card-title>
     <v-card-text>
       ファイルをアップロードします
-      
+      <m-card v-for="file of fileItems" variant="outlined">
+        {{ file.name }}
+      </m-card>
     </v-card-text>
     <v-card-actions>
       <m-btn
