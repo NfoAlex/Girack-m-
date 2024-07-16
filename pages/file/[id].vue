@@ -49,11 +49,22 @@ onMounted(() => {
 
   socket.on("RESULT::fetchFileInfo", SOCKETfetchFileInfo);
 
+  //送信者情報格納用
+  let RequestSenderLoaded = {userId:"", sessionId:""};
+
+  //クッキーからセッションデータを取得、格納
+  const cookieLoaded = useCookie("session").value;
+  //クッキーの値が有効なら格納、VueUseのアレでエラーが出るが値はJSONで帰ってくる
+  if (cookieLoaded !== undefined) {
+    //送信者情報を格納
+    RequestSenderLoaded = {
+      userId: cookieLoaded.userId,
+      sessionId: cookieLoaded.sessionId
+    }
+  }
+
   socket.emit("fetchFileInfo", {
-    RequestSender: {
-      userId: "ANONYMOUS",
-      sessionId: "ANONYMOUS"
-    },
+    RequestSender: RequestSenderLoaded,
     fileId: route.params.id
   });
 });
@@ -72,7 +83,15 @@ onUnmounted(() => {
     >
 
       <m-card
-        v-if="fetchResult !== 'ERROR_FILE_MISSING'"
+        v-if="fetchResult === ''"
+        style="width:100%;"
+        loading
+      >
+        <p class="text-center text-disabled">ファイル取得中...</p>
+      </m-card>
+
+      <m-card
+        v-if="fetchResult === 'SUCCESS'"
         class="my-auto my-3"
         color="messageHovered"
         style="width:100%;"
@@ -92,8 +111,8 @@ onUnmounted(() => {
         </m-btn>
       </m-card>
 
-      <m-card v-else class="text-center" color="messageHovered">
-        <p>ファイルが見つかりませんでした。</p>
+      <m-card v-if="fetchResult!=='SUCCESS' && fetchResult!==''" class="text-center" color="messageHovered">
+        <p>エラー :: {{ fetchResult }}</p>
       </m-card>
 
     </v-container>
