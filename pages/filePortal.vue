@@ -14,7 +14,6 @@ const fileIndex = ref<file[]>([]);
 const fileIdSelected =ref<string[]>([]);
 
 const fileItems = ref<any[]>([]);
-const elFileInput = ref(null); //入力欄要素を取得するためのref
 const displayUpload = ref<boolean>(false);
 
 //ファイルインデックス表示ヘッダ
@@ -23,38 +22,6 @@ const header = [
   { title: 'サイズ', key:"size", value: (item: file) => calcSizeInHumanFormat(item.size) },  // サイズを単位で表示
   { title: 'アップロード日時', key:"uploadedDate", value: (item: file) => new Date(item.uploadedDate).toLocaleString() },  // 日付をフォーマットして表示
 ];
-
-/**
- * ファイルの入力を受け取る
- */
-const fileInput = () => {
-  if (elFileInput.value === null) return;
-
-  //ファイルデータを初期化
-  fileItems.value = [];
-
-  console.log("filePortal :: fileInput : ファイルデータ->",
-    elFileInput.value.files[0].size < 1,
-    elFileInput.value.files[0].size === undefined
-  );
-
-  //inputに入力されたファイルの数ぶん処理する
-  for (let index in elFileInput.value.files) {
-    //条件を調べる
-    if (
-      elFileInput.value.files[index].size < 1 ||
-      elFileInput.value.files[index].size === undefined
-    ) {
-      console.log("filePortal :: fileInput : ファイル入力エラー");
-    } else {
-      //ファイルデータ用配列へファイルデータを追加
-      fileItems.value.push(elFileInput.value.files[index]);
-      console.log("filePortal :: fileInput : fileItems->", fileItems.value);
-    }
-  }
-
-  displayUpload.value = true;
-}
 
 /**
  * ファイルをアップロードする
@@ -93,15 +60,6 @@ const uploadFiles = async () => {
       sessionId: getSessionId.value
     }
   });
-}
-
-/**
- * アップロード画面を呼び出し
- */
-const clickUpload = () => {
-  if (elFileInput !== null) {
-    document.getElementById("elFileInput")?.click();
-  }
 }
 
 /**
@@ -206,19 +164,9 @@ onUnmounted(() => {
 
   </div>
 
-  <!-- ファイル受け取り部分(非表示) -->
-  <input
-    @change="fileInput"
-    type="file"
-    id="elFileInput"
-    ref="elFileInput"
-    style="display: none"
-    multiple
-  />
-
   <!-- アップロードボタン -->
   <v-btn
-    @click="clickUpload"
+    @click="displayUpload = true"
     position="absolute"
     style="right:5%; bottom: 5%;"
     color="primary"
