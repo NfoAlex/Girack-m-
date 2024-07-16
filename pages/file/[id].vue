@@ -104,10 +104,13 @@ onUnmounted(() => {
       >
         <p class="text-h5 text-center mb-3">{{ fileData.name }}</p>
         <span class="d-flex justify-space-evenly align-center">
-          <v-chip>{{ calcSizeInHumanFormat(fileData.size) }}</v-chip>
+          <span class="d-flex align-center">
+            <p class="mr-1 text-disabled">サイズ :  </p>
+            <v-chip>{{ calcSizeInHumanFormat(fileData.size) }}</v-chip>
+          </span>
           <v-icon color="gray">mdi-circle-small</v-icon>
           <span class="d-flex align-center">
-            <p class="mr-1">日時 :  </p>
+            <p class="mr-1 text-disabled">日時 :  </p>
             <v-chip>{{ new Date(fileData.uploadedDate).toLocaleString() }}</v-chip>
           </span>
         </span>
