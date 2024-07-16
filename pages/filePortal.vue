@@ -11,12 +11,6 @@ import type { file } from '~/types/file';
 const fileIndex = ref<file[]>([]);
 const fileIdSelected =ref<string[]>([]);
 
-const header = [
-  { title: 'ファイル名', value:'name' },
-  { title: 'サイズ', key:"size", value: (item: file) => convertToHumanSize(item.size) },  // サイズをMB単位で表示
-  { title: 'アップロード日時', key:"uploadedDate", value: (item: file) => new Date(item.uploadedDate).toLocaleString() },  // 日付をフォーマットして表示
-];
-
 const fileItems = ref<any[]>([]);
 const elFileInput = ref(null); //入力欄要素を取得するためのref
 const displayUpload = ref<boolean>(false);
@@ -37,6 +31,13 @@ const convertToHumanSize = (fileSize:number) => {
   
   return Math.floor(sizeCalculated) + sizeDisplay[level];
 }
+
+//ファイルインデックス表示ヘッダ
+const header = [
+  { title: 'ファイル名', value:'name' },
+  { title: 'サイズ', key:"size", value: (item: file) => convertToHumanSize(item.size) },  // サイズを単位で表示
+  { title: 'アップロード日時', key:"uploadedDate", value: (item: file) => new Date(item.uploadedDate).toLocaleString() },  // 日付をフォーマットして表示
+];
 
 /**
  * ファイルの入力を受け取る
