@@ -145,6 +145,13 @@ onUnmounted(() => {
         class="text-h5"
         style="font-weight:700;"
       >ファイルポータル</p>
+      <m-btn
+        @click="fetchFilesAndFolders"
+        icon="mdi-refresh"
+        class="ml-auto"
+        color="primary"
+        rounded="xl"
+      />
     </span>
     <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
 
