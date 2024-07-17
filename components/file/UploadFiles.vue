@@ -143,8 +143,15 @@ onMounted(() => {
 
 <template>
   <m-card style="overflow-y: auto">
-    <v-card-title>
-      ファイルアップロード
+    <v-card-title class="d-flex align-center">
+      <p class="mr-2">ファイルアップロード</p>
+      <p
+        v-if="props.currentDirectory.id!==''"
+        class="text-disabled text-center text-subtitle-2 ml-auto mr-1"
+      >
+        場所 :  
+      </p>
+      <v-chip v-if="props.currentDirectory.id!==''">{{ props.currentDirectory.name }}</v-chip>
     </v-card-title>
 
     <v-card-text>
