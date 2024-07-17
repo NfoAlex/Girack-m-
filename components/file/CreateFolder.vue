@@ -33,6 +33,17 @@ const createFolder = () => {
  */
 const SOCKETcreateFolder = (dat:{result:string, dat:null}) => {
   console.log("SOCKETcreateFolder :: dat->", dat);
+
+  //成功なら今いるフォルダ構成を再取得
+  if (dat.result === "SUCCESS") {
+    socket.emit("fetchFolders", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    positionedDirectoryId: props.currentDirectory.id
+  });
+  }
 }
 
 onMounted(() => {
