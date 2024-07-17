@@ -254,9 +254,14 @@ onUnmounted(() => {
 
     <m-card class="mt-3">
       <div class="my-2 d-flex align-center">
-        <m-btn @click="copyIdsToClipBoard" variant="text">
-          クリップボードへコピー
-        </m-btn>
+        <m-btn
+          @click="copyIdsToClipBoard"
+          variant="tonal"
+          icon="mdi-content-copy"
+          rounded="xl"
+          size="small"
+          :disabled="fileIdSelected.length===0"
+        />
         <m-btn
           @click="deleteSelectedFile"
           class="mx-2 ml-auto"
