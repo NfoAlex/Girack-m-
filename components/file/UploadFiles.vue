@@ -139,7 +139,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <m-card>
+  <m-card style="overflow-y: auto">
     <v-card-title>
       ファイルアップロード
     </v-card-title>
