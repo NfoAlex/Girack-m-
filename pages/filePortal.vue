@@ -6,12 +6,14 @@ import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
 import { useMyUserinfo } from '~/stores/userinfo';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
-import type { file } from '~/types/file';
+import type { file, folder } from '~/types/file';
 
 /**
  * data
  */
 const fileIndex = ref<file[]>([]);
+const folderIndex = ref<any[]>([]);
+const currentDirectory = ref<string>("");
 const fileIdSelected =ref<string[]>([]);
 
 const fileItems = ref<any[]>([]);
@@ -42,6 +44,26 @@ const deleteSelectedFile = () => {
 }
 
 /**
+ * ファイルとフォルダ構成を取得
+ */
+const fetchFilesAndFolders = () => {
+  //ファイルインデックスを取得
+  socket.emit("fetchFileIndex", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    directory: currentDirectory.value
+  });
+  socket.emit("fetchFolders", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    }
+  });
+}
+
+/**
  * ファイルインデックス受け取り
  * @param dat 
  */
@@ -52,6 +74,17 @@ const SOCKETfetchFileIndex = (dat:{result:string, data:file[]}) => {
     fileIndex.value = dat.data;
   }
 }
+
+/**
+ * フォルダ構成の受け取り
+ * @param dat 
+ */
+const SOCKETfetchFolders = (dat:{result:string, data:folder[]}) => {
+  console.log("fetchFolders :: dat->", dat);
+  if (dat.result === "SUCCESS") {
+    folderIndex.value = dat.data;
+  }
+};
 
 /**
  * ファイルインデックス受け取り
@@ -72,19 +105,16 @@ const SOCKETdeleteFile = (dat:{result:string, data:null}) => {
 
 onMounted(() => {
   socket.on("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
+  socket.on("RESULT::fetchFolders", SOCKETfetchFolders);
   socket.on("RESULT::deleteFile", SOCKETdeleteFile);
 
   //ファイルインデックスを取得
-  socket.emit("fetchFileIndex", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
-  });
+  fetchFilesAndFolders();
 });
 
 onUnmounted(() => {
   socket.off("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
+  socket.off("RESULT::fetchFolders", SOCKETfetchFolders);
   socket.off("RESULT::deleteFile", SOCKETdeleteFile);
 });
 

@@ -6,3 +6,10 @@ export interface file {
   size: number,
   uploadedDate: string
 }
+
+export interface folder {
+  id: string,
+  userId: string,
+  name: string,
+  positionedDirectoryId: string
+}
