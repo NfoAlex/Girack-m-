@@ -111,9 +111,16 @@ const uploadFiles = async () => {
     //アップロードの結果表示用
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
-        console.log('UploadFiles :: 成功!->', xhr.responseText)
+        console.log('UploadFiles :: 成功!->', xhr.responseText);
+        //ファイルインデックスを取り直す
+        socket.emit("fetchFileIndex", {
+          RequestSender: {
+            userId: getMyUserinfo.value.userId,
+            sessionId: getSessionId.value
+          }
+        });
       } else {
-        console.error('UploadFiles :: 失敗...->', xhr.statusText)
+        console.error('UploadFiles :: 失敗...->', xhr.statusText);
       }
     });
 
@@ -122,14 +129,6 @@ const uploadFiles = async () => {
     //アップロードする
     xhr.send(formData);
   }
-
-  //ファイルインデックスを取り直す
-  socket.emit("fetchFileIndex", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
-  });
 }
 
 onMounted(() => {
