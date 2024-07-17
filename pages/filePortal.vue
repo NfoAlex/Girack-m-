@@ -59,7 +59,8 @@ const fetchFilesAndFolders = () => {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
       sessionId: getSessionId.value
-    }
+    },
+    positionedDirectoryId: currentDirectory.value
   });
 }
 
