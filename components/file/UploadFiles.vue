@@ -10,6 +10,7 @@ import type { file } from '~/types/file';
  */
 
 const fileItems = ref<File[]>([]);
+const fileUploadStatus = ref<number[]>([]);
 const elFileInput = ref(null); //入力欄要素を取得するためのref
 
 /**
@@ -35,6 +36,8 @@ const elFileInput = ref(null); //入力欄要素を取得するためのref
     ) {
       console.log("filePortal :: fileInput : ファイル入力エラー");
     } else {
+      //ファイルアップロード状況配列へ初期数値0を挿入
+      fileUploadStatus.value.push(0);
       //ファイルデータ用配列へファイルデータを追加
       fileItems.value.push(elFileInput.value.files[index]);
       console.log("filePortal :: fileInput : fileItems->", fileItems.value);
@@ -105,6 +108,8 @@ const uploadFiles = async () => {
           "UploadFiles :: アップロード状況->",
           Math.round((event.loaded / event.total) * 100)
         );
+        //アップロード状況を更新する
+        fileUploadStatus.value[fileIndex] = Math.round((event.loaded / event.total) * 100);
       }
     });
 
@@ -145,8 +150,15 @@ onMounted(() => {
     </v-card-title>
     <v-card-text>
       ファイルをアップロードします
-      <m-card v-for="file of fileItems" variant="outlined">
-        {{ file.name }}
+      <m-card
+        v-for="file,index of fileItems"
+        color="cardInner"
+        class="mb-2"
+      >
+        <p class="my-1">{{ file.name }}</p>
+        <span>
+          <v-progress-linear :model-value="fileUploadStatus[index]" rounded />
+        </span>
       </m-card>
     </v-card-text>
     <v-card-actions>
