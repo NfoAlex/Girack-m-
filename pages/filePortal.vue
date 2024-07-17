@@ -254,7 +254,7 @@ onUnmounted(() => {
         icon="mdi-refresh"
         class="ml-auto"
         color="primary"
-        rounded="xl"
+        rounded="lg"
       />
     </span>
     <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
