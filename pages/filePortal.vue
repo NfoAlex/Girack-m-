@@ -7,18 +7,25 @@ import { useMyUserinfo } from '~/stores/userinfo';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 import type { file, folder } from '~/types/file';
+import { Value } from 'sass';
 
 /**
  * data
  */
-const fileIndex = ref<file[]>([]);
-const folderIndex = ref<any[]>([]);
-const currentDirectory = ref<string>("");
-const fileIdSelected =ref<string[]>([]);
+const fileIndex = ref<file[]>([]); //ファイルインデックス
+const folderIndex = ref<folder[]>([]); //フォルダ構成データ
+const currentDirectory = ref<string>(""); //今いるディレクトリId
+const directoryIdSelected = ref<string>("");
+const directoryTree = ref<folder[]>([{
+  id: '',
+  userId: '',
+  name: '',
+  positionedDirectoryId: ''
+}]); //今いるディレクトリまでのフォルダツリー
+const fileIdSelected =ref<string[]>([]); //選択しているファイルId配列
 
-const fileItems = ref<any[]>([]);
-const displayUpload = ref<boolean>(false);
-const displayCreateFolder = ref<boolean>(false);
+const displayUpload = ref<boolean>(false); //アップロード画面表示用
+const displayCreateFolder = ref<boolean>(false); //フォルダ作成画面表示用
 
 //ファイルインデックス表示ヘッダ
 const header = [
@@ -41,6 +48,53 @@ const deleteSelectedFile = () => {
       fileId: fileId
     });
   }
+}
+
+/**
+ * フォルダを移動
+ */
+const moveDirectory = () => {
+  console.log("filePortal :: moveDirectory : ディレクトリ移動->", directoryIdSelected.value);
+  //選択したフォルダの情報
+  let folderSelectedInfo:folder = {
+    id: '',
+    userId: '',
+    name: '',
+    positionedDirectoryId: ''
+  };
+
+  //選択Idにあたるフォルダ情報を選択フォルダ変数へ格納
+  for (let index in folderIndex.value) {
+    if (folderIndex.value[index].id === directoryIdSelected.value) {
+      folderSelectedInfo = folderIndex.value[index];
+      break;
+    }
+  }
+
+  //ディレクトリツリー上の選択したフォルダIdの位置
+  let treeIndexMovingTo:number = -1;
+  //選択したフォルダーが今より上にいるか調べてツリー上の位置を格納
+  for (let index in directoryTree.value) {
+    if (directoryTree.value[index].id === directoryIdSelected.value) {
+      treeIndexMovingTo = parseInt(index);
+      break;
+    }
+  }
+  //もし上にいくのならツリーを削る、下ならシンプル追加
+  if (treeIndexMovingTo !== -1) {
+    //ツリーからsplice
+    directoryTree.value.splice(treeIndexMovingTo + 1);
+  } else {
+    //ディレクトリーツリーへ追加
+    directoryTree.value.push(folderSelectedInfo);
+  }
+
+  console.log("filePortal :: moveDirectory : ディレクトリツリー->", directoryTree.value);
+
+  //ディレクトリIdを格納
+  currentDirectory.value = directoryIdSelected.value;
+  //ディレクトリとフォルダを再取得
+  fetchFilesAndFolders();
 }
 
 /**
@@ -172,6 +226,30 @@ onUnmounted(() => {
           {{ fileIdSelected.length }}個 
           <p>削除する</p>
         </m-btn>
+      </div>
+
+      <!-- ディレクリツリー表示、移動選択 -->
+      <div class="mb-1">
+        <v-chip @click="()=>{directoryIdSelected=''; moveDirectory();}" size="small">ホーム</v-chip> /
+        <span v-for="folder of directoryTree">
+          <span  v-if="folder.id !== ''">
+            <v-chip
+              size="small"
+            >
+              {{ folder.name }}
+            </v-chip>
+            /
+          </span>
+        </span>
+
+        <v-select
+          v-model="directoryIdSelected"
+          @update:modelValue="moveDirectory"
+          :items="folderIndex"
+          item-title="name"
+          item-value="id"
+        ></v-select>
+
       </div>
 
       <v-data-table
