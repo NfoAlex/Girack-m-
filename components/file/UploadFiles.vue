@@ -155,7 +155,7 @@ onMounted(() => {
             >
             </m-btn>
             <v-progress-circular
-              v-if="fileUploadStatus[index].status!=='UPLOADING'"
+              v-if="fileUploadStatus[index].status==='UPLOADING'"
               :width="3"
               size="24"
               indeterminate
