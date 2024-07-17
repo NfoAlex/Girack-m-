@@ -118,7 +118,7 @@ const uploadFiles = async () => {
     });
 
     //アップロード先のURLを指定
-    xhr.open('POST', '/fileupload');
+    xhr.open('POST', '/uploadfile');
     //アップロードする
     xhr.send(formData);
   }
