@@ -2,6 +2,7 @@
 import { socket } from '~/socketHandlers/socketInit';
 import UploadFiles from '~/components/file/UploadFiles.vue';
 import CreateFolder from '~/components/file/CreateFolder.vue';
+import DeleteFolder from '~/components/file/DeleteFolder.vue';
 import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
 import { useMyUserinfo } from '~/stores/userinfo';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -31,6 +32,7 @@ const fileIdSelected =ref<string[]>([]); //選択しているファイルId配�
 
 const displayUpload = ref<boolean>(false); //アップロード画面表示用
 const displayCreateFolder = ref<boolean>(false); //フォルダ作成画面表示用
+const displayDeleteFolder = ref<boolean>(false); //フォルダ削除確認画面用
 
 //ファイルインデックス表示ヘッダ
 const header = [
@@ -212,6 +214,15 @@ onUnmounted(() => {
     <CreateFolder :currentDirectory />
   </v-dialog>
 
+  <!-- フォルダー削除用 -->
+  <v-dialog
+    v-if="displayDeleteFolder"
+    v-model="displayDeleteFolder"
+    style="max-width:650px; min-width:450px; width:65vw; height:55vh; max-height:650px;"
+  >
+    <DeleteFolder :currentDirectory />
+  </v-dialog>
+
   <div class="pt-5 px-5 d-flex flex-column" style="height:100%;">
     <span class="d-flex align-center">
       <p
@@ -261,16 +272,27 @@ onUnmounted(() => {
           </span>
         </span>
 
-        <v-select
-          v-model="directoryIdSelected"
-          @update:modelValue="moveDirectory"
-          class="mt-2"
-          label="ディレクトリ"
-          variant="outlined"
-          :items="folderIndex"
-          item-title="name"
-          item-value="id"
-        ></v-select>
+        <div class="d-flex align-center my-2">
+          <m-btn icon="mdi-plus" size="small"></m-btn>
+          <v-select
+            v-model="directoryIdSelected"
+            @update:modelValue="moveDirectory"
+            label="ディレクトリ"
+            density="compact"
+            variant="outlined"
+            :items="folderIndex"
+            item-title="name"
+            item-value="id"
+            hide-details
+          ></v-select>
+          <m-btn
+            @click="displayDeleteFolder=true"
+            icon="mdi-delete"
+            color="error"
+            size="small"
+            variant="outlined"
+          />
+        </div>
 
       </div>
 
