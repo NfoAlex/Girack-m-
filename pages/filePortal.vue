@@ -134,7 +134,7 @@ onUnmounted(() => {
     v-model="displayUpload"
     style="max-width: 750px; width: 85vw"
   >
-    <upload-files />
+    <UploadFiles />
   </v-dialog>
 
   <div class="pt-5 px-5 d-flex flex-column" style="height:100%;">
