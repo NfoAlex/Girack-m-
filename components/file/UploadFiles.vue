@@ -71,11 +71,19 @@ const uploadFiles = async () => {
     sessionId: getSessionId.value
   });
 
+  const metadataForForm = {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    directory: ""
+  };
+
   for (let fileIndex in fileItems.value) {
     //アップロードするデータフォームオブジェクト生成
     const formData = new FormData();
-    //送信者情報を付与
-    formData.append('metadata', RequestSenderInString);
+    //送信者情報とディレクトリを付与
+    formData.append('metadata', JSON.stringify(metadataForForm));
     //ファイルそのものを内包
     formData.append('file', fileItems.value[fileIndex]);
 
