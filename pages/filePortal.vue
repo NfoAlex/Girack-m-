@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import UploadFiles from '~/components/file/UploadFiles.vue';
+import CreateFolder from '~/components/file/CreateFolder.vue';
 import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
 import { useMyUserinfo } from '~/stores/userinfo';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -15,6 +16,7 @@ const fileIdSelected =ref<string[]>([]);
 
 const fileItems = ref<any[]>([]);
 const displayUpload = ref<boolean>(false);
+const displayCreateFolder = ref<boolean>(false);
 
 //ファイルインデックス表示ヘッダ
 const header = [
@@ -137,6 +139,15 @@ onUnmounted(() => {
     <UploadFiles />
   </v-dialog>
 
+  <!-- フォルダー作成用 -->
+  <v-dialog
+    v-if="displayCreateFolder"
+    v-model="displayCreateFolder"
+    style="max-width:650px; min-width:450px; width:65vw; height:55vh; max-height:650px;"
+  >
+    <CreateFolder />
+  </v-dialog>
+
   <div class="pt-5 px-5 d-flex flex-column" style="height:100%;">
     <span class="d-flex align-center">
       <p
@@ -148,6 +159,9 @@ onUnmounted(() => {
 
     <m-card class="mt-3">
       <div class="my-2 d-flex align-center">
+        <m-btn @click="displayCreateFolder = true" variant="text">
+          新しいフォルダ
+        </m-btn>
         <m-btn
           @click="deleteSelectedFile"
           class="mx-2 ml-auto"
