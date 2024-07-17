@@ -3,6 +3,12 @@ import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
+import type { folder } from '~/types/file';
+
+const props = defineProps<{
+  currentDirectory: folder
+}>();
+
 /**
  * data
  */
@@ -18,7 +24,7 @@ const createFolder = () => {
       sessionId: getSessionId.value
     },
     folderName: inputFolderName.value,
-    directory: ""
+    directoryId: props.currentDirectory.id
   });
 }
 
@@ -45,6 +51,7 @@ onUnmounted(() => {
     </v-card-title>
 
     <v-card-text>
+      <p>フォルダを作るディレクトリ -> {{ props.currentDirectory.name }}</p>
       <v-text-field
         v-model="inputFolderName"
         variant="outlined"

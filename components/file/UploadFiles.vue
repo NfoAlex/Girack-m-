@@ -3,7 +3,11 @@ import { socket } from '~/socketHandlers/socketInit';
 import { useMyUserinfo } from '~/stores/userinfo';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
-import type { file } from '~/types/file';
+import type { folder } from '~/types/file';
+
+const props = defineProps<{
+  currentDirectory: folder
+}>();
 
 /**
  * data
@@ -76,7 +80,7 @@ const uploadFiles = async () => {
       userId: getMyUserinfo.value.userId,
       sessionId: getSessionId.value
     },
-    directory: ""
+    directory: props.currentDirectory.id
   };
 
   for (let fileIndex in fileItems.value) {
