@@ -28,6 +28,7 @@ interface SearchData {
 const messageInput = ref<string>(""); //メッセージ入力用変数
 const elInput = ref(null); //入力欄要素を取得するためのref
 const inputRowNum = ref<number>(1); //入力欄の行数
+const displayData = ref<boolean>(false);
 const searchData = ref<SearchData>({
   //検索データ
   query: "",
@@ -329,27 +330,36 @@ onUnmounted(() => {
         </template>
       </v-virtual-scroll>
     </m-card>
-    <v-textarea
-      v-model="messageInput"
-      id="elInput"
-      @keydown.enter.prevent="triggerEnter"
-      @keydown.up="triggerUp"
-      @keydown.down="triggerDown"
-      @keydown.@="AtsignTrigger"
-      variant="solo-filled"
-      rows="1"
-      maxRows="5"
-      ref="elInput"
-      no-resize
-      autoGrow
-      autofocus
-      rounded
-      :disabled="!canISpeakHere"
-      :placeholder="
-        canISpeakHere
-          ? props.channelInfo.channelName + ' へ送信'
-          : 'このチャンネルで話せません。'
-      "
-    />
+    <m-card-compact color="surface" class="">
+      <div v-if="!displayData" class="px-3 pt-4">
+        <div>
+          <v-card variant="outlined">テストコンテンツ</v-card>
+        </div>
+        <v-divider class="mx-auto mt-2" />
+      </div>
+      <v-textarea
+        v-model="messageInput"
+        id="elInput"
+        @keydown.enter.prevent="triggerEnter"
+        @keydown.up="triggerUp"
+        @keydown.down="triggerDown"
+        @keydown.@="AtsignTrigger"
+        variant="solo"
+        rows="1"
+        maxRows="5"
+        ref="elInput"
+        no-resize
+        autoGrow
+        autofocus
+        rounded
+        hide-details
+        :disabled="!canISpeakHere"
+        :placeholder="
+          canISpeakHere
+            ? props.channelInfo.channelName + ' へ送信'
+            : 'このチャンネルで話せません。'
+        "
+      />
+    </m-card-compact>
   </div>
 </template>
