@@ -14,7 +14,12 @@ import { Value } from 'sass';
  */
 const fileIndex = ref<file[]>([]); //ファイルインデックス
 const folderIndex = ref<folder[]>([]); //フォルダ構成データ
-const currentDirectory = ref<string>(""); //今いるディレクトリId
+const currentDirectory = ref<folder>({ //今いるディレクトリのフォルダ情報
+  id: '',
+  userId: '',
+  name: '',
+  positionedDirectoryId: ''
+});
 const directoryIdSelected = ref<string>("");
 const directoryTree = ref<folder[]>([{
   id: '',
@@ -55,44 +60,57 @@ const deleteSelectedFile = () => {
  */
 const moveDirectory = () => {
   console.log("filePortal :: moveDirectory : ディレクトリ移動->", directoryIdSelected.value);
-  //選択したフォルダの情報
-  let folderSelectedInfo:folder = {
+  //移動先のフォルダの情報
+  let folderInfoMovingTo:folder = {
     id: '',
     userId: '',
     name: '',
     positionedDirectoryId: ''
   };
 
-  //選択Idにあたるフォルダ情報を選択フォルダ変数へ格納
-  for (let index in folderIndex.value) {
-    if (folderIndex.value[index].id === directoryIdSelected.value) {
-      folderSelectedInfo = folderIndex.value[index];
+  //もし今と同じディレクトリIdを選択したなら再取得するだけ
+  if (directoryIdSelected.value === currentDirectory.value.id) {
+    fetchFilesAndFolders();
+    return;
+  }
+
+  //ディレクトリツリーで選んだのか確認、設定
+    //ディレクトリツリー上の選択したフォルダIdの位置用変数
+  let treeIndexMovingTo:number = -1;
+  console.log("今のツリー->", directoryTree.value);
+    //選択したフォルダーが今より上にいるか調べてツリー上の位置とフォルダ情報格納
+  for (let index in directoryTree.value) {
+    if (directoryTree.value[index].id === directoryIdSelected.value) {
+      treeIndexMovingTo = parseInt(index);
+      folderInfoMovingTo = directoryTree.value[index];
       break;
     }
   }
 
-  //ディレクトリツリー上の選択したフォルダIdの位置
-  let treeIndexMovingTo:number = -1;
-  //選択したフォルダーが今より上にいるか調べてツリー上の位置を格納
-  for (let index in directoryTree.value) {
-    if (directoryTree.value[index].id === directoryIdSelected.value) {
-      treeIndexMovingTo = parseInt(index);
-      break;
-    }
-  }
   //もし上にいくのならツリーを削る、下ならシンプル追加
   if (treeIndexMovingTo !== -1) {
     //ツリーからsplice
     directoryTree.value.splice(treeIndexMovingTo + 1);
   } else {
+
+    //選択Idにあたるフォルダ情報を選択フォルダ変数へ格納
+    for (let index in folderIndex.value) {
+      if (folderIndex.value[index].id === directoryIdSelected.value) {
+        folderInfoMovingTo = folderIndex.value[index];
+        console.log("index->", index);
+        break;
+      }
+    }
+
     //ディレクトリーツリーへ追加
-    directoryTree.value.push(folderSelectedInfo);
+    directoryTree.value.push(folderInfoMovingTo);
   }
 
   console.log("filePortal :: moveDirectory : ディレクトリツリー->", directoryTree.value);
+  console.log("filePortal :: moveDirectory : フォルダ情報->", folderInfoMovingTo);
 
-  //ディレクトリIdを格納
-  currentDirectory.value = directoryIdSelected.value;
+  //ディレクトリ情報を格納
+  currentDirectory.value = folderInfoMovingTo;
   //ディレクトリとフォルダを再取得
   fetchFilesAndFolders();
 }
@@ -107,14 +125,14 @@ const fetchFilesAndFolders = () => {
       userId: getMyUserinfo.value.userId,
       sessionId: getSessionId.value
     },
-    directory: currentDirectory.value
+    directory: currentDirectory.value.id
   });
   socket.emit("fetchFolders", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
       sessionId: getSessionId.value
     },
-    positionedDirectoryId: currentDirectory.value
+    positionedDirectoryId: currentDirectory.value.id
   });
 }
 
@@ -182,7 +200,7 @@ onUnmounted(() => {
     v-model="displayUpload"
     style="max-width:750px; width:85vw; height:75vh; max-height:650px;"
   >
-    <UploadFiles />
+    <UploadFiles :currentDirectory />
   </v-dialog>
 
   <!-- フォルダー作成用 -->
@@ -191,7 +209,7 @@ onUnmounted(() => {
     v-model="displayCreateFolder"
     style="max-width:650px; min-width:450px; width:65vw; height:55vh; max-height:650px;"
   >
-    <CreateFolder />
+    <CreateFolder :currentDirectory />
   </v-dialog>
 
   <div class="pt-5 px-5 d-flex flex-column" style="height:100%;">
@@ -234,6 +252,7 @@ onUnmounted(() => {
         <span v-for="folder of directoryTree">
           <span  v-if="folder.id !== ''">
             <v-chip
+              @click="()=>{directoryIdSelected=folder.id; moveDirectory();}"
               size="small"
             >
               {{ folder.name }}
@@ -245,6 +264,9 @@ onUnmounted(() => {
         <v-select
           v-model="directoryIdSelected"
           @update:modelValue="moveDirectory"
+          class="mt-2"
+          label="ディレクトリ"
+          variant="outlined"
           :items="folderIndex"
           item-title="name"
           item-value="id"
