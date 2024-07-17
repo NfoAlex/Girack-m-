@@ -46,6 +46,14 @@ const elFileInput = ref(null); //入力欄要素を取得するためのref
 }
 
 /**
+ * 入力したファイルを削除
+ * @param index 
+ */
+const trimFileItem = (index:number) => {
+  fileItems.value.splice(index,1);
+}
+
+/**
  * ファイルをアップロードする
  */
 const uploadFiles = async () => {
@@ -112,19 +120,34 @@ onMounted(() => {
     <v-card-title>
       ファイルアップロード
     </v-card-title>
+
     <v-card-text>
       ファイルをアップロードします
+
       <m-card
         v-for="file,index of fileItems"
         color="cardInner"
         class="mb-2"
       >
-        <p class="my-1">{{ file.name }}</p>
+        <span class="d-flex align-center">
+          <p class="my-1">{{ file.name }}</p>
+          <m-btn
+            @click="trimFileItem(index)"
+            class="ml-auto"
+            size="x-small"
+            icon="mdi-delete"
+            color="red"
+            variant="outlined"
+          >
+          </m-btn>
+        </span>
         <span>
           <v-progress-linear :model-value="fileUploadStatus[index]" rounded />
         </span>
       </m-card>
+
     </v-card-text>
+
     <v-card-actions>
       <m-btn
         @click="uploadFiles"
