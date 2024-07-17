@@ -10,7 +10,12 @@ import type { file } from '~/types/file';
  */
 
 const fileItems = ref<File[]>([]);
-const fileUploadStatus = ref<number[]>([]);
+const fileUploadStatus = ref<
+  {
+    progress: number,
+    status: "DONE"|"FAILED"|"UPLOADING"|"WAITING"
+  }[]
+>([]);
 const elFileInput = ref(null); //入力欄要素を取得するためのref
 
 /**
@@ -36,8 +41,11 @@ const elFileInput = ref(null); //入力欄要素を取得するためのref
     ) {
       console.log("filePortal :: fileInput : ファイル入力エラー");
     } else {
-      //ファイルアップロード状況配列へ初期数値0を挿入
-      fileUploadStatus.value.push(0);
+      //ファイルアップロード状況配列へ初期の値を挿入
+      fileUploadStatus.value.push({
+        progress: 0,
+        status: 'WAITING'
+      });
       //ファイルデータ用配列へファイルデータを追加
       fileItems.value.push(elFileInput.value.files[index]);
       console.log("filePortal :: fileInput : fileItems->", fileItems.value);
@@ -81,7 +89,7 @@ const uploadFiles = async () => {
           Math.round((event.loaded / event.total) * 100)
         );
         //アップロード状況を更新する
-        fileUploadStatus.value[fileIndex] = Math.round((event.loaded / event.total) * 100);
+        fileUploadStatus.value[fileIndex].progress = Math.round((event.loaded / event.total) * 100);
       }
     });
 
@@ -96,13 +104,19 @@ const uploadFiles = async () => {
             sessionId: getSessionId.value
           }
         });
+        //結果を格納
+        fileUploadStatus.value[fileIndex].status = "DONE";
       } else {
         console.error('UploadFiles :: 失敗...->', xhr.statusText);
+        //エラーを格納
+        fileUploadStatus.value[fileIndex].status = "FAILED";
       }
     });
 
     //アップロード先のURLを指定
     xhr.open('POST', '/uploadfile');
+    //アップロード中と設定
+    fileUploadStatus.value[fileIndex].status = "UPLOADING";
     //アップロードする
     xhr.send(formData);
   }
@@ -122,7 +136,6 @@ onMounted(() => {
     </v-card-title>
 
     <v-card-text>
-      ファイルをアップロードします
 
       <m-card
         v-for="file,index of fileItems"
@@ -131,18 +144,34 @@ onMounted(() => {
       >
         <span class="d-flex align-center">
           <p class="my-1">{{ file.name }}</p>
-          <m-btn
-            @click="trimFileItem(index)"
-            class="ml-auto"
-            size="x-small"
-            icon="mdi-delete"
-            color="red"
-            variant="outlined"
-          >
-          </m-btn>
+          <span class="ml-auto">
+            <m-btn
+              v-if="fileUploadStatus[index].status=='WAITING'"
+              @click="trimFileItem(index)"
+              size="x-small"
+              icon="mdi-delete"
+              color="red"
+              variant="outlined"
+            >
+            </m-btn>
+            <v-progress-circular
+              v-if="fileUploadStatus[index].status!=='UPLOADING'"
+              :width="3"
+              size="24"
+              indeterminate
+            />
+            <v-icon
+              v-if="fileUploadStatus[index].status==='DONE'"
+              color="success"
+            >mdi-check</v-icon>
+            <v-icon
+              v-if="fileUploadStatus[index].status==='FAILED'"
+              color="error"
+            >mdi-alert-circle-outline</v-icon>
+          </span>
         </span>
         <span>
-          <v-progress-linear :model-value="fileUploadStatus[index]" rounded class="mt-2" />
+          <v-progress-linear :model-value="fileUploadStatus[index].progress" rounded class="mt-2" />
         </span>
       </m-card>
 
