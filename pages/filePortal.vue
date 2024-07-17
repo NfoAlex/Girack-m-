@@ -148,9 +148,12 @@ onUnmounted(() => {
 
     <m-card class="mt-3">
       <div class="my-2 d-flex align-center">
-        <v-icon>mdi-plus</v-icon>
-        asdf
-        <m-btn @click="deleteSelectedFile" class="mx-2">削除する</m-btn>
+        <m-btn
+          @click="deleteSelectedFile"
+          class="mx-2"
+          variant="outlined"
+          color="error"
+        >削除する</m-btn>
       </div>
 
       <v-data-table
