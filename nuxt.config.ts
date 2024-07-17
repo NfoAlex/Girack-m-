@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     server: {
       proxy: {
         "/uploadProfileIcon": "http://localhost:33333/",
+        "/fileupload": "http://localhost:33333/",
         "/icon": "http://localhost:33333/"
       }
     }
