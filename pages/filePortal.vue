@@ -118,6 +118,21 @@ const moveDirectory = () => {
 }
 
 /**
+ * 選択したファイルIdをクリップボードへメッセに使える形でコピー
+ */
+const copyIdsToClipBoard = () => {
+  let txt = "";
+  for (let fileId of fileIdSelected.value) {
+    txt += "<file:" + fileId + ">\n";
+  }
+
+  //クリップボードへ書き込み
+  navigator.clipboard.writeText(txt).then(() => {
+    console.log('copyText: ', txt)
+  });
+}
+
+/**
  * ファイルとフォルダ構成を取得
  */
 const fetchFilesAndFolders = () => {
@@ -241,8 +256,8 @@ onUnmounted(() => {
 
     <m-card class="mt-3">
       <div class="my-2 d-flex align-center">
-        <m-btn @click="displayCreateFolder = true" variant="text">
-          新しいフォルダ
+        <m-btn @click="copyIdsToClipBoard" variant="text">
+          クリップボードへコピー
         </m-btn>
         <m-btn
           @click="deleteSelectedFile"
@@ -273,7 +288,7 @@ onUnmounted(() => {
         </span>
 
         <div class="d-flex align-center my-2">
-          <m-btn icon="mdi-plus" size="small"></m-btn>
+          <m-btn @click="displayCreateFolder = true" icon="mdi-plus" size="small"></m-btn>
           <v-select
             v-model="directoryIdSelected"
             @update:modelValue="moveDirectory"
