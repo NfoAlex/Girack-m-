@@ -142,7 +142,7 @@ onMounted(() => {
           </m-btn>
         </span>
         <span>
-          <v-progress-linear :model-value="fileUploadStatus[index]" rounded />
+          <v-progress-linear :model-value="fileUploadStatus[index]" rounded class="mt-2" />
         </span>
       </m-card>
 
