@@ -127,9 +127,7 @@ const copyIdsToClipBoard = () => {
   }
 
   //クリップボードへ書き込み
-  navigator.clipboard.writeText(txt).then(() => {
-    console.log('copyText: ', txt)
-  });
+  navigator.clipboard.writeText(txt);
 }
 
 /**
