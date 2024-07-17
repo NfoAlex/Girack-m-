@@ -150,10 +150,15 @@ onUnmounted(() => {
       <div class="my-2 d-flex align-center">
         <m-btn
           @click="deleteSelectedFile"
-          class="mx-2"
+          class="mx-2 ml-auto"
           variant="outlined"
           color="error"
-        >削除する</m-btn>
+          :disabled="fileIdSelected.length===0"
+        >
+          <v-icon>mdi-delete</v-icon>
+          {{ fileIdSelected.length }}個 
+          <p>削除する</p>
+        </m-btn>
       </div>
 
       <v-data-table
