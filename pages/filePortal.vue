@@ -26,45 +26,6 @@ const header = [
 ];
 
 /**
- * ファイルをアップロードする
- */
-const uploadFiles = async () => {
-  //送信者情報の文字列化したもの
-  const RequestSenderInString = JSON.stringify({
-    userId: getMyUserinfo.value.userId,
-    sessionId: getSessionId.value
-  });
-
-  for (let fileIndex in fileItems.value) {
-    //アップロードするデータフォームオブジェクト生成
-    const formData = new FormData();
-    //送信者情報を付与
-    formData.append('metadata', RequestSenderInString);
-    //ファイルそのものを内包
-    formData.append('file', fileItems.value[fileIndex]);
-
-    //ファイルをアップロード(結果はHTTPリスポンス)
-    const result:Response|void = await fetch('/uploadfile', {
-      method: 'POST',
-      body: formData
-    }).finally(() => {
-      console.log("filePortal :: uploadFiles(/uploadfile) : アップロード終わり");
-    }).catch((err:Error) => {
-      console.log("filePortal :: uploadFiles(/uploadfile) : アップロードエラー->", err);
-    });
-    console.log("filePortal :: uploadFiles(/uploadfile) : result->", result);
-  }
-
-  //ファイルインデックスを取り直す
-  socket.emit("fetchFileIndex", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
-  });
-}
-
-/**
  * 選択したファイルを削除する
  */
 const deleteSelectedFile = () => {
