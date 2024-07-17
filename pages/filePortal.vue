@@ -326,6 +326,7 @@ onUnmounted(() => {
         :items="fileIndex"
         item-value="id"
         :headers="header"
+        hide-default-footer
         show-select
       ></v-data-table>
     </m-card>
