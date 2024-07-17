@@ -9,6 +9,10 @@ const props = defineProps<{
   currentDirectory: folder
 }>();
 
+const emits = defineEmits<{
+  (e:"leaveAndMove"):void,
+}>();
+
 /**
  * フォルダーを削除する
  */
@@ -27,6 +31,8 @@ const deleteFolder = () => {
  */
 const SOCKETdeleteFolder = (dat:{result:string, dat:null}) => {
   console.log("SOCKETdeleteFolder :: dat->", dat);
+  //成功なら閉じて一つ上へ移動する
+  if (dat.result === "SUCCESS") emits("leaveAndMove");
 }
 
 onMounted(() => {

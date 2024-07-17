@@ -233,7 +233,14 @@ onUnmounted(() => {
     v-model="displayDeleteFolder"
     style="max-width:650px; min-width:450px; width:65vw; height:55vh; max-height:650px;"
   >
-    <DeleteFolder :currentDirectory />
+    <DeleteFolder
+      @leave-and-move="
+        directoryIdSelected=directoryTree[directoryTree.length-2].id;
+        displayDeleteFolder=false;
+        moveDirectory();
+      "
+      :currentDirectory
+    />
   </v-dialog>
 
   <div class="pt-5 px-5 d-flex flex-column" style="height:100%;">
