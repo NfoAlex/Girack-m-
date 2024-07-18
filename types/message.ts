@@ -23,6 +23,7 @@ export default interface message {
         url: string
       }
   },
+  fileId: string[],
   time: string,
   reaction: {
     [key: string]: {
