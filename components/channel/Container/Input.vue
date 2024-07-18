@@ -331,12 +331,14 @@ onUnmounted(() => {
       </v-virtual-scroll>
     </m-card>
     <m-card-compact color="surface" class="">
+      <!-- 情報、ボタン表示用 -->
       <div v-if="!displayData" class="px-3 pt-4">
         <div>
           <v-card variant="outlined">テストコンテンツ</v-card>
         </div>
         <v-divider class="mx-auto mt-2" />
       </div>
+
       <v-textarea
         v-model="messageInput"
         id="elInput"
