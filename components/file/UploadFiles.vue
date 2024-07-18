@@ -12,7 +12,6 @@ const props = defineProps<{
 /**
  * data
  */
-
 const fileItems = ref<File[]>([]);
 const fileUploadStatus = ref<
   {

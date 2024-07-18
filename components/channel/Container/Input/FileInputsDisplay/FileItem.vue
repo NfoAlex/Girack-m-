@@ -1,14 +1,32 @@
 <script setup lang="ts">
 import { useMyUserinfo } from '~/stores/userinfo';
+import type { file } from '~/types/file';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 const props = defineProps<{
-  fileInput: File,
+  fileInput: {
+    fileId: string,
+    fileBuffer: File|null,
+    fileInfo: file|null,
+    uploadedFrom: "remote"|"local"
+    ready: boolean
+  },
   channelId: string
 }>();
 
 const emits = defineEmits<{
   (e:"appendFileId", fileId:string):void, //指定ファイルの入力を削除
+  (e:"setReady"):void,
+  (  //親のファイルId配列を更新する
+    e: "updateFileData",
+    fileData: {
+      fileId: string,
+      fileBuffer: File|null,
+      fileInfo: file|null,
+      uploadedFrom: "remote"|"local"
+      ready: boolean
+    }
+  ):void,
 }>();
 
 /**
@@ -21,6 +39,12 @@ const status = ref<"WAITING"|"UPLOADING"|"SUCCESS"|"FAILED">("WAITING");
  * ファイルをアップロードする
  */
 const uploadFile = () => {
+  if (
+    props.fileInput.uploadedFrom === "remote"
+    ||
+    props.fileInput.fileBuffer === null
+  ) return;
+
   //埋め込むメタデータ
   const metadataForForm = {
     RequestSender: {
@@ -35,7 +59,7 @@ const uploadFile = () => {
   //送信者情報とディレクトリを付与
   formData.append('metadata', JSON.stringify(metadataForForm));
   //ファイルそのものを内包
-  formData.append('file', props.fileInput);
+  formData.append('file', props.fileInput.fileBuffer);
 
   //アップロード用のXHRインスタンス
   const xhr = new XMLHttpRequest();
@@ -51,7 +75,7 @@ const uploadFile = () => {
     }
   });
 
-  //アップロードの結果表示用
+  //アップロードの結果用
   xhr.addEventListener('load', () => {
     if (xhr.status === 200) {
       console.log('FileItem :: 成功!->', xhr.responseText);
@@ -60,7 +84,19 @@ const uploadFile = () => {
       status.value = "SUCCESS";
       //結果がちゃんと取れているなら親コンポにファイルIdを渡す
       if (result.data !== undefined) {
-        emits("appendFileId", result.data);
+        console.log("FileItem :: 結果->", {
+          ...props.fileInput,
+          ready: true,
+          fileId: result.data
+        });
+        emits(
+          "updateFileData",
+          {
+            ...props.fileInput,
+            ready: true,
+            fileId: result.data
+          }
+        );
       } else {
         //エラーとして設定
         status.value = "FAILED";
@@ -82,13 +118,18 @@ const uploadFile = () => {
 
 onMounted(() => {
   //マウント時にそのままアップロードする
-  uploadFile();
+  //uploadFile();
+  if (props.fileInput.uploadedFrom === "local") {
+    uploadFile();
+  }
+
+  console.log("FileItem :: props.fileInput->", props.fileInput);
 });
 </script>
 
 <template>
   <span class="d-flex align-center">
-    <p class="flex-grow-1 mr-2">{{ props.fileInput.name }}</p>
+    <p class="flex-grow-1 mr-2">{{ props.fileInput.fileBuffer?.name }}</p>
     <v-icon
       v-if="status==='SUCCESS'"
       size="small"

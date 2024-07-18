@@ -4,6 +4,7 @@ import FileInputsDisplay from "./Input/FileInputsDisplay.vue";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type { channel } from "~/types/channel";
 import type { MyUserinfo } from "~/types/user";
+import type { file } from "~/types/file";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -27,9 +28,19 @@ interface SearchData {
  * data
  */
 const messageInput = ref<string>(""); //メッセージ入力用変数
-const fileInput = ref<File[]>([]);
-const fileIdArr = ref<string[]>([]);
-const elInput = ref(null); //入力欄要素を取得するためのref
+
+const allFileReady = ref<boolean>(false);
+const fileData = ref<
+  {
+    fileId: string,
+    fileBuffer: File|null,
+    fileInfo: file|null,
+    uploadedFrom: "remote"|"local"
+    ready: boolean
+  }[]
+>([]);
+
+const elInput = ref<Element|null>(null); //入力欄要素を取得するためのref
 const elFileInput = ref(null); //ファイル入力要素を取得するためのref
 const inputRowNum = ref<number>(1); //入力欄の行数
 const displayData = ref<boolean>(false);
@@ -120,27 +131,32 @@ const receivePasteObject = async (event:ClipboardEvent) => {
 
   //クリップボードの配列ループしてファイルが有効か調べてファイル用配列へ追加
   for (let index in fileInputs) {
-    console.log("Input :: receivePasteObject : index->", fileInputs[parseInt(index)]);
+    //console.log("Input :: receivePasteObject : index->", fileInputs[parseInt(index)]);
     try {
       //有効か？
       if (fileInputs[parseInt(index)] !== undefined) {
+        //ファイルの準備状況をfalseへ
+        allFileReady.value = false;
         //ファイル入力用配列へ追加
-        fileInput.value.push(fileInputs[parseInt(index)]);
+        fileData.value.push({
+          fileId: "",
+          fileBuffer: fileInputs[parseInt(index)],
+          fileInfo: null,
+          uploadedFrom: "local",
+          ready: false,
+        });
       }
     } catch(e) {}
   }
 
-  console.log("Input :: receivePasteObject : 最終結果->", fileInput.value);
+  console.log("Input :: receivePasteObject : 最終結果->", fileData.value);
 }
 
 /**
  * ファイルの入力を受け取る
  */
- const fileInputDirectly = () => {
+const fileInputDirectly = () => {
   if (elFileInput.value === null) return;
-
-  //ファイルデータを初期化
-  fileInput.value = [];
 
   console.log("filePortal :: fileInput : ファイルデータ->",
     elFileInput.value.files[0].size < 1,
@@ -156,11 +172,44 @@ const receivePasteObject = async (event:ClipboardEvent) => {
     ) {
       console.log("filePortal :: fileInput : ファイル入力エラー");
     } else {
-      //ファイルデータ用配列へファイルデータを追加
-      fileInput.value.push(elFileInput.value.files[index]);
-      console.log("Input :: fileInputDirectly : fileItems->", fileInput.value);
+      //ファイルの準備状況をfalseへ
+      allFileReady.value = false;
+      fileData.value.push({
+        fileId: "",
+        fileBuffer: elFileInput.value.files[index],
+        fileInfo: null,
+        uploadedFrom: "local",
+        ready: false,
+      });
     }
   }
+}
+
+/**
+ * ファイルデータの更新、あとすべてのファイルが送信できる状態か調べる
+ * @param file 
+ */
+const updateFileDataValue = (
+  fileNew: {
+    fileId: string,
+    fileBuffer: File|null,
+    fileInfo: file|null,
+    uploadedFrom: "remote"|"local"
+    ready: boolean
+  },
+  index: number
+) => {
+  //格納
+  fileData.value[index] = fileNew;
+
+  //console.log("Input :: updateFileData : fileData今->", fileData.value, " もらった値->", fileNew);
+
+  //ループしてファイルがいけるかどうか調べる
+  for (let file of fileData.value) {
+    if (!file.ready) return;
+  }
+  //ループを抜け出せたら準備完了と設定
+  allFileReady.value = true;
 }
 
 /**
@@ -231,6 +280,16 @@ const triggerEnter = (event: KeyboardEvent) => {
     return;
   }
 
+  //もし全ファイルが準備できていないなら止める
+  if (!allFileReady.value) return;
+  //ファイルIdを抽出して配列にする
+  let fileIdArr = [];
+  for (let file of fileData.value) {
+    fileIdArr.push(file.fileId);
+  }
+
+  //console.log("Input :: triggerEnter : fileIdArr->", fileIdArr);
+
   //console.log("/channel/:id :: triggerEnter : Enterメッセージ->", messageInput.value, event, props);
   socket.emit("sendMessage", {
     RequestSender: {
@@ -240,6 +299,7 @@ const triggerEnter = (event: KeyboardEvent) => {
     message: {
       channelId: props.channelInfo.channelId,
       content: messageInput.value,
+      fileId: fileIdArr
     },
   });
 
@@ -389,14 +449,14 @@ onUnmounted(() => {
 
     <m-card-compact color="surface" class="">
       <!-- 情報、ボタン表示用 -->
-      <div v-if="displayData || fileInput.length>=1" class="px-3 pt-4">
+      <div v-if="displayData || fileData.length>=1" class="px-3 pt-4">
         <div>
           <!-- 添付ファイル表示用 -->
           <FileInputsDisplay
-            :fileInput
+            :fileData
             :channelId="props.channelInfo.channelId"
-            @trimFile="(index)=>{fileInput.splice(index,1)}"
-            @updateFileIdArr="fileIdArrNow=>{fileIdArr=fileIdArrNow}"
+            @trimFile="(index)=>{ fileData.splice(index,1) }"
+            @updateFileData="args=>{ updateFileDataValue(args.fileData, args.index)}"
           />
         </div>
         <v-divider class="mx-auto mt-2" />
@@ -427,8 +487,8 @@ onUnmounted(() => {
         "
       >
 
+      <!-- アップロードボタン -->
         <template v-slot:prepend-inner>
-
           <v-menu>
             <template v-slot:activator="{ props }">
               <v-btn
@@ -443,15 +503,24 @@ onUnmounted(() => {
                 key="uploadDirectly"
               >
                 <m-btn
-                  @click="elFileInput!==null?elFileInput.click():null"
+                  @click=""
                 >
-                  <v-icon>mdi-upload</v-icon>
+                  <v-icon class="mr-1">mdi-cloud-download</v-icon>
+                  クラウドから選択
+                </m-btn>
+              </v-list-item>
+              <v-list-item
+                key="uploadDirectly"
+              >
+                <m-btn
+                  @click="elFileInput?.click()"
+                >
+                  <v-icon class="mr-1">mdi-upload</v-icon>
                   直接アップロード
                 </m-btn>
               </v-list-item>
             </v-list>
           </v-menu>
-
         </template>
 
       </v-textarea>

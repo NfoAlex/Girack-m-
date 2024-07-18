@@ -5,19 +5,33 @@ import type { file } from '~/types/file';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 const props = defineProps<{
-  fileInput: File[],
+  fileData: {
+    fileId: string,
+    fileBuffer: File|null,
+    fileInfo: file|null,
+    uploadedFrom: "remote"|"local"
+    ready: boolean
+  }[],
   channelId: string
 }>();
 
 const emits = defineEmits<{
   (e:"trimFile", index:number):void, //指定ファイルの入力を削除
-  (e:"updateFileIdArr", fileIdArr:string[]):void, //親のファイルId配列を更新する
+  (  //親のファイルId配列を更新する
+    e: "updateFileData",
+    args: {
+      fileData: {
+        fileId: string,
+        fileBuffer: File|null,
+        fileInfo: file|null,
+        uploadedFrom: "remote"|"local"
+        ready: boolean
+      },
+      index: number
+    }
+  ):void
 }>();
 
-/**
- * data
- */
-const fileIdArrNow = ref<string[]>([]);
 
 </script>
 
@@ -27,17 +41,18 @@ const fileIdArrNow = ref<string[]>([]);
   >
     <span style="width:max-content" class="d-flex flex-row">
       <m-card-compact
-        v-for="(file,index) in fileInput"
+        v-for="(file,index) in props.fileData"
         class="d-flex flex-row align-center pl-3 py-1 mr-1"
         variant="tonal"
       >
         <FileItem
           :fileInput="file"
           :channelId="props.channelId"
-          @appendFileId="fileId => {
-            fileIdArrNow.push(fileId);
-            emits('updateFileIdArr', fileIdArrNow); //親にファイルId配列を更新させる
-          }"
+          @updateFileData="
+            fileDataNew=> {
+              emits('updateFileData', {fileData:fileDataNew, index:index})
+            }
+          "
         />
         <m-btn
           @click="emits('trimFile',index)"
