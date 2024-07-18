@@ -25,7 +25,7 @@ const elFileInput = ref(null); //入力欄要素を取得するためのref
 /**
  * ファイルの入力を受け取る
  */
- const fileInput = () => {
+const fileInput = () => {
   if (elFileInput.value === null) return;
 
   //ファイルデータを初期化
