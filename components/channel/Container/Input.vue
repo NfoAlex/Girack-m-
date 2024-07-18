@@ -29,7 +29,7 @@ interface SearchData {
  */
 const messageInput = ref<string>(""); //メッセージ入力用変数
 
-const allFileReady = ref<boolean>(false);
+const allFileReady = ref<boolean>(true);
 const fileData = ref<
   {
     fileId: string,
