@@ -114,7 +114,6 @@ const canISpeakHere = computed((): boolean => {
 
   //自分のロールに話せるロールが含まれるか調べてboolで結果を返す
   for (let role of props.channelInfo.speakableRole) {
-    console.log("/channel/[id] :: Input :: canISpeakHere : forロール->", role);
     if (getMyUserinfo.value.role.includes(role)) return true;
     break;
   }
@@ -148,8 +147,6 @@ const receivePasteObject = async (event:ClipboardEvent) => {
       }
     } catch(e) {}
   }
-
-  console.log("Input :: receivePasteObject : 最終結果->", fileData.value);
 }
 
 /**
@@ -158,10 +155,12 @@ const receivePasteObject = async (event:ClipboardEvent) => {
 const fileInputDirectly = () => {
   if (elFileInput.value === null) return;
 
+  /*
   console.log("filePortal :: fileInput : ファイルデータ->",
     elFileInput.value.files[0].size < 1,
     elFileInput.value.files[0].size === undefined
   );
+  */
 
   //inputに入力されたファイルの数ぶん処理する
   for (let index in elFileInput.value.files) {
@@ -230,8 +229,6 @@ const triggerEnter = (event: KeyboardEvent) => {
     //もし要素が取得できなかったら停止
     if (elInput.value === null) return;
 
-    //console.log("/channel/[id] :: Input : 要素->", elInput.value.selectionStart);
-
     //現在の入力欄上のカーソル位置
     const currentTxtCursor: number = elInput.value.selectionStart;
 
@@ -287,8 +284,6 @@ const triggerEnter = (event: KeyboardEvent) => {
   for (let file of fileData.value) {
     fileIdArr.push(file.fileId);
   }
-
-  //console.log("Input :: triggerEnter : fileIdArr->", fileIdArr);
 
   //console.log("/channel/:id :: triggerEnter : Enterメッセージ->", messageInput.value, event, props);
   socket.emit("sendMessage", {

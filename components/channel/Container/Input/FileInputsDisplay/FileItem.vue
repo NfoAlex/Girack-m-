@@ -15,8 +15,6 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e:"appendFileId", fileId:string):void, //指定ファイルの入力を削除
-  (e:"setReady"):void,
   (  //親のファイルId配列を更新する
     e: "updateFileData",
     fileData: {
@@ -66,10 +64,6 @@ const uploadFile = () => {
   //アップロード状況追跡用
   xhr.upload.addEventListener('progress', (event) => {
     if (event.lengthComputable) {
-      console.log(
-        "FileItem :: アップロード状況->",
-        Math.round((event.loaded / event.total) * 100)
-      );
       //アップロード状況を更新する
       progress.value = Math.round((event.loaded / event.total) * 100);
     }
@@ -84,11 +78,6 @@ const uploadFile = () => {
       status.value = "SUCCESS";
       //結果がちゃんと取れているなら親コンポにファイルIdを渡す
       if (result.data !== undefined) {
-        console.log("FileItem :: 結果->", {
-          ...props.fileInput,
-          ready: true,
-          fileId: result.data
-        });
         emits(
           "updateFileData",
           {
@@ -122,8 +111,6 @@ onMounted(() => {
   if (props.fileInput.uploadedFrom === "local") {
     uploadFile();
   }
-
-  console.log("FileItem :: props.fileInput->", props.fileInput);
 });
 </script>
 
