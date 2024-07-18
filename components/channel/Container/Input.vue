@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { socket } from "~/socketHandlers/socketInit";
+import FileInputsDisplay from "./Input/FileInputsDisplay.vue";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type { channel } from "~/types/channel";
 import type { MyUserinfo } from "~/types/user";
@@ -26,6 +27,8 @@ interface SearchData {
  * data
  */
 const messageInput = ref<string>(""); //メッセージ入力用変数
+const fileInput = ref<File[]>([]);
+const fileIdArr = ref<string[]>([]);
 const elInput = ref(null); //入力欄要素を取得するためのref
 const inputRowNum = ref<number>(1); //入力欄の行数
 const displayData = ref<boolean>(false);
@@ -106,6 +109,28 @@ const canISpeakHere = computed((): boolean => {
 
   return false;
 });
+
+/**
+ * 入力欄からのペーストイベントの受け取り
+ */
+const receivePasteObject = async (event:ClipboardEvent) => {
+  //入力受付
+  const fileInputs = event.clipboardData?.files;
+
+  //クリップボードの配列ループしてファイルが有効か調べてファイル用配列へ追加
+  for (let index in fileInputs) {
+    console.log("Input :: receivePasteObject : index->", fileInputs[parseInt(index)]);
+    try {
+      //有効か？
+      if (fileInputs[parseInt(index)] !== undefined) {
+        //ファイル入力用配列へ追加
+        fileInput.value.push(fileInputs[parseInt(index)]);
+      }
+    } catch(e) {}
+  }
+
+  console.log("Input :: receivePasteObject : 最終結果->", fileInput.value);
+}
 
 /**
  * Enterキー入力の処理
@@ -332,9 +357,15 @@ onUnmounted(() => {
     </m-card>
     <m-card-compact color="surface" class="">
       <!-- 情報、ボタン表示用 -->
-      <div v-if="!displayData" class="px-3 pt-4">
+      <div v-if="displayData || fileInput.length>=1" class="px-3 pt-4">
         <div>
-          <v-card variant="outlined">テストコンテンツ</v-card>
+          <!-- 添付ファイル表示用 -->
+          <FileInputsDisplay
+            :fileInput
+            :channelId="props.channelInfo.channelId"
+            @trimFile="(index)=>{fileInput.splice(index,1)}"
+            @updateFileIdArr="fileIdArrNow=>{fileIdArr=fileIdArrNow}"
+          />
         </div>
         <v-divider class="mx-auto mt-2" />
       </div>
@@ -346,6 +377,7 @@ onUnmounted(() => {
         @keydown.up="triggerUp"
         @keydown.down="triggerDown"
         @keydown.@="AtsignTrigger"
+        @paste="receivePasteObject"
         variant="solo"
         rows="1"
         maxRows="5"
@@ -364,4 +396,4 @@ onUnmounted(() => {
       />
     </m-card-compact>
   </div>
-</template>
+</template>async 
