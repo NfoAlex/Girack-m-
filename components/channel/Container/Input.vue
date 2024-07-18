@@ -30,6 +30,7 @@ const messageInput = ref<string>(""); //メッセージ入力用変数
 const fileInput = ref<File[]>([]);
 const fileIdArr = ref<string[]>([]);
 const elInput = ref(null); //入力欄要素を取得するためのref
+const elFileInput = ref(null); //ファイル入力要素を取得するためのref
 const inputRowNum = ref<number>(1); //入力欄の行数
 const displayData = ref<boolean>(false);
 const searchData = ref<SearchData>({
@@ -130,6 +131,36 @@ const receivePasteObject = async (event:ClipboardEvent) => {
   }
 
   console.log("Input :: receivePasteObject : 最終結果->", fileInput.value);
+}
+
+/**
+ * ファイルの入力を受け取る
+ */
+ const fileInputDirectly = () => {
+  if (elFileInput.value === null) return;
+
+  //ファイルデータを初期化
+  fileInput.value = [];
+
+  console.log("filePortal :: fileInput : ファイルデータ->",
+    elFileInput.value.files[0].size < 1,
+    elFileInput.value.files[0].size === undefined
+  );
+
+  //inputに入力されたファイルの数ぶん処理する
+  for (let index in elFileInput.value.files) {
+    //条件を調べる
+    if (
+      elFileInput.value.files[index].size < 1 ||
+      elFileInput.value.files[index].size === undefined
+    ) {
+      console.log("filePortal :: fileInput : ファイル入力エラー");
+    } else {
+      //ファイルデータ用配列へファイルデータを追加
+      fileInput.value.push(elFileInput.value.files[index]);
+      console.log("Input :: fileInputDirectly : fileItems->", fileInput.value);
+    }
+  }
 }
 
 /**
@@ -355,6 +386,7 @@ onUnmounted(() => {
         </template>
       </v-virtual-scroll>
     </m-card>
+
     <m-card-compact color="surface" class="">
       <!-- 情報、ボタン表示用 -->
       <div v-if="displayData || fileInput.length>=1" class="px-3 pt-4">
@@ -393,7 +425,47 @@ onUnmounted(() => {
             ? props.channelInfo.channelName + ' へ送信'
             : 'このチャンネルで話せません。'
         "
-      />
+      >
+
+        <template v-slot:prepend-inner>
+
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon="mdi-plus"
+                size="small"
+              >
+              </v-btn>
+            </template>
+            <v-list rounded="xl">
+              <v-list-item
+                key="uploadDirectly"
+              >
+                <m-btn
+                  @click="elFileInput!==null?elFileInput.click():null"
+                >
+                  <v-icon>mdi-upload</v-icon>
+                  直接アップロード
+                </m-btn>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
+        </template>
+
+      </v-textarea>
     </m-card-compact>
+
+    <!-- ファイル受け取り部分(非表示) -->
+    <input
+      @change="fileInputDirectly"
+      type="file"
+      id="elFileInput"
+      ref="elFileInput"
+      style="display: none"
+      multiple
+    />
   </div>
-</template>async 
+  
+</template>
