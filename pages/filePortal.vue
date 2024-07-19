@@ -8,7 +8,6 @@ import { useMyUserinfo } from '~/stores/userinfo';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 import type { file, folder } from '~/types/file';
-import { Value } from 'sass';
 
 /**
  * data
