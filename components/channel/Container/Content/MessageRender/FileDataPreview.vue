@@ -72,7 +72,9 @@ onUnmounted(() => {
         class="mr-1"
       >mdi-delete</v-icon>
 
-      <p class="text-truncate flex-shrink-1">{{ file.name }}</p>
+      <a v-if="file.id !== 'ERROR_FILE_MISSING'" :href="'/file/' + file.id" rel="noopener noreferrer" target="_blank">
+        <p class="text-truncate flex-shrink-1">{{ file.name }}</p>
+      </a>
       <p v-if="file.id === 'ERROR_FILE_MISSING'" class="text-disabled">このファイルは削除されています。</p>
 
       <v-chip size="small" class="ml-auto">{{ calcSizeInHumanFormat(file.size) }}</v-chip>
