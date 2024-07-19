@@ -23,6 +23,7 @@ export default defineNuxtConfig({
       proxy: {
         "/uploadProfileIcon": "http://localhost:33333/",
         "/fileupload": "http://localhost:33333/",
+        "/downloadupload": "http://localhost:33333/",
         "/icon": "http://localhost:33333/"
       }
     }
@@ -35,6 +36,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/uploadProfileIcon': { cors:true },
     '/uploadfile': { cors:true },
+    '/downloadfile': { cors:true },
     '/server/**': { ssr:false }
   },
   //ここでプロキシ適用(なぜかエラー扱い)

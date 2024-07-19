@@ -28,6 +28,79 @@ const fileData = ref<file>({
 const fetchResult = ref<""|"SUCCESS"|"ERROR_FILE_MISSING"|"ERROR_FILE_IS_PRIVATE">("")
 
 /**
+ * ダウンロード!
+ */
+const download = async () => {
+  try {
+    const formData = new FormData();
+
+    //クッキーからセッションデータを取得、格納
+    const cookieLoaded = useCookie("session").value;
+    let RequestSenderLoaded = {userId:"", sessionId:""};
+    //クッキーの値が有効なら格納、VueUseのアレでエラーが出るが値はJSONで帰ってくる
+    if (cookieLoaded !== undefined) {
+      //送信者情報を格納
+      RequestSenderLoaded = {
+        userId: cookieLoaded.userId,
+        sessionId: cookieLoaded.sessionId
+      }
+    }
+
+    // JSONデータを文字列に変換して追加
+    formData.append(
+      'metadata',
+      JSON.stringify(
+        {
+          RequestSender: {
+            userId: RequestSenderLoaded.userId,
+            sessionId: RequestSenderLoaded.sessionId
+          }
+        }
+      )
+    );
+
+    console.log("formData->", formData);
+
+    const response = await fetch('/downloadfile/' + route.params.id, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    // Content-Dispositionヘッダーからファイル名を取得
+    const contentDisposition = response.headers.get('Content-Disposition');
+    let fileName = 'download'; // デフォルトのファイル名
+    if (contentDisposition) {
+      const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/i);
+      if (fileNameMatch) {
+        fileName = fileNameMatch[1];
+      }
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = fileName;
+    link.style.display = 'none';
+
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Download failed:', error);
+  }
+}
+
+/**
  * ファイル情報受け取り
  * @param dat 
  */
@@ -117,7 +190,7 @@ onUnmounted(() => {
             <v-chip>{{ new Date(fileData.uploadedDate).toLocaleString() }}</v-chip>
           </span>
         </span>
-        <m-btn block color="primary" class="mt-3 d-flex align-center">
+        <m-btn @click="download" block color="primary" class="mt-3 d-flex align-center">
           <v-icon>mdi-download</v-icon>
           <p>ダウンロード</p>
         </m-btn>

@@ -30,7 +30,8 @@ export default defineEventHandler(async (event) => {
     '/socket.io',
     '/icon',
     '/uploadProfileIcon',
-    '/uploadfile'
+    '/uploadfile',
+    '/downloadfile',
   ];
   
   // APIのパスと指定したもの以外は処理を止める止めないと他のパスに影響が出る
