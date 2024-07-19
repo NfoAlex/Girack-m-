@@ -49,7 +49,7 @@ const SOCKETfetchFileInfo = (
 onMounted(() => {
   console.log("/file :: route->", route.params.id);
 
-  socket.on("RESULT::fetchFileInfo", SOCKETfetchFileInfo);
+  socket.on("RESULT::fetchFileInfo:" + route.params.id, SOCKETfetchFileInfo);
 
   //送信者情報格納用
   let RequestSenderLoaded = {userId:"", sessionId:""};
@@ -77,7 +77,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  socket.off("RESULT::fetchFileInfo", SOCKETfetchFileInfo);
+  socket.off("RESULT::fetchFileInfo:" + route.params.id, SOCKETfetchFileInfo);
 });
 </script>
 
