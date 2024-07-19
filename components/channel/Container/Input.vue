@@ -298,6 +298,8 @@ const triggerEnter = (event: KeyboardEvent) => {
     },
   });
 
+  //ファイルデータを初期化
+  fileData.value = [];
   //入力欄を初期化
   messageInput.value = "";
   inputRowNum.value = 1;
