@@ -9,6 +9,7 @@ import EmojiRender from './MessageRender/EmojiRender.vue';
 import TextRender from './MessageRender/TextRender.vue';
 import ContentEditing from './MessageRender/ContentEditing.vue';
 import LinkPreview from './MessageRender/LinkPreview.vue';
+import FileDataPreview from "./MessageRender/FileDataPreview.vue";
 import type message from '~/types/message';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -126,6 +127,9 @@ onMounted(() => {
 
           <!-- メッセージが編集されたものだった時の表示 -->
           <span v-if="message.isEdited && !stateEditingMessage" class="text-disabled text-subtitle-2">編集済み</span>
+
+          <!-- ファイル表示 -->
+          <FileDataPreview v-if="message.fileId.length >= 1" :fileId="message.fileId" />
 
           <!-- リンクプレビューレンダー -->
           <LinkPreview :linkData="message.linkData" />
