@@ -21,6 +21,15 @@ const SOCKETfetchFileInfo = (dat:{result:string, data:file}) => {
   console.log("FileDataPreview :: dat->", dat);
   if (dat.result === "SUCCESS") {
     fileInfo.value.push(dat.data);
+  } else if (dat.result === "ERROR_FILE_MISSING") {
+    fileInfo.value.push({
+      id: 'ERROR_FILE_MISSING',
+      userId: '',
+      name: '',
+      isPublic: false,
+      size: 0,
+      uploadedDate: ''
+    });
   }
 }
 
@@ -54,8 +63,18 @@ onUnmounted(() => {
       class="mt-1 d-flex align-center"
       style="max-height:150px;"
     >
-      <v-icon class="mr-1">mdi-folder</v-icon>
+      <v-icon
+        v-if="file.id !== 'ERROR_FILE_MISSING'"
+        class="mr-1"
+      >mdi-folder</v-icon>
+      <v-icon
+        v-else
+        class="mr-1"
+      >mdi-delete</v-icon>
+
       <p class="text-truncate flex-shrink-1">{{ file.name }}</p>
+      <p v-if="file.id === 'ERROR_FILE_MISSING'" class="text-disabled">このファイルは削除されています。</p>
+
       <v-chip size="small" class="ml-auto">{{ calcSizeInHumanFormat(file.size) }}</v-chip>
     </m-card>
   </span>
