@@ -78,7 +78,7 @@ const moveDirectory = () => {
   //ディレクトリツリーで選んだのか確認、設定
     //ディレクトリツリー上の選択したフォルダIdの位置用変数
   let treeIndexMovingTo:number = -1;
-  console.log("今のツリー->", directoryTree.value);
+  //console.log("今のツリー->", directoryTree.value);
     //選択したフォルダーが今より上にいるか調べてツリー上の位置とフォルダ情報格納
   for (let index in directoryTree.value) {
     if (directoryTree.value[index].id === directoryIdSelected.value) {
