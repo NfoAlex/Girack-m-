@@ -151,7 +151,6 @@ onUnmounted(() => {
               >
                 {{ folderInfo.name }}
               </m-card-compact>
-              <v-divider />
             </div>
           </div>
         </m-card>
