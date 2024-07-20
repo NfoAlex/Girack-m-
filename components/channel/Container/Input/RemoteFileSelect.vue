@@ -121,35 +121,35 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <m-card height="100%" width="100%">
+  <m-card class="d-flex flex-col" width="100%" height="100%">
     <v-card-title>
       ファイルを選択
     </v-card-title>
 
-    <v-card-text height="100%">
+    <v-card-text class="flex-grow-1 flex-shrink-1">
       <div class="d-flex flex-column" style="height:100%;">
         
         <m-card
           class=""
           variant="outlined"
           height="30%"
+          width="100%"
         >
-          ここでフォルダとツリー表示
-          <div class="d-flex flex-row overflow-x-auto" style="width:100%;">
-            <span
+          <div class="d-flex flex-row overflow-x-auto" style="width:100%; height:100%;">
+            <div
               v-for="directory,index in directoryTree"
               class="d-flex flex-column mr-1 overflow-y-auto"
-              style="width:25%;"
+              style="width:25%; height:100%;"
             >
               <m-card-compact
                 @click="moveDirectory(folderInfo, index.toString())"
                 v-for="folderInfo in directory"
-                class="px-3 py-2 mb-1"
+                class="px-3 py-2 mb-1 flex-shrink-0"
                 :color="currentDirectory.id === folderInfo.id ?'primary':null"
               >
                 {{ folderInfo.name }}
               </m-card-compact>
-            </span>
+            </div>
           </div>
         </m-card>
         
@@ -165,7 +165,7 @@ onUnmounted(() => {
       </div>
     </v-card-text>
 
-    <v-card-actions>
+    <v-card-actions class="flex-shrink-0">
       <m-btn color="primary">選択</m-btn>
     </v-card-actions>
   </m-card>
