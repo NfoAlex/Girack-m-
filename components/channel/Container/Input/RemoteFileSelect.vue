@@ -136,11 +136,13 @@ onUnmounted(() => {
           width="100%"
         >
           <div class="d-flex flex-row overflow-x-auto" style="width:100%; height:100%;">
+            <!-- ディレクトリの中身のフォルダ表示部分 -->
             <div
               v-for="directory,index in directoryTree"
-              class="d-flex flex-column mr-1 overflow-y-auto"
+              class="d-flex flex-column flex-shrink-0 mr-1 overflow-y-auto"
               style="width:25%; height:100%;"
             >
+              <!-- フォルダそのもの -->
               <m-card-compact
                 @click="moveDirectory(folderInfo, index.toString())"
                 v-for="folderInfo in directory"
@@ -149,6 +151,7 @@ onUnmounted(() => {
               >
                 {{ folderInfo.name }}
               </m-card-compact>
+              <v-divider />
             </div>
           </div>
         </m-card>
