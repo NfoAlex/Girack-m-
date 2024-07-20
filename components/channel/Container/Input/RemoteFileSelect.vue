@@ -1,0 +1,172 @@
+<script setup lang="ts">
+import { socket } from '~/socketHandlers/socketInit';
+import { useMyUserinfo } from '~/stores/userinfo';
+import type { file, folder } from '~/types/file';
+const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+
+//ファイルインデックス表示ヘッダ
+const header = [
+  { title: 'ファイル名', value:'name' },
+  { title: 'サイズ', key:"size", value: (item: file) => calcSizeInHumanFormat(item.size) },  // サイズを単位で表示
+  { title: 'アップロード日時', key:"uploadedDate", value: (item: file) => new Date(item.uploadedDate).toLocaleString() },  // 日付をフォーマットして表示
+];
+
+/**
+ * data
+ */
+const fileIndex = ref<file[]>([]); //ファイルインデックス
+const fileSelected = ref<file[]>([]); //選択したファイル項目
+const folderIndex = ref<folder[]>([]); //フォルダ構成データ
+const directoryTree = ref<
+  {
+    [key: string]: folder[]
+  }
+>({
+  "0": [
+    {
+      id: '',
+      userId: '',
+      name: 'home',
+      positionedDirectoryId: ''
+    }
+  ]
+});
+
+const currentDirectory = ref<folder>({
+  id: '',
+  userId: '',
+  name: 'home',
+  positionedDirectoryId: ''
+});
+
+/**
+ * ディレクトリを移動して再取得
+ */
+const moveDirectory = (folder:folder, directoryLevel:string) => {
+  //現在いるディレクトリを子往診
+  currentDirectory.value = folder;
+
+  //ディレクトリーツリーの深さ取得
+  const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
+  //ディレクトリーツリーから移動先の深さより下のものを削除
+  for (let i=parseInt(directoryLevel)+1; i<=lengthOfDirectoryTree; i++) {
+    delete directoryTree.value[i];
+  }
+
+  //ファイルとフォルダを再取得
+  fetchFilesAndFolders();
+}
+
+/**
+ * ファイルとフォルダ構成を取得
+ */
+const fetchFilesAndFolders = () => {
+  //ファイルインデックスを取得
+  socket.emit("fetchFileIndex", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    directory: currentDirectory.value.id
+  });
+  socket.emit("fetchFolders", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    positionedDirectoryId: currentDirectory.value.id
+  });
+}
+
+/**
+ * ファイルインデックス受け取り
+ * @param dat 
+ */
+const SOCKETfetchFileIndex = (dat:{result:string, data:file[]}) => {
+  console.log("RemoteFileSelect :: dat->", dat);
+  //成功ならファイルインデックスを格納
+  if (dat.result === "SUCCESS") {
+    fileIndex.value = dat.data;
+  }
+}
+
+/**
+ * フォルダ構成の受け取り
+ * @param dat 
+ */
+const SOCKETfetchFolders = (dat:{result:string, data:folder[]}) => {
+  console.log("RemoteFileSelect :: dat->", dat);
+  if (dat.result === "SUCCESS") {
+    folderIndex.value = dat.data;
+    //ディレクトリーツリーの長さ取得
+    const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
+    //その長さの数に代入する(自然に長さ - 1に代入されるよ)
+    directoryTree.value[lengthOfDirectoryTree.toString()] = dat.data;
+  }
+};
+
+onMounted(() => {
+  socket.on("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
+  socket.on("RESULT::fetchFolders", SOCKETfetchFolders);
+
+  //ファイルインデックスを取得
+  fetchFilesAndFolders();
+});
+
+onUnmounted(() => {
+  socket.off("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
+  socket.off("RESULT::fetchFolders", SOCKETfetchFolders);
+});
+
+</script>
+
+<template>
+  <m-card height="100%" width="100%">
+    <v-card-title>
+      ファイルを選択
+    </v-card-title>
+
+    <v-card-text height="100%">
+      <div class="d-flex flex-column" style="height:100%;">
+        
+        <m-card
+          class=""
+          variant="outlined"
+          height="30%"
+        >
+          ここでフォルダとツリー表示
+          <div class="d-flex flex-row overflow-x-auto" style="width:100%;">
+            <span
+              v-for="directory,index in directoryTree"
+              class="d-flex flex-column mr-1 overflow-y-auto"
+              style="width:25%;"
+            >
+              <m-card-compact
+                @click="moveDirectory(folderInfo, index.toString())"
+                v-for="folderInfo in directory"
+                class="px-3 py-2 mb-1"
+                :color="currentDirectory.id === folderInfo.id ?'primary':null"
+              >
+                {{ folderInfo.name }}
+              </m-card-compact>
+            </span>
+          </div>
+        </m-card>
+        
+        <v-data-table
+          v-model="fileSelected"
+          class="flex-grow-1 rounded-xl mt-3"
+          :items="fileIndex"
+          item-value="id"
+          :headers="header"
+          hide-default-footer
+          show-select
+        ></v-data-table>
+      </div>
+    </v-card-text>
+
+    <v-card-actions>
+      <m-btn color="primary">選択</m-btn>
+    </v-card-actions>
+  </m-card>
+</template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { socket } from "~/socketHandlers/socketInit";
 import FileInputsDisplay from "./Input/FileInputsDisplay.vue";
+import RemoteFileSelect from "./Input/RemoteFileSelect.vue";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type { channel } from "~/types/channel";
 import type { MyUserinfo } from "~/types/user";
@@ -56,6 +57,8 @@ const searchData = ref<SearchData>({
 });
 const searchDataResult = ref<MyUserinfo[]>([]);
 const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リスト
+
+const displayRemoteFileSelect = ref<boolean>(false);
 
 /**
  * 入力テキストの監視
@@ -406,6 +409,18 @@ onUnmounted(() => {
 </script>
 
 <template>
+
+  <!-- クラウドからのファイル選択 -->
+  <v-dialog
+    v-if="displayRemoteFileSelect"
+    v-model="displayRemoteFileSelect"
+    width="75vw"
+    max-width="850px"
+    height="80vh"
+  >
+    <RemoteFileSelect />
+  </v-dialog>
+
   <div style="height: fit-content">
     <!-- メンションウィンドウ -->
     <m-card
@@ -500,7 +515,7 @@ onUnmounted(() => {
                 key="uploadDirectly"
               >
                 <m-btn
-                  @click=""
+                  @click="displayRemoteFileSelect = true"
                 >
                   <v-icon class="mr-1">mdi-cloud-download</v-icon>
                   クラウドから選択
