@@ -96,7 +96,7 @@ const download = async () => {
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   } catch (error) {
-    console.error('Download failed:', error);
+    console.error('/file :: エラー->', error);
   }
 }
 
