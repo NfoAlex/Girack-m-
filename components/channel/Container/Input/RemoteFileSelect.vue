@@ -17,7 +17,7 @@ const header = [
 const fileIndex = ref<file[]>([]); //ファイルインデックス
 const fileSelected = ref<file[]>([]); //選択したファイル項目
 const folderIndex = ref<folder[]>([]); //フォルダ構成データ
-const directoryTree = ref<
+const directoryTree = ref<             //ディレクトリツリー
   {
     [key: string]: folder[]
   }
@@ -32,7 +32,7 @@ const directoryTree = ref<
   ]
 });
 
-const currentDirectory = ref<folder>({
+const currentDirectory = ref<folder>({ //今いるディレクトリ情報
   id: '',
   userId: '',
   name: 'home',
@@ -100,7 +100,7 @@ const SOCKETfetchFolders = (dat:{result:string, data:folder[]}) => {
     folderIndex.value = dat.data;
     //ディレクトリーツリーの長さ取得
     const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
-    //その長さの数に代入する(自然に長さ - 1に代入されるよ)
+    //その長さの数に代入する
     directoryTree.value[lengthOfDirectoryTree.toString()] = dat.data;
   }
 };
