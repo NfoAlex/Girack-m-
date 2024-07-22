@@ -98,7 +98,6 @@ const moveDirectory = () => {
     for (let index in folderIndex.value) {
       if (folderIndex.value[index].id === directoryIdSelected.value) {
         folderInfoMovingTo = folderIndex.value[index];
-        console.log("index->", index);
         break;
       }
     }
