@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CalendarHeatmap } from "vue3-calendar-heatmap";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
 
@@ -19,41 +20,48 @@ const route = useRoute();
     </h4>
     <IndexOnlineUsers />
   </div>
-  <div class="pa-5">
+  <div>
     <v-row>
-      <v-col>
+      <v-col cols="">
         <m-card class="mb-5">
-          <div
-            class="px-2 my-2"
-            style="font-weight: 600"
-            :style="{
-              'background-image':
-                'url(' + '/icon/' + getMyUserinfo.userId + ')',
-            }"
-          >
-            <v-avatar size="86" class="mr-3 mx-2">
+          <div class="px-2 my-2 d-flex">
+            <v-avatar size="70" class="mr-3 mx-2">
               <v-img
                 :alt="getMyUserinfo.userId"
                 :src="'/icon/' + getMyUserinfo.userId"
               ></v-img>
             </v-avatar>
-            <text class="algin-center ma-2 font-weight-black text-h5">
-              {{ getMyUserinfo.userName }}
-            </text>
+            <div>
+              <text class="algin-center ma-2 font-weight-black text-h5">
+                {{ getMyUserinfo.userName }}
+              </text>
+              <div class="d-flex">
+                <v-chip
+                  v-for="role of getMyUserinfo.role"
+                  :key="role"
+                  class="mr-1"
+                  size="small"
+                  variant="flat"
+                >
+                  {{ role }}
+                </v-chip>
+              </div>
+            </div>
           </div>
-          <p>piniaデータ :</p>
-          <p>Serverinfo :</p>
-          <m-card variant="outlined">
-            {{ getServerinfo }}
-          </m-card>
-          <p>MyUserinfo :</p>
+
           <m-card variant="outlined">
             {{ getMyUserinfo }}
           </m-card>
-          <p>セッションID :</p>
-          <m-card variant="outlined">
-            {{ getSessionId }}
-          </m-card>
+          <!-- アクティブ状況を草で表示 -->
+          <!-- https://razorness.github.io/vue3-calendar-heatmap/ -->
+          <calendar-heatmap
+            dark-mode
+            class="mt-5 overflow-x-visible h-60"
+            :values="[{ date: '2023-9-22', count: 16 }]"
+            startDate="2023-9-1"
+            endDate="2024-9-22"
+            :round="5"
+          />
         </m-card>
       </v-col>
       <v-col>
