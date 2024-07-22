@@ -3,6 +3,13 @@ import vue from "@vitejs/plugin-vue";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
+  app: {
+    head: {
+      meta: [
+        { property:"og:title", content:"Girack-m-" }
+      ]
+    }
+  },
   css: ["@/assets/styles/main.scss"],
   modules: ["@pinia/nuxt", "vuetify-nuxt-module", "@vueuse/nuxt", "@nuxtjs/google-fonts"],
   pinia: {

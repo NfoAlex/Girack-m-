@@ -129,6 +129,19 @@ const SOCKETfetchFileInfo = (
 
     //タブ名にファイル名設定
     title.value = getServerinfo.value.servername + " : " + fileData.value.name;
+
+    useHead({
+      meta: [
+        {
+          name:"description",
+          content: "Girackのファイルをダウンロードするページです。"
+        },
+        {
+          property: "og:description",
+          content: dat.data.uploadedDate
+        }
+      ]
+    });
   }
 }
 
