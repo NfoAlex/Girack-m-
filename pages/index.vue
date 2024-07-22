@@ -4,6 +4,7 @@ import { useMyUserinfo } from "../stores/userinfo";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+const { getInbox } = storeToRefs(useInbox());
 
 const route = useRoute();
 </script>
@@ -60,7 +61,7 @@ const route = useRoute();
           <div class="text-h5 pa-2 border-b-lg" style="font-weight: 600">
             Notification
           </div>
-          <!-- mock -->
+          {{ getInbox }}
         </m-card>
       </v-col>
       <v-col>
