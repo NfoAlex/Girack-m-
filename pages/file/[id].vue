@@ -176,7 +176,6 @@ onUnmounted(() => {
         v-if="fetchResult === 'SUCCESS'"
         class="my-auto my-3"
         color="messageHovered"
-        style="width:100%;"
       >
         <p class="text-h5 text-center mb-3">{{ fileData.name }}</p>
         <span class="d-flex justify-space-evenly align-center">
@@ -206,8 +205,8 @@ onUnmounted(() => {
       </m-card>
 
       <!-- フッター -->
-      <m-card color="messageHovered" class="mx-auto d-flex align-center" style="width:500px;">
-        <p class="text-h6">{{ getServerinfo.servername }}</p>
+      <m-card color="messageHovered" class="mx-auto d-flex align-center" maxWidth="100%">
+        <p class="text-h6 mr-5 text-truncate">{{ getServerinfo.servername }}</p>
         <!-- テーマ切り替えようボタン -->
         <SwitchTheme class="ml-auto" />
       </m-card>
