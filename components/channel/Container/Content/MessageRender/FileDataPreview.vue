@@ -84,7 +84,7 @@ onUnmounted(() => {
       </a>
       <p v-if="file.id === 'ERROR_FILE_MISSING'" class="text-disabled">このファイルは削除されています。</p>
 
-      <v-chip size="small" class="ml-auto">{{ calcSizeInHumanFormat(file.size) }}</v-chip>
+      <v-chip size="small" class="ml-auto flex-shrink-0">{{ calcSizeInHumanFormat(file.size) }}</v-chip>
     </m-card>
   </span>
 </template>
