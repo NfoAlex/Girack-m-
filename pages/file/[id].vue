@@ -16,7 +16,6 @@ definePageMeta({
 /**
  * data
  */
-const fileIsPublic = ref<boolean>(false);
 const fileData = ref<file>({
   id: '',
   userId: '',
