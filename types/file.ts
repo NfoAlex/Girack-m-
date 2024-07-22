@@ -4,6 +4,7 @@ export interface file {
   name: string,
   isPublic: boolean,
   size: number,
+  type: File["type"],
   uploadedDate: string
 }
 

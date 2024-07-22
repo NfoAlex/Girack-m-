@@ -28,7 +28,8 @@ const SOCKETfetchFileInfo = (dat:{result:string, data:file}) => {
       name: '',
       isPublic: false,
       size: 0,
-      uploadedDate: ''
+      type: '',
+      uploadedDate: '',
     });
   }
 }
