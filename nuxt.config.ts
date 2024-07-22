@@ -5,9 +5,6 @@ export default defineNuxtConfig({
   ssr: false,
   css: ["@/assets/styles/main.scss"],
   modules: ["@pinia/nuxt", "vuetify-nuxt-module", "@vueuse/nuxt", "@nuxtjs/google-fonts"],
-  app: {
-    keepalive: {include: ["Channelbar", "EmojiRender", "MessageRender"]},
-  },
   pinia: {
     storesDirs: ['./stores/**'],
   },
