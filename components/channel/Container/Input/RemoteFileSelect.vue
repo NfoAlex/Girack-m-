@@ -4,6 +4,19 @@ import { useMyUserinfo } from '~/stores/userinfo';
 import type { file, folder } from '~/types/file';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
+interface inputFileSelected {
+  fileId: string,
+  fileBuffer: File|null,
+  fileInfo: file|null,
+  uploadedFrom: "remote"|"local"
+  ready: boolean
+}
+
+//emit(選択したファイル適用のため)
+const emits = defineEmits<{
+  (e:"applySelectedFile", fileSelectedResult:inputFileSelected[]): void,
+}>();
+
 //ファイルインデックス表示ヘッダ
 const header = [
   { title: 'ファイル名', value:'name' },
@@ -15,8 +28,8 @@ const header = [
  * data
  */
 const fileIndex = ref<file[]>([]); //ファイルインデックス
-const fileSelected = ref<file[]>([]); //選択したファイル項目
 const folderIndex = ref<folder[]>([]); //フォルダ構成データ
+const fileSelected = ref<file[]>([]); //選択したファイル項目
 const directoryTree = ref<             //ディレクトリツリー
   {
     [key: string]: folder[]
@@ -76,6 +89,30 @@ const fetchFilesAndFolders = () => {
     },
     positionedDirectoryId: currentDirectory.value.id
   });
+}
+
+/**
+ * 選択したファイルをInputへ適用
+ */
+const finalizeSelectedFile = () => {
+  const fileSelectedResult:inputFileSelected[] = [];
+
+  //選択したファイルを親のInputで扱える形にする
+  for (let file of fileSelected.value) {
+    //伝送するデータを整備
+    fileSelectedResult.push(
+      {
+        fileId: file.id,
+        fileBuffer: null,
+        fileInfo: toRaw(file),
+        uploadedFrom: 'remote',
+        ready: true
+      }
+    );
+  }
+
+  //親コンポのInputへ渡す
+  emits("applySelectedFile", fileSelectedResult);
 }
 
 /**
@@ -159,16 +196,27 @@ onUnmounted(() => {
           v-model="fileSelected"
           class="flex-grow-1 rounded-xl mt-3"
           :items="fileIndex"
-          item-value="id"
+          return-object
           :headers="header"
           hide-default-footer
           show-select
         ></v-data-table>
       </div>
+
+      <!-- 選択したファイルのプレビュー -->
+      <div class="flex-shrink-0 mt-2 d-flex flex-wrap">
+        <v-chip
+          v-for="file in fileSelected"
+          size="small"
+          class="mr-1 mt-1"
+        >
+          {{ file.name }}
+        </v-chip>
+      </div>
     </v-card-text>
 
     <v-card-actions class="flex-shrink-0">
-      <m-btn color="primary">選択</m-btn>
+      <m-btn @click="finalizeSelectedFile" color="primary">選択</m-btn>
     </v-card-actions>
   </m-card>
 </template>

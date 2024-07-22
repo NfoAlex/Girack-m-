@@ -418,7 +418,14 @@ onUnmounted(() => {
     max-width="850px"
     height="80vh"
   >
-    <RemoteFileSelect />
+    <RemoteFileSelect
+      @applySelectedFile="
+        (fileSelected) => {
+          fileData = [...fileData, ...fileSelected];
+          displayRemoteFileSelect = false;
+        }
+      "
+    />
   </v-dialog>
 
   <div style="height: fit-content">
