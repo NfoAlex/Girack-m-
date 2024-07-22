@@ -5,6 +5,10 @@ import SwitchTheme from '~/components/file/SwitchTheme.vue';
 import { useServerinfo } from '~/stores/serverinfo';
 import type { file } from '~/types/file';
 
+//タブ名にファイル名を表示する用
+import { useTitle } from '@vueuse/core'
+const title = useTitle()
+
 const { getServerinfo } = storeToRefs(useServerinfo());
 
 const route = useRoute();
@@ -122,6 +126,9 @@ const SOCKETfetchFileInfo = (
   //成功ならデータを格納
   if (dat.result === "SUCCESS") {
     fileData.value = dat.data;
+
+    //タブ名にファイル名設定
+    title.value = getServerinfo.value.servername + " : " + fileData.value.name;
   }
 }
 
@@ -129,6 +136,9 @@ onMounted(() => {
   console.log("/file :: route->", route.params.id);
 
   socket.on("RESULT::fetchFileInfo:" + route.params.id, SOCKETfetchFileInfo);
+
+  //タブ名に初期表示用にインスタンス名を表示
+  title.value = getServerinfo.value.servername + " : ファイル";
 
   //送信者情報格納用
   let RequestSenderLoaded = {userId:"", sessionId:""};
