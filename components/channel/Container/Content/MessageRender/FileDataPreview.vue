@@ -34,19 +34,21 @@ const SOCKETfetchFileInfo = (dat:{result:string, data:file}) => {
 }
 
 onMounted(() => {
-  for (let fileId of propsMessage.fileId) {
-    console.log("FIleDataPreview :: fileId->", fileId);
+  nextTick(() => {
+    for (let fileId of propsMessage.fileId) {
+      console.log("FIleDataPreview :: fileId->", fileId);
 
-    socket.on("RESULT::fetchFileInfo:" + fileId, SOCKETfetchFileInfo);
+      socket.on("RESULT::fetchFileInfo:" + fileId, SOCKETfetchFileInfo);
 
-    socket.emit("fetchFileInfo", {
-      RequestSender: {
-        userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
-      },
-      fileId: fileId
-    });
-  }
+      socket.emit("fetchFileInfo", {
+        RequestSender: {
+          userId: getMyUserinfo.value.userId,
+          sessionId: getSessionId.value
+        },
+        fileId: fileId
+      });
+    }
+  });
 });
 
 onUnmounted(() => {
