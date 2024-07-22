@@ -116,17 +116,27 @@ onMounted(() => {
 
 <template>
   <span class="d-flex align-center">
-    <p class="flex-grow-1 mr-2">{{ props.fileInput.fileBuffer?.name }}</p>
+    <p class="flex-grow-1 mr-2">{{ props.fileInput.fileBuffer?.name || props.fileInput.fileInfo?.name }}</p>
+    <!-- クラウドから選択したファイルだった時の表示 -->
+    <v-icon
+      v-if="props.fileInput.uploadedFrom==='remote'"
+      size="small"
+      color="primary"
+    >mdi-cloud-outline</v-icon>
+
+    <!-- アップロードの成功表示 -->
     <v-icon
       v-if="status==='SUCCESS'"
       size="small"
       color="success"
     >mdi-check</v-icon>
+    <!-- アップロードの失敗表示 -->
     <v-icon
       v-if="status==='FAILED'"
       size="small"
       color="error"
     >mdi-alert-circle-outline</v-icon>
+    <!-- アップロード途中表示 -->
     <v-progress-circular
       v-if="status==='UPLOADING'"
       :model-value="progress"
