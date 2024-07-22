@@ -24,12 +24,16 @@ const fileData = ref<file>({
   size: 0,
   uploadedDate: ''
 });
-const fetchResult = ref<""|"SUCCESS"|"ERROR_FILE_MISSING"|"ERROR_FILE_IS_PRIVATE">("")
+const fetchResult = ref<""|"SUCCESS"|"ERROR_FILE_MISSING"|"ERROR_FILE_IS_PRIVATE">("");
+const downloadStatus = ref<""|"DOWNLOADING"|"SUCCESS"|"FAILED">(""); //ダウンロード結果
 
 /**
  * ダウンロード!
  */
 const download = async () => {
+  //ダウンロード途中と設定
+  downloadStatus.value = "DOWNLOADING";
+
   try {
     const formData = new FormData();
 
@@ -67,6 +71,8 @@ const download = async () => {
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
+    } else {
+      downloadStatus.value = "SUCCESS";
     }
 
     // Content-Dispositionヘッダーからファイル名を取得
@@ -96,6 +102,7 @@ const download = async () => {
     window.URL.revokeObjectURL(url);
   } catch (error) {
     console.error('/file :: エラー->', error);
+    downloadStatus.value = "FAILED";
   }
 }
 
@@ -188,10 +195,23 @@ onUnmounted(() => {
             <v-chip>{{ new Date(fileData.uploadedDate).toLocaleString() }}</v-chip>
           </span>
         </span>
-        <m-btn @click="download" block color="primary" class="mt-3 d-flex align-center">
+
+        <m-btn
+          @click="download"
+          :loading="downloadStatus==='DOWNLOADING'"
+          :disabled="downloadStatus==='SUCCESS'"
+          color="primary"
+          block
+          class="mt-3 d-flex align-center"
+        >
           <v-icon>mdi-download</v-icon>
-          <p>ダウンロード</p>
+          <p v-if="downloadStatus==='SUCCESS'">完了</p>
+          <p v-else>ダウンロード</p>
         </m-btn>
+        <p
+          v-if="downloadStatus==='FAILED'"
+          class="text-center mt-1 text-subtitle-2"
+        >ダウンロードに失敗しました...</p>
       </m-card>
 
       <!-- エラー表示用 -->
