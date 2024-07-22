@@ -59,7 +59,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <span v-for="file in fileInfo">
+  <span v-for="file in fileInfo" style="width:100%">
     <m-card
       color="cardInner"
       class="mt-1 d-flex align-center"
@@ -74,8 +74,13 @@ onUnmounted(() => {
         class="mr-1"
       >mdi-delete</v-icon>
 
-      <a v-if="file.id !== 'ERROR_FILE_MISSING'" :href="'/file/' + file.id" rel="noopener noreferrer" target="_blank">
-        <p class="text-truncate flex-shrink-1">{{ file.name }}</p>
+      <a
+        v-if="file.id !== 'ERROR_FILE_MISSING'"
+        :href="'/file/' + file.id"
+        rel="noopener noreferrer" target="_blank"
+        class="text-truncate flex-shrink-1"
+      >
+        {{ file.name }}
       </a>
       <p v-if="file.id === 'ERROR_FILE_MISSING'" class="text-disabled">このファイルは削除されています。</p>
 
