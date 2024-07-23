@@ -166,6 +166,7 @@ onUnmounted(() => {
         v-if="fileBlobArr[file.id]!==undefined"
         :src="fileBlobArr[file.id].blobUrl"
         class="rounded-lg"
+        maxHeight="150px"
       />
 
       <span class="mt-1 d-flex align-center" style="max-height:150px;">
