@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { socket } from '~/socketHandlers/socketInit';
 import calcSizeInHumanFormat from '~/composables/calcSizeInHumanFormat';
+import { getBlobUrl, registerBlobUrl } from '~/composables/manageBlobUrl';
 import { useMyUserinfo } from '~/stores/userinfo';
 import type { file } from '~/types/file';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -26,6 +27,8 @@ const fileBlobArr = ref<
  * ファイルダウンロード用のURLを生成する
  */
 const prepareFile = async (fileId:string) => {
+  if (getBlobUrl(fileId) !== undefined) return;
+
   const formData = new FormData();
 
   // JSONデータを文字列に変換して追加
@@ -62,6 +65,9 @@ const prepareFile = async (fileId:string) => {
   const blob = await response.blob();
   const url = window.URL.createObjectURL(blob);
 
+  //blobキャッシュへ保存
+  registerBlobUrl(fileId, {fileName:fileName, blobUrl:url});
+
   //ファイルデータ用JSONへ格納
   fileBlobArr.value[fileId] = {
     fileName: fileName,
@@ -77,14 +83,30 @@ const downloadFile = (fileId:string) => {
   //仮想ボタン用のアンカーオブジェクト
   const link = document.createElement('a');
 
-  if (fileBlobArr.value[fileId].blobUrl === null) {
-    return;
+  if (
+    fileBlobArr.value[fileId] !== undefined
+  ) {
+    if (fileBlobArr.value[fileId].blobUrl !== null) {
+
+      //ダウンロードするための仮想ボタン作成(見えない)
+      link.href = fileBlobArr.value[fileId].blobUrl;
+      link.download = fileBlobArr.value[fileId].fileName;
+      link.style.display = 'none';
+
+      //blobUrl = fileBlobArr.value[fileId].blobUrl
+    }
+  }
+  
+  const blobData = getBlobUrl(fileId);
+  if (blobData !== undefined) {
+
+    //ダウンロードするための仮想ボタン作成(見えない)
+    link.href = blobData.blobUrl;
+    link.download = blobData.fileName;
+    link.style.display = 'none';
   }
 
-  //ダウンロードするための仮想ボタン作成(見えない)
-  link.href = fileBlobArr.value[fileId].blobUrl;
-  link.download = fileBlobArr.value[fileId].fileName;
-  link.style.display = 'none';
+  if (link.href === "") return;
 
   //ブラウザにダウンロードさせる
   document.body.appendChild(link);
@@ -92,6 +114,26 @@ const downloadFile = (fileId:string) => {
 
   //掃除
   document.body.removeChild(link);
+}
+
+/**
+ * 画像用のblobUrl取得
+ * @param fileId 
+ */
+const getImageUrl = (fileId:string) => {
+  //キャッシュにあるか確認して取得
+  const blobCacheUrl = getBlobUrl(fileId)?.blobUrl;
+  if (blobCacheUrl !== undefined) {
+    console.log("FileDataPreview :: キャッシュから");
+    return blobCacheUrl;
+  }
+
+  //今取得したものであるか確認して取得
+  if (fileBlobArr.value[fileId] !== undefined) {
+    return fileBlobArr.value[fileId].blobUrl;
+  }
+
+  return "";
 }
 
 /**
@@ -142,14 +184,6 @@ onMounted(() => {
 onUnmounted(() => {
   for (let fileId of propsMessage.fileId) {
     socket.off("RESULT::fetchFileInfo:" + fileId, SOCKETfetchFileInfo);
-
-    //ファイル情報が無ければここで終える
-    if (fileBlobArr.value[fileId] === undefined) return;
-
-    //もしBlobURL生成されていたら止める
-    if (fileBlobArr.value[fileId].blobUrl !== null) {
-      URL.revokeObjectURL(fileBlobArr.value[fileId].blobUrl);
-    }
   }
 });
 </script>
@@ -163,8 +197,8 @@ onUnmounted(() => {
 
       <!-- プレビュー用画像表示 -->
       <v-img
-        v-if="fileBlobArr[file.id]!==undefined"
-        :src="fileBlobArr[file.id].blobUrl"
+        v-if="getImageUrl(file.id)"
+        :src="getImageUrl(file.id)"
         class="rounded-lg"
         maxHeight="150px"
       />
