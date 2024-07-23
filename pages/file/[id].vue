@@ -26,18 +26,53 @@ const fileData = ref<file>({
   name: '',
   isPublic: false,
   size: 0,
-  uploadedDate: ''
+  type: '',
+  uploadedDate: '',
 });
+const fileBufferData = ref<
+  {
+    blob: Blob|null,
+    filename: string,
+    fileURL: string
+  }
+>(
+  {
+    blob: null,
+    filename: "",
+    fileURL: ""
+  }
+);
 const fetchResult = ref<""|"SUCCESS"|"ERROR_FILE_MISSING"|"ERROR_FILE_IS_PRIVATE">("");
 const downloadStatus = ref<""|"DOWNLOADING"|"SUCCESS"|"FAILED">(""); //ダウンロード結果
+const imagePreviewUrl = ref<string>("");
 
 /**
  * ダウンロード!
  */
 const download = async () => {
-  //ダウンロード途中と設定
-  downloadStatus.value = "DOWNLOADING";
+  try {
+    const link = document.createElement('a');
 
+    link.href = fileBufferData.value.fileURL;
+    link.download = fileBufferData.value.filename;
+    link.style.display = 'none';
+
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(fileBufferData.value.fileURL);
+  } catch (error) {
+    console.error('/file :: エラー->', error);
+    downloadStatus.value = "FAILED";
+  }
+}
+
+/**
+ * ファイル情報をあらかじめ取得、ダウンロードできる体制に
+ */
+const prepareFile = async () => {
   try {
     const formData = new FormData();
 
@@ -75,8 +110,6 @@ const download = async () => {
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
-    } else {
-      downloadStatus.value = "SUCCESS";
     }
 
     // Content-Dispositionヘッダーからファイル名を取得
@@ -86,27 +119,19 @@ const download = async () => {
       const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/i);
       if (fileNameMatch) {
         fileName = fileNameMatch[1];
+        fileBufferData.value.filename = fileNameMatch[1];
       }
     }
 
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
 
-    const link = document.createElement('a');
+    fileBufferData.value.blob = blob;
+    fileBufferData.value.fileURL = url;
 
-    link.href = url;
-    link.download = fileName;
-    link.style.display = 'none';
-
-    document.body.appendChild(link);
-    link.click();
-
-    // Clean up
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    console.log("/file :: prepareFile : 今のデータ->", fileBufferData.value);
   } catch (error) {
     console.error('/file :: エラー->', error);
-    downloadStatus.value = "FAILED";
   }
 }
 
@@ -130,18 +155,7 @@ const SOCKETfetchFileInfo = (
     //タブ名にファイル名設定
     title.value = getServerinfo.value.servername + " : " + fileData.value.name;
 
-    useHead({
-      meta: [
-        {
-          name:"description",
-          content: "Girackのファイルをダウンロードするページです。"
-        },
-        {
-          property: "og:description",
-          content: dat.data.uploadedDate
-        }
-      ]
-    });
+    prepareFile();
   }
 }
 
@@ -180,6 +194,12 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::fetchFileInfo:" + route.params.id, SOCKETfetchFileInfo);
+
+  //プレビュー用の画像URLを無効化
+  if (imagePreviewUrl.value !== "") {
+    //URL.revokeObjectURL(imagePreviewUrl.value);
+    URL.revokeObjectURL(fileBufferData.value.fileURL);
+  }
 });
 </script>
 
@@ -206,6 +226,11 @@ onUnmounted(() => {
         class="my-auto my-3"
         color="messageHovered"
       >
+        <!-- 画像ファイルだった時のプレビュー表示 -->
+        <div v-if="fileData.type.startsWith('image/')">
+          <img :src="fileBufferData.fileURL" width="100%" />
+          <v-divider class="my-2" />
+        </div>
         <p class="text-h5 text-center mb-3">{{ fileData.name }}</p>
         <span class="d-flex justify-space-evenly align-center">
           <span class="d-flex align-center">
