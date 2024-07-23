@@ -13,15 +13,100 @@ const propsMessage = defineProps<{
  * data
  */
 const fileInfo = ref<file[]>([]);
+const fileBlobArr = ref<
+  {
+    [key: string]: {
+      fileName: string,
+      blobUrl: string|null
+    }
+  }
+>({});
+
+/**
+ * ファイルダウンロード用のURLを生成する
+ */
+const prepareFile = async (fileId:string) => {
+  const formData = new FormData();
+
+  // JSONデータを文字列に変換して追加
+  formData.append(
+    'metadata',
+    JSON.stringify(
+      {
+        RequestSender: {
+          userId: getMyUserinfo.value.userId,
+          sessionId: getSessionId.value
+        }
+      }
+    )
+  );
+
+  //ファイル取得
+  const response = await fetch('/downloadfile/' + fileId, {
+    method: 'POST',
+    body: formData
+  });
+
+  if (!response.ok) return;
+
+  // Content-Dispositionヘッダーからファイル名を取得
+  const contentDisposition = response.headers.get('Content-Disposition');
+  let fileName = 'download'; // デフォルトのファイル名
+  if (contentDisposition) {
+    const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/i);
+    if (fileNameMatch) {
+      fileName = fileNameMatch[1];
+    }
+  }
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+
+  //ファイルデータ用JSONへ格納
+  fileBlobArr.value[fileId] = {
+    fileName: fileName,
+    blobUrl: url
+  };
+}
+
+/**
+ * ファイルをダウンロードする
+ * @param fileId 
+ */
+const downloadFile = (fileId:string) => {
+  //仮想ボタン用のアンカーオブジェクト
+  const link = document.createElement('a');
+
+  if (fileBlobArr.value[fileId].blobUrl === null) {
+    return;
+  }
+
+  //ダウンロードするための仮想ボタン作成(見えない)
+  link.href = fileBlobArr.value[fileId].blobUrl;
+  link.download = fileBlobArr.value[fileId].fileName;
+  link.style.display = 'none';
+
+  //ブラウザにダウンロードさせる
+  document.body.appendChild(link);
+  link.click();
+
+  //掃除
+  document.body.removeChild(link);
+}
 
 /**
  * ファイル情報受け取り
  */
 const SOCKETfetchFileInfo = (dat:{result:string, data:file}) => {
-  console.log("FileDataPreview :: dat->", dat);
+  //console.log("FileDataPreview :: dat->", dat);
+
   if (dat.result === "SUCCESS") {
+    //ファイル情報格納
     fileInfo.value.push(dat.data);
+    //ファイルダウンロードのblob生成
+    prepareFile(dat.data.id);
   } else if (dat.result === "ERROR_FILE_MISSING") {
+    //データ取得ができなくても削除されたファイルとして登録する
     fileInfo.value.push({
       id: 'ERROR_FILE_MISSING',
       userId: '',
@@ -36,17 +121,19 @@ const SOCKETfetchFileInfo = (dat:{result:string, data:file}) => {
 
 onMounted(() => {
   nextTick(() => {
-    for (let fileId of propsMessage.fileId) {
-      console.log("FIleDataPreview :: fileId->", fileId);
+    for (let index in propsMessage.fileId) {
+      //console.log("FIleDataPreview :: fileId->", propsMessage.fileId[index]);
 
-      socket.on("RESULT::fetchFileInfo:" + fileId, SOCKETfetchFileInfo);
+      //ファイル情報受け取り用
+      socket.on("RESULT::fetchFileInfo:" + propsMessage.fileId[index], SOCKETfetchFileInfo);
 
+      //ファイル情報を取得
       socket.emit("fetchFileInfo", {
         RequestSender: {
           userId: getMyUserinfo.value.userId,
           sessionId: getSessionId.value
         },
-        fileId: fileId
+        fileId: propsMessage.fileId[index]
       });
     }
   });
@@ -55,6 +142,14 @@ onMounted(() => {
 onUnmounted(() => {
   for (let fileId of propsMessage.fileId) {
     socket.off("RESULT::fetchFileInfo:" + fileId, SOCKETfetchFileInfo);
+
+    //ファイル情報が無ければここで終える
+    if (fileBlobArr.value[fileId] === undefined) return;
+
+    //もしBlobURL生成されていたら止める
+    if (fileBlobArr.value[fileId].blobUrl !== null) {
+      URL.revokeObjectURL(fileBlobArr.value[fileId].blobUrl);
+    }
   }
 });
 </script>
@@ -63,29 +158,46 @@ onUnmounted(() => {
   <span v-for="file in fileInfo" style="width:100%">
     <m-card
       color="cardInner"
-      class="mt-1 d-flex align-center"
-      style="max-height:150px;"
+      class="mt-1 d-flex flex-column"
     >
-      <v-icon
-        v-if="file.id !== 'ERROR_FILE_MISSING'"
-        class="mr-1"
-      >mdi-folder</v-icon>
-      <v-icon
-        v-else
-        class="mr-1"
-      >mdi-delete</v-icon>
 
-      <a
-        v-if="file.id !== 'ERROR_FILE_MISSING'"
-        :href="'/file/' + file.id"
-        rel="noopener noreferrer" target="_blank"
-        class="text-truncate flex-shrink-1"
-      >
-        {{ file.name }}
-      </a>
-      <p v-if="file.id === 'ERROR_FILE_MISSING'" class="text-disabled">このファイルは削除されています。</p>
+      <!-- プレビュー用画像表示 -->
+      <v-img
+        v-if="fileBlobArr[file.id]!==undefined"
+        :src="fileBlobArr[file.id].blobUrl"
+        class="rounded-lg"
+      />
 
-      <v-chip size="small" class="ml-auto flex-shrink-0">{{ calcSizeInHumanFormat(file.size) }}</v-chip>
+      <span class="mt-1 d-flex align-center" style="max-height:150px;">
+        <v-icon
+          v-if="file.id !== 'ERROR_FILE_MISSING'"
+          class="mr-1"
+        >mdi-folder</v-icon>
+        <v-icon
+          v-else
+          class="mr-1"
+        >mdi-delete</v-icon>
+
+        <a
+          v-if="file.id !== 'ERROR_FILE_MISSING'"
+          :href="'/file/' + file.id"
+          rel="noopener noreferrer" target="_blank"
+          class="text-truncate flex-shrink-1"
+        >
+          {{ file.name }}
+        </a>
+        <p v-if="file.id === 'ERROR_FILE_MISSING'" class="text-disabled">このファイルは削除されています。</p>
+
+        <m-btn
+          @click="downloadFile(file.id)"
+          icon="mdi-download"
+          variant="text"
+          size="small"
+          class="ml-auto"
+        />
+
+        <v-chip size="small" class="flex-shrink-0">{{ calcSizeInHumanFormat(file.size) }}</v-chip>
+      </span>
     </m-card>
   </span>
 </template>
