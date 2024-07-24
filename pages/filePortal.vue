@@ -113,7 +113,7 @@ const moveDirectory = () => {
 
   //ディレクトリ情報を格納
   currentDirectory.value = folderInfoMovingTo;
-  //ディレクトリとフォルダを再取得
+  //ディレクトリとフォルダ、使用状況を再取得
   fetchFilesAndFolders();
 }
 
@@ -176,6 +176,14 @@ const SOCKETfetchFileIndex = (dat:{result:string, data:file[]}) => {
   //成功ならファイルインデックスを格納
   if (dat.result === "SUCCESS") {
     fileIndex.value = dat.data;
+
+    //使用容量を再取得
+    socket.emit("calcFullFolderSize", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      }
+    });
   }
 }
 
@@ -215,6 +223,13 @@ const SOCKETdeleteFile = (dat:{result:string, data:null}) => {
         sessionId: getSessionId.value
       }
     });
+    //使用容量を再取得
+    socket.emit("calcFullFolderSize", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      }
+    });
   }
 }
 
@@ -226,14 +241,6 @@ onMounted(() => {
 
   //ファイルインデックスを取得
   fetchFilesAndFolders();
-
-  //使用容量を再取得
-  socket.emit("calcFullFolderSize", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
-  });
 });
 
 onUnmounted(() => {
