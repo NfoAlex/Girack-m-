@@ -95,10 +95,6 @@ const uploadFiles = async () => {
     //アップロード状況追跡用
     xhr.upload.addEventListener('progress', (event) => {
       if (event.lengthComputable) {
-        console.log(
-          "UploadFiles :: アップロード状況->",
-          Math.round((event.loaded / event.total) * 100)
-        );
         //アップロード状況を更新する
         fileUploadStatus.value[fileIndex].progress = Math.round((event.loaded / event.total) * 100);
       }
