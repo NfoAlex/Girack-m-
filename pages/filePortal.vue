@@ -223,13 +223,6 @@ const SOCKETdeleteFile = (dat:{result:string, data:null}) => {
         sessionId: getSessionId.value
       }
     });
-    //使用容量を再取得
-    socket.emit("calcFullFolderSize", {
-      RequestSender: {
-        userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
-      }
-    });
   }
 }
 
