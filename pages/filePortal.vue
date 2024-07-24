@@ -12,6 +12,7 @@ import type { file, folder } from '~/types/file';
 /**
  * data
  */
+const storageSize = ref<number>(0); //ファイル全体の容量
 const fileIndex = ref<file[]>([]); //ファイルインデックス
 const folderIndex = ref<folder[]>([]); //フォルダ構成データ
 const currentDirectory = ref<folder>({ //今いるディレクトリのフォルダ情報
@@ -187,7 +188,18 @@ const SOCKETfetchFolders = (dat:{result:string, data:folder[]}) => {
   if (dat.result === "SUCCESS") {
     folderIndex.value = dat.data;
   }
-};
+}
+
+/**
+ * ストレージの使用状況を受け取る
+ * @param dat 
+ */
+const SOCKETcalcFullFolderSize = (dat:{result:string, data:number|null}) => {
+  console.log("filePortal :: SOCKETcalcFullFolderSize : dat->", dat);
+  if (dat.data !== null) {
+    storageSize.value = dat.data;
+  }
+}
 
 /**
  * ファイルインデックス受け取り
@@ -209,15 +221,25 @@ const SOCKETdeleteFile = (dat:{result:string, data:null}) => {
 onMounted(() => {
   socket.on("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
   socket.on("RESULT::fetchFolders", SOCKETfetchFolders);
+  socket.on("RESULT::calcFullFolderSize", SOCKETcalcFullFolderSize);
   socket.on("RESULT::deleteFile", SOCKETdeleteFile);
 
   //ファイルインデックスを取得
   fetchFilesAndFolders();
+
+  //使用容量を再取得
+  socket.emit("calcFullFolderSize", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    }
+  });
 });
 
 onUnmounted(() => {
   socket.off("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
   socket.off("RESULT::fetchFolders", SOCKETfetchFolders);
+  socket.off("RESULT::calcFullFolderSize", SOCKETcalcFullFolderSize);
   socket.off("RESULT::deleteFile", SOCKETdeleteFile);
 });
 
@@ -273,6 +295,16 @@ onUnmounted(() => {
       />
     </span>
     <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
+
+    <!-- 容量の使用状況表示 -->
+    <div class="mt-4">
+      <p class="text-right text-h5">使用状況 : {{ calcSizeInHumanFormat(storageSize) }} / {{ calcSizeInHumanFormat(5e9) }}</p>
+      <v-progress-linear
+        :model-value="storageSize / 5e9 * 100"
+        class="mt-2 mx-1"
+        rounded
+      />
+    </div>
 
     <m-card class="mt-3">
       <div class="my-2 d-flex align-center">
