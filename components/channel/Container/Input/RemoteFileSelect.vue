@@ -20,6 +20,7 @@ const emits = defineEmits<{
 //ファイルインデックス表示ヘッダ
 const header = [
   { title: 'ファイル名', value:'name' },
+  { title: '公開設定', key:"isPublic", value: (item: file) => item.isPublic ? '公開' : '-' },
   { title: 'サイズ', key:"size", value: (item: file) => calcSizeInHumanFormat(item.size) },  // サイズを単位で表示
   { title: 'アップロード日時', key:"uploadedDate", value: (item: file) => new Date(item.uploadedDate).toLocaleString() },  // 日付をフォーマットして表示
 ];

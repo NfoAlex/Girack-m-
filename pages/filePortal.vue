@@ -36,6 +36,7 @@ const displayDeleteFolder = ref<boolean>(false); //フォルダ削除確認画�
 //ファイルインデックス表示ヘッダ
 const header = [
   { title: 'ファイル名', value:'name' },
+  { title: '公開設定', key:"isPublic", value: (item: file) => item.isPublic ? '公開' : '-' },
   { title: 'サイズ', key:"size", value: (item: file) => calcSizeInHumanFormat(item.size) },  // サイズを単位で表示
   { title: 'アップロード日時', key:"uploadedDate", value: (item: file) => new Date(item.uploadedDate).toLocaleString() },  // 日付をフォーマットして表示
 ];
@@ -113,6 +114,22 @@ const moveDirectory = () => {
   currentDirectory.value = folderInfoMovingTo;
   //ディレクトリとフォルダを再取得
   fetchFilesAndFolders();
+}
+
+/**
+ * 選択したファイルの公開設定をトグル
+ */
+const toggleFileIsPublic = () => {
+  //選択したファイルの数分
+  for (let fileId of fileIdSelected.value) {
+    socket.emit("toggleFileIsPublic", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value
+      },
+      fileId: fileId
+    });
+  }
 }
 
 /**
@@ -259,6 +276,7 @@ onUnmounted(() => {
 
     <m-card class="mt-3">
       <div class="my-2 d-flex align-center">
+
         <m-btn
           @click="copyIdsToClipBoard"
           variant="tonal"
@@ -266,7 +284,23 @@ onUnmounted(() => {
           rounded="xl"
           size="small"
           :disabled="fileIdSelected.length===0"
-        />
+        >
+          <v-icon>mdi-content-copy</v-icon>
+          <v-tooltip activator="parent" location="top">ファイルIDをコピーする</v-tooltip>
+        </m-btn>
+
+        <m-btn
+          @click="toggleFileIsPublic"
+          icon="mdi-folder-account-outline"
+          variant="tonal"
+          rounded="xl"
+          size="small"
+          :disabled="fileIdSelected.length===0"
+        >
+          <v-icon>mdi-folder-account-outline</v-icon>
+          <v-tooltip activator="parent" location="top">公開設定を切り替える（トグル）</v-tooltip>
+        </m-btn>
+
         <m-btn
           @click="deleteSelectedFile"
           class="mx-2 ml-auto"
