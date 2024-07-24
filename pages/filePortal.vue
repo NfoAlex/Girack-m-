@@ -4,8 +4,10 @@ import UploadFiles from '~/components/file/UploadFiles.vue';
 import CreateFolder from '~/components/file/CreateFolder.vue';
 import DeleteFolder from '~/components/file/DeleteFolder.vue';
 import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
+import { useServerinfo } from '~/stores/serverinfo';
 import { useMyUserinfo } from '~/stores/userinfo';
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+const { getServerinfo } = storeToRefs(useServerinfo());
 
 import type { file, folder } from '~/types/file';
 
@@ -299,9 +301,9 @@ onUnmounted(() => {
 
     <!-- 容量の使用状況表示 -->
     <div class="mt-4">
-      <p class="text-right text-h5">使用状況 : {{ calcSizeInHumanFormat(storageSize) }} / {{ calcSizeInHumanFormat(5e9) }}</p>
+      <p class="text-right text-h5">使用状況 : {{ calcSizeInHumanFormat(storageSize) }} / {{ calcSizeInHumanFormat(getServerinfo.config.STORAGE.StorageSizeLimit) }}</p>
       <v-progress-linear
-        :model-value="storageSize / 5e9 * 100"
+        :model-value="storageSize / getServerinfo.config.STORAGE.StorageSizeLimit * 100"
         class="mt-2 mx-1"
         rounded
       />
