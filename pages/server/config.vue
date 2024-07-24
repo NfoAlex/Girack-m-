@@ -30,8 +30,10 @@ const ServerConfigCloned = ref<Serverinfo>({
       defaultJoinOnRegister: []
     },
     MESSAGE: {
-      TxtMaxLength: 0,
-      FileMaxSize: 0
+      TxtMaxLength: 0
+    },
+    STORAGE: {
+      StorageSizeLimit: 0
     }
   }
 });
@@ -198,29 +200,6 @@ onUnmounted(() => {
                 show-ticks="always"
               />
             </div>
-
-            <v-divider class="my-8" />
-
-            <div>
-              <p>
-                ユーザーが添付できるファイルの最大サイズ :
-              </p>
-              <v-select
-                v-model="ServerConfigCloned.config.MESSAGE.FileMaxSize"
-                label="添付ファイルサイズ"
-                :items="[
-                  {'size':5e7, 'display':'50MB'},
-                  {'size':1e8, 'display':'100MB'},
-                  {'size':3e8, 'display':'300MB'},
-                  {'size':5e8, 'display':'500MB'},
-                  {'size':1e9, 'display':'1GB'}
-                ]"
-                :item-props="(item)=>{
-                  return {title: item.display, value:item.size}
-                }"
-                class="mr-3 mt-3"
-              />
-            </div>
           </m-card>
 
           <span class="mt-5 mb-1 text-h6 d-flex align-center">
@@ -253,6 +232,33 @@ onUnmounted(() => {
                 v-model="ServerConfigCloned.config.PROFILE.iconMaxSize"
                 label="画像サイズ"
                 :items="[{'size':1e6, 'display':'1MB'}, {'size':5e6, 'display':'5MB'}, {'size':1e7, 'display':'10MB'}, ]"
+                :item-props="(item)=>{
+                  return {title: item.display, value:item.size}
+                }"
+                class="mr-3 mt-3"
+              />
+            </div>
+          </m-card>
+
+          <span class="mt-5 mb-1 text-h6 d-flex align-center">
+            <v-icon class="mr-2">mdi-folder</v-icon>
+            <p>ストレージ</p>
+          </span>
+          <m-card>
+            <div class="my-3">
+              <p>
+                ユーザーごとのストレージ全体の容量制限 :
+              </p>
+              <v-select
+                v-model="ServerConfigCloned.config.STORAGE.StorageSizeLimit"
+                label="容量制限"
+                :items="[
+                  {'size':1e8, 'display':'100MB'},
+                  {'size':5e8, 'display':'500MB'},
+                  {'size':1e9, 'display':'1GB'},
+                  {'size':3e9, 'display':'3GB'},
+                  {'size':5e9, 'display':'5GB'},
+                ]"
                 :item-props="(item)=>{
                   return {title: item.display, value:item.size}
                 }"

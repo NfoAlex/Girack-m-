@@ -23,9 +23,11 @@ export const useServerinfo = defineStore("serverinfo", {
           defaultJoinOnRegister: ["0001"],
         },
         MESSAGE: {
-          TxtMaxLength: 300,
-          FileMaxSize: 5e7,
+          TxtMaxLength: 300
         },
+        STORAGE: {
+          StorageSizeLimit: 128
+        }
       }
     },
   } as {
