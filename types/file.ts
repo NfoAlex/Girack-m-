@@ -5,6 +5,7 @@ export interface file {
   isPublic: boolean,
   size: number,
   type: File["type"],
+  directory: string,
   uploadedDate: string
 }
 
