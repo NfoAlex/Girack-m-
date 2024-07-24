@@ -121,7 +121,7 @@ const finalizeSelectedFile = () => {
  * @param dat 
  */
 const SOCKETfetchFileIndex = (dat:{result:string, data:file[]}) => {
-  console.log("RemoteFileSelect :: dat->", dat);
+  //console.log("RemoteFileSelect :: dat->", dat);
   //成功ならファイルインデックスを格納
   if (dat.result === "SUCCESS") {
     fileIndex.value = dat.data;

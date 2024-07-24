@@ -62,7 +62,8 @@ const deleteSelectedFile = () => {
  * フォルダを移動
  */
 const moveDirectory = () => {
-  console.log("filePortal :: moveDirectory : ディレクトリ移動->", directoryIdSelected.value);
+  //console.log("filePortal :: moveDirectory : ディレクトリ移動->", directoryIdSelected.value);
+
   //移動先のフォルダの情報
   let folderInfoMovingTo:folder = {
     id: '',
@@ -172,7 +173,7 @@ const fetchFilesAndFolders = () => {
  * @param dat 
  */
 const SOCKETfetchFileIndex = (dat:{result:string, data:file[]}) => {
-  console.log("filePortal :: dat->", dat);
+  //console.log("filePortal :: dat->", dat);
   //成功ならファイルインデックスを格納
   if (dat.result === "SUCCESS") {
     fileIndex.value = dat.data;
@@ -192,7 +193,7 @@ const SOCKETfetchFileIndex = (dat:{result:string, data:file[]}) => {
  * @param dat 
  */
 const SOCKETfetchFolders = (dat:{result:string, data:folder[]}) => {
-  console.log("fetchFolders :: dat->", dat);
+  //console.log("fetchFolders :: dat->", dat);
   if (dat.result === "SUCCESS") {
     folderIndex.value = dat.data;
   }
@@ -203,7 +204,7 @@ const SOCKETfetchFolders = (dat:{result:string, data:folder[]}) => {
  * @param dat 
  */
 const SOCKETcalcFullFolderSize = (dat:{result:string, data:number|null}) => {
-  console.log("filePortal :: SOCKETcalcFullFolderSize : dat->", dat);
+  //console.log("filePortal :: SOCKETcalcFullFolderSize : dat->", dat);
   if (dat.data !== null) {
     storageSize.value = dat.data;
   }

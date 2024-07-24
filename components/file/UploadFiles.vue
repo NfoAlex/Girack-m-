@@ -30,11 +30,6 @@ const fileInput = () => {
   //ファイルデータを初期化
   fileItems.value = [];
 
-  console.log("filePortal :: fileInput : ファイルデータ->",
-    elFileInput.value.files[0].size < 1,
-    elFileInput.value.files[0].size === undefined
-  );
-
   //inputに入力されたファイルの数ぶん処理する
   for (let index in elFileInput.value.files) {
     //条件を調べる
@@ -51,7 +46,7 @@ const fileInput = () => {
       });
       //ファイルデータ用配列へファイルデータを追加
       fileItems.value.push(elFileInput.value.files[index]);
-      console.log("filePortal :: fileInput : fileItems->", fileItems.value);
+      //console.log("filePortal :: fileInput : fileItems->", fileItems.value);
     }
   }
 }
@@ -68,12 +63,6 @@ const trimFileItem = (index:number) => {
  * ファイルをアップロードする
  */
 const uploadFiles = async () => {
-  //送信者情報の文字列化したもの
-  const RequestSenderInString = JSON.stringify({
-    userId: getMyUserinfo.value.userId,
-    sessionId: getSessionId.value
-  });
-
   const metadataForForm = {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
@@ -103,7 +92,7 @@ const uploadFiles = async () => {
     //アップロードの結果表示用
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
-        console.log('UploadFiles :: 成功!->', xhr.responseText);
+        //console.log('UploadFiles :: 成功!->', xhr.responseText);
         //ファイルインデックスを取り直す
         socket.emit("fetchFileIndex", {
           RequestSender: {
