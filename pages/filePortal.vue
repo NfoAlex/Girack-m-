@@ -275,7 +275,7 @@ onUnmounted(() => {
           ' level->',
           (Object.keys(directoryTree).length-1).toString()
         );
-        moveDirectory(directoryTree[Object.keys(directoryTree).length-1][0], (Object.keys(directoryTree).length-1).toString());
+        moveDirectory(directoryTree[Object.keys(directoryTree).length-3][0], (Object.keys(directoryTree).length-3).toString());
       "
       :currentDirectory
     />
