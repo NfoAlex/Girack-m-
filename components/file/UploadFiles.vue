@@ -98,7 +98,8 @@ const uploadFiles = async () => {
           RequestSender: {
             userId: getMyUserinfo.value.userId,
             sessionId: getSessionId.value
-          }
+          },
+          directory: props.currentDirectory.id
         });
         //結果を格納
         fileUploadStatus.value[fileIndex].status = "DONE";
