@@ -337,8 +337,35 @@ onUnmounted(() => {
     </m-card>
 
     <!-- ファイル用ツールバー -->
-    <m-card class="flex-shrink-0 mt-3 d-flex align-center" color="surface">
-      <v-chip>
+    <m-card
+      class="flex-shrink-0 mt-3 d-flex align-center overflow-x-auto"
+      width="100%"
+      color="surface"
+    >
+
+      <m-btn
+        @click="displayUpload=true"
+        icon="mdi-upload"
+        size="small"
+        color="primary"
+      >
+        <v-icon>mdi-upload</v-icon>
+        <v-tooltip activator="parent" location="top">ファイルをアップロード</v-tooltip>
+      </m-btn>
+
+      <m-btn
+        @click="displayCreateFolder=true"
+        variant="tonal"
+        icon="mdi-folder-plus-outline"
+        size="small"
+      >
+        <v-icon>mdi-folder-plus-outline</v-icon>
+        <v-tooltip activator="parent" location="top">フォルダを作成する</v-tooltip>
+      </m-btn>
+
+      <v-divider vertical class="mx-3" />
+
+      <v-chip variant="outlined" class="flex-shrink-0">
         選択 : {{ fileSelected.length }}
       </v-chip>
 
@@ -346,17 +373,24 @@ onUnmounted(() => {
         @click="copyUrlsToClipBoard"
         :disabled="fileSelected.length === 0"
         variant="text"
+        class="ml-2"
         icon="mdi-content-copy"
         size="small"
-      />
+      >
+        <v-icon>mdi-content-copy</v-icon>
+        <v-tooltip activator="parent" location="top">ファイルのURLをコピーする</v-tooltip>
+      </m-btn>
 
       <m-btn
-        @click="displayCreateFolder=true"
+        @click="toggleFileIsPublic"
         :disabled="fileSelected.length === 0"
+        icon="mdi-folder-account-outline"
         variant="text"
-        icon="mdi-folder-plus-outline"
         size="small"
-      />
+      >
+        <v-icon>mdi-folder-account-outline</v-icon>
+        <v-tooltip activator="parent" location="top">公開設定を切り替える（トグル）</v-tooltip>
+      </m-btn>
 
       <m-btn
         @click="deleteSelectedFile"
