@@ -438,15 +438,4 @@ onUnmounted(() => {
       </v-chip>
     </div>
   </div>
-
-  <!-- アップロードボタン -->
-  <v-btn
-    @click="displayUpload = true"
-    position="absolute"
-    style="right:5%; bottom: 5%;"
-    color="primary"
-    icon="mdi:mdi-plus"
-    size="x-large"
-    rounded="lg"
-  />
 </template>
