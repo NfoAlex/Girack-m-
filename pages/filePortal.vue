@@ -11,31 +11,6 @@ const { getServerinfo } = storeToRefs(useServerinfo());
 
 import type { file, folder } from '~/types/file';
 
-/**
- * data
- */
-const storageSize = ref<number>(0); //ファイル全体の容量
-const fileIndex = ref<file[]>([]); //ファイルインデックス
-const folderIndex = ref<folder[]>([]); //フォルダ構成データ
-const currentDirectory = ref<folder>({ //今いるディレクトリのフォルダ情報
-  id: '',
-  userId: '',
-  name: '',
-  positionedDirectoryId: ''
-});
-const directoryIdSelected = ref<string>("");
-const directoryTree = ref<folder[]>([{
-  id: '',
-  userId: '',
-  name: '',
-  positionedDirectoryId: ''
-}]); //今いるディレクトリまでのフォルダツリー
-const fileIdSelected =ref<string[]>([]); //選択しているファイルId配列
-
-const displayUpload = ref<boolean>(false); //アップロード画面表示用
-const displayCreateFolder = ref<boolean>(false); //フォルダ作成画面表示用
-const displayDeleteFolder = ref<boolean>(false); //フォルダ削除確認画面用
-
 //ファイルインデックス表示ヘッダ
 const header = [
   { title: 'ファイル名', value:'name' },
@@ -45,79 +20,73 @@ const header = [
 ];
 
 /**
+ * data
+ */
+const storageSize = ref<number>(0); //ファイル全体の容量
+const fileIndex = ref<file[]>([]); //ファイルインデックス
+const folderIndex = ref<folder[]>([]); //フォルダ構成データ
+const fileSelected = ref<file[]>([]); //選択したファイル項目
+const directoryTree = ref<             //ディレクトリツリー
+  {
+    [key: string]: folder[]
+  }
+>({
+  "0": [
+    {
+      id: '',
+      userId: '',
+      name: 'home',
+      positionedDirectoryId: ''
+    }
+  ]
+});
+
+const currentDirectory = ref<folder>({ //今いるディレクトリ情報
+  id: '',
+  userId: '',
+  name: 'home',
+  positionedDirectoryId: ''
+});
+
+const displayUpload = ref<boolean>(false); //アップロード画面表示用
+const displayCreateFolder = ref<boolean>(false); //フォルダ作成画面表示用
+const displayDeleteFolder = ref<boolean>(false); //フォルダ削除確認画面用
+
+/**
+ * ディレクトリを移動して再取得
+ */
+const moveDirectory = (folder:folder, directoryLevel:string) => {
+  //現在いるディレクトリを子往診
+  currentDirectory.value = folder;
+
+  //ディレクトリーツリーの深さ取得
+  const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
+  //ディレクトリーツリーから移動先の深さより下のものを削除
+  for (let i=parseInt(directoryLevel)+1; i<=lengthOfDirectoryTree; i++) {
+    delete directoryTree.value[i];
+  }
+
+  //ファイルとフォルダを再取得
+  fetchFilesAndFolders();
+}
+
+/**
  * 選択したファイルを削除する
  */
 const deleteSelectedFile = () => {
-  for (let fileId of fileIdSelected.value) {
-    console.log("filePortal :: deleteSelectedFile : 消そうとしているファイル->", fileId);
+  for (let file of fileSelected.value) {
+    console.log("filePortal :: deleteSelectedFile : 消そうとしているファイル->", file);
     socket.emit("deleteFile", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
         sessionId: getSessionId.value
       },
-      fileId: fileId
+      fileId: file.id
     });
   }
-}
 
-/**
- * フォルダを移動
- */
-const moveDirectory = () => {
-  //console.log("filePortal :: moveDirectory : ディレクトリ移動->", directoryIdSelected.value);
-
-  //移動先のフォルダの情報
-  let folderInfoMovingTo:folder = {
-    id: '',
-    userId: '',
-    name: '',
-    positionedDirectoryId: ''
-  };
-
-  //もし今と同じディレクトリIdを選択したなら再取得するだけ
-  if (directoryIdSelected.value === currentDirectory.value.id) {
-    fetchFilesAndFolders();
-    return;
-  }
-
-  //ディレクトリツリーで選んだのか確認、設定
-    //ディレクトリツリー上の選択したフォルダIdの位置用変数
-  let treeIndexMovingTo:number = -1;
-  //console.log("今のツリー->", directoryTree.value);
-    //選択したフォルダーが今より上にいるか調べてツリー上の位置とフォルダ情報格納
-  for (let index in directoryTree.value) {
-    if (directoryTree.value[index].id === directoryIdSelected.value) {
-      treeIndexMovingTo = parseInt(index);
-      folderInfoMovingTo = directoryTree.value[index];
-      break;
-    }
-  }
-
-  //もし上にいくのならツリーを削る、下ならシンプル追加
-  if (treeIndexMovingTo !== -1) {
-    //ツリーからsplice
-    directoryTree.value.splice(treeIndexMovingTo + 1);
-  } else {
-
-    //選択Idにあたるフォルダ情報を選択フォルダ変数へ格納
-    for (let index in folderIndex.value) {
-      if (folderIndex.value[index].id === directoryIdSelected.value) {
-        folderInfoMovingTo = folderIndex.value[index];
-        break;
-      }
-    }
-
-    //ディレクトリーツリーへ追加
-    directoryTree.value.push(folderInfoMovingTo);
-  }
-
-  console.log("filePortal :: moveDirectory : ディレクトリツリー->", directoryTree.value);
-  console.log("filePortal :: moveDirectory : フォルダ情報->", folderInfoMovingTo);
-
-  //ディレクトリ情報を格納
-  currentDirectory.value = folderInfoMovingTo;
-  //ディレクトリとフォルダ、使用状況を再取得
-  fetchFilesAndFolders();
+  //選択したファイル一覧を初期化
+  fileSelected.value = [];
 }
 
 /**
@@ -125,7 +94,7 @@ const moveDirectory = () => {
  */
 const toggleFileIsPublic = () => {
   //選択したファイルの数分
-  for (let fileId of fileIdSelected.value) {
+  for (let fileId of fileSelected.value) {
     socket.emit("toggleFileIsPublic", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
@@ -137,16 +106,18 @@ const toggleFileIsPublic = () => {
 }
 
 /**
- * 選択したファイルIdをクリップボードへメッセに使える形でコピー
+ * 選択したファイルをクリップボードへURLをコピー
  */
-const copyIdsToClipBoard = () => {
-  let txt = "";
-  for (let fileId of fileIdSelected.value) {
-    txt += "<file:" + fileId + ">\n";
+const copyUrlsToClipBoard = () => {
+  let urls = "";
+  console.log("filePortal :: copyUrlsToClipBoard : url->", window.location.origin);
+
+  for (let file of fileSelected.value) {
+    urls += window.location.origin + "/file/" + file.id + "\n";
   }
 
   //クリップボードへ書き込み
-  navigator.clipboard.writeText(txt);
+  navigator.clipboard.writeText(urls);
 }
 
 /**
@@ -175,7 +146,7 @@ const fetchFilesAndFolders = () => {
  * @param dat 
  */
 const SOCKETfetchFileIndex = (dat:{result:string, data:file[]}) => {
-  //console.log("filePortal :: dat->", dat);
+  //console.log("RemoteFileSelect :: dat->", dat);
   //成功ならファイルインデックスを格納
   if (dat.result === "SUCCESS") {
     fileIndex.value = dat.data;
@@ -195,11 +166,34 @@ const SOCKETfetchFileIndex = (dat:{result:string, data:file[]}) => {
  * @param dat 
  */
 const SOCKETfetchFolders = (dat:{result:string, data:folder[]}) => {
-  //console.log("fetchFolders :: dat->", dat);
+  //console.log("RemoteFileSelect :: dat->", dat);
   if (dat.result === "SUCCESS") {
     folderIndex.value = dat.data;
+
+    //ディレクトリーツリーの長さ取得
+    const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
+
+    console.log("filePortal :: SOCKETfetchFolders : dat,data[0]->",
+      dat.data[0],
+      " 今いるdirectoryTreeの最初->",
+      directoryTree.value[(lengthOfDirectoryTree - 1).toString()][0]
+    )
+
+    //フォルダデータの最初と現階層の最初が同じフォルダなら上書き
+    if (
+      dat.data[0]
+      ===
+      directoryTree.value[(lengthOfDirectoryTree - 1).toString()][0]
+    ) {
+      //今いる階層に上書き
+      directoryTree.value[(lengthOfDirectoryTree - 1).toString()] = dat.data;
+    } else {
+      //その長さの数に代入する
+      directoryTree.value[lengthOfDirectoryTree.toString()] = dat.data || [];
+    }
+
   }
-}
+};
 
 /**
  * ストレージの使用状況を受け取る
@@ -224,7 +218,8 @@ const SOCKETdeleteFile = (dat:{result:string, data:null}) => {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
         sessionId: getSessionId.value
-      }
+      },
+      directory: currentDirectory.value.id
     });
   }
 }
@@ -274,23 +269,28 @@ onUnmounted(() => {
     style="max-width:650px; min-width:450px; width:65vw; height:55vh; max-height:650px;"
   >
     <DeleteFolder
-      @leave-and-move="
-        directoryIdSelected=directoryTree[directoryTree.length-2].id;
+      @leaveAndMove="
         displayDeleteFolder=false;
-        moveDirectory();
+        console.log('filePortal :: folder->',
+          ' level->',
+          (Object.keys(directoryTree).length-1).toString()
+        );
+        moveDirectory(directoryTree[Object.keys(directoryTree).length-1][0], (Object.keys(directoryTree).length-1).toString());
       "
       :currentDirectory
     />
   </v-dialog>
 
-  <div class="pt-5 px-5 d-flex flex-column" style="height:100%;">
+  <div class="pt-5 px-5 pb-5 d-flex flex-column" style="height:100%;">
     <span class="d-flex align-center">
       <p
         class="text-h5"
         style="font-weight:700;"
       >ファイルポータル</p>
       <m-btn
-        @click="fetchFilesAndFolders"
+        @click="
+          moveDirectory(currentDirectory, (Object.keys(directoryTree).length-2).toString())
+        "
         icon="mdi-refresh"
         class="ml-auto"
         color="primary"
@@ -300,7 +300,7 @@ onUnmounted(() => {
     <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
 
     <!-- 容量の使用状況表示 -->
-    <div class="mt-4">
+    <div class="my-4">
       <p class="text-right text-h5">使用状況 : {{ calcSizeInHumanFormat(storageSize) }} / {{ calcSizeInHumanFormat(getServerinfo.config.STORAGE.StorageSizeLimit) }}</p>
       <v-progress-linear
         :model-value="storageSize / getServerinfo.config.STORAGE.StorageSizeLimit * 100"
@@ -309,95 +309,100 @@ onUnmounted(() => {
       />
     </div>
 
-    <m-card class="mt-3">
-      <div class="my-2 d-flex align-center">
-
-        <m-btn
-          @click="copyIdsToClipBoard"
-          variant="tonal"
-          icon="mdi-content-copy"
-          rounded="xl"
-          size="small"
-          :disabled="fileIdSelected.length===0"
+    <!-- ディレクトリ選択画面 -->
+    <m-card
+      class=""
+      variant="outlined"
+      height="20%"
+      width="100%"
+    >
+      <div class="d-flex flex-row overflow-x-auto" style="width:100%; height:100%;">
+        <!-- ディレクトリの中身のフォルダ表示部分 -->
+        <div
+          v-for="directory,index in directoryTree"
+          class="d-flex flex-column flex-shrink-0 mr-1 overflow-y-auto"
+          style="width:25%; height:100%;"
         >
-          <v-icon>mdi-content-copy</v-icon>
-          <v-tooltip activator="parent" location="top">ファイルIDをコピーする</v-tooltip>
-        </m-btn>
-
-        <m-btn
-          @click="toggleFileIsPublic"
-          icon="mdi-folder-account-outline"
-          variant="tonal"
-          rounded="xl"
-          size="small"
-          :disabled="fileIdSelected.length===0"
-        >
-          <v-icon>mdi-folder-account-outline</v-icon>
-          <v-tooltip activator="parent" location="top">公開設定を切り替える（トグル）</v-tooltip>
-        </m-btn>
-
-        <m-btn
-          @click="deleteSelectedFile"
-          class="mx-2 ml-auto"
-          variant="outlined"
-          color="error"
-          :disabled="fileIdSelected.length===0"
-        >
-          <v-icon>mdi-delete</v-icon>
-          {{ fileIdSelected.length }}個 
-          <p>削除する</p>
-        </m-btn>
-      </div>
-
-      <!-- ディレクリツリー表示、移動選択 -->
-      <div class="mb-1">
-        <v-chip @click="()=>{directoryIdSelected=''; moveDirectory();}" size="small">ホーム</v-chip> /
-        <span v-for="folder of directoryTree">
-          <span  v-if="folder.id !== ''">
-            <v-chip
-              @click="()=>{directoryIdSelected=folder.id; moveDirectory();}"
-              size="small"
-            >
-              {{ folder.name }}
-            </v-chip>
-            /
-          </span>
-        </span>
-
-        <div class="d-flex align-center my-2">
-          <m-btn @click="displayCreateFolder = true" icon="mdi-plus" size="small"></m-btn>
-          <v-select
-            v-model="directoryIdSelected"
-            @update:modelValue="moveDirectory"
-            label="ディレクトリ"
-            density="compact"
-            variant="outlined"
-            :items="folderIndex"
-            item-title="name"
-            item-value="id"
-            hide-details
-          ></v-select>
-          <m-btn
-            @click="displayDeleteFolder=true"
-            icon="mdi-delete"
-            color="error"
-            size="small"
-            variant="outlined"
-          />
+          <!-- フォルダそのもの -->
+          <m-card-compact
+            @click="moveDirectory(folderInfo, index.toString())"
+            v-for="folderInfo in directory"
+            class="px-3 py-2 mb-1 flex-shrink-0"
+            :color="currentDirectory.id === folderInfo.id ?'primary':null"
+          >
+            {{ folderInfo.name }}
+          </m-card-compact>
         </div>
-
       </div>
-
-      <v-data-table
-        v-model="fileIdSelected"
-        :items="fileIndex"
-        item-value="id"
-        :headers="header"
-        hide-default-footer
-        show-select
-      ></v-data-table>
     </m-card>
 
+    <!-- ファイル用ツールバー -->
+    <m-card class="flex-shrink-0 mt-3 d-flex align-center" color="surface">
+      <v-chip>
+        選択 : {{ fileSelected.length }}
+      </v-chip>
+
+      <m-btn
+        @click="copyUrlsToClipBoard"
+        :disabled="fileSelected.length === 0"
+        variant="text"
+        icon="mdi-content-copy"
+        size="small"
+      />
+
+      <m-btn
+        @click="displayCreateFolder=true"
+        :disabled="fileSelected.length === 0"
+        variant="text"
+        icon="mdi-folder-plus-outline"
+        size="small"
+      />
+
+      <m-btn
+        @click="deleteSelectedFile"
+        :disabled="fileSelected.length === 0"
+        variant="text"
+        class="ml-auto"
+        color="error"
+        size="small"
+      >
+        <v-icon>mdi-delete</v-icon>
+        ファイルを削除
+      </m-btn>
+
+      <m-btn
+        @click="displayDeleteFolder=true"
+        :disabled="fileSelected.length === 0"
+        variant="text"
+        color="error"
+        size="small"
+      >
+        <v-icon>mdi-folder-remove-outline</v-icon>
+        フォルダを削除
+      </m-btn>
+    </m-card>
+
+    <!-- ファイル表示 -->
+    <v-data-table
+      v-model="fileSelected"
+      class="flex-grow-1 rounded-xl mt-3"
+      :items="fileIndex"
+      return-object
+      :headers="header"
+      hide-default-footer
+      show-select
+    ></v-data-table>
+
+    <!-- 選択したファイル表示 -->
+    <div class="flex-shrink-0 mt-2 d-flex flex-wrap">
+      <v-chip
+        v-for="file in fileSelected"
+        size="small"
+        class="mr-1 mt-1"
+      >
+        {{ file.name }}
+      </v-chip>
+    </div>
   </div>
 
   <!-- アップロードボタン -->
