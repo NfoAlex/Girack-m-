@@ -406,7 +406,6 @@ onUnmounted(() => {
 
       <m-btn
         @click="displayDeleteFolder=true"
-        :disabled="fileSelected.length === 0"
         variant="text"
         color="error"
         size="small"
