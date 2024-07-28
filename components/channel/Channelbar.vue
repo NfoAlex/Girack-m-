@@ -78,22 +78,6 @@ const getChannelListOrdered = () => {
   ];
 };
 
-/**
- * 指定のチャンネルに新着があるかどうかを判別する
- * @param channelId
- */
-const getThereIsNew = (channelId: string): boolean => {
-  if (
-    //最新メッセと時間を比較
-    new Date(getLatestMessage.value(channelId)?.time || "").valueOf() >
-    new Date(getMessageReadTime.value(channelId)).valueOf()
-  ) {
-    return true;
-  }
-
-  return false;
-};
-
 //チャンネルボタン用配列処理
 onBeforeMount(() => {
   getChannelListOrdered();
