@@ -51,7 +51,7 @@ export const useRole = defineStore("role", {
         if (state._Roles[roleId] !== undefined) {
           return state._Roles[roleId];
         }
-        
+
         //ホルダーとしてデータ追加
         state._Roles[roleId] = {
           roleId: roleId,

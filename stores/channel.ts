@@ -63,9 +63,9 @@ export const useChannelinfo = defineStore("channelinfo", {
         console.log("store(channel) :: getChannelinfoSingle : 送信した");
 
         return state._Channelinfo[channelId];
-      } else {
-        return state._Channelinfo[channelId];
       }
+      
+      return state._Channelinfo[channelId];
     },
 
     //チャンネル順序取得
