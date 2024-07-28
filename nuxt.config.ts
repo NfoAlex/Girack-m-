@@ -3,6 +3,7 @@ import vue from "@vitejs/plugin-vue";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
+
   app: {
     head: {
       meta: [
@@ -10,11 +11,14 @@ export default defineNuxtConfig({
       ]
     }
   },
+
   css: ["@/assets/styles/main.scss"],
   modules: ["@pinia/nuxt", "vuetify-nuxt-module", "@vueuse/nuxt", "@nuxtjs/google-fonts"],
+
   pinia: {
     storesDirs: ['./stores/**'],
   },
+
   vite: {
     css: {
       preprocessorOptions: {
@@ -32,21 +36,25 @@ export default defineNuxtConfig({
       }
     }
   },
+
   nitro: {
     rollupConfig: {
       plugins: [vue()]
     }
   },
+
   routeRules: {
     '/uploadProfileIcon': { cors:true },
     '/uploadfile': { cors:true },
     '/downloadfile': { cors:true },
     '/server/**': { ssr:false }
   },
+
   //ここでプロキシ適用(なぜかエラー扱い)
   serverMiddleware: [
     { path: '/socket.io', handler: './server/middleware/proxy.ts' },
   ],
+
   vuetify: {
     moduleOptions: {
       /* module specific options */
@@ -127,6 +135,7 @@ export default defineNuxtConfig({
       }
     }
   },
+
   googleFonts: {
     families: {
       "Noto Sans JP": [500, 700],
@@ -135,5 +144,7 @@ export default defineNuxtConfig({
     download: true,
     inject: true
   },
+
   devtools: { enabled: false },
+  compatibilityDate: "2024-07-28",
 });
