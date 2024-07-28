@@ -10,16 +10,16 @@ import type role from "~/types/role";
  */
 const roleData = ref<role[]>([]); //ロールデータの配列
 const roleEditing = ref<role>({
-	//編集用のロールデータ
-	roleId: "",
-	name: "",
-	color: "",
-	ServerManage: false,
-	RoleManage: false,
-	ChannelManage: false,
-	UserManage: false,
-	MessageDelete: false,
-	MessageAttatchFile: false,
+  //編集用のロールデータ
+  roleId: "",
+  name: "",
+  color: "",
+  ServerManage: false,
+  RoleManage: false,
+  ChannelManage: false,
+  UserManage: false,
+  MessageDelete: false,
+  MessageAttatchFile: false,
 });
 const displayCreateRole = ref<boolean>(false); //ロール作成画面表示用
 
@@ -28,27 +28,27 @@ const displayCreateRole = ref<boolean>(false); //ロール作成画面表示用
  * @param dat
  */
 const SOCKETfetchRoles = (dat: { result: string; data: role[] }) => {
-	//console.log("role :: SOCKETfetchRoles : dat->", dat);
-	//格納
-	roleData.value = dat.data;
-	//編集中のロールを最初のやつに設定
-	roleEditing.value = dat.data[0];
+  //console.log("role :: SOCKETfetchRoles : dat->", dat);
+  //格納
+  roleData.value = dat.data;
+  //編集中のロールを最初のやつに設定
+  roleEditing.value = dat.data[0];
 };
 
 onMounted(() => {
-	socket.on("RESULT::fetchRoles", SOCKETfetchRoles);
+  socket.on("RESULT::fetchRoles", SOCKETfetchRoles);
 
-	//ロールの取得
-	socket.emit("fetchRoles", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-	});
+  //ロールの取得
+  socket.emit("fetchRoles", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+  });
 });
 
 onUnmounted(() => {
-	socket.off("RESULT::fetchRoles", SOCKETfetchRoles);
+  socket.off("RESULT::fetchRoles", SOCKETfetchRoles);
 });
 </script>
 

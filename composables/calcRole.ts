@@ -20,23 +20,23 @@ const roleLevel:{
 */
 
 export default function calcRole(roleDataChecking: role): number {
-	try {
-		if (roleDataChecking.ServerManage) {
-			return 5;
-		}
-		if (roleDataChecking.RoleManage) {
-			return 4;
-		}
-		if (roleDataChecking.UserManage || roleDataChecking.ChannelManage) {
-			return 3;
-		}
-		if (roleDataChecking.MessageDelete) {
-			return 2;
-		}
-		//2以下はもう1として返す
-		return 1;
-	} catch (e) {
-		console.log("calcRole :: エラー ->", e);
-		return 0;
-	}
+  try {
+    if (roleDataChecking.ServerManage) {
+      return 5;
+    }
+    if (roleDataChecking.RoleManage) {
+      return 4;
+    }
+    if (roleDataChecking.UserManage || roleDataChecking.ChannelManage) {
+      return 3;
+    }
+    if (roleDataChecking.MessageDelete) {
+      return 2;
+    }
+    //2以下はもう1として返す
+    return 1;
+  } catch (e) {
+    console.log("calcRole :: エラー ->", e);
+    return 0;
+  }
 }

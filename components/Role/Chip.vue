@@ -10,8 +10,8 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getRoleSingle } = storeToRefs(useRole());
 
 const props = defineProps<{
-	roleId: string;
-	userId?: string;
+  roleId: string;
+  userId?: string;
 }>();
 
 /**
@@ -24,32 +24,32 @@ const canUnlinkThis = ref<boolean>(false); //外せるかどうか
  * ロールを外す
  */
 const unlinkRole = () => {
-	//メンバーのデフォルトロールかホスト専用ロールじゃないなら外す
-	if (props.roleId !== "MEMBER" && props.roleId !== "HOST") {
-		socket.emit("unlinkRole", {
-			RequestSender: {
-				userId: getMyUserinfo.value.userId,
-				sessionId: getSessionId.value,
-			},
-			targetUserId: props.userId,
-			roleId: props.roleId,
-		});
-	}
+  //メンバーのデフォルトロールかホスト専用ロールじゃないなら外す
+  if (props.roleId !== "MEMBER" && props.roleId !== "HOST") {
+    socket.emit("unlinkRole", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value,
+      },
+      targetUserId: props.userId,
+      roleId: props.roleId,
+    });
+  }
 };
 
 onMounted(() => {
-	//ユーザーIDが渡されているならレベル比較処理
-	if (props.userId !== undefined) {
-		//ロール情報取得
-		const roleInfo = useRole().getRoleSingle(props.roleId);
-		//権限レベル計算
-		const roleLevel = calcRole(roleInfo);
-		const MyRoleLevel = calcMyRole();
+  //ユーザーIDが渡されているならレベル比較処理
+  if (props.userId !== undefined) {
+    //ロール情報取得
+    const roleInfo = useRole().getRoleSingle(props.roleId);
+    //権限レベル計算
+    const roleLevel = calcRole(roleInfo);
+    const MyRoleLevel = calcMyRole();
 
-		//レベル比較して外せるかどうか設定
-		if (roleLevel <= MyRoleLevel && getMyRolePower().RoleManage)
-			canUnlinkThis.value = true;
-	}
+    //レベル比較して外せるかどうか設定
+    if (roleLevel <= MyRoleLevel && getMyRolePower().RoleManage)
+      canUnlinkThis.value = true;
+  }
 });
 </script>
 

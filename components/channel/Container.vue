@@ -12,18 +12,18 @@ const router = useRouter();
  * 現在いるチャンネルIdを取得する
  */
 const getChannelPath = computed(() => {
-	//チャンネルIdをルーターオブジェクトから取得
-	const channelId = route.params.id;
+  //チャンネルIdをルーターオブジェクトから取得
+  const channelId = route.params.id;
 
-	//取得したチャンネルIdがシンプル文字列ならそれを返す
-	if (typeof channelId !== "object") {
-		return channelId;
-	}
-	if (channelId === undefined) {
-		alert("致命的エラー :: リロードしてください");
-		router.push("/");
-		return "";
-	}
+  //取得したチャンネルIdがシンプル文字列ならそれを返す
+  if (typeof channelId !== "object") {
+    return channelId;
+  }
+  if (channelId === undefined) {
+    alert("致命的エラー :: リロードしてください");
+    router.push("/");
+    return "";
+  }
 });
 </script>
 

@@ -23,7 +23,7 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const emojiIndex = new EmojiIndex(data);
 
 const propsMessage = defineProps<{
-	message: message;
+  message: message;
 }>();
 
 /**
@@ -35,30 +35,30 @@ const displayEmojiPicker = ref<boolean>(false);
  * リアクションする
  */
 const reactIt = (emoji: any) => {
-	//console.log("/channel/:id :: reactIt : emoji->", emoji);
-	socket.emit("reactMessage", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		channelId: propsMessage.message.channelId,
-		messageId: propsMessage.message.messageId,
-		reactionName: emoji._sanitized.id,
-	});
+  //console.log("/channel/:id :: reactIt : emoji->", emoji);
+  socket.emit("reactMessage", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    channelId: propsMessage.message.channelId,
+    messageId: propsMessage.message.messageId,
+    reactionName: emoji._sanitized.id,
+  });
 };
 
 /**
  * メッセージを削除する
  */
 const deleteIt = () => {
-	socket.emit("deleteMessage", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		channelId: propsMessage.message.channelId,
-		messageId: propsMessage.message.messageId,
-	});
+  socket.emit("deleteMessage", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    channelId: propsMessage.message.channelId,
+    messageId: propsMessage.message.messageId,
+  });
 };
 </script>
 

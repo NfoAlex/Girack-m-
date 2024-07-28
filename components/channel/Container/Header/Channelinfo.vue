@@ -10,20 +10,20 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 //prop
 const props = defineProps<{
-	channelId: string;
+  channelId: string;
 }>();
 
 /**
  * data
  */
 const channelInfo = ref<channel>({
-	//チャンネルデータ
-	channelId: "...",
-	channelName: "...",
-	createdBy: "",
-	description: "",
-	isPrivate: false,
-	speakableRole: [],
+  //チャンネルデータ
+  channelId: "...",
+  channelName: "...",
+  createdBy: "",
+  description: "",
+  isPrivate: false,
+  speakableRole: [],
 });
 const tabPage = ref<"INFO" | "MANAGE">("INFO"); //表示するタブ指定用
 const stateNameEditing = ref<boolean>(false); //チャンネル名編集モードトグル
@@ -36,43 +36,43 @@ const tempSpeakableRole = ref<string[]>([]); //話せるロール
  * プライベートスイッチの監視用関数
  */
 const updatePrivate = () => {
-	console.log(
-		"Channelinfo :: updatePrivate : tempIsPrivate->",
-		tempIsPrivate.value,
-	);
-	//プライベート設定を適用させる
-	nextTick(() => {
-		socket.emit("updateChannel", {
-			RequestSender: {
-				userId: getMyUserinfo.value.userId,
-				sessionId: getSessionId.value,
-			},
-			channelId: props.channelId,
-			channelInfo: {
-				...channelInfo.value,
-				isPrivate: !tempIsPrivate.value,
-			},
-		});
-	});
+  console.log(
+    "Channelinfo :: updatePrivate : tempIsPrivate->",
+    tempIsPrivate.value,
+  );
+  //プライベート設定を適用させる
+  nextTick(() => {
+    socket.emit("updateChannel", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value,
+      },
+      channelId: props.channelId,
+      channelInfo: {
+        ...channelInfo.value,
+        isPrivate: !tempIsPrivate.value,
+      },
+    });
+  });
 };
 
 /**
  * チャンネル更新
  */
 const updateChannel = () => {
-	//チャンネル情報を取得
-	socket.emit("updateChannel", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		channelId: props.channelId,
-		channelInfo: {
-			...channelInfo.value,
-			channelName: tempNameEditing.value,
-			description: tempDescriptionEditing.value,
-		},
-	});
+  //チャンネル情報を取得
+  socket.emit("updateChannel", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    channelId: props.channelId,
+    channelInfo: {
+      ...channelInfo.value,
+      channelName: tempNameEditing.value,
+      description: tempDescriptionEditing.value,
+    },
+  });
 };
 
 /**
@@ -80,41 +80,41 @@ const updateChannel = () => {
  * @param dat
  */
 const SOCKETfetchChannelInfo = (dat: {
-	result: string;
-	data: {
-		channelId: string;
-		channelInfo: channel;
-	};
+  result: string;
+  data: {
+    channelId: string;
+    channelInfo: channel;
+  };
 }) => {
-	console.log("Channelinfo :: SOCKETfetchChannelInfo : dat->", dat);
+  console.log("Channelinfo :: SOCKETfetchChannelInfo : dat->", dat);
 
-	if (dat.result === "SUCCESS") {
-		//チャンネルデータ格納
-		channelInfo.value = dat.data.channelInfo;
-		tempNameEditing.value = dat.data.channelInfo.channelName;
-		tempDescriptionEditing.value = dat.data.channelInfo.description;
-		tempIsPrivate.value = dat.data.channelInfo.isPrivate;
-		tempSpeakableRole.value = dat.data.channelInfo.speakableRole;
+  if (dat.result === "SUCCESS") {
+    //チャンネルデータ格納
+    channelInfo.value = dat.data.channelInfo;
+    tempNameEditing.value = dat.data.channelInfo.channelName;
+    tempDescriptionEditing.value = dat.data.channelInfo.description;
+    tempIsPrivate.value = dat.data.channelInfo.isPrivate;
+    tempSpeakableRole.value = dat.data.channelInfo.speakableRole;
 
-		//watchOnce(tempIsPrivate, (newValue,oldValue)=>watchIsPrivate(newValue, oldValue));
-	}
+    //watchOnce(tempIsPrivate, (newValue,oldValue)=>watchIsPrivate(newValue, oldValue));
+  }
 };
 
 onMounted(() => {
-	socket.on("RESULT::fetchChannelInfo", SOCKETfetchChannelInfo);
+  socket.on("RESULT::fetchChannelInfo", SOCKETfetchChannelInfo);
 
-	//チャンネル情報を取得
-	socket.emit("fetchChannelInfo", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		channelId: props.channelId,
-	});
+  //チャンネル情報を取得
+  socket.emit("fetchChannelInfo", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    channelId: props.channelId,
+  });
 });
 
 onUnmounted(() => {
-	socket.off("RESULT::fetchChannelInfo", SOCKETfetchChannelInfo);
+  socket.off("RESULT::fetchChannelInfo", SOCKETfetchChannelInfo);
 });
 </script>
 

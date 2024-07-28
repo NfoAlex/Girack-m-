@@ -27,31 +27,31 @@ const stateEditingMessage = ref<boolean>(false);
 const emits = defineEmits<(e: "leaveEditingParent") => void>();
 
 const propsMessage = defineProps<{
-	message: message;
-	index: number;
-	editThisMessage: boolean;
-	borderClass: string;
+  message: message;
+  index: number;
+  editThisMessage: boolean;
+  borderClass: string;
 }>();
 
 //このメッセージが通知Inboxにあるかどうかを調べてその通知を消す
 onMounted(() => {
-	if (getInbox.value.mention[propsMessage.message.channelId] !== undefined) {
-		if (
-			getInbox.value.mention[propsMessage.message.channelId].indexOf(
-				propsMessage.message.messageId,
-			) !== -1
-		) {
-			socket.emit("removeFromUserInbox", {
-				RequestSender: {
-					userId: getMyUserinfo.value.userId,
-					sessionId: getSessionId.value,
-				},
-				inboxCategory: "mention",
-				channelId: propsMessage.message.channelId,
-				inboxItemId: propsMessage.message.messageId,
-			});
-		}
-	}
+  if (getInbox.value.mention[propsMessage.message.channelId] !== undefined) {
+    if (
+      getInbox.value.mention[propsMessage.message.channelId].indexOf(
+        propsMessage.message.messageId,
+      ) !== -1
+    ) {
+      socket.emit("removeFromUserInbox", {
+        RequestSender: {
+          userId: getMyUserinfo.value.userId,
+          sessionId: getSessionId.value,
+        },
+        inboxCategory: "mention",
+        channelId: propsMessage.message.channelId,
+        inboxItemId: propsMessage.message.messageId,
+      });
+    }
+  }
 });
 </script>
 

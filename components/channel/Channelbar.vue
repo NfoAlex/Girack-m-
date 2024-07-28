@@ -33,49 +33,49 @@ const channelOrderedData = ref<any[]>([]);
  * チャンネルリストを保存した順序へ補完しつつソートして表示に使う格納する
  */
 const getChannelListOrdered = () => {
-	//チャンネル順序結果用配列
-	let channelOrderPushing: channelOrder[] = [];
+  //チャンネル順序結果用配列
+  let channelOrderPushing: channelOrder[] = [];
 
-	//console.log('Channelbar :: getChannelListOrdered : getChannelOrder->', toRaw(getChannelOrder.value));
+  //console.log('Channelbar :: getChannelListOrdered : getChannelOrder->', toRaw(getChannelOrder.value));
 
-	//まず保存されているチャンネル順序配列をプッシュ
-	try {
-		channelOrderPushing = [...toRaw(getChannelOrder.value)];
-	} catch (e) {}
+  //まず保存されているチャンネル順序配列をプッシュ
+  try {
+    channelOrderPushing = [...toRaw(getChannelOrder.value)];
+  } catch (e) {}
 
-	//保存されていない順序データに無かったチャンネルId用配列
-	const channelNotUsed = [];
+  //保存されていない順序データに無かったチャンネルId用配列
+  const channelNotUsed = [];
 
-	//順序に保存されていないチャンネルを調べる
-	for (const channelIdChecking of getMyUserinfo.value.channelJoined) {
-		//チャンネルがすでに順序データに入っているかどうかフラグ
-		let thisChannelIsIncluded = false;
-		//ループで一致したものを探す
-		for (const index in getChannelOrder.value) {
-			if (getChannelOrder.value[index].channelId === channelIdChecking) {
-				thisChannelIsIncluded = true;
-				break;
-			}
-		}
+  //順序に保存されていないチャンネルを調べる
+  for (const channelIdChecking of getMyUserinfo.value.channelJoined) {
+    //チャンネルがすでに順序データに入っているかどうかフラグ
+    let thisChannelIsIncluded = false;
+    //ループで一致したものを探す
+    for (const index in getChannelOrder.value) {
+      if (getChannelOrder.value[index].channelId === channelIdChecking) {
+        thisChannelIsIncluded = true;
+        break;
+      }
+    }
 
-		//フラグが無効なら使われていないチャンネルリストへ追加
-		if (!thisChannelIsIncluded) channelNotUsed.push(channelIdChecking);
-	}
+    //フラグが無効なら使われていないチャンネルリストへ追加
+    if (!thisChannelIsIncluded) channelNotUsed.push(channelIdChecking);
+  }
 
-	//入ってなかった配列分プッシュ
-	for (const channelId of channelNotUsed) {
-		channelOrderPushing.push({
-			channelId: channelId,
-			isThread: false,
-			isFolder: false,
-		});
-	}
+  //入ってなかった配列分プッシュ
+  for (const channelId of channelNotUsed) {
+    channelOrderPushing.push({
+      channelId: channelId,
+      isThread: false,
+      isFolder: false,
+    });
+  }
 
-	//結果を適用
-	channelOrderedData.value = [
-		...channelOrderedData.value,
-		...channelOrderPushing,
-	];
+  //結果を適用
+  channelOrderedData.value = [
+    ...channelOrderedData.value,
+    ...channelOrderPushing,
+  ];
 };
 
 /**
@@ -83,45 +83,45 @@ const getChannelListOrdered = () => {
  * @param channelId
  */
 const getThereIsNew = (channelId: string): boolean => {
-	if (
-		//最新メッセと時間を比較
-		new Date(getLatestMessage.value(channelId)?.time || "").valueOf() >
-		new Date(getMessageReadTime.value(channelId)).valueOf()
-	) {
-		return true;
-	} else {
-		return false;
-	}
+  if (
+    //最新メッセと時間を比較
+    new Date(getLatestMessage.value(channelId)?.time || "").valueOf() >
+    new Date(getMessageReadTime.value(channelId)).valueOf()
+  ) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 //チャンネルボタン用配列処理
 onBeforeMount(() => {
-	getChannelListOrdered();
+  getChannelListOrdered();
 });
 
 onMounted(() => {
-	//なぜかpathが配列ならブラウザへ
-	if (typeof route.params.id !== "object") {
-		currentPath.value = route.params.id;
-	} else {
-		router.push("/browser");
-	}
+  //なぜかpathが配列ならブラウザへ
+  if (typeof route.params.id !== "object") {
+    currentPath.value = route.params.id;
+  } else {
+    router.push("/browser");
+  }
 
-	//チャンネル順序のソートを検知してサーバー上へ同期させる
-	watch(channelOrderedData, (newValue, oldValue) => {
-		//console.log("Channelbar :: watch(channelOrderData) : newValue->", newValue);
+  //チャンネル順序のソートを検知してサーバー上へ同期させる
+  watch(channelOrderedData, (newValue, oldValue) => {
+    //console.log("Channelbar :: watch(channelOrderData) : newValue->", newValue);
 
-		//チャンネル情報用Storeのチャンネル順序を更新させる
-		updateChannelOrder(newValue);
+    //チャンネル情報用Storeのチャンネル順序を更新させる
+    updateChannelOrder(newValue);
 
-		socket.emit("saveUserChannelOrder", {
-			RequestSender: {
-				userId: getMyUserinfo.value.userId,
-				sessionId: getSessionId.value,
-			},
-			channelOrder: newValue,
-		});
-	});
+    socket.emit("saveUserChannelOrder", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value,
+      },
+      channelOrder: newValue,
+    });
+  });
 });
 </script>
 

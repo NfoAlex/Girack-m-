@@ -14,8 +14,8 @@ const emit = defineEmits(["closeDialog"]);
  */
 //チャンネル作成用に使うデータ
 const roleCreationData = ref<{ name: string; color: string }>({
-	name: "",
-	color: "",
+  name: "",
+  color: "",
 });
 const roleCreationError = ref<boolean>(false);
 
@@ -23,29 +23,29 @@ const roleCreationError = ref<boolean>(false);
  * チャンネルを作成する
  */
 const createRole = () => {
-	socket.emit("createRole", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		roleData: {
-			name: roleCreationData.value.name,
-			color: roleCreationData.value.color,
-		},
-	});
+  socket.emit("createRole", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    roleData: {
+      name: roleCreationData.value.name,
+      color: roleCreationData.value.color,
+    },
+  });
 };
 
 /**
  * ダイアログ閉じる処理
  */
 const closeDialog = () => {
-	//ダイアログを閉じさせる
-	emit("closeDialog");
-	//ロール作成用変数を初期化
-	nextTick(() => {
-		roleCreationData.value = { name: "", color: "" };
-		roleCreationError.value = false;
-	});
+  //ダイアログを閉じさせる
+  emit("closeDialog");
+  //ロール作成用変数を初期化
+  nextTick(() => {
+    roleCreationData.value = { name: "", color: "" };
+    roleCreationError.value = false;
+  });
 };
 
 /**
@@ -53,34 +53,34 @@ const closeDialog = () => {
  * @param dat
  */
 const SOCKETcreateRole = (dat: { result: string; data: boolean | null }) => {
-	console.log("createRole :: SOCKETcreateRole : dat->", dat);
-	//結果に応じて表示を変更
-	if (dat.result !== "SUCCESS") {
-		//エラー表示
-		roleCreationError.value = true;
-	} else {
-		//更新させるためにチャンネルリストを取得する
-		//ロールの取得
-		socket.emit("fetchRoles", {
-			RequestSender: {
-				userId: getMyUserinfo.value.userId,
-				sessionId: getSessionId.value,
-			},
-		});
-		//ダイアログを閉じる
-		closeDialog();
-	}
+  console.log("createRole :: SOCKETcreateRole : dat->", dat);
+  //結果に応じて表示を変更
+  if (dat.result !== "SUCCESS") {
+    //エラー表示
+    roleCreationError.value = true;
+  } else {
+    //更新させるためにチャンネルリストを取得する
+    //ロールの取得
+    socket.emit("fetchRoles", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value,
+      },
+    });
+    //ダイアログを閉じる
+    closeDialog();
+  }
 };
 
 onMounted(() => {
-	socket.on("RESULT::createRole", SOCKETcreateRole);
-	//チャンネル作成結果を初期化
-	roleCreationError.value = false;
-	roleCreationData.value = { name: "", color: "" };
+  socket.on("RESULT::createRole", SOCKETcreateRole);
+  //チャンネル作成結果を初期化
+  roleCreationError.value = false;
+  roleCreationData.value = { name: "", color: "" };
 });
 
 onUnmounted(() => {
-	socket.off("RESULT::createRole", SOCKETcreateRole);
+  socket.off("RESULT::createRole", SOCKETcreateRole);
 });
 </script>
 

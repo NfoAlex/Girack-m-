@@ -22,7 +22,7 @@ const lengthPage = ref<number>(1);
 const userCount = ref<number>(0);
 //ユーザー情報格納用
 const users = ref<{
-	[key: string]: MyUserinfo;
+  [key: string]: MyUserinfo;
 }>({});
 //ユーザーダイアログ表示用
 const userIdForDialog = ref<string>(""); //表示するユーザーのID
@@ -32,23 +32,23 @@ const displayUserpage = ref<boolean>(false); //ダイアログ制御用
  * ページの移動を監視してまたユーザーリストをフェッチ
  */
 watch(currentPage, () => {
-	fetchUsers(currentPage.value);
+  fetchUsers(currentPage.value);
 });
 
 /**
  * 指定するページ部分にあたるユーザー取得(30人ごと)
  */
 const fetchUsers = (page: number) => {
-	//ユーザーを取得
-	socket.emit("fetchUserAll", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		indexPage: page,
-	});
-	//ロード中と設定
-	stateLoading.value = true;
+  //ユーザーを取得
+  socket.emit("fetchUserAll", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    indexPage: page,
+  });
+  //ロード中と設定
+  stateLoading.value = true;
 };
 
 /**
@@ -56,29 +56,29 @@ const fetchUsers = (page: number) => {
  * @param dat
  */
 const SOCKETfetchUserAll = (dat: {
-	result: string;
-	data: {
-		datUser: {
-			[key: string]: MyUserinfo;
-		};
-		countUser: number;
-	};
+  result: string;
+  data: {
+    datUser: {
+      [key: string]: MyUserinfo;
+    };
+    countUser: number;
+  };
 }) => {
-	console.log("/users :: SOCKETfetchUserAll : dat->", dat);
+  console.log("/users :: SOCKETfetchUserAll : dat->", dat);
 
-	//ユーザー情報格納
-	users.value = dat.data.datUser;
-	userCount.value = dat.data.countUser;
-	//ロード中状態を解除
-	stateLoading.value = false;
+  //ユーザー情報格納
+  users.value = dat.data.datUser;
+  userCount.value = dat.data.countUser;
+  //ロード中状態を解除
+  stateLoading.value = false;
 
-	//ユーザー数を30で割って必要なページ数を計算
-	if (userCount.value / 30 > 1) {
-		//それに設定
-		lengthPage.value = userCount.value / 30;
-		//もし30での除算で1以上いればもう1ページ追加
-		if (userCount.value % 30 >= 1) lengthPage.value++;
-	}
+  //ユーザー数を30で割って必要なページ数を計算
+  if (userCount.value / 30 > 1) {
+    //それに設定
+    lengthPage.value = userCount.value / 30;
+    //もし30での除算で1以上いればもう1ページ追加
+    if (userCount.value % 30 >= 1) lengthPage.value++;
+  }
 };
 
 /**
@@ -86,24 +86,24 @@ const SOCKETfetchUserAll = (dat: {
  * @param dat
  */
 const SOCKETfetchUserInfo = (dat: { result: string; data: MyUserinfo }) => {
-	console.log("/users :: SOCKETfetchUserInfo : dat->", dat);
+  console.log("/users :: SOCKETfetchUserInfo : dat->", dat);
 
-	//ユーザー格納用変数に該当するユーザーIDがあれば更新する
-	if (users.value[dat.data.userId] !== undefined) {
-		users.value[dat.data.userId] = dat.data;
-	}
+  //ユーザー格納用変数に該当するユーザーIDがあれば更新する
+  if (users.value[dat.data.userId] !== undefined) {
+    users.value[dat.data.userId] = dat.data;
+  }
 };
 
 onMounted(() => {
-	socket.on("RESULT::fetchUserAll", SOCKETfetchUserAll);
-	socket.on("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
+  socket.on("RESULT::fetchUserAll", SOCKETfetchUserAll);
+  socket.on("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
 
-	fetchUsers(1);
+  fetchUsers(1);
 });
 
 onUnmounted(() => {
-	socket.off("RESULT::fetchUserAll", SOCKETfetchUserAll);
-	socket.off("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
+  socket.off("RESULT::fetchUserAll", SOCKETfetchUserAll);
+  socket.off("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
 });
 </script>
 

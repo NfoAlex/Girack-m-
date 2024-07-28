@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 export interface Props {
-	channelName: string;
+  channelName: string;
 }
 const props = withDefaults(defineProps<Props>(), {});
 </script>

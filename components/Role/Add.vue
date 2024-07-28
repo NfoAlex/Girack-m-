@@ -8,7 +8,7 @@ const { getRoles } = storeToRefs(useRole());
 
 //prop
 const props = defineProps<{
-	userId: string;
+  userId: string;
 }>();
 
 /**
@@ -20,14 +20,14 @@ const displayRoleSelect = ref<boolean>(false);
  * ロールを付与する
  */
 const addRole = (roleIdAdding: string) => {
-	socket.emit("addRole", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		targetUserId: props.userId,
-		roleId: roleIdAdding,
-	});
+  socket.emit("addRole", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    targetUserId: props.userId,
+    roleId: roleIdAdding,
+  });
 };
 </script>
 

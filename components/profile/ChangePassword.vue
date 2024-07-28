@@ -19,19 +19,19 @@ const resultChangePasswordError = ref<boolean>(false);
  * パスワードを変更
  */
 const changePassword = () => {
-	//自ユーザー情報取得
-	const MyUserinfo = useMyUserinfo().getMyUserinfo;
-	//セッションID
-	const sessionId = useMyUserinfo().getSessionId;
-	//パスワードを変更申請
-	socket.emit("changePassword", {
-		currentPassword: currentPassword.value,
-		newPassword: newPassword.value,
-		RequestSender: {
-			userId: MyUserinfo.userId,
-			sessionId: sessionId,
-		},
-	});
+  //自ユーザー情報取得
+  const MyUserinfo = useMyUserinfo().getMyUserinfo;
+  //セッションID
+  const sessionId = useMyUserinfo().getSessionId;
+  //パスワードを変更申請
+  socket.emit("changePassword", {
+    currentPassword: currentPassword.value,
+    newPassword: newPassword.value,
+    RequestSender: {
+      userId: MyUserinfo.userId,
+      sessionId: sessionId,
+    },
+  });
 };
 
 /**
@@ -39,20 +39,20 @@ const changePassword = () => {
  * @param dat
  */
 const SOCKETchangePassword = (dat: { result: string; data: any }) => {
-	console.log("ChangePassword :: SOCKETchangePassword : dat->", dat);
-	if (dat.result === "SUCCESS") {
-		resultChangePasswordSuccess.value = true;
-	} else if (dat.result === "ERROR_WRONGPASSWORD") {
-		resultChangePasswordError.value = true;
-	}
+  console.log("ChangePassword :: SOCKETchangePassword : dat->", dat);
+  if (dat.result === "SUCCESS") {
+    resultChangePasswordSuccess.value = true;
+  } else if (dat.result === "ERROR_WRONGPASSWORD") {
+    resultChangePasswordError.value = true;
+  }
 };
 
 onMounted(() => {
-	socket.on("RESULT::changePassword", SOCKETchangePassword);
+  socket.on("RESULT::changePassword", SOCKETchangePassword);
 });
 
 onUnmounted(() => {
-	socket.off("RESULT::changePassword", SOCKETchangePassword);
+  socket.off("RESULT::changePassword", SOCKETchangePassword);
 });
 </script>
 

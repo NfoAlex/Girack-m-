@@ -5,7 +5,7 @@ import { useConfig } from "../stores/config";
 
 //サービスの準備ができてからSocketの設定開始
 onNuxtReady(() => {
-	loadSocket();
+  loadSocket();
 });
 
 //設定の値監視してテーマを切り替え
@@ -20,12 +20,12 @@ const theme = useTheme();
  * 設定を監視してテーマを適用
  */
 watch(getConfig, async () => {
-	theme.global.name.value = getConfig.value.theme; //テーマを設定で設定されているものへ設定
+  theme.global.name.value = getConfig.value.theme; //テーマを設定で設定されているものへ設定
 });
 
 //リロード時にチャンネルごとに記憶されたスクロール位置を消去するように
 onMounted(() => {
-	sessionStorage.clear();
+  sessionStorage.clear();
 });
 </script>
 

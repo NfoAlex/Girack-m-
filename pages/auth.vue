@@ -13,7 +13,7 @@ const { updateSessionId } = useMyUserinfo();
 const router = useRouter();
 
 definePageMeta({
-	layout: "plain", //レイアウトを何もないやつに設定
+  layout: "plain", //レイアウトを何もないやつに設定
 });
 
 /**
@@ -24,117 +24,117 @@ const stateProcesingWithCookie = ref<boolean>(true); //クッキーでログイ�
 const sharedUserName = ref<string>("");
 const isNewUser = ref<boolean>(false); //新規登録者かどうか
 const registrationData = ref<{ userName: string; done: boolean }>({
-	userName: "",
-	done: false,
+  userName: "",
+  done: false,
 });
 
 /**
  * ログイン後のGirack-m-準備処理
  */
 const initialize = (userId: string, sessionId: string) => {
-	console.log("/auth :: initialize : INITIALIZEするね");
+  console.log("/auth :: initialize : INITIALIZEするね");
 
-	//全ロールを取得
-	socket.emit("fetchRoles", {
-		RequestSender: {
-			userId: userId,
-			sessionId: sessionId,
-		},
-	});
+  //全ロールを取得
+  socket.emit("fetchRoles", {
+    RequestSender: {
+      userId: userId,
+      sessionId: sessionId,
+    },
+  });
 
-	//ユーザー情報取得
-	socket.emit("fetchUserInfo", {
-		RequestSender: {
-			userId: userId,
-			sessionId: sessionId,
-		},
-		userId: userId,
-	});
+  //ユーザー情報取得
+  socket.emit("fetchUserInfo", {
+    RequestSender: {
+      userId: userId,
+      sessionId: sessionId,
+    },
+    userId: userId,
+  });
 
-	//localStorageから設定を読み込む
-	const datConfigLocal = getConfigLocal();
-	if (datConfigLocal !== null) {
-		//同期設定がONなら設定取得
-		if (datConfigLocal.sync || datConfigLocal.config === null) {
-			//設定データを取得する
-			socket.emit("fetchUserConfig", {
-				userId: userId,
-				sessionId: sessionId,
-			});
-		} else {
-			//localStorageにある設定データをそのまま適用
-			useConfig().updateConfig(datConfigLocal.config);
-			//同期設定をオフとして設定
-			useConfig().updateConfigSyncStatus(false);
-		}
-	} else {
-		//設定データがないなら絶対取得
-		//設定データを取得する
-		socket.emit("fetchUserConfig", {
-			userId: userId,
-			sessionId: sessionId,
-		});
-	}
+  //localStorageから設定を読み込む
+  const datConfigLocal = getConfigLocal();
+  if (datConfigLocal !== null) {
+    //同期設定がONなら設定取得
+    if (datConfigLocal.sync || datConfigLocal.config === null) {
+      //設定データを取得する
+      socket.emit("fetchUserConfig", {
+        userId: userId,
+        sessionId: sessionId,
+      });
+    } else {
+      //localStorageにある設定データをそのまま適用
+      useConfig().updateConfig(datConfigLocal.config);
+      //同期設定をオフとして設定
+      useConfig().updateConfigSyncStatus(false);
+    }
+  } else {
+    //設定データがないなら絶対取得
+    //設定データを取得する
+    socket.emit("fetchUserConfig", {
+      userId: userId,
+      sessionId: sessionId,
+    });
+  }
 
-	//ログイン状態を完了と設定
-	getAppStatus.value.profile.authDone = true;
+  //ログイン状態を完了と設定
+  getAppStatus.value.profile.authDone = true;
 
-	//オンラインユーザーリストを取得
-	socket.emit("fetchOnlineUsers", {
-		RequestSender: {
-			userId: userId,
-			sessionId: sessionId,
-		},
-	});
-	//通知受け取り
-	socket.emit("fetchUserInbox", {
-		RequestSender: {
-			userId: userId,
-			sessionId: sessionId,
-		},
-	});
-	//チャンネル順序受け取り
-	socket.emit("fetchUserChannelOrder", {
-		RequestSender: {
-			userId: userId,
-			sessionId: sessionId,
-		},
-	});
+  //オンラインユーザーリストを取得
+  socket.emit("fetchOnlineUsers", {
+    RequestSender: {
+      userId: userId,
+      sessionId: sessionId,
+    },
+  });
+  //通知受け取り
+  socket.emit("fetchUserInbox", {
+    RequestSender: {
+      userId: userId,
+      sessionId: sessionId,
+    },
+  });
+  //チャンネル順序受け取り
+  socket.emit("fetchUserChannelOrder", {
+    RequestSender: {
+      userId: userId,
+      sessionId: sessionId,
+    },
+  });
 
-	//トップページへ移動
-	if (isNewUser.value) {
-		router.push("/?firstTime=true");
-	} else {
-		router.push("/");
-	}
+  //トップページへ移動
+  if (isNewUser.value) {
+    router.push("/?firstTime=true");
+  } else {
+    router.push("/");
+  }
 };
 
 /**
  * Cookieからセッションデータを取得
  */
 const getSessionFromCookie = ():
-	| {
-			userId: string;
-			sessionId: string;
-	  }
-	| undefined => {
-	//取得
-	const tempCookie = useCookie("session").value;
+  | {
+      userId: string;
+      sessionId: string;
+    }
+  | undefined => {
+  //取得
+  const tempCookie = useCookie("session").value;
 
-	//無効な値ならundefuned
-	if (
-		tempCookie === undefined ||
-		tempCookie === null ||
-		typeof tempCookie !== "object"
-	)
-		return undefined;
-	//値を確認してあるならそれを返す
-	//ここで型エラーが出るが結果はきちんとJSONを返すためこのまま
-	if (tempCookie.userId !== undefined && tempCookie.sessionId != undefined) {
-		return tempCookie;
-	} else {
-		return undefined;
-	}
+  //無効な値ならundefuned
+  if (
+    tempCookie === undefined ||
+    tempCookie === null ||
+    typeof tempCookie !== "object"
+  )
+    return undefined;
+  //値を確認してあるならそれを返す
+  //ここで型エラーが出るが結果はきちんとJSONを返すためこのまま
+  if (tempCookie.userId !== undefined && tempCookie.sessionId != undefined) {
+    return tempCookie;
+  } else {
+    return undefined;
+  }
 };
 
 /**
@@ -142,18 +142,18 @@ const getSessionFromCookie = ():
  * @param userNameNew
  */
 const bindUserName = (userNameNew: string) => {
-	//現セッションで登録していて...
-	if (registrationData.value.done) {
-		//もし入力するユーザー名が違うなら新ユーザーじゃないと設定、逆なら逆
-		if (registrationData.value.userName !== userNameNew) {
-			isNewUser.value = false;
-		} else {
-			isNewUser.value = true;
-		}
-	}
+  //現セッションで登録していて...
+  if (registrationData.value.done) {
+    //もし入力するユーザー名が違うなら新ユーザーじゃないと設定、逆なら逆
+    if (registrationData.value.userName !== userNameNew) {
+      isNewUser.value = false;
+    } else {
+      isNewUser.value = true;
+    }
+  }
 
-	//格納
-	sharedUserName.value = userNameNew;
+  //格納
+  sharedUserName.value = userNameNew;
 };
 
 /**
@@ -161,58 +161,58 @@ const bindUserName = (userNameNew: string) => {
  * @param dat
  */
 const SOCKEtauthSession = (dat: { result: string; dat: boolean }) => {
-	console.log("/auth :: SOCKETauthSession : dat->", dat);
+  console.log("/auth :: SOCKETauthSession : dat->", dat);
 
-	//成功なら初期ロード開始
-	if (dat.result === "SUCCESS") {
-		//ロード開始
-		initialize(getMyUserinfo.value.userId, getSessionId.value);
-	} else {
-		//失敗ならクッキーでの認証中も考慮しロード中を解除
-		stateProcesingWithCookie.value = false;
-	}
+  //成功なら初期ロード開始
+  if (dat.result === "SUCCESS") {
+    //ロード開始
+    initialize(getMyUserinfo.value.userId, getSessionId.value);
+  } else {
+    //失敗ならクッキーでの認証中も考慮しロード中を解除
+    stateProcesingWithCookie.value = false;
+  }
 };
 
 onMounted(() => {
-	//認証結果受け取り
-	socket.on("RESULT::authSession", SOCKEtauthSession);
+  //認証結果受け取り
+  socket.on("RESULT::authSession", SOCKEtauthSession);
 
-	console.log("/auth :: onMounted : session->", useCookie("session").value);
+  console.log("/auth :: onMounted : session->", useCookie("session").value);
 });
 
 onUnmounted(() => {
-	//socketハンドラ解除
-	socket.off("RESULT::authSession", SOCKEtauthSession);
+  //socketハンドラ解除
+  socket.off("RESULT::authSession", SOCKEtauthSession);
 });
 
 //アプリ全体のロードを待ってから認証処理
 onNuxtReady(() => {
-	//クッキーからセッションデータを取得、格納
-	const sessionData = getSessionFromCookie();
+  //クッキーからセッションデータを取得、格納
+  const sessionData = getSessionFromCookie();
 
-	//レンダーを待ってから認証処理
-	nextTick(() => {
-		//クッキーがあればそのまま認証
-		if (sessionData !== undefined) {
-			//セッションIDをstoreへ登録
-			updateSessionId(sessionData.sessionId);
-			//ユーザーIDをあらかじめマージ
-			const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
-			updateMyUserinfo({
-				...useMyUserinfo().getMyUserinfo,
-				userId: sessionData.userId,
-			});
+  //レンダーを待ってから認証処理
+  nextTick(() => {
+    //クッキーがあればそのまま認証
+    if (sessionData !== undefined) {
+      //セッションIDをstoreへ登録
+      updateSessionId(sessionData.sessionId);
+      //ユーザーIDをあらかじめマージ
+      const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
+      updateMyUserinfo({
+        ...useMyUserinfo().getMyUserinfo,
+        userId: sessionData.userId,
+      });
 
-			//セッション認証
-			socket.emit("authSession", {
-				userId: sessionData.userId,
-				sessionId: sessionData.sessionId,
-			});
-		} else {
-			//クッキーがないなら認証画面を表示するためにクッキー処理状態を解除
-			stateProcesingWithCookie.value = false;
-		}
-	});
+      //セッション認証
+      socket.emit("authSession", {
+        userId: sessionData.userId,
+        sessionId: sessionData.sessionId,
+      });
+    } else {
+      //クッキーがないなら認証画面を表示するためにクッキー処理状態を解除
+      stateProcesingWithCookie.value = false;
+    }
+  });
 });
 </script>
 

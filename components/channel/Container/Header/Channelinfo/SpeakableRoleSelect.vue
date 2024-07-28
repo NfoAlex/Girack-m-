@@ -16,74 +16,74 @@ const roleSearchedData = ref<role[]>([]); //ロール検索結果格納用
 const tempSpeakableRole = ref<string[]>([]); //編集用話せるロール配列
 //ロール検索用クエリー保存データ
 const roleSearchInput = ref<{
-	query: string;
-	querySearched: string;
-	pageIndex: number;
-	reachedEnd: boolean;
+  query: string;
+  querySearched: string;
+  pageIndex: number;
+  reachedEnd: boolean;
 }>({
-	query: "", //検索クエリー用
-	querySearched: "", //最後に結果を受け取った検索クエリー
-	pageIndex: 1, //ロール検索結果のページ番号
-	reachedEnd: false, //最後のページまで受け取ったかどうか
+  query: "", //検索クエリー用
+  querySearched: "", //最後に結果を受け取った検索クエリー
+  pageIndex: 1, //ロール検索結果のページ番号
+  reachedEnd: false, //最後のページまで受け取ったかどうか
 });
 
 //prop
 const props = defineProps<{
-	channelId: string;
-	channelInfo: channel;
-	speakableRole: string[];
+  channelId: string;
+  channelInfo: channel;
+  speakableRole: string[];
 }>();
 
 /**
  * チャンネル更新
  */
 const updateChannel = () => {
-	//チャンネル情報を取得
-	socket.emit("updateChannel", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		channelId: props.channelId,
-		channelInfo: {
-			...props.channelInfo,
-			speakableRole: tempSpeakableRole.value,
-		},
-	});
+  //チャンネル情報を取得
+  socket.emit("updateChannel", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    channelId: props.channelId,
+    channelInfo: {
+      ...props.channelInfo,
+      speakableRole: tempSpeakableRole.value,
+    },
+  });
 };
 
 /**
  * 検索クエリーでロールを検索する
  */
 const searchRole = (pageIndex = 1) => {
-	//検索したクエリーと入力クエリー、ページ数と引数が一緒なら停止
-	if (
-		roleSearchInput.value.query === roleSearchInput.value.querySearched &&
-		roleSearchInput.value.pageIndex === pageIndex
-	)
-		return;
+  //検索したクエリーと入力クエリー、ページ数と引数が一緒なら停止
+  if (
+    roleSearchInput.value.query === roleSearchInput.value.querySearched &&
+    roleSearchInput.value.pageIndex === pageIndex
+  )
+    return;
 
-	console.log(
-		"/channel/[id] :: SpeakableRoleSelect :: searchRole : pageIndex->",
-		toRaw(pageIndex),
-	);
+  console.log(
+    "/channel/[id] :: SpeakableRoleSelect :: searchRole : pageIndex->",
+    toRaw(pageIndex),
+  );
 
-	//取得
-	socket.emit("searchRole", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		searchQuery: roleSearchInput.value.query,
-		pageIndex: pageIndex,
-	});
+  //取得
+  socket.emit("searchRole", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    searchQuery: roleSearchInput.value.query,
+    pageIndex: pageIndex,
+  });
 
-	//再検索なら最後の結果まで検索した状態を解除
-	if (pageIndex === 1) {
-		roleSearchInput.value.reachedEnd = false;
-	}
-	//検索したクエリー文を上書き
-	roleSearchInput.value.querySearched = roleSearchInput.value.query;
+  //再検索なら最後の結果まで検索した状態を解除
+  if (pageIndex === 1) {
+    roleSearchInput.value.reachedEnd = false;
+  }
+  //検索したクエリー文を上書き
+  roleSearchInput.value.querySearched = roleSearchInput.value.query;
 };
 
 /**
@@ -91,50 +91,50 @@ const searchRole = (pageIndex = 1) => {
  * @param dat
  */
 const SOCKETsearchRole = (dat: {
-	result: string;
-	data: { role: role[]; pageIndex: number };
+  result: string;
+  data: { role: role[]; pageIndex: number };
 }) => {
-	//成功なら検索結果を格納
-	if (dat.result === "SUCCESS") {
-		if (dat.data.pageIndex === roleSearchInput.value.pageIndex + 1) {
-			roleSearchedData.value = [...roleSearchedData.value, ...dat.data.role];
-		} else {
-			roleSearchedData.value = dat.data.role;
-		}
+  //成功なら検索結果を格納
+  if (dat.result === "SUCCESS") {
+    if (dat.data.pageIndex === roleSearchInput.value.pageIndex + 1) {
+      roleSearchedData.value = [...roleSearchedData.value, ...dat.data.role];
+    } else {
+      roleSearchedData.value = dat.data.role;
+    }
 
-		//どのページまで読み込んだかを保存
-		roleSearchInput.value.pageIndex = dat.data.pageIndex;
-		//結果が空なら最後のページまで行ったと設定
-		if (dat.data.role.length === 0 || dat.data.role.length < 30)
-			roleSearchInput.value.reachedEnd = true;
+    //どのページまで読み込んだかを保存
+    roleSearchInput.value.pageIndex = dat.data.pageIndex;
+    //結果が空なら最後のページまで行ったと設定
+    if (dat.data.role.length === 0 || dat.data.role.length < 30)
+      roleSearchInput.value.reachedEnd = true;
 
-		console.log("dat->", dat);
-	}
+    console.log("dat->", dat);
+  }
 };
 
 onMounted(() => {
-	//propsからの値を適用
-	tempSpeakableRole.value = props.speakableRole;
-	console.log(
-		"/channel/[id] :: SpeakableRoleSelect :: onMounted : props.speakableRole->",
-		props.speakableRole,
-	);
+  //propsからの値を適用
+  tempSpeakableRole.value = props.speakableRole;
+  console.log(
+    "/channel/[id] :: SpeakableRoleSelect :: onMounted : props.speakableRole->",
+    props.speakableRole,
+  );
 
-	socket.on("RESULT::searchRole", SOCKETsearchRole);
+  socket.on("RESULT::searchRole", SOCKETsearchRole);
 
-	//取得
-	socket.emit("searchRole", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		searchQuery: "",
-		pageIndex: 1,
-	});
+  //取得
+  socket.emit("searchRole", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    searchQuery: "",
+    pageIndex: 1,
+  });
 });
 
 onUnmounted(() => {
-	socket.off("RESULT::searchRole", SOCKETsearchRole);
+  socket.off("RESULT::searchRole", SOCKETsearchRole);
 });
 </script>
 

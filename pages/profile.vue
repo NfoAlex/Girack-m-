@@ -13,30 +13,30 @@ const dialogChangePassword = ref<boolean>(false); //パスワード変更
 const dialogChangeUsername = ref<boolean>(false); //ユーザー名変更用
 const dialogChangeProfileIcon = ref<boolean>(false); //プロフィール画像変更用
 const myRolePower = ref<{
-	//自分の権力用
-	ServerManage: boolean;
-	RoleManage: boolean;
-	ChannelManage: boolean;
-	UserManage: boolean;
-	MessageDelete: boolean;
-	MessageAttatchFile: boolean;
+  //自分の権力用
+  ServerManage: boolean;
+  RoleManage: boolean;
+  ChannelManage: boolean;
+  UserManage: boolean;
+  MessageDelete: boolean;
+  MessageAttatchFile: boolean;
 }>({
-	ServerManage: false,
-	RoleManage: false,
-	ChannelManage: false,
-	UserManage: false,
-	MessageDelete: false,
-	MessageAttatchFile: false,
+  ServerManage: false,
+  RoleManage: false,
+  ChannelManage: false,
+  UserManage: false,
+  MessageDelete: false,
+  MessageAttatchFile: false,
 });
 
 onMounted(() => {
-	//現在の自分の権力を調べて格納
-	myRolePower.value = getMyRolePower();
+  //現在の自分の権力を調べて格納
+  myRolePower.value = getMyRolePower();
 
-	//自分の情報の更新があったら権力をまた調べる
-	watch(getMyUserinfo, () => {
-		myRolePower.value = getMyRolePower();
-	});
+  //自分の情報の更新があったら権力をまた調べる
+  watch(getMyUserinfo, () => {
+    myRolePower.value = getMyRolePower();
+  });
 });
 </script>
 

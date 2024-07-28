@@ -7,19 +7,19 @@ const props = defineProps<{ linkData: message["linkData"] }>();
  * リンクプレビューデータJSONのキーを配列にしたものを返す
  */
 const linkDataKeyArr = computed((): string[] => {
-	//リンクデータがnullなら空
-	if (props.linkData === null) return [];
-	return Object.keys(props.linkData);
+  //リンクデータがnullなら空
+  if (props.linkData === null) return [];
+  return Object.keys(props.linkData);
 });
 
 /**
  * エラーハンドラ
  */
 onErrorCaptured((err, instance, info) => {
-	console.log("LinkPreview :: erron->", props.linkData);
-	console.log("LinkPreview :: err->", err);
+  console.log("LinkPreview :: erron->", props.linkData);
+  console.log("LinkPreview :: err->", err);
 
-	return false;
+  return false;
 });
 </script>
 

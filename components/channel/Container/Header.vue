@@ -8,7 +8,7 @@ import Channelinfo from "./Header/Channelinfo.vue";
 const displayChannelinfo = ref<boolean>(false);
 
 const props = defineProps<{
-	channelInfo: channel;
+  channelInfo: channel;
 }>();
 </script>
 

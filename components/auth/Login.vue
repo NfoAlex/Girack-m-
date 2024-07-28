@@ -8,7 +8,7 @@ const { updateSessionId } = useMyUserinfo();
 
 //emit用
 const emitInitializeProxy = (): void => {
-	emits("initialize", getMyUserinfo.value.userId, getSessionId.value);
+  emits("initialize", getMyUserinfo.value.userId, getSessionId.value);
 };
 
 /**
@@ -21,29 +21,29 @@ const resultDisplay = ref<string>("");
 
 //emit
 const emits = defineEmits<{
-	(e: "applyChangeUserName", username: string): void;
-	(e: "initialize", userId: string, sessionId: string): void;
+  (e: "applyChangeUserName", username: string): void;
+  (e: "initialize", userId: string, sessionId: string): void;
 }>();
 
 //prop
 const props = defineProps<{
-	sharedUserName: string;
+  sharedUserName: string;
 }>();
 
 /**
  * ログイン処理
  */
 const login = () => {
-	//処理中と設定
-	processingAuth.value = true;
-	//認証結果を初期化
-	resultDisplay.value = "";
+  //処理中と設定
+  processingAuth.value = true;
+  //認証結果を初期化
+  resultDisplay.value = "";
 
-	//認証
-	socket.emit("authLogin", {
-		username: username.value,
-		password: password.value,
-	});
+  //認証
+  socket.emit("authLogin", {
+    username: username.value,
+    password: password.value,
+  });
 };
 
 /**
@@ -51,55 +51,55 @@ const login = () => {
  * @param dat
  */
 const SOCKETRESULTauthLogin = (dat: {
-	result: string;
-	data: { UserInfo: MyUserinfo; sessionId: string };
+  result: string;
+  data: { UserInfo: MyUserinfo; sessionId: string };
 }) => {
-	console.log("auth :: SOCKETRESULTauthLogin : dat->", dat);
-	//ログインできたらユーザー情報設定、ページ移動
-	if (dat.result === "SUCCESS") {
-		//成功
-		resultDisplay.value = "SUCCESS";
-		//自ユーザー情報更新
-		const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
-		updateMyUserinfo({
-			userName: dat.data.UserInfo.userName,
-			userId: dat.data.UserInfo.userId,
-			role: dat.data.UserInfo.role, //文字列で渡されるためここで配列にする
-			banned: dat.data.UserInfo.banned,
-			channelJoined: dat.data.UserInfo.channelJoined, //文字列で渡されるためここで配列にする
-		});
-		//セッションID更新
-		updateSessionId(dat.data.sessionId);
+  console.log("auth :: SOCKETRESULTauthLogin : dat->", dat);
+  //ログインできたらユーザー情報設定、ページ移動
+  if (dat.result === "SUCCESS") {
+    //成功
+    resultDisplay.value = "SUCCESS";
+    //自ユーザー情報更新
+    const updateMyUserinfo = useMyUserinfo().updateMyUserinfo;
+    updateMyUserinfo({
+      userName: dat.data.UserInfo.userName,
+      userId: dat.data.UserInfo.userId,
+      role: dat.data.UserInfo.role, //文字列で渡されるためここで配列にする
+      banned: dat.data.UserInfo.banned,
+      channelJoined: dat.data.UserInfo.channelJoined, //文字列で渡されるためここで配列にする
+    });
+    //セッションID更新
+    updateSessionId(dat.data.sessionId);
 
-		//セッション情報をクッキーへ保存
-		useCookie("session", { maxAge: 1.296e6 }).value = JSON.stringify({
-			userId: dat.data.UserInfo.userId,
-			sessionId: dat.data.sessionId,
-		});
+    //セッション情報をクッキーへ保存
+    useCookie("session", { maxAge: 1.296e6 }).value = JSON.stringify({
+      userId: dat.data.UserInfo.userId,
+      sessionId: dat.data.sessionId,
+    });
 
-		//準備処理開始
-		//initialize(dat.data.UserInfo.userId, dat.data.sessionId);
-		emitInitializeProxy();
-	} else {
-		//エラーを表示
-		resultDisplay.value = "FAILED";
-	}
-	//認証状態中を解除
-	processingAuth.value = false;
+    //準備処理開始
+    //initialize(dat.data.UserInfo.userId, dat.data.sessionId);
+    emitInitializeProxy();
+  } else {
+    //エラーを表示
+    resultDisplay.value = "FAILED";
+  }
+  //認証状態中を解除
+  processingAuth.value = false;
 };
 
 onMounted(() => {
-	//認証結果受け取り
-	socket.on("RESULT::authLogin", SOCKETRESULTauthLogin);
-	//ユーザー名を適用
-	username.value = props.sharedUserName;
+  //認証結果受け取り
+  socket.on("RESULT::authLogin", SOCKETRESULTauthLogin);
+  //ユーザー名を適用
+  username.value = props.sharedUserName;
 
-	console.log("/auth :: onMounted : session->", useCookie("session").value);
+  console.log("/auth :: onMounted : session->", useCookie("session").value);
 });
 
 onUnmounted(() => {
-	//socketハンドラ解除
-	socket.off("RESULT::authLogin", SOCKETRESULTauthLogin);
+  //socketハンドラ解除
+  socket.off("RESULT::authLogin", SOCKETRESULTauthLogin);
 });
 </script>
 

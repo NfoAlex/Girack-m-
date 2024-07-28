@@ -13,29 +13,29 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
  */
 //自由に編集できるようにコピーしたサーバー設定
 const ServerConfigCloned = ref<Serverinfo>({
-	servername: "",
-	registration: {
-		available: false,
-		invite: {
-			inviteOnly: false,
-		},
-	},
-	config: {
-		PROFILE: {
-			iconMaxSize: 0,
-			usernameMaxLength: 0,
-		},
-		CHANNEL: {
-			channelIdAnnounceRegistration: "",
-			defaultJoinOnRegister: [],
-		},
-		MESSAGE: {
-			TxtMaxLength: 0,
-		},
-		STORAGE: {
-			StorageSizeLimit: 0,
-		},
-	},
+  servername: "",
+  registration: {
+    available: false,
+    invite: {
+      inviteOnly: false,
+    },
+  },
+  config: {
+    PROFILE: {
+      iconMaxSize: 0,
+      usernameMaxLength: 0,
+    },
+    CHANNEL: {
+      channelIdAnnounceRegistration: "",
+      defaultJoinOnRegister: [],
+    },
+    MESSAGE: {
+      TxtMaxLength: 0,
+    },
+    STORAGE: {
+      StorageSizeLimit: 0,
+    },
+  },
 });
 const ServerinfoEdited = ref<boolean>(false); //サーバー設定を変えたかどうか
 const channelList = ref<channel[]>(); //チャンネル情報格納用
@@ -44,37 +44,37 @@ const channelList = ref<channel[]>(); //チャンネル情報格納用
  * 編集用サーバー設定を復元
  */
 const restoreServerConfigClone = () => {
-	//現在のサーバー設定からまたクローンして初期化
-	ServerConfigCloned.value = structuredClone(toRaw(getServerinfo.value));
+  //現在のサーバー設定からまたクローンして初期化
+  ServerConfigCloned.value = structuredClone(toRaw(getServerinfo.value));
 
-	//サーバー設定の編集した状態を初期化
-	ServerinfoEdited.value = false;
-	//監視処理が初期化されるからまた監視処理開始
-	watch(ServerConfigCloned.value, () => {
-		console.log("server(index) :: watch(mounted) : 変更検知");
-		//console.log("server(index) :: watch(mounted) : data->", JSON.stringify(ServerinfoCloned.value), JSON.stringify(getServerinfo.value));
-		if (
-			JSON.stringify(ServerConfigCloned.value) ===
-			JSON.stringify(getServerinfo.value)
-		) {
-			ServerinfoEdited.value = false;
-		} else {
-			ServerinfoEdited.value = true;
-		}
-	});
+  //サーバー設定の編集した状態を初期化
+  ServerinfoEdited.value = false;
+  //監視処理が初期化されるからまた監視処理開始
+  watch(ServerConfigCloned.value, () => {
+    console.log("server(index) :: watch(mounted) : 変更検知");
+    //console.log("server(index) :: watch(mounted) : data->", JSON.stringify(ServerinfoCloned.value), JSON.stringify(getServerinfo.value));
+    if (
+      JSON.stringify(ServerConfigCloned.value) ===
+      JSON.stringify(getServerinfo.value)
+    ) {
+      ServerinfoEdited.value = false;
+    } else {
+      ServerinfoEdited.value = true;
+    }
+  });
 };
 
 /**
  * サーバー設定を適用する
  */
 const applyServerConfig = () => {
-	socket.emit("updateServerConfig", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		ServerConfig: ServerConfigCloned.value.config,
-	});
+  socket.emit("updateServerConfig", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    ServerConfig: ServerConfigCloned.value.config,
+  });
 };
 
 /**
@@ -82,8 +82,8 @@ const applyServerConfig = () => {
  * @param dat
  */
 const SOCKETRfetchChannelList = (dat: { result: string; data: channel[] }) => {
-	console.log("server(index)  :: SOCKETRfetchChannelList : dat->", dat);
-	channelList.value = dat.data; //格納
+  console.log("server(index)  :: SOCKETRfetchChannelList : dat->", dat);
+  channelList.value = dat.data; //格納
 };
 
 /**
@@ -91,52 +91,52 @@ const SOCKETRfetchChannelList = (dat: { result: string; data: channel[] }) => {
  * @param dat
  */
 const SOCKETfetchServerInfoLimited = () => {
-	//サーバー設定の監視用処理をここで実行する
-	if (
-		JSON.stringify(ServerConfigCloned.value) ===
-		JSON.stringify(getServerinfo.value)
-	) {
-		ServerinfoEdited.value = false;
-	} else {
-		ServerinfoEdited.value = true;
-	}
+  //サーバー設定の監視用処理をここで実行する
+  if (
+    JSON.stringify(ServerConfigCloned.value) ===
+    JSON.stringify(getServerinfo.value)
+  ) {
+    ServerinfoEdited.value = false;
+  } else {
+    ServerinfoEdited.value = true;
+  }
 };
 
 onMounted(() => {
-	//チャンネル情報とサーバー情報の更新受け取り
-	socket.on("RESULT::fetchChannelList", SOCKETRfetchChannelList);
-	socket.on("RESULT::fetchServerInfoLimited", SOCKETfetchServerInfoLimited);
+  //チャンネル情報とサーバー情報の更新受け取り
+  socket.on("RESULT::fetchChannelList", SOCKETRfetchChannelList);
+  socket.on("RESULT::fetchServerInfoLimited", SOCKETfetchServerInfoLimited);
 
-	//チャンネルリストの取得
-	socket.emit("fetchChannelList", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-	});
+  //チャンネルリストの取得
+  socket.emit("fetchChannelList", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+  });
 
-	//サーバー設定をクローン
-	ServerConfigCloned.value = structuredClone(toRaw(getServerinfo.value));
+  //サーバー設定をクローン
+  ServerConfigCloned.value = structuredClone(toRaw(getServerinfo.value));
 
-	//クローンしたサーバー設定の編集を監視
-	watch(ServerConfigCloned.value, () => {
-		console.log("server(index) :: watch(mounted) : 変更検知");
-		//console.log("server(index) :: watch(mounted) : data->", JSON.stringify(ServerinfoCloned.value), JSON.stringify(getServerinfo.value));
-		//設定データとクローンデータを比較
-		if (
-			JSON.stringify(ServerConfigCloned.value) ===
-			JSON.stringify(getServerinfo.value)
-		) {
-			ServerinfoEdited.value = false;
-		} else {
-			ServerinfoEdited.value = true;
-		}
-	});
+  //クローンしたサーバー設定の編集を監視
+  watch(ServerConfigCloned.value, () => {
+    console.log("server(index) :: watch(mounted) : 変更検知");
+    //console.log("server(index) :: watch(mounted) : data->", JSON.stringify(ServerinfoCloned.value), JSON.stringify(getServerinfo.value));
+    //設定データとクローンデータを比較
+    if (
+      JSON.stringify(ServerConfigCloned.value) ===
+      JSON.stringify(getServerinfo.value)
+    ) {
+      ServerinfoEdited.value = false;
+    } else {
+      ServerinfoEdited.value = true;
+    }
+  });
 });
 
 onUnmounted(() => {
-	socket.off("RESULT::fetchChannelList", SOCKETRfetchChannelList);
-	socket.off("RESULT::fetchServerInfoLimited", SOCKETfetchServerInfoLimited);
+  socket.off("RESULT::fetchChannelList", SOCKETRfetchChannelList);
+  socket.off("RESULT::fetchServerInfoLimited", SOCKETfetchServerInfoLimited);
 });
 </script>
 

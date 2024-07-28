@@ -5,18 +5,18 @@ import { useRole } from "~/stores/role";
 import type role from "~/types/role";
 
 export default function fetchRoleSingle(socket: Socket): void {
-	socket.on(
-		"RESULT::fetchRoleSingle",
-		(dat: {
-			result: string;
-			data: role;
-		}) => {
-			//console.log("fetchRoleSingle :: dat->", dat);
+  socket.on(
+    "RESULT::fetchRoleSingle",
+    (dat: {
+      result: string;
+      data: role;
+    }) => {
+      //console.log("fetchRoleSingle :: dat->", dat);
 
-			//ロールセット用処理をインポート
-			const { bindRoleSingle } = useRole();
-			//格納
-			bindRoleSingle(dat.data);
-		},
-	);
+      //ロールセット用処理をインポート
+      const { bindRoleSingle } = useRole();
+      //格納
+      bindRoleSingle(dat.data);
+    },
+  );
 }

@@ -11,46 +11,46 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 //props(リアクション)
 const props = defineProps<{
-	channelId: string;
-	messageId: string;
-	reaction: {
-		[key: string]: {
-			[key: string]: number;
-		};
-	};
+  channelId: string;
+  messageId: string;
+  reaction: {
+    [key: string]: {
+      [key: string]: number;
+    };
+  };
 }>();
 
 //リアクションデータがあるなら絵文字データをロード、格納する
 if (JSON.stringify(props.reaction) !== "{}") {
-	//console.log("EmojiReader :: reaction->", props.reaction);
-	//console.log("EmojiReader :: data->", data);
-	emojiIndex = new EmojiIndex(data);
+  //console.log("EmojiReader :: reaction->", props.reaction);
+  //console.log("EmojiReader :: data->", data);
+  emojiIndex = new EmojiIndex(data);
 }
 
 //リアクションデータの変更を監視して絵文字データをロードするように
 watch(props, () => {
-	//初回のみね
-	if (JSON.stringify(props.reaction) !== "{}" && emojiIndex === undefined) {
-		emojiIndex = new EmojiIndex(data);
-	}
+  //初回のみね
+  if (JSON.stringify(props.reaction) !== "{}" && emojiIndex === undefined) {
+    emojiIndex = new EmojiIndex(data);
+  }
 });
 
 /**
  * 絵文字のレンダー
  */
 const emojiRender = (emojiId: string) => {
-	//総リアクション数
-	let totalReactionNumber = 0;
-	try {
-		//リアクション数を加算
-		for (const reactionedUserId in props.reaction[emojiId]) {
-			totalReactionNumber += props.reaction[emojiId][reactionedUserId];
-		}
-		//絵文字と合わせて総数を文字列として返す
-		return emojiIndex._emojis[emojiId].native + totalReactionNumber.toString();
-	} catch (e) {
-		console.log("EmojiReader :: onMounted : e->", e);
-	}
+  //総リアクション数
+  let totalReactionNumber = 0;
+  try {
+    //リアクション数を加算
+    for (const reactionedUserId in props.reaction[emojiId]) {
+      totalReactionNumber += props.reaction[emojiId][reactionedUserId];
+    }
+    //絵文字と合わせて総数を文字列として返す
+    return emojiIndex._emojis[emojiId].native + totalReactionNumber.toString();
+  } catch (e) {
+    console.log("EmojiReader :: onMounted : e->", e);
+  }
 };
 
 /**
@@ -58,15 +58,15 @@ const emojiRender = (emojiId: string) => {
  * @param emojiId
  */
 const addMoreReaction = (emojiId: string) => {
-	socket.emit("reactMessage", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		channelId: props.channelId,
-		messageId: props.messageId,
-		reactionName: emojiId,
-	});
+  socket.emit("reactMessage", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    channelId: props.channelId,
+    messageId: props.messageId,
+    reactionName: emojiId,
+  });
 };
 </script>
 

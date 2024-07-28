@@ -5,32 +5,32 @@ import FileItem from "./FileInputsDisplay/FileItem.vue";
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 const props = defineProps<{
-	fileData: {
-		fileId: string;
-		fileBuffer: File | null;
-		fileInfo: file | null;
-		uploadedFrom: "remote" | "local";
-		ready: boolean;
-	}[];
-	channelId: string;
+  fileData: {
+    fileId: string;
+    fileBuffer: File | null;
+    fileInfo: file | null;
+    uploadedFrom: "remote" | "local";
+    ready: boolean;
+  }[];
+  channelId: string;
 }>();
 
 const emits = defineEmits<{
-	(e: "trimFile", index: number): void; //指定ファイルの入力を削除
-	(
-		//親のファイルId配列を更新する
-		e: "updateFileData",
-		args: {
-			fileData: {
-				fileId: string;
-				fileBuffer: File | null;
-				fileInfo: file | null;
-				uploadedFrom: "remote" | "local";
-				ready: boolean;
-			};
-			index: number;
-		},
-	): void;
+  (e: "trimFile", index: number): void; //指定ファイルの入力を削除
+  (
+    //親のファイルId配列を更新する
+    e: "updateFileData",
+    args: {
+      fileData: {
+        fileId: string;
+        fileBuffer: File | null;
+        fileInfo: file | null;
+        uploadedFrom: "remote" | "local";
+        ready: boolean;
+      };
+      index: number;
+    },
+  ): void;
 }>();
 </script>
 
