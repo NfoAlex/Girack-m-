@@ -31,7 +31,7 @@ import saveUserConfig from "./saveUserConfig";
 import fetchRoleSingle from "./fetchRoleSingle";
 import fetchRoles from "./fetchRoles";
 
-import EventEmitter from "events";
+import EventEmitter from "node:events";
 EventEmitter.defaultMaxListeners = 25; // 新しいリスナーの上限を25に設定
 
 console.log("socketInit :: INITIALIZED");
