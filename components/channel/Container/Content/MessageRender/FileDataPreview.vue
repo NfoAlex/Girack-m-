@@ -14,7 +14,6 @@ const propsMessage = defineProps<{
 /**
  * data
  */
-const fileInfos = ref<file[]>([]);
 const fileBlobArr = ref<{
   [key: string]: {
     fileName: string;
