@@ -50,35 +50,35 @@ export const useRole = defineStore("role", {
       (roleId: string): role => {
         if (state._Roles[roleId] !== undefined) {
           return state._Roles[roleId];
-        } else {
-          //ホルダーとしてデータ追加
-          state._Roles[roleId] = {
-            roleId: roleId,
-            name: roleId,
-            color: "#f00",
-            ServerManage: false,
-            RoleManage: false,
-            ChannelManage: false,
-            UserManage: false,
-            MessageDelete: false,
-            MessageAttatchFile: false,
-          };
-
-          //ロール情報を取得する
-          //RequestSender用
-          const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-          //取得
-          socket.emit("fetchRoleSingle", {
-            RequestSender: {
-              userId: getMyUserinfo.value.userId,
-              sessionId: getSessionId.value,
-            },
-            roleId: roleId,
-          });
-
-          //ホルダーデータを返す
-          return state._Roles[roleId];
         }
+        
+        //ホルダーとしてデータ追加
+        state._Roles[roleId] = {
+          roleId: roleId,
+          name: roleId,
+          color: "#f00",
+          ServerManage: false,
+          RoleManage: false,
+          ChannelManage: false,
+          UserManage: false,
+          MessageDelete: false,
+          MessageAttatchFile: false,
+        };
+
+        //ロール情報を取得する
+        //RequestSender用
+        const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+        //取得
+        socket.emit("fetchRoleSingle", {
+          RequestSender: {
+            userId: getMyUserinfo.value.userId,
+            sessionId: getSessionId.value,
+          },
+          roleId: roleId,
+        });
+
+        //ホルダーデータを返す
+        return state._Roles[roleId];
       },
   },
 
