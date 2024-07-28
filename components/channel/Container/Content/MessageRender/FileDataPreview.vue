@@ -149,7 +149,7 @@ const SOCKETfetchFileInfo = (dat: { result: string; data: file }) => {
       size: 0,
       type: "",
       uploadedDate: "",
-      directory: ""
+      directory: "",
     });
   }
 };

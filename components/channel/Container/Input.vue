@@ -240,7 +240,7 @@ const triggerEnter = (event: KeyboardEvent) => {
     const txtAfter = messageInput.value.slice(currentTxtCursor);
 
     //改行を挿入
-    messageInput.value = txtBefore + "\n" + txtAfter;
+    messageInput.value = `${txtBefore}\n${txtAfter}`;
 
     //カーソル位置を改行のすぐ次へ移動
     nextTick(() => {
