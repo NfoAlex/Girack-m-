@@ -4,6 +4,7 @@ import { EmojiIndex } from "emoji-mart-vue-fast/src"; //TS...
 import { socket } from "~/socketHandlers/socketInit";
 import { useMyUserinfo } from "~/stores/userinfo";
 
+// biome-ignore lint/suspicious/noExplicitAny: emoji-mart-vue-fast用のタイプが存在しないため
 let emojiIndex: any; //絵文字データ用(onMountedでロードする)
 
 //Socket通信のユーザー情報用
