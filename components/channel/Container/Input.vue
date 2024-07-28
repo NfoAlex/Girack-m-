@@ -1,28 +1,28 @@
 <script setup lang="ts">
 import { socket } from "~/socketHandlers/socketInit";
-import FileInputsDisplay from "./Input/FileInputsDisplay.vue";
-import RemoteFileSelect from "./Input/RemoteFileSelect.vue";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type { channel } from "~/types/channel";
-import type { MyUserinfo } from "~/types/user";
 import type { file } from "~/types/file";
+import type { MyUserinfo } from "~/types/user";
+import FileInputsDisplay from "./Input/FileInputsDisplay.vue";
+import RemoteFileSelect from "./Input/RemoteFileSelect.vue";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 //props(チャンネル情報)
 const props = defineProps<{
-  channelInfo: channel;
+	channelInfo: channel;
 }>();
 
 //メンションデータ用interface
 interface SearchData {
-  query: string; //検索文字列
-  searching: boolean; //検索モードに入っているかどうか
-  selectedIndex: number; //選択しているもの
-  searchStartingAt: number; //検索モードに入った文字位置
-  searchEndingAt: number; //検索文字列の範囲終わり(文字列全体の長さ - searchStartingAt)
-  txtLengthWhenStartSearching: number; //検索をし始めたときの文字列全体の長さ
-  searchingTerm: "user" | "channel"; //ToDo::(!現在未使用!)検索するもの("user" | "channel")
+	query: string; //検索文字列
+	searching: boolean; //検索モードに入っているかどうか
+	selectedIndex: number; //選択しているもの
+	searchStartingAt: number; //検索モードに入った文字位置
+	searchEndingAt: number; //検索文字列の範囲終わり(文字列全体の長さ - searchStartingAt)
+	txtLengthWhenStartSearching: number; //検索をし始めたときの文字列全体の長さ
+	searchingTerm: "user" | "channel"; //ToDo::(!現在未使用!)検索するもの("user" | "channel")
 }
 
 /**
@@ -32,28 +32,28 @@ const messageInput = ref<string>(""); //メッセージ入力用変数
 
 const allFileReady = ref<boolean>(true);
 const fileData = ref<
-  {
-    fileId: string,
-    fileBuffer: File|null,
-    fileInfo: file|null,
-    uploadedFrom: "remote"|"local"
-    ready: boolean
-  }[]
+	{
+		fileId: string;
+		fileBuffer: File | null;
+		fileInfo: file | null;
+		uploadedFrom: "remote" | "local";
+		ready: boolean;
+	}[]
 >([]);
 
-const elInput = ref<Element|null>(null); //入力欄要素を取得するためのref
+const elInput = ref<Element | null>(null); //入力欄要素を取得するためのref
 const elFileInput = ref(null); //ファイル入力要素を取得するためのref
 const inputRowNum = ref<number>(1); //入力欄の行数
 const displayData = ref<boolean>(false);
 const searchData = ref<SearchData>({
-  //検索データ
-  query: "",
-  searching: false,
-  selectedIndex: 0,
-  searchStartingAt: 0,
-  searchEndingAt: 0,
-  txtLengthWhenStartSearching: 0,
-  searchingTerm: "user",
+	//検索データ
+	query: "",
+	searching: false,
+	selectedIndex: 0,
+	searchStartingAt: 0,
+	searchEndingAt: 0,
+	txtLengthWhenStartSearching: 0,
+	searchingTerm: "user",
 });
 const searchDataResult = ref<MyUserinfo[]>([]);
 const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リスト
@@ -64,275 +64,275 @@ const displayRemoteFileSelect = ref<boolean>(false);
  * 入力テキストの監視
  */
 watch(messageInput, () => {
-  //console.log("/channel/[id] :: watch(messageInput) : 入力検知->", messageInput.value);
+	//console.log("/channel/[id] :: watch(messageInput) : 入力検知->", messageInput.value);
 
-  //スペースが入力された、あるいは文字が空になったら検索モードを終了
-  if (
-    messageInput.value[messageInput.value.length - 1] === " " ||
-    messageInput.value[messageInput.value.length - 1] === "　" ||
-    messageInput.value.length === 0
-  ) {
-    searchData.value.searching = false;
-    //console.log("/channel/[id] :: watch(messageInput) : 検索モードOFF");
-  }
+	//スペースが入力された、あるいは文字が空になったら検索モードを終了
+	if (
+		messageInput.value[messageInput.value.length - 1] === " " ||
+		messageInput.value[messageInput.value.length - 1] === "　" ||
+		messageInput.value.length === 0
+	) {
+		searchData.value.searching = false;
+		//console.log("/channel/[id] :: watch(messageInput) : 検索モードOFF");
+	}
 
-  //検索モードに入っているなら検索する
-  if (searchData.value.searching) {
-    //検索文字列の範囲終わりを取得
-    searchData.value.searchEndingAt =
-      messageInput.value.length -
-      searchData.value.txtLengthWhenStartSearching +
-      searchData.value.searchStartingAt;
-    //もし開始文字位置と検索範囲終わり位置がかたよったら検索モードを無効化して関数を止める
-    if (
-      searchData.value.searchStartingAt + 1 >
-      searchData.value.searchEndingAt
-    ) {
-      searchData.value.searching = false;
-      return;
-    }
+	//検索モードに入っているなら検索する
+	if (searchData.value.searching) {
+		//検索文字列の範囲終わりを取得
+		searchData.value.searchEndingAt =
+			messageInput.value.length -
+			searchData.value.txtLengthWhenStartSearching +
+			searchData.value.searchStartingAt;
+		//もし開始文字位置と検索範囲終わり位置がかたよったら検索モードを無効化して関数を止める
+		if (
+			searchData.value.searchStartingAt + 1 >
+			searchData.value.searchEndingAt
+		) {
+			searchData.value.searching = false;
+			return;
+		}
 
-    //検索文字列を取得
-    searchData.value.query = messageInput.value.substring(
-      searchData.value.searchStartingAt + 1,
-      searchData.value.searchEndingAt
-    );
-    //console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
+		//検索文字列を取得
+		searchData.value.query = messageInput.value.substring(
+			searchData.value.searchStartingAt + 1,
+			searchData.value.searchEndingAt,
+		);
+		//console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
 
-    //クエリーでユーザーリストへフィルターかけて結果格納
-    searchDataResult.value = userAtHere.value.filter((user) =>
-      user.userName
-        .toLocaleLowerCase()
-        .includes(searchData.value.query.toLocaleLowerCase())
-    );
-  }
+		//クエリーでユーザーリストへフィルターかけて結果格納
+		searchDataResult.value = userAtHere.value.filter((user) =>
+			user.userName
+				.toLocaleLowerCase()
+				.includes(searchData.value.query.toLocaleLowerCase()),
+		);
+	}
 });
 
 /**
  * ここで話せるかどうか
  */
 const canISpeakHere = computed((): boolean => {
-  //もし配列が空なら話せると設定
-  if (props.channelInfo.speakableRole.length === 0) return true;
+	//もし配列が空なら話せると設定
+	if (props.channelInfo.speakableRole.length === 0) return true;
 
-  //自分のロールに話せるロールが含まれるか調べてboolで結果を返す
-  for (let role of props.channelInfo.speakableRole) {
-    if (getMyUserinfo.value.role.includes(role)) return true;
-    break;
-  }
+	//自分のロールに話せるロールが含まれるか調べてboolで結果を返す
+	for (const role of props.channelInfo.speakableRole) {
+		if (getMyUserinfo.value.role.includes(role)) return true;
+		break;
+	}
 
-  return false;
+	return false;
 });
 
 /**
  * 入力欄からのペーストイベントの受け取り
  */
-const receivePasteObject = async (event:ClipboardEvent) => {
-  //入力受付
-  const fileInputs = event.clipboardData?.files;
+const receivePasteObject = async (event: ClipboardEvent) => {
+	//入力受付
+	const fileInputs = event.clipboardData?.files;
 
-  //クリップボードの配列ループしてファイルが有効か調べてファイル用配列へ追加
-  for (let index in fileInputs) {
-    //console.log("Input :: receivePasteObject : index->", fileInputs[parseInt(index)]);
-    try {
-      //有効か？
-      if (fileInputs[parseInt(index)] !== undefined) {
-        //ファイルの準備状況をfalseへ
-        allFileReady.value = false;
-        //ファイル入力用配列へ追加
-        fileData.value.push({
-          fileId: "",
-          fileBuffer: fileInputs[parseInt(index)],
-          fileInfo: null,
-          uploadedFrom: "local",
-          ready: false,
-        });
-      }
-    } catch(e) {}
-  }
-}
+	//クリップボードの配列ループしてファイルが有効か調べてファイル用配列へ追加
+	for (const index in fileInputs) {
+		//console.log("Input :: receivePasteObject : index->", fileInputs[parseInt(index)]);
+		try {
+			//有効か？
+			if (fileInputs[Number.parseInt(index)] !== undefined) {
+				//ファイルの準備状況をfalseへ
+				allFileReady.value = false;
+				//ファイル入力用配列へ追加
+				fileData.value.push({
+					fileId: "",
+					fileBuffer: fileInputs[Number.parseInt(index)],
+					fileInfo: null,
+					uploadedFrom: "local",
+					ready: false,
+				});
+			}
+		} catch (e) {}
+	}
+};
 
 /**
  * ファイルの入力を受け取る
  */
 const fileInputDirectly = () => {
-  if (elFileInput.value === null) return;
+	if (elFileInput.value === null) return;
 
-  /*
+	/*
   console.log("filePortal :: fileInput : ファイルデータ->",
     elFileInput.value.files[0].size < 1,
     elFileInput.value.files[0].size === undefined
   );
   */
 
-  //inputに入力されたファイルの数ぶん処理する
-  for (let index in elFileInput.value.files) {
-    //条件を調べる
-    if (
-      elFileInput.value.files[index].size < 1 ||
-      elFileInput.value.files[index].size === undefined
-    ) {
-      console.log("filePortal :: fileInput : ファイル入力エラー");
-    } else {
-      //ファイルの準備状況をfalseへ
-      allFileReady.value = false;
-      fileData.value.push({
-        fileId: "",
-        fileBuffer: elFileInput.value.files[index],
-        fileInfo: null,
-        uploadedFrom: "local",
-        ready: false,
-      });
-    }
-  }
-}
+	//inputに入力されたファイルの数ぶん処理する
+	for (const index in elFileInput.value.files) {
+		//条件を調べる
+		if (
+			elFileInput.value.files[index].size < 1 ||
+			elFileInput.value.files[index].size === undefined
+		) {
+			console.log("filePortal :: fileInput : ファイル入力エラー");
+		} else {
+			//ファイルの準備状況をfalseへ
+			allFileReady.value = false;
+			fileData.value.push({
+				fileId: "",
+				fileBuffer: elFileInput.value.files[index],
+				fileInfo: null,
+				uploadedFrom: "local",
+				ready: false,
+			});
+		}
+	}
+};
 
 /**
  * ファイルデータの更新、あとすべてのファイルが送信できる状態か調べる
- * @param file 
+ * @param file
  */
 const updateFileDataValue = (
-  fileNew: {
-    fileId: string,
-    fileBuffer: File|null,
-    fileInfo: file|null,
-    uploadedFrom: "remote"|"local"
-    ready: boolean
-  },
-  index: number
+	fileNew: {
+		fileId: string;
+		fileBuffer: File | null;
+		fileInfo: file | null;
+		uploadedFrom: "remote" | "local";
+		ready: boolean;
+	},
+	index: number,
 ) => {
-  //格納
-  fileData.value[index] = fileNew;
+	//格納
+	fileData.value[index] = fileNew;
 
-  //console.log("Input :: updateFileData : fileData今->", fileData.value, " もらった値->", fileNew);
+	//console.log("Input :: updateFileData : fileData今->", fileData.value, " もらった値->", fileNew);
 
-  //ループしてファイルがいけるかどうか調べる
-  for (let file of fileData.value) {
-    if (!file.ready) return;
-  }
-  //ループを抜け出せたら準備完了と設定
-  allFileReady.value = true;
-}
+	//ループしてファイルがいけるかどうか調べる
+	for (const file of fileData.value) {
+		if (!file.ready) return;
+	}
+	//ループを抜け出せたら準備完了と設定
+	allFileReady.value = true;
+};
 
 /**
  * Enterキー入力の処理
  */
 const triggerEnter = (event: KeyboardEvent) => {
-  //MacのIME入力中はEnterを無視
-  // 229はMacのIME入力中のキーコードです非推奨ですが、現状これで対応しています
-  if (
-    navigator.userAgent.toUpperCase().indexOf("MAC") >= 0 &&
-    event.keyCode === 229
-  ) {
-    return;
-  }
+	//MacのIME入力中はEnterを無視
+	// 229はMacのIME入力中のキーコードです非推奨ですが、現状これで対応しています
+	if (
+		navigator.userAgent.toUpperCase().indexOf("MAC") >= 0 &&
+		event.keyCode === 229
+	) {
+		return;
+	}
 
-  //Shiftキーを押されているならシンプルに改行
-  if (event.shiftKey) {
-    //もし要素が取得できなかったら停止
-    if (elInput.value === null) return;
+	//Shiftキーを押されているならシンプルに改行
+	if (event.shiftKey) {
+		//もし要素が取得できなかったら停止
+		if (elInput.value === null) return;
 
-    //現在の入力欄上のカーソル位置
-    const currentTxtCursor: number = elInput.value.selectionStart;
+		//現在の入力欄上のカーソル位置
+		const currentTxtCursor: number = elInput.value.selectionStart;
 
-    //テキストを現在のカーソル位置をもとに分裂させる
-    let txtBefore = messageInput.value.slice(0, currentTxtCursor);
-    let txtAfter = messageInput.value.slice(currentTxtCursor);
+		//テキストを現在のカーソル位置をもとに分裂させる
+		const txtBefore = messageInput.value.slice(0, currentTxtCursor);
+		const txtAfter = messageInput.value.slice(currentTxtCursor);
 
-    //改行を挿入
-    messageInput.value = txtBefore + "\n" + txtAfter;
+		//改行を挿入
+		messageInput.value = txtBefore + "\n" + txtAfter;
 
-    //カーソル位置を改行のすぐ次へ移動
-    nextTick(() => {
-      elInput.value.setSelectionRange(
-        currentTxtCursor + 1,
-        currentTxtCursor + 1
-      );
-    });
-    //関数終了
-    return;
-  }
+		//カーソル位置を改行のすぐ次へ移動
+		nextTick(() => {
+			elInput.value.setSelectionRange(
+				currentTxtCursor + 1,
+				currentTxtCursor + 1,
+			);
+		});
+		//関数終了
+		return;
+	}
 
-  //メッセージが空なら停止
-  if (messageInput.value === "" || messageInput.value === " ") return;
+	//メッセージが空なら停止
+	if (messageInput.value === "" || messageInput.value === " ") return;
 
-  //検索中なら指定のユーザーIdあるいはチャンネルIdを挿入
-  if (searchData.value.searching) {
-    //検索位置の終わり取得
-    searchData.value.searchEndingAt =
-      messageInput.value.length -
-      searchData.value.txtLengthWhenStartSearching -
-      searchData.value.searchStartingAt;
+	//検索中なら指定のユーザーIdあるいはチャンネルIdを挿入
+	if (searchData.value.searching) {
+		//検索位置の終わり取得
+		searchData.value.searchEndingAt =
+			messageInput.value.length -
+			searchData.value.txtLengthWhenStartSearching -
+			searchData.value.searchStartingAt;
 
-    if (
-      searchData.value.searchStartingAt + 1 >
-      searchData.value.searchEndingAt
-    ) {
-      searchData.value.searching = false;
-    }
+		if (
+			searchData.value.searchStartingAt + 1 >
+			searchData.value.searchEndingAt
+		) {
+			searchData.value.searching = false;
+		}
 
-    //挿入
-    insertResult(searchDataResult.value[searchData.value.selectedIndex].userId);
-    //改行防止
-    event.preventDefault();
-    //選択インデックス初期化
-    searchData.value.selectedIndex = 0;
-    return;
-  }
+		//挿入
+		insertResult(searchDataResult.value[searchData.value.selectedIndex].userId);
+		//改行防止
+		event.preventDefault();
+		//選択インデックス初期化
+		searchData.value.selectedIndex = 0;
+		return;
+	}
 
-  //もし全ファイルが準備できていないなら止める
-  if (!allFileReady.value) return;
-  //ファイルIdを抽出して配列にする
-  let fileIdArr = [];
-  for (let file of fileData.value) {
-    fileIdArr.push(file.fileId);
-  }
+	//もし全ファイルが準備できていないなら止める
+	if (!allFileReady.value) return;
+	//ファイルIdを抽出して配列にする
+	const fileIdArr = [];
+	for (const file of fileData.value) {
+		fileIdArr.push(file.fileId);
+	}
 
-  //console.log("/channel/:id :: triggerEnter : Enterメッセージ->", messageInput.value, event, props);
-  socket.emit("sendMessage", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value,
-    },
-    message: {
-      channelId: props.channelInfo.channelId,
-      content: messageInput.value,
-      fileId: fileIdArr
-    },
-  });
+	//console.log("/channel/:id :: triggerEnter : Enterメッセージ->", messageInput.value, event, props);
+	socket.emit("sendMessage", {
+		RequestSender: {
+			userId: getMyUserinfo.value.userId,
+			sessionId: getSessionId.value,
+		},
+		message: {
+			channelId: props.channelInfo.channelId,
+			content: messageInput.value,
+			fileId: fileIdArr,
+		},
+	});
 
-  //ファイルデータを初期化
-  fileData.value = [];
-  //入力欄を初期化
-  messageInput.value = "";
-  inputRowNum.value = 1;
+	//ファイルデータを初期化
+	fileData.value = [];
+	//入力欄を初期化
+	messageInput.value = "";
+	inputRowNum.value = 1;
 };
 
 /**
  * @ キーの入力の処理
  */
 const AtsignTrigger = () => {
-  console.log("Input :: AtsignTrigger : @キー押された");
+	console.log("Input :: AtsignTrigger : @キー押された");
 
-  //このチャンネルに参加するユーザーを取得
-  socket.emit("searchUserInfo", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value,
-    },
-    userName: "", //全員取得するため空
-    rule: "PARTIAL",
-    channelId: props.channelInfo.channelId,
-  });
+	//このチャンネルに参加するユーザーを取得
+	socket.emit("searchUserInfo", {
+		RequestSender: {
+			userId: getMyUserinfo.value.userId,
+			sessionId: getSessionId.value,
+		},
+		userName: "", //全員取得するため空
+		rule: "PARTIAL",
+		channelId: props.channelInfo.channelId,
+	});
 
-  //検索モードを有効化
-  searchData.value.searching = true;
-  //この時の文章の長さを格納
-  searchData.value.txtLengthWhenStartSearching = messageInput.value.length;
-  //選択を初期化
-  searchData.value.selectedIndex = 0;
-  //入力の開始位置を格納
-  searchData.value.searchStartingAt = elInput.value.selectionStart;
+	//検索モードを有効化
+	searchData.value.searching = true;
+	//この時の文章の長さを格納
+	searchData.value.txtLengthWhenStartSearching = messageInput.value.length;
+	//選択を初期化
+	searchData.value.selectedIndex = 0;
+	//入力の開始位置を格納
+	searchData.value.searchStartingAt = elInput.value.selectionStart;
 };
 
 /**
@@ -340,14 +340,14 @@ const AtsignTrigger = () => {
  * @param e
  */
 const triggerUp = (e: Event) => {
-  //上キーの処理
-  if (
-    0 <= searchData.value.selectedIndex - 1 && //Indexを引くときに0以上なら
-    searchData.value.searching
-  ) {
-    e.preventDefault();
-    searchData.value.selectedIndex--;
-  }
+	//上キーの処理
+	if (
+		0 <= searchData.value.selectedIndex - 1 && //Indexを引くときに0以上なら
+		searchData.value.searching
+	) {
+		e.preventDefault();
+		searchData.value.selectedIndex--;
+	}
 };
 
 /**
@@ -355,14 +355,14 @@ const triggerUp = (e: Event) => {
  * @param e
  */
 const triggerDown = (e: Event) => {
-  //下キーの処理
-  if (
-    searchDataResult.value.length > searchData.value.selectedIndex + 1 && //Indexを足すときにまだ結果配列長より下なら
-    searchData.value.searching
-  ) {
-    e.preventDefault();
-    searchData.value.selectedIndex++;
-  }
+	//下キーの処理
+	if (
+		searchDataResult.value.length > searchData.value.selectedIndex + 1 && //Indexを足すときにまだ結果配列長より下なら
+		searchData.value.searching
+	) {
+		e.preventDefault();
+		searchData.value.selectedIndex++;
+	}
 };
 
 /**
@@ -370,21 +370,21 @@ const triggerDown = (e: Event) => {
  * @param targetId
  */
 const insertResult = (targetId: string) => {
-  //入力テキストの@部分をメンション文で代入
-  if (searchData.value.query === "") {
-    messageInput.value =
-      messageInput.value.substring(0, searchData.value.searchStartingAt) +
-      ("@<" + targetId + "> ") +
-      messageInput.value.substring(searchData.value.searchStartingAt + 1);
-  } else {
-    messageInput.value = messageInput.value.replace(
-      "@" + searchData.value.query,
-      "@<" + targetId + "> "
-    );
-  }
+	//入力テキストの@部分をメンション文で代入
+	if (searchData.value.query === "") {
+		messageInput.value =
+			messageInput.value.substring(0, searchData.value.searchStartingAt) +
+			("@<" + targetId + "> ") +
+			messageInput.value.substring(searchData.value.searchStartingAt + 1);
+	} else {
+		messageInput.value = messageInput.value.replace(
+			"@" + searchData.value.query,
+			"@<" + targetId + "> ",
+		);
+	}
 
-  //検索モードを終了する
-  searchData.value.searching = false;
+	//検索モードを終了する
+	searchData.value.searching = false;
 };
 
 /**
@@ -392,19 +392,19 @@ const insertResult = (targetId: string) => {
  * @param dat
  */
 const SOCKETsearchUserInfo = (dat: { result: string; data: MyUserinfo[] }) => {
-  console.log("/channel/[id] :: SOCKETsearchUserInfo : dat->", dat);
-  //ユーザーリストを格納
-  userAtHere.value = dat.data;
-  //初期結果にも格納する
-  searchDataResult.value = dat.data;
+	console.log("/channel/[id] :: SOCKETsearchUserInfo : dat->", dat);
+	//ユーザーリストを格納
+	userAtHere.value = dat.data;
+	//初期結果にも格納する
+	searchDataResult.value = dat.data;
 };
 
 onMounted(() => {
-  socket.on("RESULT::searchUserInfo", SOCKETsearchUserInfo);
+	socket.on("RESULT::searchUserInfo", SOCKETsearchUserInfo);
 });
 
 onUnmounted(() => {
-  socket.off("RESULT::searchUserInfo", SOCKETsearchUserInfo);
+	socket.off("RESULT::searchUserInfo", SOCKETsearchUserInfo);
 });
 </script>
 

@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { socket } from "~/socketHandlers/socketInit";
-import { useMyUserinfo } from "~/stores/userinfo";
-import { useUserIndex } from '~/stores/userindex';
+import { useInbox } from "~/stores/inbox";
 import { useMessageReadTime } from "~/stores/messageReadTime";
-import { useInbox } from '~/stores/inbox';
-import HoverMenu from './MessageRender/HoverMenu.vue';
-import EmojiRender from './MessageRender/EmojiRender.vue';
-import TextRender from './MessageRender/TextRender.vue';
-import ContentEditing from './MessageRender/ContentEditing.vue';
-import LinkPreview from './MessageRender/LinkPreview.vue';
+import { useUserIndex } from "~/stores/userindex";
+import { useMyUserinfo } from "~/stores/userinfo";
+import type message from "~/types/message";
+import ContentEditing from "./MessageRender/ContentEditing.vue";
+import EmojiRender from "./MessageRender/EmojiRender.vue";
 import FileDataPreview from "./MessageRender/FileDataPreview.vue";
-import type message from '~/types/message';
+import HoverMenu from "./MessageRender/HoverMenu.vue";
+import LinkPreview from "./MessageRender/LinkPreview.vue";
+import TextRender from "./MessageRender/TextRender.vue";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getUserinfo } = useUserIndex();
@@ -24,36 +24,35 @@ const userIdForDialog = ref<string>("");
 const displayUserpage = ref<boolean>(false);
 const stateEditingMessage = ref<boolean>(false);
 
-const emits = defineEmits<{(e: 'leaveEditingParent'): void}>();
+const emits = defineEmits<(e: "leaveEditingParent") => void>();
 
 const propsMessage = defineProps<{
-  message: message,
-  index: number,
-  editThisMessage: boolean,
-  borderClass: string,
+	message: message;
+	index: number;
+	editThisMessage: boolean;
+	borderClass: string;
 }>();
 
 //このメッセージが通知Inboxにあるかどうかを調べてその通知を消す
 onMounted(() => {
-  if (getInbox.value.mention[propsMessage.message.channelId] !== undefined) {
-    if (
-      getInbox.value.mention[propsMessage.message.channelId].indexOf(
-        propsMessage.message.messageId
-      ) !== -1
-    ) {
-      socket.emit("removeFromUserInbox", {
-        RequestSender: {
-          userId: getMyUserinfo.value.userId,
-          sessionId: getSessionId.value
-        },
-        inboxCategory: "mention",
-        channelId: propsMessage.message.channelId,
-        inboxItemId: propsMessage.message.messageId
-      });
-    }
-  }
+	if (getInbox.value.mention[propsMessage.message.channelId] !== undefined) {
+		if (
+			getInbox.value.mention[propsMessage.message.channelId].indexOf(
+				propsMessage.message.messageId,
+			) !== -1
+		) {
+			socket.emit("removeFromUserInbox", {
+				RequestSender: {
+					userId: getMyUserinfo.value.userId,
+					sessionId: getSessionId.value,
+				},
+				inboxCategory: "mention",
+				channelId: propsMessage.message.channelId,
+				inboxItemId: propsMessage.message.messageId,
+			});
+		}
+	}
 });
-
 </script>
 
 <template>

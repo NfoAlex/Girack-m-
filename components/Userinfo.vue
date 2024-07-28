@@ -1,84 +1,83 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
-import { useRole } from '~/stores/role';
+import { socket } from "~/socketHandlers/socketInit";
+import { useRole } from "~/stores/role";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 const { getRoleSingle } = storeToRefs(useRole());
 
-import type { MyUserinfo } from '~/types/user';
+import type { MyUserinfo } from "~/types/user";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 const props = defineProps<{
-  userId: string
+	userId: string;
 }>();
 
 /**
  * data
  */
 const Userinfo = ref<MyUserinfo>({
-  userName: '',
-  role: [],
-  userId: '',
-  banned: false,
-  channelJoined: []
+	userName: "",
+	role: [],
+	userId: "",
+	banned: false,
+	channelJoined: [],
 });
-const displayPage = ref<"joinedChannel"|"manage"|"JSON">("joinedChannel");
+const displayPage = ref<"joinedChannel" | "manage" | "JSON">("joinedChannel");
 
 /**
  * ユーザーをBANする
  */
 const banUser = () => {
-  socket.emit("banUser", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    targetUserId: props.userId
-  });
+	socket.emit("banUser", {
+		RequestSender: {
+			userId: getMyUserinfo.value.userId,
+			sessionId: getSessionId.value,
+		},
+		targetUserId: props.userId,
+	});
 };
 
 /**
  * ユーザーのBANを解除する
  */
 const pardonUser = () => {
-  socket.emit("pardonUser", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    targetUserId: props.userId
-  });
+	socket.emit("pardonUser", {
+		RequestSender: {
+			userId: getMyUserinfo.value.userId,
+			sessionId: getSessionId.value,
+		},
+		targetUserId: props.userId,
+	});
 };
 
 /**
  * ユーザー情報受け取り
  * @param dat
  */
-const SOCKETfetchUserInfo = (dat:{result:string, data:MyUserinfo}) => {
-  //console.log("Userinfo :: SOCKETfetchUserInfo : dat->", dat);
+const SOCKETfetchUserInfo = (dat: { result: string; data: MyUserinfo }) => {
+	//console.log("Userinfo :: SOCKETfetchUserInfo : dat->", dat);
 
-  //ユーザー情報を格納
-  Userinfo.value = dat.data;
+	//ユーザー情報を格納
+	Userinfo.value = dat.data;
 };
 
 onMounted(() => {
-  socket.on("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
+	socket.on("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
 
-  //ユーザー情報取得
-  socket.emit("fetchUserInfo", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    userId: props.userId
-  });
+	//ユーザー情報取得
+	socket.emit("fetchUserInfo", {
+		RequestSender: {
+			userId: getMyUserinfo.value.userId,
+			sessionId: getSessionId.value,
+		},
+		userId: props.userId,
+	});
 });
 
 onUnmounted(() => {
-  socket.off("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
+	socket.off("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
 });
-
 </script>
 
 <template>

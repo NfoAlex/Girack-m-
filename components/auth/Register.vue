@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { socket } from "../../socketHandlers/socketInit";
 import { useServerinfo } from "~/stores/serverinfo";
+import { socket } from "../../socketHandlers/socketInit";
 
 import type { MyUserinfo } from "~/types/user";
 
@@ -14,81 +14,79 @@ const processingAuth = ref<boolean>(false); //ボタンの処理中表示用
 const username = ref<string>("");
 const invitecode = ref<string>("");
 // 結果用
-const resultDisplay = ref<"SUCCESS"|"FAILED"|"">("");
+const resultDisplay = ref<"SUCCESS" | "FAILED" | "">("");
 const resultRegisterDone = ref<boolean>(false);
 const passwordRegistered = ref<string>("");
 
 //emit
 const emits = defineEmits<{
-  (e:"applyChangeUserName", username:string):void,
-  (e:"registered", username:string):void
+	(e: "applyChangeUserName", username: string): void;
+	(e: "registered", username: string): void;
 }>();
 
 //prop
 const props = defineProps<{
-  sharedUserName: string
+	sharedUserName: string;
 }>();
 
 /**
  * ユーザー名の変更監視
  */
 const applyChangeUserName = () => {
-  emits("applyChangeUserName", username.value);
-}
+	emits("applyChangeUserName", username.value);
+};
 
 /**
  * 新規登録
  */
 const register = () => {
-  //処理中と設定
-  processingAuth.value = true;
-  //認証結果を初期化
-  resultDisplay.value = "";
+	//処理中と設定
+	processingAuth.value = true;
+	//認証結果を初期化
+	resultDisplay.value = "";
 
-  //登録
-  socket.emit("authRegister", {
-    username: username.value,
-    inviteCode: invitecode.value,
-  });
+	//登録
+	socket.emit("authRegister", {
+		username: username.value,
+		inviteCode: invitecode.value,
+	});
 };
 
 /**
  * 登録結果の受け取りと処理
  * @param dat
  */
-const SOCKETRESULTauthRegister = (
-  dat: {
-    result: string;
-    data: {datUser:MyUserinfo, password:string}
-  }
-) => {
-  console.log("auth :: SOCKETRESULTauthRegister : dat->", dat);
-  //結果処理
-  if (dat.result === "SUCCESS") {
-    passwordRegistered.value = dat.data.password; //結果用パスワードを格納
-    resultDisplay.value = "SUCCESS"; //結果成功ととして表示
-    resultRegisterDone.value = true; //結果成功ととして表示
-    emits("registered", username.value); //登録したと親へ伝える
-  } else {
-    resultDisplay.value = "FAILED";
-    resultRegisterDone.value = false; //結果成功ととして表示
-  }
+const SOCKETRESULTauthRegister = (dat: {
+	result: string;
+	data: { datUser: MyUserinfo; password: string };
+}) => {
+	console.log("auth :: SOCKETRESULTauthRegister : dat->", dat);
+	//結果処理
+	if (dat.result === "SUCCESS") {
+		passwordRegistered.value = dat.data.password; //結果用パスワードを格納
+		resultDisplay.value = "SUCCESS"; //結果成功ととして表示
+		resultRegisterDone.value = true; //結果成功ととして表示
+		emits("registered", username.value); //登録したと親へ伝える
+	} else {
+		resultDisplay.value = "FAILED";
+		resultRegisterDone.value = false; //結果成功ととして表示
+	}
 
-  //認証状態中を解除
-  processingAuth.value = false;
+	//認証状態中を解除
+	processingAuth.value = false;
 };
 
 onMounted(() => {
-  //登録ができたと受信したときの処理
-  socket.on("RESULT::authRegister", SOCKETRESULTauthRegister);
+	//登録ができたと受信したときの処理
+	socket.on("RESULT::authRegister", SOCKETRESULTauthRegister);
 
-  //ユーザー名を適用
-  username.value = props.sharedUserName;
+	//ユーザー名を適用
+	username.value = props.sharedUserName;
 });
 
 onUnmounted(() => {
-  //socketハンドラ解除
-  socket.off("RESULT::authRegister", SOCKETRESULTauthRegister);
+	//socketハンドラ解除
+	socket.off("RESULT::authRegister", SOCKETRESULTauthRegister);
 });
 </script>
 

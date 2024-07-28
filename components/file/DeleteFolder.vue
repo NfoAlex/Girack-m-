@@ -1,46 +1,44 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
-import type { folder } from '~/types/file';
+import type { folder } from "~/types/file";
 
 const props = defineProps<{
-  currentDirectory: folder
+	currentDirectory: folder;
 }>();
 
-const emits = defineEmits<{
-  (e:"leaveAndMove"):void,
-}>();
+const emits = defineEmits<(e: "leaveAndMove") => void>();
 
 /**
  * フォルダーを削除する
  */
 const deleteFolder = () => {
-  socket.emit("deleteFolder", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    folderId: props.currentDirectory.id
-  });
-}
+	socket.emit("deleteFolder", {
+		RequestSender: {
+			userId: getMyUserinfo.value.userId,
+			sessionId: getSessionId.value,
+		},
+		folderId: props.currentDirectory.id,
+	});
+};
 
 /**
  * フォルダー作成結果受け取り
  */
-const SOCKETdeleteFolder = (dat:{result:string, dat:null}) => {
-  console.log("SOCKETdeleteFolder :: dat->", dat);
-  //成功なら閉じて一つ上へ移動する
-  if (dat.result === "SUCCESS") emits("leaveAndMove");
-}
+const SOCKETdeleteFolder = (dat: { result: string; dat: null }) => {
+	console.log("SOCKETdeleteFolder :: dat->", dat);
+	//成功なら閉じて一つ上へ移動する
+	if (dat.result === "SUCCESS") emits("leaveAndMove");
+};
 
 onMounted(() => {
-  socket.on("RESULT::deleteFolder", SOCKETdeleteFolder);
+	socket.on("RESULT::deleteFolder", SOCKETdeleteFolder);
 });
 
 onUnmounted(() => {
-  socket.off("RESULT::deleteFolder", SOCKETdeleteFolder);
+	socket.off("RESULT::deleteFolder", SOCKETdeleteFolder);
 });
 </script>
 

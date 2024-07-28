@@ -1,24 +1,25 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-import type role from '~/types/role';
+import type role from "~/types/role";
 
 /**
  * data
  */
 const roleData = ref<role[]>([]); //ロールデータの配列
-const roleEditing = ref<role>({ //編集用のロールデータ
-  roleId: '',
-  name: '',
-  color: '',
-  ServerManage: false,
-  RoleManage: false,
-  ChannelManage: false,
-  UserManage: false,
-  MessageDelete: false,
-  MessageAttatchFile: false
+const roleEditing = ref<role>({
+	//編集用のロールデータ
+	roleId: "",
+	name: "",
+	color: "",
+	ServerManage: false,
+	RoleManage: false,
+	ChannelManage: false,
+	UserManage: false,
+	MessageDelete: false,
+	MessageAttatchFile: false,
 });
 const displayCreateRole = ref<boolean>(false); //ロール作成画面表示用
 
@@ -26,28 +27,28 @@ const displayCreateRole = ref<boolean>(false); //ロール作成画面表示用
  * ロールデータの受信、格納
  * @param dat
  */
-const SOCKETfetchRoles = (dat:{result:string, data:role[]}) => {
-  //console.log("role :: SOCKETfetchRoles : dat->", dat);
-  //格納
-  roleData.value = dat.data;
-  //編集中のロールを最初のやつに設定
-  roleEditing.value = dat.data[0];
-}
+const SOCKETfetchRoles = (dat: { result: string; data: role[] }) => {
+	//console.log("role :: SOCKETfetchRoles : dat->", dat);
+	//格納
+	roleData.value = dat.data;
+	//編集中のロールを最初のやつに設定
+	roleEditing.value = dat.data[0];
+};
 
 onMounted(() => {
-  socket.on("RESULT::fetchRoles", SOCKETfetchRoles);
+	socket.on("RESULT::fetchRoles", SOCKETfetchRoles);
 
-  //ロールの取得
-  socket.emit("fetchRoles", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
-  });
+	//ロールの取得
+	socket.emit("fetchRoles", {
+		RequestSender: {
+			userId: getMyUserinfo.value.userId,
+			sessionId: getSessionId.value,
+		},
+	});
 });
 
 onUnmounted(() => {
-  socket.off("RESULT::fetchRoles", SOCKETfetchRoles);
+	socket.off("RESULT::fetchRoles", SOCKETfetchRoles);
 });
 </script>
 

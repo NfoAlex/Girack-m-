@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useConfig } from '~/stores/config';
+import { useConfig } from "~/stores/config";
 
 const { getConfigSyncStatus } = storeToRefs(useConfig());
 
@@ -10,22 +10,22 @@ const syncSwitch = ref<boolean>(true);
 const displayConfirmSync = ref<boolean>(false); //同期設定の切り替え確認ダイアログ
 
 onMounted(() => {
-  //同期設定をスイッチとして表示するため変数へ
-  syncSwitch.value = getConfigSyncStatus.value;
+	//同期設定をスイッチとして表示するため変数へ
+	syncSwitch.value = getConfigSyncStatus.value;
 
-  //同期設定を変数へ格納してから同期スイッチを監視
-  watch(syncSwitch, () => {
-    //オンにするのなら現在の設定をどうするか確認する
-    if (syncSwitch.value === true) {
-      //ダイアログ表示
-      displayConfirmSync.value = true;
-    } else {
-      //同期スイッチの値を設定Storeの同期設定へ適用
-      useConfig().updateConfigSyncStatus(false);
-      //falseをlocalStorageへ書き込み
-      setConfigLocalSync(false);
-    }
-  });
+	//同期設定を変数へ格納してから同期スイッチを監視
+	watch(syncSwitch, () => {
+		//オンにするのなら現在の設定をどうするか確認する
+		if (syncSwitch.value === true) {
+			//ダイアログ表示
+			displayConfirmSync.value = true;
+		} else {
+			//同期スイッチの値を設定Storeの同期設定へ適用
+			useConfig().updateConfigSyncStatus(false);
+			//falseをlocalStorageへ書き込み
+			setConfigLocalSync(false);
+		}
+	});
 });
 </script>
 

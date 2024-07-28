@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { useUserIndex } from '~/stores/userindex';
-import { useMyUserinfo } from '~/stores/userinfo';
-import Userinfo from '~/components/Userinfo.vue';
+import Userinfo from "~/components/Userinfo.vue";
+import { useUserIndex } from "~/stores/userindex";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 const { getUserinfo } = storeToRefs(useUserIndex());
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
 const props = defineProps<{
-  userId: string
+	userId: string;
 }>();
 
 /**
@@ -19,7 +19,7 @@ const displayUserinfo = ref<boolean>(false); //ユーザーページを表示す
  * @<123...>から数字のユーザーIdのみを取り出す
  */
 const formatedUserId = computed(() => {
-  return props.userId.split("@<").join("").split(">")[0];
+	return props.userId.split("@<").join("").split(">")[0];
 });
 </script>
 

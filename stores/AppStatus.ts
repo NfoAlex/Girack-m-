@@ -3,31 +3,30 @@ import { defineStore } from "pinia";
 import type AppStatus from "~/types/AppStatus";
 
 export const useAppStatus = defineStore("appstatus", {
-  state: () =>
-  ({
-    _AppStatus: {
-      connected: false,
-      fetchingHistory: false,
-      hasMessageReadId: false,
-      profile: {
-        authDone: false,
-        UserinfoLoaded: false
-      }
-    }
-  } as {
-    _AppStatus: AppStatus;
-  }),
+	state: () =>
+		({
+			_AppStatus: {
+				connected: false,
+				fetchingHistory: false,
+				hasMessageReadId: false,
+				profile: {
+					authDone: false,
+					UserinfoLoaded: false,
+				},
+			},
+		}) as {
+			_AppStatus: AppStatus;
+		},
 
-  getters: {
-    getAppStatus: (state) => {
-      return state._AppStatus;
-    },
-  },
-  
-  actions: {
-    updateAppStatus(data: AppStatus) {
-      this._AppStatus = data;
-    },
-  }
+	getters: {
+		getAppStatus: (state) => {
+			return state._AppStatus;
+		},
+	},
+
+	actions: {
+		updateAppStatus(data: AppStatus) {
+			this._AppStatus = data;
+		},
+	},
 });
-

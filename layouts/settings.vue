@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { useConfig } from '~/stores/config';
-import { useMyUserinfo } from '~/stores/userinfo';
-import { socket } from '~/socketHandlers/socketInit';
+import { socket } from "~/socketHandlers/socketInit";
+import { useConfig } from "~/stores/config";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 const { getConfig, getConfigSyncStatus } = storeToRefs(useConfig());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 //設定データを監視する
 watch(getConfig.value, () => {
-  //同期がONならサーバーと同期する
-  if (getConfigSyncStatus.value) {
-    //設定データを送信、更新させる
-    socket.emit("saveUserConfig", {
-      RequestSender: {
-        userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
-      },
-      config: getConfig.value
-    });
-  }
+	//同期がONならサーバーと同期する
+	if (getConfigSyncStatus.value) {
+		//設定データを送信、更新させる
+		socket.emit("saveUserConfig", {
+			RequestSender: {
+				userId: getMyUserinfo.value.userId,
+				sessionId: getSessionId.value,
+			},
+			config: getConfig.value,
+		});
+	}
 
-  //localStorageで設定データを書き込む
-  setConfigLocal(getConfig.value);
+	//localStorageで設定データを書き込む
+	setConfigLocal(getConfig.value);
 });
 </script>
 

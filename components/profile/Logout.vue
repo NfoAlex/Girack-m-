@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useMyUserinfo } from "../../stores/userinfo";
 import { socket } from "../../socketHandlers/socketInit";
+import { useMyUserinfo } from "../../stores/userinfo";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
@@ -8,12 +8,11 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
  * ログアウト処理
  */
 const logout = () => {
-  //クッキー削除
-  useCookie("session", {maxAge:1.296e+6}).value = "";
-  //ページリロード
-  location.reload();
-}
-
+	//クッキー削除
+	useCookie("session", { maxAge: 1.296e6 }).value = "";
+	//ページリロード
+	location.reload();
+};
 </script>
 
 <template>

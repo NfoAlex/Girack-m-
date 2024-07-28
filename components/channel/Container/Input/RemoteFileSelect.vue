@@ -1,28 +1,41 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
-import type { file, folder } from '~/types/file';
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
+import type { file, folder } from "~/types/file";
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 interface inputFileSelected {
-  fileId: string,
-  fileBuffer: File|null,
-  fileInfo: file|null,
-  uploadedFrom: "remote"|"local"
-  ready: boolean
+	fileId: string;
+	fileBuffer: File | null;
+	fileInfo: file | null;
+	uploadedFrom: "remote" | "local";
+	ready: boolean;
 }
 
 //emit(選択したファイル適用のため)
-const emits = defineEmits<{
-  (e:"applySelectedFile", fileSelectedResult:inputFileSelected[]): void,
-}>();
+const emits =
+	defineEmits<
+		(e: "applySelectedFile", fileSelectedResult: inputFileSelected[]) => void
+	>();
 
 //ファイルインデックス表示ヘッダ
 const header = [
-  { title: 'ファイル名', value:'name' },
-  { title: '公開設定', key:"isPublic", value: (item: file) => item.isPublic ? '公開' : '-' },
-  { title: 'サイズ', key:"size", value: (item: file) => calcSizeInHumanFormat(item.size) },  // サイズを単位で表示
-  { title: 'アップロード日時', key:"uploadedDate", value: (item: file) => new Date(item.uploadedDate).toLocaleString() },  // 日付をフォーマットして表示
+	{ title: "ファイル名", value: "name" },
+	{
+		title: "公開設定",
+		key: "isPublic",
+		value: (item: file) => (item.isPublic ? "公開" : "-"),
+	},
+	{
+		title: "サイズ",
+		key: "size",
+		value: (item: file) => calcSizeInHumanFormat(item.size),
+	}, // サイズを単位で表示
+	{
+		title: "アップロード日時",
+		key: "uploadedDate",
+		value: (item: file) => new Date(item.uploadedDate).toLocaleString(),
+	}, // 日付をフォーマットして表示
 ];
 
 /**
@@ -31,131 +44,132 @@ const header = [
 const fileIndex = ref<file[]>([]); //ファイルインデックス
 const folderIndex = ref<folder[]>([]); //フォルダ構成データ
 const fileSelected = ref<file[]>([]); //選択したファイル項目
-const directoryTree = ref<             //ディレクトリツリー
-  {
-    [key: string]: folder[]
-  }
->({
-  "0": [
-    {
-      id: '',
-      userId: '',
-      name: 'home',
-      positionedDirectoryId: ''
-    }
-  ]
+const directoryTree = ref<//ディレクトリツリー
+{
+	[key: string]: folder[];
+}>({
+	"0": [
+		{
+			id: "",
+			userId: "",
+			name: "home",
+			positionedDirectoryId: "",
+		},
+	],
 });
 
-const currentDirectory = ref<folder>({ //今いるディレクトリ情報
-  id: '',
-  userId: '',
-  name: 'home',
-  positionedDirectoryId: ''
+const currentDirectory = ref<folder>({
+	//今いるディレクトリ情報
+	id: "",
+	userId: "",
+	name: "home",
+	positionedDirectoryId: "",
 });
 
 /**
  * ディレクトリを移動して再取得
  */
-const moveDirectory = (folder:folder, directoryLevel:string) => {
-  //現在いるディレクトリを子往診
-  currentDirectory.value = folder;
+const moveDirectory = (folder: folder, directoryLevel: string) => {
+	//現在いるディレクトリを子往診
+	currentDirectory.value = folder;
 
-  //ディレクトリーツリーの深さ取得
-  const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
-  //ディレクトリーツリーから移動先の深さより下のものを削除
-  for (let i=parseInt(directoryLevel)+1; i<=lengthOfDirectoryTree; i++) {
-    delete directoryTree.value[i];
-  }
+	//ディレクトリーツリーの深さ取得
+	const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
+	//ディレクトリーツリーから移動先の深さより下のものを削除
+	for (
+		let i = Number.parseInt(directoryLevel) + 1;
+		i <= lengthOfDirectoryTree;
+		i++
+	) {
+		delete directoryTree.value[i];
+	}
 
-  //ファイルとフォルダを再取得
-  fetchFilesAndFolders();
-}
+	//ファイルとフォルダを再取得
+	fetchFilesAndFolders();
+};
 
 /**
  * ファイルとフォルダ構成を取得
  */
 const fetchFilesAndFolders = () => {
-  //ファイルインデックスを取得
-  socket.emit("fetchFileIndex", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    directory: currentDirectory.value.id
-  });
-  socket.emit("fetchFolders", {
-    RequestSender: {
-      userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    },
-    positionedDirectoryId: currentDirectory.value.id
-  });
-}
+	//ファイルインデックスを取得
+	socket.emit("fetchFileIndex", {
+		RequestSender: {
+			userId: getMyUserinfo.value.userId,
+			sessionId: getSessionId.value,
+		},
+		directory: currentDirectory.value.id,
+	});
+	socket.emit("fetchFolders", {
+		RequestSender: {
+			userId: getMyUserinfo.value.userId,
+			sessionId: getSessionId.value,
+		},
+		positionedDirectoryId: currentDirectory.value.id,
+	});
+};
 
 /**
  * 選択したファイルをInputへ適用
  */
 const finalizeSelectedFile = () => {
-  const fileSelectedResult:inputFileSelected[] = [];
+	const fileSelectedResult: inputFileSelected[] = [];
 
-  //選択したファイルを親のInputで扱える形にする
-  for (let file of fileSelected.value) {
-    //伝送するデータを整備
-    fileSelectedResult.push(
-      {
-        fileId: file.id,
-        fileBuffer: null,
-        fileInfo: toRaw(file),
-        uploadedFrom: 'remote',
-        ready: true
-      }
-    );
-  }
+	//選択したファイルを親のInputで扱える形にする
+	for (const file of fileSelected.value) {
+		//伝送するデータを整備
+		fileSelectedResult.push({
+			fileId: file.id,
+			fileBuffer: null,
+			fileInfo: toRaw(file),
+			uploadedFrom: "remote",
+			ready: true,
+		});
+	}
 
-  //親コンポのInputへ渡す
-  emits("applySelectedFile", fileSelectedResult);
-}
+	//親コンポのInputへ渡す
+	emits("applySelectedFile", fileSelectedResult);
+};
 
 /**
  * ファイルインデックス受け取り
- * @param dat 
+ * @param dat
  */
-const SOCKETfetchFileIndex = (dat:{result:string, data:file[]}) => {
-  //console.log("RemoteFileSelect :: dat->", dat);
-  //成功ならファイルインデックスを格納
-  if (dat.result === "SUCCESS") {
-    fileIndex.value = dat.data;
-  }
-}
+const SOCKETfetchFileIndex = (dat: { result: string; data: file[] }) => {
+	//console.log("RemoteFileSelect :: dat->", dat);
+	//成功ならファイルインデックスを格納
+	if (dat.result === "SUCCESS") {
+		fileIndex.value = dat.data;
+	}
+};
 
 /**
  * フォルダ構成の受け取り
- * @param dat 
+ * @param dat
  */
-const SOCKETfetchFolders = (dat:{result:string, data:folder[]}) => {
-  console.log("RemoteFileSelect :: dat->", dat);
-  if (dat.result === "SUCCESS") {
-    folderIndex.value = dat.data;
-    //ディレクトリーツリーの長さ取得
-    const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
-    //その長さの数に代入する
-    directoryTree.value[lengthOfDirectoryTree.toString()] = dat.data;
-  }
+const SOCKETfetchFolders = (dat: { result: string; data: folder[] }) => {
+	console.log("RemoteFileSelect :: dat->", dat);
+	if (dat.result === "SUCCESS") {
+		folderIndex.value = dat.data;
+		//ディレクトリーツリーの長さ取得
+		const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
+		//その長さの数に代入する
+		directoryTree.value[lengthOfDirectoryTree.toString()] = dat.data;
+	}
 };
 
 onMounted(() => {
-  socket.on("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
-  socket.on("RESULT::fetchFolders", SOCKETfetchFolders);
+	socket.on("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
+	socket.on("RESULT::fetchFolders", SOCKETfetchFolders);
 
-  //ファイルインデックスを取得
-  fetchFilesAndFolders();
+	//ファイルインデックスを取得
+	fetchFilesAndFolders();
 });
 
 onUnmounted(() => {
-  socket.off("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
-  socket.off("RESULT::fetchFolders", SOCKETfetchFolders);
+	socket.off("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
+	socket.off("RESULT::fetchFolders", SOCKETfetchFolders);
 });
-
 </script>
 
 <template>

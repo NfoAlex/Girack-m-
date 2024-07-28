@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useMyUserinfo } from "../../stores/userinfo";
 import { socket } from "../../socketHandlers/socketInit";
+import { useMyUserinfo } from "../../stores/userinfo";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -17,7 +17,8 @@ const newUsername = ref<string>("");
 const stateUsernameSearching = ref<boolean>(false);
 // 結果保存用
 const resultNewUsername = ref<TresultNewUsername>("");
-const resultNewUsernameAlertDisplay = ref<TresultNewUsernameAlertDisplay>("info");
+const resultNewUsernameAlertDisplay =
+	ref<TresultNewUsernameAlertDisplay>("info");
 
 /**
  * emit
@@ -29,120 +30,119 @@ const emit = defineEmits(["closeDialog"]);
  * 新ユーザー名の変更監視して使えるかを調べる
  */
 watch(newUsername, () => {
-  //２文字以上ならトリガー
-  if (newUsername.value.length >= 2) {
-    //ユーザー名検索中と設定
-    stateUsernameSearching.value = true;
-    resultNewUsernameAlertDisplay.value = "info";
-    //自ユーザー情報情報取得
-    const MyUserinfo = useMyUserinfo().getMyUserinfo;
-    const sessionId = useMyUserinfo().getSessionId;
-    //名前検索
-    socket.emit("searchUserInfo", {
-      RequestSender: {
-        userId: MyUserinfo.userId,
-        sessionId: sessionId
-      },
-      userName: newUsername.value,
-      rule: "FULL"
-    });
-
-  } else if (newUsername.value.length === 0) { //新ユーザー名が0なら初期化
-    resultNewUsername.value = "";
-    resultNewUsernameAlertDisplay.value = "info";
-  } else {
-    //エラー設定
-    resultNewUsername.value = "SHORT_NAME";
-    resultNewUsernameAlertDisplay.value = "error";
-  }
-  //表示する結果設定
-  checkUsernameResultDisplay();
+	//２文字以上ならトリガー
+	if (newUsername.value.length >= 2) {
+		//ユーザー名検索中と設定
+		stateUsernameSearching.value = true;
+		resultNewUsernameAlertDisplay.value = "info";
+		//自ユーザー情報情報取得
+		const MyUserinfo = useMyUserinfo().getMyUserinfo;
+		const sessionId = useMyUserinfo().getSessionId;
+		//名前検索
+		socket.emit("searchUserInfo", {
+			RequestSender: {
+				userId: MyUserinfo.userId,
+				sessionId: sessionId,
+			},
+			userName: newUsername.value,
+			rule: "FULL",
+		});
+	} else if (newUsername.value.length === 0) {
+		//新ユーザー名が0なら初期化
+		resultNewUsername.value = "";
+		resultNewUsernameAlertDisplay.value = "info";
+	} else {
+		//エラー設定
+		resultNewUsername.value = "SHORT_NAME";
+		resultNewUsernameAlertDisplay.value = "error";
+	}
+	//表示する結果設定
+	checkUsernameResultDisplay();
 });
 
 /**
  * ユーザー名を変更する
  */
 const changeUsername = () => {
-  //自ユーザー情報取得
-  const MyUserinfo = useMyUserinfo().getMyUserinfo;
-  const sessionId = useMyUserinfo().getSessionId;
-  //名前更新
-  socket.emit("changeUserName", {
-    userName: newUsername.value, //更新する名前
-    RequestSender: {
-      //セッション認証に必要な情報送信
-      userId: MyUserinfo.userId,
-      sessionId: sessionId,
-    },
-  });
+	//自ユーザー情報取得
+	const MyUserinfo = useMyUserinfo().getMyUserinfo;
+	const sessionId = useMyUserinfo().getSessionId;
+	//名前更新
+	socket.emit("changeUserName", {
+		userName: newUsername.value, //更新する名前
+		RequestSender: {
+			//セッション認証に必要な情報送信
+			userId: MyUserinfo.userId,
+			sessionId: sessionId,
+		},
+	});
 
-  //ダイアログを閉じる
-  emit('closeDialog');
-}
+	//ダイアログを閉じる
+	emit("closeDialog");
+};
 
 /**
  * ユーザー名が使えるかどうかのVAlert用の表示ラベルを返す
  */
 const checkUsernameResultDisplay = () => {
-  switch(resultNewUsername.value) {
-    case "ALREADY_USED":
-      resultNewUsernameAlertDisplay.value = "error";
-      break;
+	switch (resultNewUsername.value) {
+		case "ALREADY_USED":
+			resultNewUsernameAlertDisplay.value = "error";
+			break;
 
-    case "SUCCESS":
-      resultNewUsernameAlertDisplay.value = "success";
-      break;
+		case "SUCCESS":
+			resultNewUsernameAlertDisplay.value = "success";
+			break;
 
-    case "SHORT_NAME":
-      resultNewUsernameAlertDisplay.value = "error";
-      break;
+		case "SHORT_NAME":
+			resultNewUsernameAlertDisplay.value = "error";
+			break;
 
-    default:
-      resultNewUsernameAlertDisplay.value = "info";
-      break;
-  }
-}
+		default:
+			resultNewUsernameAlertDisplay.value = "info";
+			break;
+	}
+};
 
 /**
  * ユーザー名変更用の名前検索ハンドラ
  * @param result
  */
-const SOCKETsearchUserInfo = (result:{result:string, data:[any]}) => {
-  console.log("profile :: SOCKETsearchUserInfo : result->", result);
-  //結果を一つずつ調べる
-  for (let index in result.data) {
-    //名前が検索結果にあったら
-    if (result.data[index].userName === newUsername.value) {
-      //この名前を使えないと設定
-      resultNewUsername.value = "ALREADY_USED";
-      //検索中状態を解除
-      stateUsernameSearching.value = false;
-      //表示する結果設定
-      checkUsernameResultDisplay();
+const SOCKETsearchUserInfo = (result: { result: string; data: [any] }) => {
+	console.log("profile :: SOCKETsearchUserInfo : result->", result);
+	//結果を一つずつ調べる
+	for (const index in result.data) {
+		//名前が検索結果にあったら
+		if (result.data[index].userName === newUsername.value) {
+			//この名前を使えないと設定
+			resultNewUsername.value = "ALREADY_USED";
+			//検索中状態を解除
+			stateUsernameSearching.value = false;
+			//表示する結果設定
+			checkUsernameResultDisplay();
 
-      return;
-    }
-  }
+			return;
+		}
+	}
 
-  //検索中状態を解除
-  stateUsernameSearching.value = false;
+	//検索中状態を解除
+	stateUsernameSearching.value = false;
 
-  //この名前を使えると設定
-  resultNewUsername.value = "SUCCESS";
-  //表示する結果設定
-  checkUsernameResultDisplay();
-}
+	//この名前を使えると設定
+	resultNewUsername.value = "SUCCESS";
+	//表示する結果設定
+	checkUsernameResultDisplay();
+};
 
 onMounted(() => {
-  //ユーザー検索結果受け取り用
-  socket.on("RESULT::searchUserInfo", SOCKETsearchUserInfo);
+	//ユーザー検索結果受け取り用
+	socket.on("RESULT::searchUserInfo", SOCKETsearchUserInfo);
 });
 
 onUnmounted(() => {
-  //ハンドラ解除
-  socket.off("RESULT::searchUserInfo", SOCKETsearchUserInfo);
+	//ハンドラ解除
+	socket.off("RESULT::searchUserInfo", SOCKETsearchUserInfo);
 });
-
 </script>
 
 <template>
