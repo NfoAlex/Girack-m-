@@ -554,15 +554,22 @@ onMounted(() => {
     ) {
       //新着削除
       setHasNewMessage(props.channelInfo.channelId, false);
-      //表示している内の最新のメッセージ時間を取得
-      const latestMessageTime = getHistoryFromChannel(
-        props.channelInfo.channelId,
-      )[0].time;
-      //最新既読時間を更新
-      updateMessageReadTimeCloudAndLocal(
-        props.channelInfo.channelId,
-        latestMessageTime,
-      );
+
+      //最新のメッセージを取得
+      const firstMessage:message|undefined = getHistoryFromChannel(
+        props.channelInfo.channelId
+      )[0];
+
+      //メッセージが空でないなら最新の時間を更新
+      if (firstMessage !== undefined) {
+        //表示している内の最新のメッセージ時間を取得
+        const latestMessageTime = firstMessage.time;
+        //最新既読時間を更新
+        updateMessageReadTimeCloudAndLocal(
+          props.channelInfo.channelId,
+          latestMessageTime,
+        );
+      }
     }
 
     //移動前のチャンネル用の最新既読IdBeforeを更新
