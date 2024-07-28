@@ -99,7 +99,7 @@ const prepareFile = async () => {
 
     console.log("formData->", formData);
 
-    const response = await fetch("/downloadfile/" + route.params.id, {
+    const response = await fetch(`/downloadfile/${route.params.id}`, {
       method: "POST",
       body: formData,
     });
@@ -147,7 +147,7 @@ const SOCKETfetchFileInfo = (dat: {
     fileData.value = dat.data;
 
     //タブ名にファイル名設定
-    title.value = getServerinfo.value.servername + " : " + fileData.value.name;
+    title.value = `${getServerinfo.value.servername} : ${fileData.value.name}`;
 
     prepareFile();
   }
@@ -156,10 +156,13 @@ const SOCKETfetchFileInfo = (dat: {
 onMounted(() => {
   console.log("/file :: route->", route.params.id);
 
-  socket.on("RESULT::fetchFileInfo:" + route.params.id, SOCKETfetchFileInfo);
+  socket.on(
+    `RESULT :: fetchFileInfo : ${route.params.id} `,
+    SOCKETfetchFileInfo,
+  );
 
   //タブ名に初期表示用にインスタンス名を表示
-  title.value = getServerinfo.value.servername + " : ファイル";
+  title.value = `${getServerinfo.value.servername} : ファイル`;
 
   //送信者情報格納用
   let RequestSenderLoaded = { userId: "", sessionId: "" };
@@ -187,7 +190,10 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  socket.off("RESULT::fetchFileInfo:" + route.params.id, SOCKETfetchFileInfo);
+  socket.off(
+    `RESULT :: fetchFileInfo : ${route.params.id} `,
+    SOCKETfetchFileInfo,
+  );
 
   //プレビュー用の画像URLを無効化
   if (imagePreviewUrl.value !== "") {
