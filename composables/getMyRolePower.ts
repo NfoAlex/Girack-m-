@@ -51,7 +51,7 @@ export default function getMyRolePower(): onlyRolePower {
   }
 
   //名前とかも記録されるため必要じゃないものを削除
-    //biomeにより"undefined割り当て"を使えと言われるが完全に消したいためdelete
+  //biomeにより"undefined割り当て"を使えと言われるが完全に消したいためdelete
   delete rolePower.name;
   delete rolePower.color;
   delete rolePower.roleId;
