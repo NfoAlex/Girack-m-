@@ -34,6 +34,7 @@ const displayEmojiPicker = ref<boolean>(false);
 /**
  * リアクションする
  */
+// biome-ignore lint/suspicious/noExplicitAny: vue-emoji-martはtypeがない
 const reactIt = (emoji: any) => {
   //console.log("/channel/:id :: reactIt : emoji->", emoji);
   socket.emit("reactMessage", {

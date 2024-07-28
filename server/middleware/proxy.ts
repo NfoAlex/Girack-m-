@@ -1,8 +1,9 @@
+import type { IncomingMessage, ServerResponse } from "node:http";
 import { defineEventHandler } from "h3";
-import { createProxyMiddleware } from "http-proxy-middleware";
+import { Options, createProxyMiddleware } from "http-proxy-middleware";
 
 // Nuxt configで登録したAPI_URLを設定
-const API_URL = `ws://localhost:33333`;
+const API_URL = "ws://localhost:33333";
 // オプション
 const myProxyOption = {
   target: API_URL,
@@ -16,7 +17,7 @@ const myProxyOption = {
     // キャッシュの最大サイズ（バイト単位）
     maxSize: 1024 * 1024, // 1MB
   },
-  onError: (err, req, res) => {
+  onError: (err: Error, req: IncomingMessage, res: ServerResponse) => {
     console.error("Proxy Error:", err);
   },
 };

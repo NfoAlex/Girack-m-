@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { MyUserinfo } from "~/types/user";
 import { socket } from "../../socketHandlers/socketInit";
 import { useMyUserinfo } from "../../stores/userinfo";
 
@@ -108,7 +109,10 @@ const checkUsernameResultDisplay = () => {
  * ユーザー名変更用の名前検索ハンドラ
  * @param result
  */
-const SOCKETsearchUserInfo = (result: { result: string; data: [any] }) => {
+const SOCKETsearchUserInfo = (result: {
+  result: string;
+  data: [MyUserinfo];
+}) => {
   console.log("profile :: SOCKETsearchUserInfo : result->", result);
   //結果を一つずつ調べる
   for (const index in result.data) {

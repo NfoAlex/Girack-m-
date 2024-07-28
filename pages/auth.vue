@@ -128,13 +128,13 @@ const getSessionFromCookie = ():
     typeof tempCookie !== "object"
   )
     return undefined;
+
   //値を確認してあるならそれを返す
   //ここで型エラーが出るが結果はきちんとJSONを返すためこのまま
-  if (tempCookie.userId !== undefined && tempCookie.sessionId != undefined) {
+  if (tempCookie.userId !== undefined && tempCookie.sessionId !== undefined) {
     return tempCookie;
-  } else {
-    return undefined;
   }
+  return undefined;
 };
 
 /**

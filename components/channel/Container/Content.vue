@@ -293,12 +293,13 @@ const calculateMessageBorder = (messageIndex: number) => {
     //次のメッセージが違う送信者なら
     if (messageAvailable.next.userId !== messageAvailable.here.userId) {
       return "messageSingle";
-    } else {
-      //時差計算
-      const timeDiffs = calculateTimeDiff(messageIndex);
-      return timeDiffs.next ? "messageSingle" : "messageBottom";
     }
-  } else if (messageAvailable.next === null) {
+    //時差計算
+    const timeDiffs = calculateTimeDiff(messageIndex);
+    return timeDiffs.next ? "messageSingle" : "messageBottom";
+  }
+
+  if (messageAvailable.next === null) {
     //最初でなく、次のメッセージがなければ(最後)
     //次(下)のメッセージと送信者が同じなら
     if (messageAvailable.before.userId === messageAvailable.here.userId) {
@@ -306,49 +307,50 @@ const calculateMessageBorder = (messageIndex: number) => {
       const timeDiffs = calculateTimeDiff(messageIndex);
 
       return timeDiffs.before ? "messageSingle" : "messageTop";
-    } else {
-      //違うなら
-      return "messageSingle";
     }
-  } else {
-    //最初でも最後のメッセージでもないなら
-    //前のメッセージと同じ送信者で
-    if (messageAvailable.next.userId === messageAvailable.here.userId) {
-      //かつ次のメッセージとも同じなら
-      if (messageAvailable.before.userId === messageAvailable.here.userId) {
-        //時差計算
-        const timeDiffs = calculateTimeDiff(messageIndex);
-        //ひとつ前から時差があるなら
-        if (timeDiffs.next && timeDiffs.before) {
-          return "messageSingle";
-        } else if (timeDiffs.next) {
-          return "messageTop";
-        } else if (timeDiffs.before) {
-          return "messageBottom";
-        }
-        return "messageMiddle";
-      } else {
-        //時差計算
-        const timeDiffs = calculateTimeDiff(messageIndex);
-        return timeDiffs.next ? "messageSingle" : "messageBottom";
-      }
-    } else {
-      //前のメッセージが違う送信者
+    //違うなら
+    return "messageSingle";
+  }
 
-      //次のメッセージが同じ送信者なら
-      if (messageAvailable.before.userId === messageAvailable.here.userId) {
-        //時差計算
-        const timeDiffs = calculateTimeDiff(messageIndex);
-        //一つ後から時差があるなら
-        if (timeDiffs.before) {
-          return "messageSingle";
-        }
-        return "messageTop";
-      } else {
+  //最初でも最後のメッセージでもないなら
+  //前のメッセージと同じ送信者で
+  if (messageAvailable.next.userId === messageAvailable.here.userId) {
+    //かつ次のメッセージとも同じなら
+    if (messageAvailable.before.userId === messageAvailable.here.userId) {
+      //時差計算
+      const timeDiffs = calculateTimeDiff(messageIndex);
+      //ひとつ前から時差があるなら
+      if (timeDiffs.next && timeDiffs.before) {
         return "messageSingle";
       }
+      if (timeDiffs.next) {
+        return "messageTop";
+      }
+      if (timeDiffs.before) {
+        return "messageBottom";
+      }
+      return "messageMiddle";
     }
+
+    //時差計算
+    const timeDiffs = calculateTimeDiff(messageIndex);
+    return timeDiffs.next ? "messageSingle" : "messageBottom";
   }
+
+  //前のメッセージが違う送信者
+  //次のメッセージが同じ送信者なら
+  if (messageAvailable.before.userId === messageAvailable.here.userId) {
+    //時差計算
+    const timeDiffs = calculateTimeDiff(messageIndex);
+    //一つ後から時差があるなら
+    if (timeDiffs.before) {
+      return "messageSingle";
+    }
+
+    return "messageTop";
+  }
+
+  return "messageSingle";
 };
 
 // *************  位置監視  ************* //
@@ -442,7 +444,7 @@ watch(
 
           //その要素へスクロールする
           //要素DOMオブジェクト取得
-          const el = document.getElementById("msg" + messageScrolledPosition);
+          const el = document.getElementById(`msg${messageScrolledPosition}`);
           //要素がnullじゃないならその要素へスクロール
           if (el !== null) {
             document.getElementById("ChannelContainerContent")?.scrollTo({
@@ -511,13 +513,13 @@ onMounted(() => {
   nextTick(() => {
     //スクロール位置を取り出し
     const scrollPosition = sessionStorage.getItem(
-      "scrollPositionY::" + props.channelInfo.channelId,
+      `scrollPositionY::${props.channelInfo.channelId}`,
     );
     //console.log("/channel/[id] :: onMounted : スクロール記憶位置->", scrollPosition);
 
     //最新既読Idの要素を取得
     const latestReadEl = document.getElementById(
-      "msg" + getLatestReadMessage.value?.messageId,
+      `msg${getLatestReadMessage.value?.messageId}`,
     );
 
     //最新既読Idへスクロール、ないなら一番古いやつへ
@@ -552,15 +554,22 @@ onMounted(() => {
     ) {
       //新着削除
       setHasNewMessage(props.channelInfo.channelId, false);
-      //表示している内の最新のメッセージ時間を取得
-      const latestMessageTime = getHistoryFromChannel(
-        props.channelInfo.channelId,
-      )[0].time;
-      //最新既読時間を更新
-      updateMessageReadTimeCloudAndLocal(
-        props.channelInfo.channelId,
-        latestMessageTime,
-      );
+
+      //最新のメッセージを取得
+      const firstMessage:message|undefined = getHistoryFromChannel(
+        props.channelInfo.channelId
+      )[0];
+
+      //メッセージが空でないなら最新の時間を更新
+      if (firstMessage !== undefined) {
+        //表示している内の最新のメッセージ時間を取得
+        const latestMessageTime = firstMessage.time;
+        //最新既読時間を更新
+        updateMessageReadTimeCloudAndLocal(
+          props.channelInfo.channelId,
+          latestMessageTime,
+        );
+      }
     }
 
     //移動前のチャンネル用の最新既読IdBeforeを更新
@@ -604,7 +613,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   sessionStorage.setItem("latestChannel", props.channelInfo.channelId);
   sessionStorage.setItem(
-    "scrollPositionY::" + props.channelInfo.channelId,
+    `scrollPositionY::${props.channelInfo.channelId}`,
     y.value.toString(),
   );
 

@@ -27,7 +27,7 @@ export default function receiveMessage(socket: Socket): void {
     if (typeof route.params.id !== "object") {
       //スクロール位置を取り出し
       const scrollPosition: string | null = sessionStorage.getItem(
-        "scrollPositionY::" + message.channelId,
+        `scrollPositionY::${message.channelId}`,
       );
 
       //ウィンドウへのフォーカスを取得
@@ -58,7 +58,7 @@ export default function receiveMessage(socket: Socket): void {
         if (
           getConfig.value.notification.notifyAllMessages || //すべてで通知するか
           (getConfig.value.notification.notifyMention && //メンション通知が有効で
-            message.content.includes("@<" + getMyUserinfo.value.userId + ">")) //メンションが入っているなら
+            message.content.includes(`@<${getMyUserinfo.value.userId}>`)) //メンションが入っているなら
         ) {
           //もし通知イベントがすでに起きているなら閉じる
           try {
@@ -68,7 +68,7 @@ export default function receiveMessage(socket: Socket): void {
           //通知を出す
           NoticationHolder = new Notification(message.userId, {
             body: message.content,
-            icon: "/icon/" + message.userId,
+            icon: `/icon/${message.userId}`,
           });
         }
       }

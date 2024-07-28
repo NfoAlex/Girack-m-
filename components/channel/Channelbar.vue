@@ -8,7 +8,7 @@ import { useMessageReadTime } from "~/stores/messageReadTime";
 import { useServerinfo } from "~/stores/serverinfo";
 import { useMyUserinfo } from "~/stores/userinfo";
 
-import type { channelOrder } from "~/types/channel";
+import type { channel, channelOrder } from "~/types/channel";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -27,7 +27,7 @@ const route = useRoute();
  * data
  */
 const currentPath = ref<string>(""); //チャンネルID
-const channelOrderedData = ref<any[]>([]);
+const channelOrderedData = ref<channel[]>([]);
 
 /**
  * チャンネルリストを保存した順序へ補完しつつソートして表示に使う格納する
@@ -76,22 +76,6 @@ const getChannelListOrdered = () => {
     ...channelOrderedData.value,
     ...channelOrderPushing,
   ];
-};
-
-/**
- * 指定のチャンネルに新着があるかどうかを判別する
- * @param channelId
- */
-const getThereIsNew = (channelId: string): boolean => {
-  if (
-    //最新メッセと時間を比較
-    new Date(getLatestMessage.value(channelId)?.time || "").valueOf() >
-    new Date(getMessageReadTime.value(channelId)).valueOf()
-  ) {
-    return true;
-  } else {
-    return false;
-  }
 };
 
 //チャンネルボタン用配列処理

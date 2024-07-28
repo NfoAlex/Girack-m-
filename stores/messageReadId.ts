@@ -35,7 +35,7 @@ export const useMessageReadId = defineStore("messagereadid", {
 
   actions: {
     //まるごと格納
-    setMessageReadId(data: any) {
+    setMessageReadId(data: { [key: string]: string }) {
       //console.log("messageReadTime :: setmessageReadTime : 今->", this._MessageReadId);
       this._MessageReadId = data;
 

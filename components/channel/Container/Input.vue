@@ -240,7 +240,7 @@ const triggerEnter = (event: KeyboardEvent) => {
     const txtAfter = messageInput.value.slice(currentTxtCursor);
 
     //改行を挿入
-    messageInput.value = txtBefore + "\n" + txtAfter;
+    messageInput.value = `${txtBefore}\n${txtAfter}`;
 
     //カーソル位置を改行のすぐ次へ移動
     nextTick(() => {
@@ -372,14 +372,15 @@ const triggerDown = (e: Event) => {
 const insertResult = (targetId: string) => {
   //入力テキストの@部分をメンション文で代入
   if (searchData.value.query === "") {
-    messageInput.value =
-      messageInput.value.substring(0, searchData.value.searchStartingAt) +
-      ("@<" + targetId + "> ") +
-      messageInput.value.substring(searchData.value.searchStartingAt + 1);
+    messageInput.value = `
+        ${messageInput.value.substring(0, searchData.value.searchStartingAt)}
+        @<${targetId}> 
+        ${messageInput.value.substring(searchData.value.searchStartingAt + 1)}
+      `;
   } else {
     messageInput.value = messageInput.value.replace(
-      "@" + searchData.value.query,
-      "@<" + targetId + "> ",
+      `@${searchData.value.query}`,
+      `@<${targetId}> `,
     );
   }
 

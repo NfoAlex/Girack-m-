@@ -9,7 +9,7 @@ onMounted(() => {
   const channelJoined: string[] = getMyUserinfo.value.channelJoined;
   //最初のチャンネルへ移動
   if (channelJoined.length !== 0) {
-    router.push("/channel/" + channelJoined[0]);
+    router.push(`/channel/${channelJoined[0]}`);
   } else {
     router.push("/browser");
   }

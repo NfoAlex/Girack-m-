@@ -6,7 +6,7 @@ import { useUserIndex } from "~/stores/userindex";
 export default function fetchOnlineUsers(socket: Socket): void {
   socket.on(
     "RESULT::fetchOnlineUsers",
-    (dat: { result: string; data: any[] }) => {
+    (dat: { result: string; data: string[] }) => {
       //console.log("socket(fetchOnlineUsers) :: dat->", dat);
 
       //オンラインユーザーリストをStoreへ格納

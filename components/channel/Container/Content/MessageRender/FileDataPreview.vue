@@ -41,7 +41,7 @@ const prepareFile = async (fileId: string) => {
   );
 
   //ファイル取得
-  const response = await fetch("/downloadfile/" + fileId, {
+  const response = await fetch(`/downloadfile/${fileId}`, {
     method: "POST",
     body: formData,
   });
@@ -149,6 +149,7 @@ const SOCKETfetchFileInfo = (dat: { result: string; data: file }) => {
       size: 0,
       type: "",
       uploadedDate: "",
+      directory: "",
     });
   }
 };
@@ -160,7 +161,7 @@ onMounted(() => {
 
       //ファイル情報受け取り用
       socket.on(
-        "RESULT::fetchFileInfo:" + propsMessage.fileId[index],
+        `RESULT::fetchFileInfo:${propsMessage.fileId[index]}`,
         SOCKETfetchFileInfo,
       );
 
@@ -178,7 +179,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   for (const fileId of propsMessage.fileId) {
-    socket.off("RESULT::fetchFileInfo:" + fileId, SOCKETfetchFileInfo);
+    socket.off(`RESULT::fetchFileInfo:${fileId}`, SOCKETfetchFileInfo);
   }
 });
 </script>
