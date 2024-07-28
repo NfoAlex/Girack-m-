@@ -64,7 +64,7 @@ export const useChannelinfo = defineStore("channelinfo", {
 
         return state._Channelinfo[channelId];
       }
-      
+
       return state._Channelinfo[channelId];
     },
 
