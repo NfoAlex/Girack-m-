@@ -556,8 +556,8 @@ onMounted(() => {
       setHasNewMessage(props.channelInfo.channelId, false);
 
       //最新のメッセージを取得
-      const firstMessage:message|undefined = getHistoryFromChannel(
-        props.channelInfo.channelId
+      const firstMessage: message | undefined = getHistoryFromChannel(
+        props.channelInfo.channelId,
       )[0];
 
       //メッセージが空でないなら最新の時間を更新

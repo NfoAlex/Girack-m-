@@ -31,6 +31,8 @@ import saveUserConfig from "./saveUserConfig";
 import fetchRoleSingle from "./fetchRoleSingle";
 import fetchRoles from "./fetchRoles";
 
+import fetchFileInfo from "./fetchFileInfo";
+
 import EventEmitter from "node:events";
 EventEmitter.defaultMaxListeners = 25; // 新しいリスナーの上限を25に設定
 
@@ -81,4 +83,6 @@ export function loadSocket() {
 
   fetchRoles(socket); //全ロール受け取り
   fetchRoleSingle(socket); //単一ロール受け取り
+
+  fetchFileInfo(socket); //ファイルデータの受け取り
 }

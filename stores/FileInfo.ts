@@ -1,18 +1,16 @@
+import { defineStore } from "pinia";
 //ファイル情報のキャッシュ
 import { socket } from "~/socketHandlers/socketInit";
-import { defineStore } from "pinia";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type { file } from "~/types/file";
 
 export const useFileInfo = defineStore("fileinfo", {
   state: () =>
     ({
-      _FileInfo: {
-
-      }
+      _FileInfo: {},
     }) as {
       _FileInfo: {
-        [key:string]: file
+        [key: string]: file;
       };
     },
 
@@ -22,41 +20,44 @@ export const useFileInfo = defineStore("fileinfo", {
     },
 
     //ファイルデータを取得する、無いなら空データを返して後から更新する
-    getFileInfoSingle: (state) => (fileId:string):file => {
-      //もしファイル情報があるなら返す
-      if (state._FileInfo[fileId] !== undefined) {
+    getFileInfoSingle:
+      (state) =>
+      (fileId: string): file => {
+        //もしファイル情報があるなら返す
+        if (state._FileInfo[fileId] !== undefined) {
+          return state._FileInfo[fileId];
+        }
+
+        //空データを割り当てる
+        state._FileInfo[fileId] = {
+          id: fileId,
+          userId: "",
+          name: "Loading...",
+          isPublic: false,
+          size: 0,
+          type: "*/*",
+          directory: "",
+          uploadedDate: "",
+        };
+
+        //ファイル情報を取得
+        const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+        socket.emit("fetchFileInfo", {
+          RequestSender: {
+            userId: getMyUserinfo.value.userId,
+            sessionId: getSessionId.value,
+          },
+          fileId: fileId,
+        });
+
+        //空データを返す
         return state._FileInfo[fileId];
-      }
-
-      //空データを割り当てる
-      state._FileInfo[fileId] ={
-        id: fileId,
-        userId: "",
-        name: "Loading...",
-        isPublic: false,
-        size: 0,
-        type: "*/*",
-        directory: "",
-        uploadedDate: ""
-      };
-
-      //ファイル情報を取得
-      const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-      socket.emit("fetchFileInfo", {
-        RequestSender: {
-          userId: getMyUserinfo.value.userId,
-          sessionId: getSessionId.value,
-        },
-        fileId: fileId
-      });
-
-      //空データを返す
-      return state._FileInfo[fileId];
-    }
+      },
   },
 
   actions: {
-    updateMyUserinfo(data: file) {
+    //ファイルデータを格納
+    updateFileInfo(data: file) {
       this._FileInfo[data.id] = data;
     },
   },

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
 import { getBlobUrl, registerBlobUrl } from "~/composables/manageBlobUrl";
-import { socket } from "~/socketHandlers/socketInit";
+import { useFileInfo } from "~/stores/FileInfo";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type { file } from "~/types/file";
+const { getFileInfoSingle } = useFileInfo();
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 const propsMessage = defineProps<{
@@ -13,7 +14,7 @@ const propsMessage = defineProps<{
 /**
  * data
  */
-const fileInfo = ref<file[]>([]);
+const fileInfos = ref<file[]>([]);
 const fileBlobArr = ref<{
   [key: string]: {
     fileName: string;
@@ -23,9 +24,12 @@ const fileBlobArr = ref<{
 
 /**
  * ファイルダウンロード用のURLを生成する
+ * @param fileId プレビューしたい画像のファイルId
  */
 const prepareFile = async (fileId: string) => {
   if (getBlobUrl(fileId) !== undefined) return;
+
+  console.log("FileDataPreview :: prepareFile : 準備します->", fileId);
 
   const formData = new FormData();
 
@@ -46,7 +50,11 @@ const prepareFile = async (fileId: string) => {
     body: formData,
   });
 
-  if (!response.ok) return;
+  if (!response.ok) {
+    //blobキャッシュへ保存
+    registerBlobUrl(fileId, { fileName: "", blobUrl: "ERROR" });
+    return;
+  }
 
   // Content-Dispositionヘッダーからファイル名を取得
   const contentDisposition = response.headers.get("Content-Disposition");
@@ -113,6 +121,7 @@ const downloadFile = (fileId: string) => {
  * @param fileId
  */
 const getImageUrl = (fileId: string) => {
+
   //キャッシュにあるか確認して取得
   const blobCacheUrl = getBlobUrl(fileId)?.blobUrl;
   if (blobCacheUrl !== undefined) {
@@ -125,67 +134,17 @@ const getImageUrl = (fileId: string) => {
     return fileBlobArr.value[fileId].blobUrl;
   }
 
+  if (blobCacheUrl !== "ERROR") {
+    prepareFile(fileId);
+    return;
+  }
+
   return "";
 };
-
-/**
- * ファイル情報受け取り
- */
-const SOCKETfetchFileInfo = (dat: { result: string; data: file }) => {
-  //console.log("FileDataPreview :: dat->", dat);
-
-  if (dat.result === "SUCCESS") {
-    //ファイル情報格納
-    fileInfo.value.push(dat.data);
-    //ファイルダウンロードのblob生成
-    prepareFile(dat.data.id);
-  } else if (dat.result === "ERROR_FILE_MISSING") {
-    //データ取得ができなくても削除されたファイルとして登録する
-    fileInfo.value.push({
-      id: "ERROR_FILE_MISSING",
-      userId: "",
-      name: "",
-      isPublic: false,
-      size: 0,
-      type: "",
-      uploadedDate: "",
-      directory: "",
-    });
-  }
-};
-
-onMounted(() => {
-  nextTick(() => {
-    for (const index in propsMessage.fileId) {
-      //console.log("FIleDataPreview :: fileId->", propsMessage.fileId[index]);
-
-      //ファイル情報受け取り用
-      socket.on(
-        `RESULT::fetchFileInfo:${propsMessage.fileId[index]}`,
-        SOCKETfetchFileInfo,
-      );
-
-      //ファイル情報を取得
-      socket.emit("fetchFileInfo", {
-        RequestSender: {
-          userId: getMyUserinfo.value.userId,
-          sessionId: getSessionId.value,
-        },
-        fileId: propsMessage.fileId[index],
-      });
-    }
-  });
-});
-
-onUnmounted(() => {
-  for (const fileId of propsMessage.fileId) {
-    socket.off(`RESULT::fetchFileInfo:${fileId}`, SOCKETfetchFileInfo);
-  }
-});
 </script>
 
 <template>
-  <span v-for="file in fileInfo" style="width:100%">
+  <span v-for="fileId in propsMessage.fileId" style="width:100%">
     <m-card
       color="cardInner"
       class="mt-1 d-flex flex-column"
@@ -193,15 +152,15 @@ onUnmounted(() => {
 
       <!-- プレビュー用画像表示 -->
       <v-img
-        v-if="getImageUrl(file.id)"
-        :src="getImageUrl(file.id)"
+        v-if="getImageUrl(getFileInfoSingle(fileId).id)"
+        :src="getImageUrl(getFileInfoSingle(fileId).id) || undefined"
         class="rounded-lg"
         maxHeight="150px"
       />
 
       <span class="mt-1 d-flex align-center" style="max-height:150px;">
         <v-icon
-          v-if="file.id !== 'ERROR_FILE_MISSING'"
+          v-if="getFileInfoSingle(fileId).id !== 'ERROR_FILE_MISSING'"
           class="mr-1"
         >mdi-folder</v-icon>
         <v-icon
@@ -210,24 +169,24 @@ onUnmounted(() => {
         >mdi-delete</v-icon>
 
         <a
-          v-if="file.id !== 'ERROR_FILE_MISSING'"
-          :href="'/file/' + file.id"
+          v-if="getFileInfoSingle(fileId).id !== 'ERROR_FILE_MISSING'"
+          :href="'/file/' + getFileInfoSingle(fileId).id"
           rel="noopener noreferrer" target="_blank"
           class="text-truncate flex-shrink-1"
         >
-          {{ file.name }}
+          {{ getFileInfoSingle(fileId).name }}
         </a>
-        <p v-if="file.id === 'ERROR_FILE_MISSING'" class="text-disabled">このファイルは削除されています。</p>
+        <p v-if="getFileInfoSingle(fileId).id === 'ERROR_FILE_MISSING'" class="text-disabled">このファイルは削除されています。</p>
 
         <m-btn
-          @click="downloadFile(file.id)"
+          @click="downloadFile(getFileInfoSingle(fileId).id)"
           icon="mdi-download"
           variant="text"
           size="small"
           class="ml-auto"
         />
 
-        <v-chip size="small" class="flex-shrink-0">{{ calcSizeInHumanFormat(file.size) }}</v-chip>
+        <v-chip size="small" class="flex-shrink-0">{{ calcSizeInHumanFormat(getFileInfoSingle(fileId).size) }}</v-chip>
       </span>
     </m-card>
   </span>
