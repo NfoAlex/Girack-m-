@@ -52,8 +52,11 @@ export default function getMyRolePower(): onlyRolePower {
 
   //名前とかも記録されるため必要じゃないものを削除
   //biomeにより"undefined割り当て"を使えと言われるが完全に消したいためdelete
+  // biome-ignore lint/performance/noDelete: biomeにより"undefined割り当て"を使えと言われるが完全に消したいためdelete
   delete rolePower.name;
+  // biome-ignore lint/performance/noDelete: biomeにより"undefined割り当て"を使えと言われるが完全に消したいためdelete
   delete rolePower.color;
+  // biome-ignore lint/performance/noDelete: biomeにより"undefined割り当て"を使えと言われるが完全に消したいためdelete
   delete rolePower.roleId;
 
   return rolePower;

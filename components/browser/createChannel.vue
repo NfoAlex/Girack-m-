@@ -14,7 +14,11 @@ const emit = defineEmits(["closeDialog"]);
  * data
  */
 //チャンネル作成用に使うデータ
-const channelCreationData = ref<any>({
+const channelCreationData = ref<{
+  channelName: string;
+  description: string;
+  isPrivate: boolean;
+}>({
   channelName: "",
   description: "",
   isPrivate: false,

@@ -38,7 +38,7 @@ const changePassword = () => {
  * パスワード変更結果受け取り用
  * @param dat
  */
-const SOCKETchangePassword = (dat: { result: string; data: any }) => {
+const SOCKETchangePassword = (dat: { result: string; data: null }) => {
   console.log("ChangePassword :: SOCKETchangePassword : dat->", dat);
   if (dat.result === "SUCCESS") {
     resultChangePasswordSuccess.value = true;

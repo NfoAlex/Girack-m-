@@ -84,7 +84,9 @@ export const useRole = defineStore("role", {
 
   actions: {
     //ロール情報を格納する
-    bindRoles(roles: any) {
+    bindRoles(roles: {
+      [key: string]: role;
+    }) {
       this._Roles = roles;
     },
 

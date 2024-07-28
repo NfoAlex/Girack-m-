@@ -111,24 +111,26 @@ export const useHistory = defineStore("history", {
       return state._ThereIsNewMessage;
     },
 
-    //対象チャンネルの最新のメッセージ取得
+    //対象チャンネルの最新のメッセージ取得、ないなら空データを返す
     getLatestMessage: (state) => (channelId: string) => {
-      //undefinedでないならそのまま返す、そうならホルダー作成してそれを返す
+      //参照して返す
       if (state._LatestMessage[channelId] !== undefined) {
         return state._LatestMessage[channelId];
-      } else {
-        const blankMessage: message = {
-          messageId: "UNDEFINED",
-          channelId: "UNDEFINED",
-          userId: "UNDEFINED",
-          content: "",
-          linkData: {},
-          time: "",
-          reaction: {},
-        };
-
-        return blankMessage;
       }
+
+      //メッセージのデータホルダー
+      const blankMessage: message = {
+        messageId: "UNDEFINED",
+        channelId: "UNDEFINED",
+        userId: "UNDEFINED",
+        content: "",
+        linkData: {},
+        time: "",
+        reaction: {},
+        isEdited: false,
+        fileId: [],
+      };
+      return blankMessage;
     },
   },
 

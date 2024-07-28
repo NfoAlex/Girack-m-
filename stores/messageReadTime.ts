@@ -35,7 +35,7 @@ export const useMessageReadTime = defineStore("messagereadtime", {
 
   actions: {
     //まるごと格納
-    setMessageReadTime(data: any) {
+    setMessageReadTime(data: { [key: string]: string }) {
       //console.log("messageReadTime :: setmessageReadTime : 今->", this._messageReadTime);
       this._MessageReadTime = data;
 

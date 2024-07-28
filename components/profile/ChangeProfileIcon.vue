@@ -17,14 +17,14 @@ const metadata = ref<{ userId: string; sessionId: string }>({
   userId: getMyUserinfo.value.userId,
   sessionId: getSessionId.value,
 });
-const uploadRule = ref<any>([
+const uploadRule = ref([
   //アップロードするファイルのサイズ制限確認
   (fileInput: File[]) => {
     try {
       console.log("fileInput->", fileInput[0]);
       return (
         fileInput[0].size < getServerinfo.value.config.PROFILE.iconMaxSize ||
-        "画像サイズを" + avatarLimitSizeHumanDisplay() + "以下にしてください!"
+        `画像サイズを${avatarLimitSizeHumanDisplay()}以下にしてください!`
       );
     } catch (e) {
       return true;
@@ -72,7 +72,7 @@ const submit = async () => {
     stateUploading.value = true;
 
     //画像アップロード(結果はHTTPリスポンス)
-    const result: any = await fetch("/uploadProfileIcon", {
+    const result = await fetch("/uploadProfileIcon", {
       method: "POST",
       body: formData,
     })
@@ -88,6 +88,11 @@ const submit = async () => {
 
         return;
       });
+
+    if (result === void) {
+      uploadResult.value = "ERROR";
+      return;
+    }
 
     if (result.status === 200) {
       //console.log("/profile :: submit : result->", result);
