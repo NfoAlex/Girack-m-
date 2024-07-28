@@ -62,7 +62,7 @@ const moveDirectory = (folder:folder, directoryLevel:string) => {
   //ディレクトリーツリーの深さ取得
   const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
   //ディレクトリーツリーから移動先の深さより下のものを削除
-  for (let i=parseInt(directoryLevel)+1; i<=lengthOfDirectoryTree; i++) {
+  for (let i=Number.parseInt(directoryLevel)+1; i<=lengthOfDirectoryTree; i++) {
     delete directoryTree.value[i];
   }
 
@@ -74,7 +74,7 @@ const moveDirectory = (folder:folder, directoryLevel:string) => {
  * 選択したファイルを削除する
  */
 const deleteSelectedFile = () => {
-  for (let file of fileSelected.value) {
+  for (const file of fileSelected.value) {
     console.log("filePortal :: deleteSelectedFile : 消そうとしているファイル->", file);
     socket.emit("deleteFile", {
       RequestSender: {
@@ -94,7 +94,7 @@ const deleteSelectedFile = () => {
  */
 const toggleFileIsPublic = () => {
   //選択したファイルの数分
-  for (let fileId of fileSelected.value) {
+  for (const fileId of fileSelected.value) {
     socket.emit("toggleFileIsPublic", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
@@ -112,7 +112,7 @@ const copyUrlsToClipBoard = () => {
   let urls = "";
   console.log("filePortal :: copyUrlsToClipBoard : url->", window.location.origin);
 
-  for (let file of fileSelected.value) {
+  for (const file of fileSelected.value) {
     urls += window.location.origin + "/file/" + file.id + "\n";
   }
 
