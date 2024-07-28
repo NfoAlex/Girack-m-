@@ -89,7 +89,8 @@ const submit = async () => {
         return;
       });
 
-    if (result === void) {
+    //結果がエラーだった時に処理
+    if (!result?.ok) {
       uploadResult.value = "ERROR";
       return;
     }
