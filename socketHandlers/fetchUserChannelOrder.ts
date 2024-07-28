@@ -2,13 +2,14 @@
 
 import type { Socket } from "socket.io-client"; //クラス識別用
 import { useChannelinfo } from "~/stores/channel";
+import type { channelOrder } from "~/types/channel";
 
 export default function fetchUserChannelOrder(socket: Socket): void {
   socket.on(
     "RESULT::fetchUserChannelOrder",
     (dat: {
       result: string;
-      data: any[];
+      data: channelOrder[];
     }) => {
       //console.log("fetchUserChannelOrder :: dat->", dat);
 

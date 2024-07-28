@@ -7,7 +7,7 @@ export interface channelOrder {
   channelId: string;
   isThread: boolean;
   isFolder: boolean;
-  child?: any[];
+  child?: channelOrder[];
 }
 
 export interface channel {
