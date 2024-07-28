@@ -6,10 +6,10 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 import type { folder } from "~/types/file";
 
 const props = defineProps<{
-	currentDirectory: folder;
+  currentDirectory: folder;
 }>();
 
-const emits = defineEmits<(e:"trimFolderLevel") => void>();
+const emits = defineEmits<(e: "trimFolderLevel") => void>();
 
 /**
  * data
@@ -20,21 +20,21 @@ const inputFolderName = ref<string>("");
  * フォルダーを作成
  */
 const createFolder = () => {
-	socket.emit("createFolder", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		folderName: inputFolderName.value,
-		directoryId: props.currentDirectory.id,
-	});
+  socket.emit("createFolder", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    folderName: inputFolderName.value,
+    directoryId: props.currentDirectory.id,
+  });
 };
 
 /**
  * フォルダー作成結果受け取り
  */
 const SOCKETcreateFolder = (dat: { result: string; dat: null }) => {
-	console.log("SOCKETcreateFolder :: dat->", dat);
+  console.log("SOCKETcreateFolder :: dat->", dat);
 
   //成功なら今いるフォルダ構成を再取得
   if (dat.result === "SUCCESS") {
@@ -48,14 +48,14 @@ const SOCKETcreateFolder = (dat: { result: string; dat: null }) => {
     });
     */
   }
-}
+};
 
 onMounted(() => {
-	socket.on("RESULT::createFolder", SOCKETcreateFolder);
+  socket.on("RESULT::createFolder", SOCKETcreateFolder);
 });
 
 onUnmounted(() => {
-	socket.off("RESULT::createFolder", SOCKETcreateFolder);
+  socket.off("RESULT::createFolder", SOCKETcreateFolder);
 });
 </script>
 
