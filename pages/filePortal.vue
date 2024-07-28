@@ -13,22 +13,22 @@ import type { file, folder } from "~/types/file";
 
 //ファイルインデックス表示ヘッダ
 const header = [
-	{ title: "ファイル名", value: "name" },
-	{
-		title: "公開設定",
-		key: "isPublic",
-		value: (item: file) => (item.isPublic ? "公開" : "-"),
-	},
-	{
-		title: "サイズ",
-		key: "size",
-		value: (item: file) => calcSizeInHumanFormat(item.size),
-	}, // サイズを単位で表示
-	{
-		title: "アップロード日時",
-		key: "uploadedDate",
-		value: (item: file) => new Date(item.uploadedDate).toLocaleString(),
-	}, // 日付をフォーマットして表示
+  { title: "ファイル名", value: "name" },
+  {
+    title: "公開設定",
+    key: "isPublic",
+    value: (item: file) => (item.isPublic ? "公開" : "-"),
+  },
+  {
+    title: "サイズ",
+    key: "size",
+    value: (item: file) => calcSizeInHumanFormat(item.size),
+  }, // サイズを単位で表示
+  {
+    title: "アップロード日時",
+    key: "uploadedDate",
+    value: (item: file) => new Date(item.uploadedDate).toLocaleString(),
+  }, // 日付をフォーマットして表示
 ];
 
 /**
@@ -40,24 +40,24 @@ const folderIndex = ref<folder[]>([]); //フォルダ構成データ
 const fileSelected = ref<file[]>([]); //選択したファイル項目
 const directoryTree = ref<//ディレクトリツリー
 {
-	[key: string]: folder[];
+  [key: string]: folder[];
 }>({
-	"0": [
-		{
-			id: "",
-			userId: "",
-			name: "home",
-			positionedDirectoryId: "",
-		},
-	],
+  "0": [
+    {
+      id: "",
+      userId: "",
+      name: "home",
+      positionedDirectoryId: "",
+    },
+  ],
 });
 
 const currentDirectory = ref<folder>({
-	//今いるディレクトリ情報
-	id: "",
-	userId: "",
-	name: "home",
-	positionedDirectoryId: "",
+  //今いるディレクトリ情報
+  id: "",
+  userId: "",
+  name: "home",
+  positionedDirectoryId: "",
 });
 
 const displayUpload = ref<boolean>(false); //アップロード画面表示用
@@ -68,99 +68,108 @@ const displayDeleteFolder = ref<boolean>(false); //フォルダ削除確認画�
  * ディレクトリを移動して再取得
  */
 const moveDirectory = (folder: folder, directoryLevel: string) => {
-	//現在いるディレクトリを子往診
-	currentDirectory.value = folder;
+  //現在いるディレクトリを子往診
+  currentDirectory.value = folder;
 
-	//ディレクトリーツリーの深さ取得
-	const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
-	//ディレクトリーツリーから移動先の深さより下のものを削除
-	for (
-		let i = Number.parseInt(directoryLevel) + 1;
-		i <= lengthOfDirectoryTree;
-		i++
-	) {
-		delete directoryTree.value[i];
-	}
+  trimFolderLevel(directoryLevel);
 
-	//ファイルとフォルダを再取得
-	fetchFilesAndFolders();
+  //ファイルとフォルダを再取得
+  fetchFilesAndFolders();
+};
+
+/**
+ * ディレクトリツリーを削る
+ * @param directoryLevel
+ */
+const trimFolderLevel = (directoryLevel: string) => {
+  //ディレクトリーツリーの深さ取得
+  const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
+
+  //ディレクトリーツリーから移動先の深さより下のものを削除
+  for (
+    let i = Number.parseInt(directoryLevel) + 1;
+    i <= lengthOfDirectoryTree;
+    i++
+  ) {
+    delete directoryTree.value[i];
+  }
 };
 
 /**
  * 選択したファイルを削除する
  */
 const deleteSelectedFile = () => {
-	for (const file of fileSelected.value) {
-		console.log(
-			"filePortal :: deleteSelectedFile : 消そうとしているファイル->",
-			file,
-		);
-		socket.emit("deleteFile", {
-			RequestSender: {
-				userId: getMyUserinfo.value.userId,
-				sessionId: getSessionId.value,
-			},
-			fileId: file.id,
-		});
-	}
+  for (const file of fileSelected.value) {
+    console.log(
+      "filePortal :: deleteSelectedFile : 消そうとしているファイル->",
+      file,
+    );
+    socket.emit("deleteFile", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value,
+      },
+      fileId: file.id,
+    });
+  }
 
-	//選択したファイル一覧を初期化
-	fileSelected.value = [];
+  //選択したファイル一覧を初期化
+  fileSelected.value = [];
 };
 
 /**
  * 選択したファイルの公開設定をトグル
  */
 const toggleFileIsPublic = () => {
-	//選択したファイルの数分
-	for (const fileId of fileSelected.value) {
-		socket.emit("toggleFileIsPublic", {
-			RequestSender: {
-				userId: getMyUserinfo.value.userId,
-				sessionId: getSessionId.value,
-			},
-			fileId: fileId,
-		});
-	}
+  //選択したファイルの数分
+  for (const fileId of fileSelected.value) {
+    socket.emit("toggleFileIsPublic", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value,
+      },
+      fileId: fileId,
+    });
+  }
 };
 
 /**
  * 選択したファイルをクリップボードへURLをコピー
  */
 const copyUrlsToClipBoard = () => {
-	let urls = "";
-	console.log(
-		"filePortal :: copyUrlsToClipBoard : url->",
-		window.location.origin,
-	);
+  let urls = "";
+  console.log(
+    "filePortal :: copyUrlsToClipBoard : url->",
+    window.location.origin,
+  );
 
-	for (const file of fileSelected.value) {
-		urls += window.location.origin + "/file/" + file.id + "\n";
-	}
+  for (const file of fileSelected.value) {
+    urls += `${window.location.origin}/file/${file.id}\n`;
+  }
 
-	//クリップボードへ書き込み
-	navigator.clipboard.writeText(urls);
+  //クリップボードへ書き込み
+  navigator.clipboard.writeText(urls);
 };
 
 /**
  * ファイルとフォルダ構成を取得
  */
 const fetchFilesAndFolders = () => {
-	//ファイルインデックスを取得
-	socket.emit("fetchFileIndex", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		directory: currentDirectory.value.id,
-	});
-	socket.emit("fetchFolders", {
-		RequestSender: {
-			userId: getMyUserinfo.value.userId,
-			sessionId: getSessionId.value,
-		},
-		positionedDirectoryId: currentDirectory.value.id,
-	});
+  //ファイルインデックスを取得
+  socket.emit("fetchFileIndex", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    directory: currentDirectory.value.id,
+  });
+  socket.emit("fetchFolders", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    positionedDirectoryId: currentDirectory.value.id,
+  });
 };
 
 /**
@@ -168,19 +177,19 @@ const fetchFilesAndFolders = () => {
  * @param dat
  */
 const SOCKETfetchFileIndex = (dat: { result: string; data: file[] }) => {
-	//console.log("RemoteFileSelect :: dat->", dat);
-	//成功ならファイルインデックスを格納
-	if (dat.result === "SUCCESS") {
-		fileIndex.value = dat.data;
+  //console.log("RemoteFileSelect :: dat->", dat);
+  //成功ならファイルインデックスを格納
+  if (dat.result === "SUCCESS") {
+    fileIndex.value = dat.data;
 
-		//使用容量を再取得
-		socket.emit("calcFullFolderSize", {
-			RequestSender: {
-				userId: getMyUserinfo.value.userId,
-				sessionId: getSessionId.value,
-			},
-		});
-	}
+    //使用容量を再取得
+    socket.emit("calcFullFolderSize", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value,
+      },
+    });
+  }
 };
 
 /**
@@ -188,32 +197,32 @@ const SOCKETfetchFileIndex = (dat: { result: string; data: file[] }) => {
  * @param dat
  */
 const SOCKETfetchFolders = (dat: { result: string; data: folder[] }) => {
-	//console.log("RemoteFileSelect :: dat->", dat);
-	if (dat.result === "SUCCESS") {
-		folderIndex.value = dat.data;
+  //console.log("RemoteFileSelect :: dat->", dat);
+  if (dat.result === "SUCCESS") {
+    folderIndex.value = dat.data;
 
-		//ディレクトリーツリーの長さ取得
-		const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
+    //ディレクトリーツリーの長さ取得
+    const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
 
-		console.log(
-			"filePortal :: SOCKETfetchFolders : dat,data[0]->",
-			dat.data[0],
-			" 今いるdirectoryTreeの最初->",
-			directoryTree.value[(lengthOfDirectoryTree - 1).toString()][0],
-		);
+    console.log(
+      "filePortal :: SOCKETfetchFolders : dat,data->",
+      dat.data,
+      " 今いるdirectoryTreeの最初->",
+      directoryTree.value[(lengthOfDirectoryTree - 1).toString()][0],
+    );
 
-		//フォルダデータの最初と現階層の最初が同じフォルダなら上書き
-		if (
-			dat.data[0] ===
-			directoryTree.value[(lengthOfDirectoryTree - 1).toString()][0]
-		) {
-			//今いる階層に上書き
-			directoryTree.value[(lengthOfDirectoryTree - 1).toString()] = dat.data;
-		} else {
-			//その長さの数に代入する
-			directoryTree.value[lengthOfDirectoryTree.toString()] = dat.data || [];
-		}
-	}
+    //フォルダデータの最初と現階層の最初が同じフォルダなら上書き
+    if (
+      dat.data[0] ===
+      directoryTree.value[(lengthOfDirectoryTree - 1).toString()][0]
+    ) {
+      //今いる階層に上書き
+      directoryTree.value[(lengthOfDirectoryTree - 1).toString()] = dat.data;
+    } else {
+      //その長さの数に代入する
+      directoryTree.value[lengthOfDirectoryTree.toString()] = dat.data || [];
+    }
+  }
 };
 
 /**
@@ -221,13 +230,13 @@ const SOCKETfetchFolders = (dat: { result: string; data: folder[] }) => {
  * @param dat
  */
 const SOCKETcalcFullFolderSize = (dat: {
-	result: string;
-	data: number | null;
+  result: string;
+  data: number | null;
 }) => {
-	//console.log("filePortal :: SOCKETcalcFullFolderSize : dat->", dat);
-	if (dat.data !== null) {
-		storageSize.value = dat.data;
-	}
+  //console.log("filePortal :: SOCKETcalcFullFolderSize : dat->", dat);
+  if (dat.data !== null) {
+    storageSize.value = dat.data;
+  }
 };
 
 /**
@@ -235,34 +244,34 @@ const SOCKETcalcFullFolderSize = (dat: {
  * @param dat
  */
 const SOCKETdeleteFile = (dat: { result: string; data: null }) => {
-	console.log("deleteFile :: dat->", dat);
-	if (dat.result === "SUCCESS") {
-		//ファイルインデックスを取り直す
-		socket.emit("fetchFileIndex", {
-			RequestSender: {
-				userId: getMyUserinfo.value.userId,
-				sessionId: getSessionId.value,
-			},
-			directory: currentDirectory.value.id,
-		});
-	}
+  console.log("deleteFile :: dat->", dat);
+  if (dat.result === "SUCCESS") {
+    //ファイルインデックスを取り直す
+    socket.emit("fetchFileIndex", {
+      RequestSender: {
+        userId: getMyUserinfo.value.userId,
+        sessionId: getSessionId.value,
+      },
+      directory: currentDirectory.value.id,
+    });
+  }
 };
 
 onMounted(() => {
-	socket.on("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
-	socket.on("RESULT::fetchFolders", SOCKETfetchFolders);
-	socket.on("RESULT::calcFullFolderSize", SOCKETcalcFullFolderSize);
-	socket.on("RESULT::deleteFile", SOCKETdeleteFile);
+  socket.on("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
+  socket.on("RESULT::fetchFolders", SOCKETfetchFolders);
+  socket.on("RESULT::calcFullFolderSize", SOCKETcalcFullFolderSize);
+  socket.on("RESULT::deleteFile", SOCKETdeleteFile);
 
-	//ファイルインデックスを取得
-	fetchFilesAndFolders();
+  //ファイルインデックスを取得
+  fetchFilesAndFolders();
 });
 
 onUnmounted(() => {
-	socket.off("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
-	socket.off("RESULT::fetchFolders", SOCKETfetchFolders);
-	socket.off("RESULT::calcFullFolderSize", SOCKETcalcFullFolderSize);
-	socket.off("RESULT::deleteFile", SOCKETdeleteFile);
+  socket.off("RESULT::fetchFileIndex", SOCKETfetchFileIndex);
+  socket.off("RESULT::fetchFolders", SOCKETfetchFolders);
+  socket.off("RESULT::calcFullFolderSize", SOCKETcalcFullFolderSize);
+  socket.off("RESULT::deleteFile", SOCKETdeleteFile);
 });
 </script>
 
@@ -282,7 +291,13 @@ onUnmounted(() => {
     v-model="displayCreateFolder"
     style="max-width:650px; min-width:450px; width:65vw; height:55vh; max-height:650px;"
   >
-    <CreateFolder :currentDirectory />
+    <CreateFolder
+      @trimFolderLevel="
+        trimFolderLevel('-1');
+        displayCreateFolder = false;
+      "
+      :currentDirectory
+    />
   </v-dialog>
 
   <!-- フォルダー削除用 -->
