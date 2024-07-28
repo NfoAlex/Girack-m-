@@ -42,31 +42,31 @@ export const useUserIndex = defineStore("userindex", {
         //空じゃなければそのデータを返す、空ならホルダー作成して情報取得
         if (state._UserIndex[userId] !== undefined) {
           return state._UserIndex[userId];
-        } else {
-          //ホルダーとしてデータ追加
-          state._UserIndex[userId] = {
-            userName: "User",
-            role: ["Member"],
-            userId: userId,
-            banned: false,
-            channelJoined: ["0001"],
-          };
-
-          //ユーザー情報を取得する
-          //RequestSender用
-          const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-          //WS通信
-          socket.emit("fetchUserInfo", {
-            RequestSender: {
-              userId: getMyUserinfo.value.userId,
-              sessionId: getSessionId.value,
-            },
-            userId: userId,
-          });
-
-          //ホルダー用データを返しておく
-          return state._UserIndex[userId];
         }
+
+        //ホルダーとしてデータ追加
+        state._UserIndex[userId] = {
+          userName: "User",
+          role: ["Member"],
+          userId: userId,
+          banned: false,
+          channelJoined: ["0001"],
+        };
+
+        //ユーザー情報を取得する
+        //RequestSender用
+        const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+        //WS通信
+        socket.emit("fetchUserInfo", {
+          RequestSender: {
+            userId: getMyUserinfo.value.userId,
+            sessionId: getSessionId.value,
+          },
+          userId: userId,
+        });
+
+        //ホルダー用データを返しておく
+        return state._UserIndex[userId];
       },
 
     //オンラインユーザーリストを返す

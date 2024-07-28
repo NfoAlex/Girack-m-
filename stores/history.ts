@@ -296,22 +296,24 @@ export const useHistory = defineStore("history", {
         });
         this._ThereIsNewMessage = true;
         return;
-      } else {
-        for (const channelId in this._HasNewMessage) {
-          if (this._HasNewMessage[channelId]) {
-            //タイトル更新
-            useHead({
-              titleTemplate: "[*]Girack",
-            });
-            this._ThereIsNewMessage = true;
-            return;
-          }
-        }
-        useHead({
-          titleTemplate: "Girack",
-        });
-        this._ThereIsNewMessage = false;
       }
+
+      //ループして新着アリならタブ名と状態更新
+      for (const channelId in this._HasNewMessage) {
+        if (this._HasNewMessage[channelId]) {
+          //タイトル更新
+          useHead({
+            titleTemplate: "[*]Girack",
+          });
+          this._ThereIsNewMessage = true;
+          return;
+        }
+      }
+
+      useHead({
+        titleTemplate: "Girack",
+      });
+      this._ThereIsNewMessage = false;
     },
 
     //最新メッセを更新する
