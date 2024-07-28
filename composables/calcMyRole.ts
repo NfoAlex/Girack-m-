@@ -20,40 +20,27 @@ const roleLevel:{
 
 export default function calcMyRole() {
   try {
-
     //自分が持っている権限データ取得
     const roleDataChecking = getMyRolePower();
 
     //権限をそれぞれ調べてレベルを返す
     if (roleDataChecking.ServerManage) {
       return 5;
-
-    } else if (roleDataChecking.RoleManage) {
+    }
+    if (roleDataChecking.RoleManage) {
       return 4;
-
-    } else if (
-      roleDataChecking.ChannelViewPrivate
-      ||
-      roleDataChecking.UserManage
-    ) {
+    }
+    if (roleDataChecking.UserManage || roleDataChecking.ChannelManage) {
       return 3;
-
-    } else if (
-      roleDataChecking.ChannelRename
-      ||
-      roleDataChecking.MessageDelete
-    ) {
+    }
+    if (roleDataChecking.MessageDelete) {
       return 2;
-      
     }
 
     //2以下はもう1として返す
     return 1;
-
-  } catch(e) {
-
+  } catch (e) {
     console.log("calcRole :: エラー ->", e);
     return 0;
-
   }
 }

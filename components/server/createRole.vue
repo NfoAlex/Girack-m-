@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
+import { socket } from "~/socketHandlers/socketInit";
 import { useMyUserinfo } from "../../stores/userinfo";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -7,15 +7,15 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 /**
  * emit
  */
- const emit = defineEmits(["closeDialog"]);
+const emit = defineEmits(["closeDialog"]);
 
 /**
  * data
  */
 //チャンネル作成用に使うデータ
-const roleCreationData = ref<{name:string, color:string}>({
+const roleCreationData = ref<{ name: string; color: string }>({
   name: "",
-  color: ""
+  color: "",
 });
 const roleCreationError = ref<boolean>(false);
 
@@ -26,12 +26,12 @@ const createRole = () => {
   socket.emit("createRole", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     roleData: {
       name: roleCreationData.value.name,
-      color: roleCreationData.value.color
-    }
+      color: roleCreationData.value.color,
+    },
   });
 };
 
@@ -43,7 +43,7 @@ const closeDialog = () => {
   emit("closeDialog");
   //ロール作成用変数を初期化
   nextTick(() => {
-    roleCreationData.value = {name:"", color:""};
+    roleCreationData.value = { name: "", color: "" };
     roleCreationError.value = false;
   });
 };
@@ -52,7 +52,7 @@ const closeDialog = () => {
  * チャンネル作成結果受け取り
  * @param dat
  */
-const SOCKETcreateRole = (dat:{result:string, data:boolean|null}) => {
+const SOCKETcreateRole = (dat: { result: string; data: boolean | null }) => {
   console.log("createRole :: SOCKETcreateRole : dat->", dat);
   //結果に応じて表示を変更
   if (dat.result !== "SUCCESS") {
@@ -64,8 +64,8 @@ const SOCKETcreateRole = (dat:{result:string, data:boolean|null}) => {
     socket.emit("fetchRoles", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
-      }
+        sessionId: getSessionId.value,
+      },
     });
     //ダイアログを閉じる
     closeDialog();
@@ -76,13 +76,12 @@ onMounted(() => {
   socket.on("RESULT::createRole", SOCKETcreateRole);
   //チャンネル作成結果を初期化
   roleCreationError.value = false;
-  roleCreationData.value = {name:"", color:""};
+  roleCreationData.value = { name: "", color: "" };
 });
 
 onUnmounted(() => {
   socket.off("RESULT::createRole", SOCKETcreateRole);
 });
-
 </script>
 
 <template>

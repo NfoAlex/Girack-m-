@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
-import { useRole } from '~/stores/role';
+import { socket } from "~/socketHandlers/socketInit";
+import { useRole } from "~/stores/role";
+import { useMyUserinfo } from "~/stores/userinfo";
 
-import type { channel } from '~/types/channel';
-import type role from '~/types/role';
+import type { channel } from "~/types/channel";
+import type role from "~/types/role";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getRoleSingle } = storeToRefs(useRole());
@@ -15,9 +15,12 @@ const { getRoleSingle } = storeToRefs(useRole());
 const roleSearchedData = ref<role[]>([]); //ロール検索結果格納用
 const tempSpeakableRole = ref<string[]>([]); //編集用話せるロール配列
 //ロール検索用クエリー保存データ
-const roleSearchInput = ref<
-  {query:string, querySearched:string, pageIndex:number, reachedEnd:boolean}
->({
+const roleSearchInput = ref<{
+  query: string;
+  querySearched: string;
+  pageIndex: number;
+  reachedEnd: boolean;
+}>({
   query: "", //検索クエリー用
   querySearched: "", //最後に結果を受け取った検索クエリー
   pageIndex: 1, //ロール検索結果のページ番号
@@ -26,9 +29,9 @@ const roleSearchInput = ref<
 
 //prop
 const props = defineProps<{
-  channelId: string,
-  channelInfo: channel,
-  speakableRole: string[]
+  channelId: string;
+  channelInfo: channel;
+  speakableRole: string[];
 }>();
 
 /**
@@ -39,37 +42,40 @@ const updateChannel = () => {
   socket.emit("updateChannel", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     channelId: props.channelId,
     channelInfo: {
       ...props.channelInfo,
-      speakableRole: tempSpeakableRole.value
-    }
+      speakableRole: tempSpeakableRole.value,
+    },
   });
 };
 
 /**
  * 検索クエリーでロールを検索する
  */
-const searchRole = (pageIndex:number=1) => {
+const searchRole = (pageIndex = 1) => {
   //検索したクエリーと入力クエリー、ページ数と引数が一緒なら停止
   if (
-    roleSearchInput.value.query === roleSearchInput.value.querySearched
-      &&
+    roleSearchInput.value.query === roleSearchInput.value.querySearched &&
     roleSearchInput.value.pageIndex === pageIndex
-  ) return;
+  )
+    return;
 
-  console.log("/channel/[id] :: SpeakableRoleSelect :: searchRole : pageIndex->", toRaw(pageIndex));
+  console.log(
+    "/channel/[id] :: SpeakableRoleSelect :: searchRole : pageIndex->",
+    toRaw(pageIndex),
+  );
 
   //取得
   socket.emit("searchRole", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     searchQuery: roleSearchInput.value.query,
-    pageIndex: pageIndex
+    pageIndex: pageIndex,
   });
 
   //再検索なら最後の結果まで検索した状態を解除
@@ -84,7 +90,10 @@ const searchRole = (pageIndex:number=1) => {
  * ロール検索データ受け取り
  * @param dat
  */
-const SOCKETsearchRole = (dat:{result:string, data:{role:role[], pageIndex:number}}) => {
+const SOCKETsearchRole = (dat: {
+  result: string;
+  data: { role: role[]; pageIndex: number };
+}) => {
   //成功なら検索結果を格納
   if (dat.result === "SUCCESS") {
     if (dat.data.pageIndex === roleSearchInput.value.pageIndex + 1) {
@@ -96,7 +105,8 @@ const SOCKETsearchRole = (dat:{result:string, data:{role:role[], pageIndex:numbe
     //どのページまで読み込んだかを保存
     roleSearchInput.value.pageIndex = dat.data.pageIndex;
     //結果が空なら最後のページまで行ったと設定
-    if (dat.data.role.length === 0 || dat.data.role.length < 30) roleSearchInput.value.reachedEnd = true;
+    if (dat.data.role.length === 0 || dat.data.role.length < 30)
+      roleSearchInput.value.reachedEnd = true;
 
     console.log("dat->", dat);
   }
@@ -105,7 +115,10 @@ const SOCKETsearchRole = (dat:{result:string, data:{role:role[], pageIndex:numbe
 onMounted(() => {
   //propsからの値を適用
   tempSpeakableRole.value = props.speakableRole;
-  console.log("/channel/[id] :: SpeakableRoleSelect :: onMounted : props.speakableRole->", props.speakableRole);
+  console.log(
+    "/channel/[id] :: SpeakableRoleSelect :: onMounted : props.speakableRole->",
+    props.speakableRole,
+  );
 
   socket.on("RESULT::searchRole", SOCKETsearchRole);
 
@@ -113,10 +126,10 @@ onMounted(() => {
   socket.emit("searchRole", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     searchQuery: "",
-    pageIndex: 1
+    pageIndex: 1,
   });
 });
 

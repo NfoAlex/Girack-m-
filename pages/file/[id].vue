@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
+import SwitchTheme from "~/components/file/SwitchTheme.vue";
 import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
-import SwitchTheme from '~/components/file/SwitchTheme.vue';
-import { useServerinfo } from '~/stores/serverinfo';
-import type { file } from '~/types/file';
+import { socket } from "~/socketHandlers/socketInit";
+import { useServerinfo } from "~/stores/serverinfo";
+import type { file } from "~/types/file";
 
 //タブ名にファイル名を表示する用
-import { useTitle } from '@vueuse/core'
-const title = useTitle()
+import { useTitle } from "@vueuse/core";
+const title = useTitle();
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 
@@ -21,29 +21,27 @@ definePageMeta({
  * data
  */
 const fileData = ref<file>({
-  id: '',
-  userId: '',
-  name: '',
+  id: "",
+  userId: "",
+  name: "",
   isPublic: false,
   size: 0,
-  type: '',
-  uploadedDate: '',
+  type: "",
+  uploadedDate: "",
 });
-const fileBufferData = ref<
-  {
-    blob: Blob|null,
-    filename: string,
-    fileURL: string
-  }
->(
-  {
-    blob: null,
-    filename: "",
-    fileURL: ""
-  }
-);
-const fetchResult = ref<""|"SUCCESS"|"ERROR_FILE_MISSING"|"ERROR_FILE_IS_PRIVATE">("");
-const downloadStatus = ref<""|"DOWNLOADING"|"SUCCESS"|"FAILED">(""); //ダウンロード結果
+const fileBufferData = ref<{
+  blob: Blob | null;
+  filename: string;
+  fileURL: string;
+}>({
+  blob: null,
+  filename: "",
+  fileURL: "",
+});
+const fetchResult = ref<
+  "" | "SUCCESS" | "ERROR_FILE_MISSING" | "ERROR_FILE_IS_PRIVATE"
+>("");
+const downloadStatus = ref<"" | "DOWNLOADING" | "SUCCESS" | "FAILED">(""); //ダウンロード結果
 const imagePreviewUrl = ref<string>("");
 
 /**
@@ -51,11 +49,11 @@ const imagePreviewUrl = ref<string>("");
  */
 const download = async () => {
   try {
-    const link = document.createElement('a');
+    const link = document.createElement("a");
 
     link.href = fileBufferData.value.fileURL;
     link.download = fileBufferData.value.filename;
-    link.style.display = 'none';
+    link.style.display = "none";
 
     document.body.appendChild(link);
     link.click();
@@ -64,10 +62,10 @@ const download = async () => {
     document.body.removeChild(link);
     window.URL.revokeObjectURL(fileBufferData.value.fileURL);
   } catch (error) {
-    console.error('/file :: エラー->', error);
+    console.error("/file :: エラー->", error);
     downloadStatus.value = "FAILED";
   }
-}
+};
 
 /**
  * ファイル情報をあらかじめ取得、ダウンロードできる体制に
@@ -78,43 +76,41 @@ const prepareFile = async () => {
 
     //クッキーからセッションデータを取得、格納
     const cookieLoaded = useCookie("session").value;
-    let RequestSenderLoaded = {userId:"", sessionId:""};
+    let RequestSenderLoaded = { userId: "", sessionId: "" };
     //クッキーの値が有効なら格納、VueUseのアレでエラーが出るが値はJSONで帰ってくる
     if (cookieLoaded !== undefined) {
       //送信者情報を格納
       RequestSenderLoaded = {
         userId: cookieLoaded.userId,
-        sessionId: cookieLoaded.sessionId
-      }
+        sessionId: cookieLoaded.sessionId,
+      };
     }
 
     // JSONデータを文字列に変換して追加
     formData.append(
-      'metadata',
-      JSON.stringify(
-        {
-          RequestSender: {
-            userId: RequestSenderLoaded.userId,
-            sessionId: RequestSenderLoaded.sessionId
-          }
-        }
-      )
+      "metadata",
+      JSON.stringify({
+        RequestSender: {
+          userId: RequestSenderLoaded.userId,
+          sessionId: RequestSenderLoaded.sessionId,
+        },
+      }),
     );
 
     console.log("formData->", formData);
 
-    const response = await fetch('/downloadfile/' + route.params.id, {
-      method: 'POST',
-      body: formData
+    const response = await fetch("/downloadfile/" + route.params.id, {
+      method: "POST",
+      body: formData,
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
     // Content-Dispositionヘッダーからファイル名を取得
-    const contentDisposition = response.headers.get('Content-Disposition');
-    let fileName = 'download'; // デフォルトのファイル名
+    const contentDisposition = response.headers.get("Content-Disposition");
+    let fileName = "download"; // デフォルトのファイル名
     if (contentDisposition) {
       const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/i);
       if (fileNameMatch) {
@@ -131,20 +127,18 @@ const prepareFile = async () => {
 
     console.log("/file :: prepareFile : 今のデータ->", fileBufferData.value);
   } catch (error) {
-    console.error('/file :: エラー->', error);
+    console.error("/file :: エラー->", error);
   }
-}
+};
 
 /**
  * ファイル情報受け取り
- * @param dat 
+ * @param dat
  */
-const SOCKETfetchFileInfo = (
-  dat: {
-    result: ""|"SUCCESS"|"ERROR_FILE_MISSING"|"ERROR_FILE_IS_PRIVATE",
-    data: file
-  }
-) => {
+const SOCKETfetchFileInfo = (dat: {
+  result: "" | "SUCCESS" | "ERROR_FILE_MISSING" | "ERROR_FILE_IS_PRIVATE";
+  data: file;
+}) => {
   console.log("/file :: dat->", dat);
   fetchResult.value = dat.result;
 
@@ -157,7 +151,7 @@ const SOCKETfetchFileInfo = (
 
     prepareFile();
   }
-}
+};
 
 onMounted(() => {
   console.log("/file :: route->", route.params.id);
@@ -168,7 +162,7 @@ onMounted(() => {
   title.value = getServerinfo.value.servername + " : ファイル";
 
   //送信者情報格納用
-  let RequestSenderLoaded = {userId:"", sessionId:""};
+  let RequestSenderLoaded = { userId: "", sessionId: "" };
 
   //クッキーからセッションデータを取得、格納
   const cookieLoaded = useCookie("session").value;
@@ -177,17 +171,17 @@ onMounted(() => {
     //送信者情報を格納
     RequestSenderLoaded = {
       userId: cookieLoaded.userId,
-      sessionId: cookieLoaded.sessionId
-    }
+      sessionId: cookieLoaded.sessionId,
+    };
     //ファイル情報取得
     socket.emit("fetchFileInfo", {
       RequestSender: RequestSenderLoaded,
-      fileId: route.params.id
+      fileId: route.params.id,
     });
   } else {
     //ファイル情報取得
     socket.emit("fetchFileInfo", {
-      fileId: route.params.id
+      fileId: route.params.id,
     });
   }
 });

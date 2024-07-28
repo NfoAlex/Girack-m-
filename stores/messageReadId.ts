@@ -3,39 +3,39 @@ import { defineStore } from "pinia";
 
 export const useMessageReadId = defineStore("messagereadid", {
   state: () =>
-  ({
-    _MessageReadId: {
-      /*
+    ({
+      _MessageReadId: {
+        /*
       "0001": "9734758937895324"
       */
-    },
-    _MessageReadIdBefore: {
-      /*
+      },
+      _MessageReadIdBefore: {
+        /*
       "0001": "89123789781234123"
       */
-    }
-  } as {
-    _MessageReadId: {
-      [key: string]: string
+      },
+    }) as {
+      _MessageReadId: {
+        [key: string]: string;
+      };
+      _MessageReadIdBefore: {
+        [key: string]: string;
+      };
     },
-    _MessageReadIdBefore: {
-      [key: string]: string
-    }
-  }),
 
   getters: {
-    getMessageReadId: (state) => (channelId:string) => {
+    getMessageReadId: (state) => (channelId: string) => {
       return state._MessageReadId[channelId];
     },
 
-    getMessageReadIdBefore: (state) => (channelId:string) => {
+    getMessageReadIdBefore: (state) => (channelId: string) => {
       return state._MessageReadIdBefore[channelId];
     },
   },
-  
+
   actions: {
     //まるごと格納
-    setMessageReadId(data:any) {
+    setMessageReadId(data: any) {
       //console.log("messageReadTime :: setmessageReadTime : 今->", this._MessageReadId);
       this._MessageReadId = data;
 
@@ -46,7 +46,7 @@ export const useMessageReadId = defineStore("messagereadid", {
     },
 
     //チャンネルを指定して設定
-    updateMessageReadId(channelId:string, messageId:string) {
+    updateMessageReadId(channelId: string, messageId: string) {
       //console.log("messageReadTime :: setmessageReadTime : 今->", messageId);
 
       //最新既読Idを更新
@@ -54,7 +54,7 @@ export const useMessageReadId = defineStore("messagereadid", {
     },
 
     //ひとつ前用の最新既読Id設定
-    updateMessageReadIdBefore(channelId:string) {
+    updateMessageReadIdBefore(channelId: string) {
       //console.log("messageReadTime :: setmessageReadTimeBefore : ひとつ前用->", channelId);
 
       //もし最新既読Idが空なら飛ばす
@@ -64,10 +64,9 @@ export const useMessageReadId = defineStore("messagereadid", {
     },
 
     //最新メッセージを削除
-    deleteMessageReadId(channelId:string) {
+    deleteMessageReadId(channelId: string) {
       delete this._MessageReadId[channelId];
       delete this._MessageReadIdBefore[channelId];
-    }
-  }
+    },
+  },
 });
-

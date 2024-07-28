@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
 import getMyRolePower from "~/composables/getMyRolePower";
-import { useMyUserinfo } from '~/stores/userinfo';
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
 const router = useRouter();
 
-import type { Serverinfo } from '~/types/serverInfo';
+import type { Serverinfo } from "~/types/serverInfo";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -15,53 +15,53 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const stateEdited = ref<boolean>(false);
 //サーバー情報
 const ServerinfoFull = ref<Serverinfo>({
-  servername: '',
+  servername: "",
   registration: {
     available: false,
     invite: {
       inviteOnly: false,
-      inviteCode: ''
-    }
+      inviteCode: "",
+    },
   },
   config: {
     PROFILE: {
       iconMaxSize: 0,
-      usernameMaxLength: 0
+      usernameMaxLength: 0,
     },
     CHANNEL: {
-      channelIdAnnounceRegistration: '',
-      defaultJoinOnRegister: []
+      channelIdAnnounceRegistration: "",
+      defaultJoinOnRegister: [],
     },
     MESSAGE: {
       TxtMaxLength: 0,
-      FileMaxSize: 0
-    }
-  }
+      FileMaxSize: 0,
+    },
+  },
 });
 //編集用サーバー情報変数
 const ServerinfoCloned = ref<Serverinfo>({
-  servername: '',
+  servername: "",
   registration: {
     available: false,
     invite: {
       inviteOnly: false,
-      inviteCode: ''
-    }
+      inviteCode: "",
+    },
   },
   config: {
     PROFILE: {
       iconMaxSize: 0,
-      usernameMaxLength: 0
+      usernameMaxLength: 0,
     },
     CHANNEL: {
-      channelIdAnnounceRegistration: '',
-      defaultJoinOnRegister: []
+      channelIdAnnounceRegistration: "",
+      defaultJoinOnRegister: [],
     },
     MESSAGE: {
       TxtMaxLength: 0,
-      FileMaxSize: 0
-    }
-  }
+      FileMaxSize: 0,
+    },
+  },
 });
 
 /**
@@ -75,13 +75,16 @@ const restoreServerinfoCloned = () => {
 
   //編集用JSONの変更を監視する
   watch(ServerinfoCloned.value, () => {
-    if (JSON.stringify(ServerinfoCloned.value) === JSON.stringify(ServerinfoFull.value)) {
+    if (
+      JSON.stringify(ServerinfoCloned.value) ===
+      JSON.stringify(ServerinfoFull.value)
+    ) {
       stateEdited.value = false;
     } else {
       stateEdited.value = true;
     }
   });
-}
+};
 
 /**
  * サーバー情報を更新させる
@@ -90,23 +93,26 @@ const updateServerinfo = () => {
   socket.emit("updateServerInfo", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     servername: ServerinfoCloned.value.servername,
-    registration: ServerinfoCloned.value.registration
+    registration: ServerinfoCloned.value.registration,
   });
-}
+};
 
 /**
  * サーバー情報取得
  * @param dat
  */
-const SOCKETfetchServerInfoFull = (dat:{result:string, data:Serverinfo}) => {
+const SOCKETfetchServerInfoFull = (dat: {
+  result: string;
+  data: Serverinfo;
+}) => {
   console.log("/server :: SOCKETfetchServerInfoFull : dat->", dat);
 
   //結果が成功以外なら停止
   if (dat.result !== "SUCCESS") return;
-  
+
   //サーバー情報を格納
   ServerinfoFull.value = dat.data;
 
@@ -117,13 +123,16 @@ const SOCKETfetchServerInfoFull = (dat:{result:string, data:Serverinfo}) => {
 
   //編集用JSONの変更を監視する
   watch(ServerinfoCloned.value, () => {
-    if (JSON.stringify(ServerinfoCloned.value) === JSON.stringify(ServerinfoFull.value)) {
+    if (
+      JSON.stringify(ServerinfoCloned.value) ===
+      JSON.stringify(ServerinfoFull.value)
+    ) {
       stateEdited.value = false;
     } else {
       stateEdited.value = true;
     }
   });
-}
+};
 
 onBeforeMount(() => {
   //サーバー管理の権限を持っていないならロール管理ページへ
@@ -138,8 +147,8 @@ onMounted(() => {
   socket.emit("fetchServerInfoFull", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
+      sessionId: getSessionId.value,
+    },
   });
 });
 

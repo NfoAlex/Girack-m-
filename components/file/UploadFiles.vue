@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
-import type { folder } from '~/types/file';
+import type { folder } from "~/types/file";
 
 const props = defineProps<{
-  currentDirectory: folder
+  currentDirectory: folder;
 }>();
 
 /**
@@ -15,8 +15,8 @@ const props = defineProps<{
 const fileItems = ref<File[]>([]);
 const fileUploadStatus = ref<
   {
-    progress: number,
-    status: "DONE"|"FAILED"|"UPLOADING"|"WAITING"
+    progress: number;
+    status: "DONE" | "FAILED" | "UPLOADING" | "WAITING";
   }[]
 >([]);
 const elFileInput = ref(null); //入力欄要素を取得するためのref
@@ -31,7 +31,7 @@ const fileInput = () => {
   fileItems.value = [];
 
   //inputに入力されたファイルの数ぶん処理する
-  for (let index in elFileInput.value.files) {
+  for (const index in elFileInput.value.files) {
     //条件を調べる
     if (
       elFileInput.value.files[index].size < 1 ||
@@ -42,22 +42,22 @@ const fileInput = () => {
       //ファイルアップロード状況配列へ初期の値を挿入
       fileUploadStatus.value.push({
         progress: 0,
-        status: 'WAITING'
+        status: "WAITING",
       });
       //ファイルデータ用配列へファイルデータを追加
       fileItems.value.push(elFileInput.value.files[index]);
       //console.log("filePortal :: fileInput : fileItems->", fileItems.value);
     }
   }
-}
+};
 
 /**
  * 入力したファイルを削除
- * @param index 
+ * @param index
  */
-const trimFileItem = (index:number) => {
-  fileItems.value.splice(index,1);
-}
+const trimFileItem = (index: number) => {
+  fileItems.value.splice(index, 1);
+};
 
 /**
  * ファイルをアップロードする
@@ -66,58 +66,60 @@ const uploadFiles = async () => {
   const metadataForForm = {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
-    directory: props.currentDirectory.id
+    directory: props.currentDirectory.id,
   };
 
-  for (let fileIndex in fileItems.value) {
+  for (const fileIndex in fileItems.value) {
     //アップロードするデータフォームオブジェクト生成
     const formData = new FormData();
     //送信者情報とディレクトリを付与
-    formData.append('metadata', JSON.stringify(metadataForForm));
+    formData.append("metadata", JSON.stringify(metadataForForm));
     //ファイルそのものを内包
-    formData.append('file', fileItems.value[fileIndex]);
+    formData.append("file", fileItems.value[fileIndex]);
 
     //アップロード用のXHRインスタンス
     const xhr = new XMLHttpRequest();
     //アップロード状況追跡用
-    xhr.upload.addEventListener('progress', (event) => {
+    xhr.upload.addEventListener("progress", (event) => {
       if (event.lengthComputable) {
         //アップロード状況を更新する
-        fileUploadStatus.value[fileIndex].progress = Math.round((event.loaded / event.total) * 100);
+        fileUploadStatus.value[fileIndex].progress = Math.round(
+          (event.loaded / event.total) * 100,
+        );
       }
     });
 
     //アップロードの結果表示用
-    xhr.addEventListener('load', () => {
+    xhr.addEventListener("load", () => {
       if (xhr.status === 200) {
         //console.log('UploadFiles :: 成功!->', xhr.responseText);
         //ファイルインデックスを取り直す
         socket.emit("fetchFileIndex", {
           RequestSender: {
             userId: getMyUserinfo.value.userId,
-            sessionId: getSessionId.value
+            sessionId: getSessionId.value,
           },
-          directory: props.currentDirectory.id
+          directory: props.currentDirectory.id,
         });
         //結果を格納
         fileUploadStatus.value[fileIndex].status = "DONE";
       } else {
-        console.error('UploadFiles :: 失敗...->', xhr.statusText);
+        console.error("UploadFiles :: 失敗...->", xhr.statusText);
         //エラーを格納
         fileUploadStatus.value[fileIndex].status = "FAILED";
       }
     });
 
     //アップロード先のURLを指定
-    xhr.open('POST', '/uploadfile');
+    xhr.open("POST", "/uploadfile");
     //アップロード中と設定
     fileUploadStatus.value[fileIndex].status = "UPLOADING";
     //アップロードする
     xhr.send(formData);
   }
-}
+};
 
 onMounted(() => {
   if (elFileInput !== null) {

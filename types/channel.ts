@@ -4,17 +4,17 @@ export interface getchannelList {
 }
 
 export interface channelOrder {
-  channelId: string,
-  isThread: boolean,
-  isFolder: boolean,
-  child?: any[]
-};
+  channelId: string;
+  isThread: boolean;
+  isFolder: boolean;
+  child?: any[];
+}
 
 export interface channel {
-  channelId: string,
-  channelName: string,
-  createdBy: string,
-  description: string,
-  isPrivate: boolean,
-  speakableRole: string[]
-};
+  channelId: string;
+  channelName: string;
+  createdBy: string;
+  description: string;
+  isPrivate: boolean;
+  speakableRole: string[];
+}

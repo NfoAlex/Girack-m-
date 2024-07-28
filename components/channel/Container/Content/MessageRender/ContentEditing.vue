@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
-const emits = defineEmits<{(e: 'leaveEditing'): void}>();
+const emits = defineEmits<(e: "leaveEditing") => void>();
 
 const propsMessage = defineProps<{
-  content: string,
-  channelId: string,
-  messageId: string
+  content: string;
+  channelId: string;
+  messageId: string;
 }>();
 
 /**
@@ -23,21 +23,21 @@ const updateMessage = () => {
   socket.emit("editMessage", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     channelId: propsMessage.channelId,
     messageId: propsMessage.messageId,
-    contentUpdating: contentUpdating.value
+    contentUpdating: contentUpdating.value,
   });
 
   //編集から抜け出す(親にて)
   emits("leaveEditing");
-}
+};
 
 /**
  * Enterキー処理
  */
-const triggerEnter = (event:KeyboardEvent) => {
+const triggerEnter = (event: KeyboardEvent) => {
   //MacのIME入力中はEnterを無視
   // 229はMacのIME入力中のキーコードです非推奨ですが、現状これで対応しています
   if (
@@ -59,10 +59,9 @@ const triggerEnter = (event:KeyboardEvent) => {
     updateMessage();
   } else {
     //内容が一緒ならシンプルに停止
-    emits('leaveEditing');
+    emits("leaveEditing");
   }
-}
-
+};
 </script>
 
 <template>

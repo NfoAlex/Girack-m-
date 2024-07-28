@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useConfig } from '~/stores/config';
+import { useConfig } from "~/stores/config";
 
 const { getConfig } = storeToRefs(useConfig());
 

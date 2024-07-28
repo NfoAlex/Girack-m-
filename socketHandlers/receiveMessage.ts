@@ -1,48 +1,45 @@
 //メッセージの受け取り、履歴記録
 
-import { Socket } from "socket.io-client"; //クラス識別用
-import { useHistory } from "~/stores/history";
-import { useMyUserinfo } from "~/stores/userinfo";
-import { useConfig } from "~/stores/config";
-import { useMessageReadTime } from "~/stores/messageReadTime";
+import { useDocumentVisibility, useWindowFocus } from "@vueuse/core";
+import type { Socket } from "socket.io-client"; //クラス識別用
 import updateMessageReadTimeCloudAndLocal from "~/composables/updateMessageReadTimeCloudAndLocal";
-import { useWindowFocus, useDocumentVisibility } from '@vueuse/core'
+import { useConfig } from "~/stores/config";
+import { useHistory } from "~/stores/history";
+import { useMessageReadTime } from "~/stores/messageReadTime";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 import type message from "~/types/message";
 
 //通知イベント格納用
-let NoticationHolder:null|Notification = null;
+let NoticationHolder: null | Notification = null;
 
 export default function receiveMessage(socket: Socket): void {
   //メッセージ追加を取得
   const { addMessage } = useHistory();
   //メッセージの受け取り
-  socket.on("receiveMessage", (message:message) => {
+  socket.on("receiveMessage", (message: message) => {
     //console.log("socket(receiveMessage) :: message->", message);
 
     addMessage(message);
 
     //現在そのチャンネルにいて、フォーカスしていてかつ一番下にスクロールしているのなら最新既読Id更新
     const route = useRoute();
-    if (typeof(route.params.id) !== "object") {
+    if (typeof route.params.id !== "object") {
       //スクロール位置を取り出し
-      const scrollPosition:string|null = sessionStorage.getItem(
-        "scrollPositionY::" + message.channelId
+      const scrollPosition: string | null = sessionStorage.getItem(
+        "scrollPositionY::" + message.channelId,
       );
 
       //ウィンドウへのフォーカスを取得
-      const windowFocused = useWindowFocus()
+      const windowFocused = useWindowFocus();
       //タブへのフォーカスを取得
       const tabFocused = useDocumentVisibility();
-      
+
       //新着判別
       if (
-        route.params.id === message.channelId
-        &&
-        parseInt(scrollPosition || "0") === 0
-        &&
-        tabFocused.value
-        &&
+        route.params.id === message.channelId &&
+        Number.parseInt(scrollPosition || "0") === 0 &&
+        tabFocused.value &&
         windowFocused.value
       ) {
         //最新既読時間を更新
@@ -59,27 +56,20 @@ export default function receiveMessage(socket: Socket): void {
         const { getMyUserinfo } = storeToRefs(useMyUserinfo());
         const { getConfig } = storeToRefs(useConfig());
         if (
-          getConfig.value.notification.notifyAllMessages //すべてで通知するか
-          ||
-          (
-            getConfig.value.notification.notifyMention //メンション通知が有効で
-            &&
-            message.content.includes("@<" + getMyUserinfo.value.userId + ">") //メンションが入っているなら
-          )
+          getConfig.value.notification.notifyAllMessages || //すべてで通知するか
+          (getConfig.value.notification.notifyMention && //メンション通知が有効で
+            message.content.includes("@<" + getMyUserinfo.value.userId + ">")) //メンションが入っているなら
         ) {
           //もし通知イベントがすでに起きているなら閉じる
           try {
             NoticationHolder?.close();
-          } catch(e) {}
+          } catch (e) {}
 
           //通知を出す
-          NoticationHolder = new Notification(
-            message.userId,
-            {
-              body: message.content,
-              icon: "/icon/" + message.userId
-            }
-          );
+          NoticationHolder = new Notification(message.userId, {
+            body: message.content,
+            icon: "/icon/" + message.userId,
+          });
         }
       }
     }

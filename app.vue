@@ -1,10 +1,12 @@
 <script setup>
 import { loadSocket } from "../socketHandlers/socketInit";
-import { useConfig } from "../stores/config";
 import { useAppStatus } from "../stores/AppStatus";
+import { useConfig } from "../stores/config";
 
 //サービスの準備ができてからSocketの設定開始
-onNuxtReady(() => { loadSocket() });
+onNuxtReady(() => {
+  loadSocket();
+});
 
 //設定の値監視してテーマを切り替え
 const { getConfig } = storeToRefs(useConfig());

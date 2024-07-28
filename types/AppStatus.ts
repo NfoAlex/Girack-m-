@@ -1,9 +1,9 @@
 export default interface AppStatus {
-  connected: boolean,
-  fetchingHistory: boolean,
-  hasMessageReadId: boolean,
+  connected: boolean;
+  fetchingHistory: boolean;
+  hasMessageReadId: boolean;
   profile: {
-    authDone: boolean,
-    UserinfoLoaded: boolean
-  }
+    authDone: boolean;
+    UserinfoLoaded: boolean;
+  };
 }

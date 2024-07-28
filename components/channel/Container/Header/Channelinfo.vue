@@ -1,30 +1,31 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
-import SpeakableRoleSelect from './Channelinfo/SpeakableRoleSelect.vue';
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
+import SpeakableRoleSelect from "./Channelinfo/SpeakableRoleSelect.vue";
 
-import type { channel } from '~/types/channel';
-import type role from '~/types/role';
+import type { channel } from "~/types/channel";
+import type role from "~/types/role";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 //prop
 const props = defineProps<{
-  channelId: string
+  channelId: string;
 }>();
 
 /**
  * data
  */
-const channelInfo = ref<channel>({ //チャンネルデータ
-  channelId: '...',
-  channelName: '...',
-  createdBy: '',
-  description: '',
+const channelInfo = ref<channel>({
+  //チャンネルデータ
+  channelId: "...",
+  channelName: "...",
+  createdBy: "",
+  description: "",
   isPrivate: false,
-  speakableRole: []
+  speakableRole: [],
 });
-const tabPage = ref<"INFO"|"MANAGE">("INFO"); //表示するタブ指定用
+const tabPage = ref<"INFO" | "MANAGE">("INFO"); //表示するタブ指定用
 const stateNameEditing = ref<boolean>(false); //チャンネル名編集モードトグル
 const tempNameEditing = ref<string>(""); //チャンネル名編集用
 const tempDescriptionEditing = ref<string>(""); //チャンネル概要文編集用
@@ -35,22 +36,23 @@ const tempSpeakableRole = ref<string[]>([]); //話せるロール
  * プライベートスイッチの監視用関数
  */
 const updatePrivate = () => {
-  console.log("Channelinfo :: updatePrivate : tempIsPrivate->", tempIsPrivate.value);
+  console.log(
+    "Channelinfo :: updatePrivate : tempIsPrivate->",
+    tempIsPrivate.value,
+  );
   //プライベート設定を適用させる
   nextTick(() => {
-  
     socket.emit("updateChannel", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
+        sessionId: getSessionId.value,
       },
       channelId: props.channelId,
       channelInfo: {
         ...channelInfo.value,
-        isPrivate: !tempIsPrivate.value
-      }
+        isPrivate: !tempIsPrivate.value,
+      },
     });
-  
   });
 };
 
@@ -62,30 +64,28 @@ const updateChannel = () => {
   socket.emit("updateChannel", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     channelId: props.channelId,
     channelInfo: {
       ...channelInfo.value,
       channelName: tempNameEditing.value,
-      description: tempDescriptionEditing.value
-    }
+      description: tempDescriptionEditing.value,
+    },
   });
 };
 
 /**
  * チャンネルデータ受け取り
- * @param dat 
+ * @param dat
  */
-const SOCKETfetchChannelInfo = (
-  dat: {
-    result: string,
-    data: {
-      channelId: string,
-      channelInfo: channel
-    }
-  }
-) => {
+const SOCKETfetchChannelInfo = (dat: {
+  result: string;
+  data: {
+    channelId: string;
+    channelInfo: channel;
+  };
+}) => {
   console.log("Channelinfo :: SOCKETfetchChannelInfo : dat->", dat);
 
   if (dat.result === "SUCCESS") {
@@ -107,9 +107,9 @@ onMounted(() => {
   socket.emit("fetchChannelInfo", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
-    channelId: props.channelId
+    channelId: props.channelId,
   });
 });
 
