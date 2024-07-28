@@ -6,17 +6,20 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      meta: [
-        { property:"og:title", content:"Girack-m-" }
-      ]
-    }
+      meta: [{ property: "og:title", content: "Girack-m-" }],
+    },
   },
 
   css: ["@/assets/styles/main.scss"],
-  modules: ["@pinia/nuxt", "vuetify-nuxt-module", "@vueuse/nuxt", "@nuxtjs/google-fonts"],
+  modules: [
+    "@pinia/nuxt",
+    "vuetify-nuxt-module",
+    "@vueuse/nuxt",
+    "@nuxtjs/google-fonts",
+  ],
 
   pinia: {
-    storesDirs: ['./stores/**'],
+    storesDirs: ["./stores/**"],
   },
 
   vite: {
@@ -32,27 +35,27 @@ export default defineNuxtConfig({
         "/uploadProfileIcon": "http://localhost:33333/",
         "/fileupload": "http://localhost:33333/",
         "/downloadupload": "http://localhost:33333/",
-        "/icon": "http://localhost:33333/"
-      }
-    }
+        "/icon": "http://localhost:33333/",
+      },
+    },
   },
 
   nitro: {
     rollupConfig: {
-      plugins: [vue()]
-    }
+      plugins: [vue()],
+    },
   },
 
   routeRules: {
-    '/uploadProfileIcon': { cors:true },
-    '/uploadfile': { cors:true },
-    '/downloadfile': { cors:true },
-    '/server/**': { ssr:false }
+    "/uploadProfileIcon": { cors: true },
+    "/uploadfile": { cors: true },
+    "/downloadfile": { cors: true },
+    "/server/**": { ssr: false },
   },
 
   //ここでプロキシ適用(なぜかエラー扱い)
   serverMiddleware: [
-    { path: '/socket.io', handler: './server/middleware/proxy.ts' },
+    { path: "/socket.io", handler: "./server/middleware/proxy.ts" },
   ],
 
   vuetify: {
@@ -65,75 +68,76 @@ export default defineNuxtConfig({
         MCard: "VCard",
         MCardCompact: "VCard",
         MBtn: "VBtn",
-        MInput: "VInput"
+        MInput: "VInput",
       },
       /* vuetify options */
       defaults: {
         global: {
-          elevation: '0'
+          elevation: "0",
         },
         VAlert: {
-          rounded: 'xl'
+          rounded: "xl",
         },
         VSwitch: {
-          color: 'primary',
+          color: "primary",
           inset: true,
-          hideDetails: true
+          hideDetails: true,
         },
         VDivider: {
-          style: 'border-radius: 8px',
-          thickness: '2'
+          style: "border-radius: 8px",
+          thickness: "2",
         },
         VTextField: {
-          rounded: 'lg'
+          rounded: "lg",
         },
         VTextarea: {
-          rounded: 'lg'
+          rounded: "lg",
         },
         VCheckbox: {
-          hideDetails: true
+          hideDetails: true,
         },
         VColorPicker: {
-          rounded: 'xl'
+          rounded: "xl",
         },
         VProgressCircular: {
-          width: 7
+          width: 7,
         },
         MInput: {
-          rounded: 'pill'
+          rounded: "pill",
         },
         MBtn: {
           rounded: "pill",
           size: "large",
-          class: "mx-1"
+          class: "mx-1",
         },
         MCard: {
-          style: 'border-radius:28px; background-color:rgb(var(--v-theme-sidebarBackground));',
-          class: 'pa-4',
+          style:
+            "border-radius:28px; background-color:rgb(var(--v-theme-sidebarBackground));",
+          class: "pa-4",
         },
         MCardCompact: {
-          style: 'border-radius:28px;'
-        }
+          style: "border-radius:28px;",
+        },
       },
       theme: {
         themes: {
           light: {
             colors: {
-              "sidebarBackground": "#efefef",
-              "cardInner": "#f9f9f9",
-              "messageHovered": "#eaeaea"
-            }
+              sidebarBackground: "#efefef",
+              cardInner: "#f9f9f9",
+              messageHovered: "#eaeaea",
+            },
           },
           dark: {
             colors: {
-              "sidebarBackground": "#020202",
-              "cardInner": "#121212",
-              "messageHovered": "#484848"
-            }
-          }
-        }
-      }
-    }
+              sidebarBackground: "#020202",
+              cardInner: "#121212",
+              messageHovered: "#484848",
+            },
+          },
+        },
+      },
+    },
   },
 
   googleFonts: {
@@ -142,7 +146,7 @@ export default defineNuxtConfig({
       Inter: true,
     },
     download: true,
-    inject: true
+    inject: true,
   },
 
   devtools: { enabled: false },

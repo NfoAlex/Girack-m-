@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { socket } from "~/socketHandlers/socketInit";
-import FileInputsDisplay from "./Input/FileInputsDisplay.vue";
-import RemoteFileSelect from "./Input/RemoteFileSelect.vue";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type { channel } from "~/types/channel";
-import type { MyUserinfo } from "~/types/user";
 import type { file } from "~/types/file";
+import type { MyUserinfo } from "~/types/user";
+import FileInputsDisplay from "./Input/FileInputsDisplay.vue";
+import RemoteFileSelect from "./Input/RemoteFileSelect.vue";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -33,15 +33,15 @@ const messageInput = ref<string>(""); //メッセージ入力用変数
 const allFileReady = ref<boolean>(true);
 const fileData = ref<
   {
-    fileId: string,
-    fileBuffer: File|null,
-    fileInfo: file|null,
-    uploadedFrom: "remote"|"local"
-    ready: boolean
+    fileId: string;
+    fileBuffer: File | null;
+    fileInfo: file | null;
+    uploadedFrom: "remote" | "local";
+    ready: boolean;
   }[]
 >([]);
 
-const elInput = ref<Element|null>(null); //入力欄要素を取得するためのref
+const elInput = ref<Element | null>(null); //入力欄要素を取得するためのref
 const elFileInput = ref(null); //ファイル入力要素を取得するためのref
 const inputRowNum = ref<number>(1); //入力欄の行数
 const displayData = ref<boolean>(false);
@@ -95,7 +95,7 @@ watch(messageInput, () => {
     //検索文字列を取得
     searchData.value.query = messageInput.value.substring(
       searchData.value.searchStartingAt + 1,
-      searchData.value.searchEndingAt
+      searchData.value.searchEndingAt,
     );
     //console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
 
@@ -103,7 +103,7 @@ watch(messageInput, () => {
     searchDataResult.value = userAtHere.value.filter((user) =>
       user.userName
         .toLocaleLowerCase()
-        .includes(searchData.value.query.toLocaleLowerCase())
+        .includes(searchData.value.query.toLocaleLowerCase()),
     );
   }
 });
@@ -116,7 +116,7 @@ const canISpeakHere = computed((): boolean => {
   if (props.channelInfo.speakableRole.length === 0) return true;
 
   //自分のロールに話せるロールが含まれるか調べてboolで結果を返す
-  for (let role of props.channelInfo.speakableRole) {
+  for (const role of props.channelInfo.speakableRole) {
     if (getMyUserinfo.value.role.includes(role)) return true;
     break;
   }
@@ -127,30 +127,30 @@ const canISpeakHere = computed((): boolean => {
 /**
  * 入力欄からのペーストイベントの受け取り
  */
-const receivePasteObject = async (event:ClipboardEvent) => {
+const receivePasteObject = async (event: ClipboardEvent) => {
   //入力受付
   const fileInputs = event.clipboardData?.files;
 
   //クリップボードの配列ループしてファイルが有効か調べてファイル用配列へ追加
-  for (let index in fileInputs) {
+  for (const index in fileInputs) {
     //console.log("Input :: receivePasteObject : index->", fileInputs[parseInt(index)]);
     try {
       //有効か？
-      if (fileInputs[parseInt(index)] !== undefined) {
+      if (fileInputs[Number.parseInt(index)] !== undefined) {
         //ファイルの準備状況をfalseへ
         allFileReady.value = false;
         //ファイル入力用配列へ追加
         fileData.value.push({
           fileId: "",
-          fileBuffer: fileInputs[parseInt(index)],
+          fileBuffer: fileInputs[Number.parseInt(index)],
           fileInfo: null,
           uploadedFrom: "local",
           ready: false,
         });
       }
-    } catch(e) {}
+    } catch (e) {}
   }
-}
+};
 
 /**
  * ファイルの入力を受け取る
@@ -166,7 +166,7 @@ const fileInputDirectly = () => {
   */
 
   //inputに入力されたファイルの数ぶん処理する
-  for (let index in elFileInput.value.files) {
+  for (const index in elFileInput.value.files) {
     //条件を調べる
     if (
       elFileInput.value.files[index].size < 1 ||
@@ -185,21 +185,21 @@ const fileInputDirectly = () => {
       });
     }
   }
-}
+};
 
 /**
  * ファイルデータの更新、あとすべてのファイルが送信できる状態か調べる
- * @param file 
+ * @param file
  */
 const updateFileDataValue = (
   fileNew: {
-    fileId: string,
-    fileBuffer: File|null,
-    fileInfo: file|null,
-    uploadedFrom: "remote"|"local"
-    ready: boolean
+    fileId: string;
+    fileBuffer: File | null;
+    fileInfo: file | null;
+    uploadedFrom: "remote" | "local";
+    ready: boolean;
   },
-  index: number
+  index: number,
 ) => {
   //格納
   fileData.value[index] = fileNew;
@@ -207,12 +207,12 @@ const updateFileDataValue = (
   //console.log("Input :: updateFileData : fileData今->", fileData.value, " もらった値->", fileNew);
 
   //ループしてファイルがいけるかどうか調べる
-  for (let file of fileData.value) {
+  for (const file of fileData.value) {
     if (!file.ready) return;
   }
   //ループを抜け出せたら準備完了と設定
   allFileReady.value = true;
-}
+};
 
 /**
  * Enterキー入力の処理
@@ -236,8 +236,8 @@ const triggerEnter = (event: KeyboardEvent) => {
     const currentTxtCursor: number = elInput.value.selectionStart;
 
     //テキストを現在のカーソル位置をもとに分裂させる
-    let txtBefore = messageInput.value.slice(0, currentTxtCursor);
-    let txtAfter = messageInput.value.slice(currentTxtCursor);
+    const txtBefore = messageInput.value.slice(0, currentTxtCursor);
+    const txtAfter = messageInput.value.slice(currentTxtCursor);
 
     //改行を挿入
     messageInput.value = txtBefore + "\n" + txtAfter;
@@ -246,7 +246,7 @@ const triggerEnter = (event: KeyboardEvent) => {
     nextTick(() => {
       elInput.value.setSelectionRange(
         currentTxtCursor + 1,
-        currentTxtCursor + 1
+        currentTxtCursor + 1,
       );
     });
     //関数終了
@@ -283,8 +283,8 @@ const triggerEnter = (event: KeyboardEvent) => {
   //もし全ファイルが準備できていないなら止める
   if (!allFileReady.value) return;
   //ファイルIdを抽出して配列にする
-  let fileIdArr = [];
-  for (let file of fileData.value) {
+  const fileIdArr = [];
+  for (const file of fileData.value) {
     fileIdArr.push(file.fileId);
   }
 
@@ -297,7 +297,7 @@ const triggerEnter = (event: KeyboardEvent) => {
     message: {
       channelId: props.channelInfo.channelId,
       content: messageInput.value,
-      fileId: fileIdArr
+      fileId: fileIdArr,
     },
   });
 
@@ -379,7 +379,7 @@ const insertResult = (targetId: string) => {
   } else {
     messageInput.value = messageInput.value.replace(
       "@" + searchData.value.query,
-      "@<" + targetId + "> "
+      "@<" + targetId + "> ",
     );
   }
 

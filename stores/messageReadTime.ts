@@ -3,39 +3,39 @@ import { defineStore } from "pinia";
 
 export const useMessageReadTime = defineStore("messagereadtime", {
   state: () =>
-  ({
-    _MessageReadTime: {
-      /*
+    ({
+      _MessageReadTime: {
+        /*
       "0001": "9734758937895324"
       */
-    },
-    _MessageReadTimeBefore: {
-      /*
+      },
+      _MessageReadTimeBefore: {
+        /*
       "0001": "89123789781234123"
       */
-    }
-  } as {
-    _MessageReadTime: {
-      [key: string]: string
+      },
+    }) as {
+      _MessageReadTime: {
+        [key: string]: string;
+      };
+      _MessageReadTimeBefore: {
+        [key: string]: string;
+      };
     },
-    _MessageReadTimeBefore: {
-      [key: string]: string
-    }
-  }),
 
   getters: {
-    getMessageReadTime: (state) => (channelId:string) => {
+    getMessageReadTime: (state) => (channelId: string) => {
       return state._MessageReadTime[channelId];
     },
 
-    getMessageReadTimeBefore: (state) => (channelId:string) => {
+    getMessageReadTimeBefore: (state) => (channelId: string) => {
       return state._MessageReadTimeBefore[channelId];
     },
   },
-  
+
   actions: {
     //まるごと格納
-    setMessageReadTime(data:any) {
+    setMessageReadTime(data: any) {
       //console.log("messageReadTime :: setmessageReadTime : 今->", this._messageReadTime);
       this._MessageReadTime = data;
 
@@ -46,7 +46,7 @@ export const useMessageReadTime = defineStore("messagereadtime", {
     },
 
     //チャンネルを指定して設定
-    updateMessageReadTime(channelId:string, messageId:string) {
+    updateMessageReadTime(channelId: string, messageId: string) {
       //console.log("messageReadTime :: setmessageReadTime : 今->", messageId);
 
       //最新既読時間を更新
@@ -54,7 +54,7 @@ export const useMessageReadTime = defineStore("messagereadtime", {
     },
 
     //ひとつ前用の最新既読Time設定
-    updateMessageReadTimeBefore(channelId:string) {
+    updateMessageReadTimeBefore(channelId: string) {
       //console.log("messageReadTime :: setmessageReadTimeBefore : ひとつ前用->", channelId);
 
       //もし最新既読時間が空なら飛ばす
@@ -64,10 +64,9 @@ export const useMessageReadTime = defineStore("messagereadtime", {
     },
 
     //指定チャンネルの既読時間を削除
-    deleteMessageReadTime(channelId:string) {
+    deleteMessageReadTime(channelId: string) {
       delete this._MessageReadTime[channelId];
       delete this._MessageReadTimeBefore[channelId];
-    }
-  }
+    },
+  },
 });
-

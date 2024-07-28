@@ -4,19 +4,19 @@ import type { MyUserinfo } from "~/types/user";
 
 export const useMyUserinfo = defineStore("myuserinfo", {
   state: () =>
-  ({
-    _MyUserinfo: {
-      userName: "User",
-      role: ["Member"],
-      userId: "XXXXXXXX",
-      banned: false,
-      channelJoined: ["0001"],
+    ({
+      _MyUserinfo: {
+        userName: "User",
+        role: ["Member"],
+        userId: "XXXXXXXX",
+        banned: false,
+        channelJoined: ["0001"],
+      },
+      _sessionId: "",
+    }) as {
+      _MyUserinfo: MyUserinfo;
+      _sessionId: string;
     },
-    _sessionId: ""
-  } as {
-    _MyUserinfo: MyUserinfo;
-    _sessionId: string;
-  }),
 
   getters: {
     getMyUserinfo: (state) => {
@@ -26,14 +26,13 @@ export const useMyUserinfo = defineStore("myuserinfo", {
       return state._sessionId;
     },
   },
-  
+
   actions: {
     updateMyUserinfo(data: MyUserinfo) {
       this._MyUserinfo = data;
     },
     updateSessionId(sessionId: string) {
       this._sessionId = sessionId;
-    }
-  }
+    },
+  },
 });
-

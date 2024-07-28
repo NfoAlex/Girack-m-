@@ -1,5 +1,5 @@
-import { defineEventHandler } from 'h3';
-import { createProxyMiddleware } from 'http-proxy-middleware';
+import { defineEventHandler } from "h3";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
 // Nuxt configで登録したAPI_URLを設定
 const API_URL = `ws://localhost:33333`;
@@ -17,7 +17,7 @@ const myProxyOption = {
     maxSize: 1024 * 1024, // 1MB
   },
   onError: (err, req, res) => {
-    console.error('Proxy Error:', err);
+    console.error("Proxy Error:", err);
   },
 };
 
@@ -26,26 +26,25 @@ const myProxy = createProxyMiddleware(myProxyOption);
 export default defineEventHandler(async (event) => {
   const url = event.node.req.url;
   // APIパスが複数ある場合
-  const apiPaths:string[] = [
-    '/socket.io',
-    '/icon',
-    '/uploadProfileIcon',
-    '/uploadfile',
-    '/downloadfile',
+  const apiPaths: string[] = [
+    "/socket.io",
+    "/icon",
+    "/uploadProfileIcon",
+    "/uploadfile",
+    "/downloadfile",
   ];
-  
+
   // APIのパスと指定したもの以外は処理を止める止めないと他のパスに影響が出る
   const isContained =
-    typeof url === 'string'
-      &&
-    apiPaths.some(
-      (apiPath: string) => new RegExp(`^${apiPath}([/?]|$)`).test(url)
+    typeof url === "string" &&
+    apiPaths.some((apiPath: string) =>
+      new RegExp(`^${apiPath}([/?]|$)`).test(url),
     );
-  
+
   if (!isContained) {
     return;
   }
-  
+
   //ここでプロキシ適用
   await new Promise((resolve, reject) => {
     const next = (err?: unknown) => {
@@ -55,14 +54,13 @@ export default defineEventHandler(async (event) => {
       } else {
         resolve(true);
       }
-    }
+    };
 
     try {
       myProxy(event.req, event.res, next);
-    } catch(e) {
+    } catch (e) {
       console.log("PROXY :: エラー->", e);
       reject(e);
     }
-  })
+  });
 });
-

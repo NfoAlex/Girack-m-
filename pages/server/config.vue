@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useServerinfo } from '~/stores/serverinfo';
-import { useMyUserinfo } from '~/stores/userinfo';
-import type { Serverinfo } from '~/types/serverInfo';
-import type { channel } from '~/types/channel';
+import { socket } from "~/socketHandlers/socketInit";
+import { useServerinfo } from "~/stores/serverinfo";
+import { useMyUserinfo } from "~/stores/userinfo";
+import type { channel } from "~/types/channel";
+import type { Serverinfo } from "~/types/serverInfo";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -13,29 +13,29 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
  */
 //自由に編集できるようにコピーしたサーバー設定
 const ServerConfigCloned = ref<Serverinfo>({
-  servername: '',
+  servername: "",
   registration: {
     available: false,
     invite: {
-      inviteOnly: false
-    }
+      inviteOnly: false,
+    },
   },
   config: {
     PROFILE: {
       iconMaxSize: 0,
-      usernameMaxLength: 0
+      usernameMaxLength: 0,
     },
     CHANNEL: {
-      channelIdAnnounceRegistration: '',
-      defaultJoinOnRegister: []
+      channelIdAnnounceRegistration: "",
+      defaultJoinOnRegister: [],
     },
     MESSAGE: {
-      TxtMaxLength: 0
+      TxtMaxLength: 0,
     },
     STORAGE: {
-      StorageSizeLimit: 0
-    }
-  }
+      StorageSizeLimit: 0,
+    },
+  },
 });
 const ServerinfoEdited = ref<boolean>(false); //サーバー設定を変えたかどうか
 const channelList = ref<channel[]>(); //チャンネル情報格納用
@@ -53,7 +53,10 @@ const restoreServerConfigClone = () => {
   watch(ServerConfigCloned.value, () => {
     console.log("server(index) :: watch(mounted) : 変更検知");
     //console.log("server(index) :: watch(mounted) : data->", JSON.stringify(ServerinfoCloned.value), JSON.stringify(getServerinfo.value));
-    if (JSON.stringify(ServerConfigCloned.value) === JSON.stringify(getServerinfo.value)) {
+    if (
+      JSON.stringify(ServerConfigCloned.value) ===
+      JSON.stringify(getServerinfo.value)
+    ) {
       ServerinfoEdited.value = false;
     } else {
       ServerinfoEdited.value = true;
@@ -68,9 +71,9 @@ const applyServerConfig = () => {
   socket.emit("updateServerConfig", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
-    ServerConfig: ServerConfigCloned.value.config
+    ServerConfig: ServerConfigCloned.value.config,
   });
 };
 
@@ -78,10 +81,10 @@ const applyServerConfig = () => {
  * チャンネルリストを受信
  * @param dat
  */
-const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
+const SOCKETRfetchChannelList = (dat: { result: string; data: channel[] }) => {
   console.log("server(index)  :: SOCKETRfetchChannelList : dat->", dat);
   channelList.value = dat.data; //格納
-}
+};
 
 /**
  * サーバー情報の更新を受信したら変更状態をチェックする
@@ -89,12 +92,15 @@ const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
  */
 const SOCKETfetchServerInfoLimited = () => {
   //サーバー設定の監視用処理をここで実行する
-  if (JSON.stringify(ServerConfigCloned.value) === JSON.stringify(getServerinfo.value)) {
+  if (
+    JSON.stringify(ServerConfigCloned.value) ===
+    JSON.stringify(getServerinfo.value)
+  ) {
     ServerinfoEdited.value = false;
   } else {
     ServerinfoEdited.value = true;
   }
-}
+};
 
 onMounted(() => {
   //チャンネル情報とサーバー情報の更新受け取り
@@ -105,8 +111,8 @@ onMounted(() => {
   socket.emit("fetchChannelList", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
+      sessionId: getSessionId.value,
+    },
   });
 
   //サーバー設定をクローン
@@ -117,7 +123,10 @@ onMounted(() => {
     console.log("server(index) :: watch(mounted) : 変更検知");
     //console.log("server(index) :: watch(mounted) : data->", JSON.stringify(ServerinfoCloned.value), JSON.stringify(getServerinfo.value));
     //設定データとクローンデータを比較
-    if (JSON.stringify(ServerConfigCloned.value) === JSON.stringify(getServerinfo.value)) {
+    if (
+      JSON.stringify(ServerConfigCloned.value) ===
+      JSON.stringify(getServerinfo.value)
+    ) {
       ServerinfoEdited.value = false;
     } else {
       ServerinfoEdited.value = true;

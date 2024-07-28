@@ -1,17 +1,20 @@
 export const blobUrlCache = new Map<
   string,
   {
-    fileName: string,
-    blobUrl: string
+    fileName: string;
+    blobUrl: string;
   }
 >();
 
 /**
  * blobURLをキャッシュへ登録する
- * @param fileId 
- * @param blobUrl 
+ * @param fileId
+ * @param blobUrl
  */
-export function registerBlobUrl(fileId:string, args:{fileName:string, blobUrl:string}) {
+export function registerBlobUrl(
+  fileId: string,
+  args: { fileName: string; blobUrl: string },
+) {
   //キャッシュへ登録
   blobUrlCache.set(fileId, args);
 
@@ -20,7 +23,7 @@ export function registerBlobUrl(fileId:string, args:{fileName:string, blobUrl:st
     //順番を取り出すためのハンドラを作る
     const firstObjectHandler = blobUrlCache.entries();
     //ファイルIdにあたるものを取得
-    const firstObject:[string, string] = firstObjectHandler.next().value;
+    const firstObject: [string, string] = firstObjectHandler.next().value;
     //ファイルIDとURLに分ける
     const firstFileId = firstObject[0];
     const firstBlobUrl = firstObject[1];
@@ -34,13 +37,14 @@ export function registerBlobUrl(fileId:string, args:{fileName:string, blobUrl:st
 
 /**
  * blobURLキャッシュからURLを取得
- * @param fileId 
- * @returns 
+ * @param fileId
+ * @returns
  */
-export function getBlobUrl(fileId:string)
-:{
-  fileName: string,
-  blobUrl: string
-}|undefined {
+export function getBlobUrl(fileId: string):
+  | {
+      fileName: string;
+      blobUrl: string;
+    }
+  | undefined {
   return blobUrlCache.get(fileId);
 }

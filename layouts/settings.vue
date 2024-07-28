@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useConfig } from '~/stores/config';
-import { useMyUserinfo } from '~/stores/userinfo';
-import { socket } from '~/socketHandlers/socketInit';
+import { socket } from "~/socketHandlers/socketInit";
+import { useConfig } from "~/stores/config";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 const { getConfig, getConfigSyncStatus } = storeToRefs(useConfig());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -14,9 +14,9 @@ watch(getConfig.value, () => {
     socket.emit("saveUserConfig", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
+        sessionId: getSessionId.value,
       },
-      config: getConfig.value
+      config: getConfig.value,
     });
   }
 

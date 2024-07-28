@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { useUserIndex } from '~/stores/userindex';
-import { useMyUserinfo } from '~/stores/userinfo';
-import Userinfo from '~/components/Userinfo.vue';
+import Userinfo from "~/components/Userinfo.vue";
+import { useUserIndex } from "~/stores/userindex";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 const { getUserinfo } = storeToRefs(useUserIndex());
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
 const props = defineProps<{
-  userId: string
+  userId: string;
 }>();
 
 /**

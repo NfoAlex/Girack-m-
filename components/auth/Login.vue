@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { socket } from "~/socketHandlers/socketInit";
 import { useMyUserinfo } from "~/stores/userinfo";
+import type { MyUserinfo } from "~/types/user";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { updateSessionId } = useMyUserinfo();
 
 //emit用
-const emitInitializeProxy = ():void => {
-  emits("initialize", getMyUserinfo.value.userId, getSessionId.value)
+const emitInitializeProxy = (): void => {
+  emits("initialize", getMyUserinfo.value.userId, getSessionId.value);
 };
 
 /**
@@ -20,13 +21,13 @@ const resultDisplay = ref<string>("");
 
 //emit
 const emits = defineEmits<{
-  (e:"applyChangeUserName", username:string):void,
-  (e: 'initialize', userId:string, sessionId:string): void
+  (e: "applyChangeUserName", username: string): void;
+  (e: "initialize", userId: string, sessionId: string): void;
 }>();
 
 //prop
 const props = defineProps<{
-  sharedUserName: string
+  sharedUserName: string;
 }>();
 
 /**
@@ -39,25 +40,20 @@ const login = () => {
   resultDisplay.value = "";
 
   //認証
-  socket.emit(
-    "authLogin",
-    {
-      username: username.value,
-      password: password.value,
-    }
-  );
+  socket.emit("authLogin", {
+    username: username.value,
+    password: password.value,
+  });
 };
 
 /**
  * 認証結果の受け取りと処理
  * @param dat
  */
-const SOCKETRESULTauthLogin = (
-  dat: {
-    result: string;
-    data: { UserInfo: any; sessionId: string };
-  }
-) => {
+const SOCKETRESULTauthLogin = (dat: {
+  result: string;
+  data: { UserInfo: MyUserinfo; sessionId: string };
+}) => {
   console.log("auth :: SOCKETRESULTauthLogin : dat->", dat);
   //ログインできたらユーザー情報設定、ページ移動
   if (dat.result === "SUCCESS") {
@@ -76,7 +72,7 @@ const SOCKETRESULTauthLogin = (
     updateSessionId(dat.data.sessionId);
 
     //セッション情報をクッキーへ保存
-    useCookie("session", {maxAge:1.296e+6}).value = JSON.stringify({
+    useCookie("session", { maxAge: 1.296e6 }).value = JSON.stringify({
       userId: dat.data.UserInfo.userId,
       sessionId: dat.data.sessionId,
     });

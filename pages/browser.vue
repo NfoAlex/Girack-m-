@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
-import { useUserIndex } from '~/stores/userindex';
-import getMyRolePower from '~/composables/getMyRolePower';
+import getMyRolePower from "~/composables/getMyRolePower";
+import { socket } from "~/socketHandlers/socketInit";
+import { useUserIndex } from "~/stores/userindex";
+import { useMyUserinfo } from "~/stores/userinfo";
 
-import type { channel } from '~/types/channel';
+import type { channel } from "~/types/channel";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getUserinfo } = storeToRefs(useUserIndex());
@@ -14,11 +14,13 @@ const { getUserinfo } = storeToRefs(useUserIndex());
  */
 const channelList = ref<channel[]>(); //チャンネル情報格納用
 const stateLoding = ref<boolean>(true); //チャンネル情報を受信できたかどうか
-const channelInfoDeleting = ref<{ //削除する予定のチャンネルの基本情報
-  channelId:string, channelName:string
+const channelInfoDeleting = ref<{
+  //削除する予定のチャンネルの基本情報
+  channelId: string;
+  channelName: string;
 }>({
   channelId: "",
-  channelName: ""
+  channelName: "",
 });
 
 const displayCreateChannel = ref<boolean>(false); //チャンネル作成画面表示
@@ -27,48 +29,48 @@ const displayDeleteChannel = ref<boolean>(false); //チャンネル削除画面�
 /**
  * チャンネル参加
  */
-const joinChannel = (channelIdJoining:string) => {
+const joinChannel = (channelIdJoining: string) => {
   socket.emit("joinChannel", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
-    channelId: channelIdJoining
+    channelId: channelIdJoining,
   });
-}
+};
 
 /**
  * チャンネル脱退
  */
-const leaveChannel = (channelIdLeaving:string) => {
+const leaveChannel = (channelIdLeaving: string) => {
   socket.emit("leaveChannel", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
-    channelId: channelIdLeaving
+    channelId: channelIdLeaving,
   });
-}
+};
 
 /**
  * チャンネル削除
  */
-const deleteChannel = (channelIdDeleting:string) => {
+const deleteChannel = (channelIdDeleting: string) => {
   socket.emit("deleteChannel", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
-    channelId: channelIdDeleting
+    channelId: channelIdDeleting,
   });
   //チャンネル削除確認ダイアログを非表示に
   displayDeleteChannel.value = false;
   //チャンネル削除確認用の情報変数を初期化
   channelInfoDeleting.value = {
     channelId: "",
-    channelName: ""
+    channelName: "",
   };
-}
+};
 
 /**
  * チャンネルリストの取得
@@ -77,26 +79,26 @@ const fetchChannelListTrigger = () => {
   socket.emit("fetchChannelList", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
+      sessionId: getSessionId.value,
+    },
   });
-}
+};
 
 /**
  * チャンネルリストを受信
  * @param dat
  */
-const SOCKETRfetchChannelList = (dat:{result:string, data:channel[]}) => {
+const SOCKETRfetchChannelList = (dat: { result: string; data: channel[] }) => {
   //console.log("browser :: SOCKETRfetchChannelList : dat->", dat);
   stateLoding.value = false; //ロード中状態を解除
   channelList.value = dat.data; //格納
-}
+};
 
 /**
  * チャンネル参加結果受け取り
  * @param dat
  */
-const SOCKETjoinChannel = (dat:{result:string, data:string}) => {
+const SOCKETjoinChannel = (dat: { result: string; data: string }) => {
   console.log("browser :: SOCKETjoinChannel : dat->", dat);
   //成功なら自分のユーザー情報と履歴を取得して更新する
   if (dat.result === "SUCCESS") {
@@ -104,31 +106,31 @@ const SOCKETjoinChannel = (dat:{result:string, data:string}) => {
     socket.emit("fetchUserInfo", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
+        sessionId: getSessionId.value,
       },
-      userId: getMyUserinfo.value.userId
+      userId: getMyUserinfo.value.userId,
     });
     //履歴
     socket.emit("fetchHistory", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
+        sessionId: getSessionId.value,
       },
       channelId: dat.data,
       fetchingPosition: {
-        positionMessageId: '',
+        positionMessageId: "",
         includeThisPosition: true,
-        fetchDirection: "older"
-      }
+        fetchDirection: "older",
+      },
     });
   }
-}
+};
 
 /**
  * チャンネル脱退結果受け取り
  * @param dat
  */
-const SOCKETleaveChannel = (dat:{result:string, data:boolean}) => {
+const SOCKETleaveChannel = (dat: { result: string; data: boolean }) => {
   console.log("browser :: SOCKETleaveChannel : dat->", dat);
   //成功なら自分のユーザー情報を取得して更新する
   if (dat.result === "SUCCESS") {
@@ -136,26 +138,26 @@ const SOCKETleaveChannel = (dat:{result:string, data:boolean}) => {
     socket.emit("fetchUserInfo", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
+        sessionId: getSessionId.value,
       },
-      userId: getMyUserinfo.value.userId
+      userId: getMyUserinfo.value.userId,
     });
   }
-}
+};
 
 /**
  * チャンネル削除結果の受け取り
- * @param dat 
+ * @param dat
  */
-const SOCKETdeleteChannel = (dat:{result:string, data:string}) => {
+const SOCKETdeleteChannel = (dat: { result: string; data: string }) => {
   //チャンネルリストの取得
   socket.emit("fetchChannelList", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
+      sessionId: getSessionId.value,
+    },
   });
-}
+};
 
 onMounted(() => {
   socket.on("RESULT::fetchChannelList", SOCKETRfetchChannelList);

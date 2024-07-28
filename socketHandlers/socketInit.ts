@@ -1,43 +1,43 @@
 //一番最初に認識されて、いろんなSocketハンドラをまとめるところ
 
-import { Socket, io } from "socket.io-client"; //ウェブソケット通信用
+import { type Socket, io } from "socket.io-client"; //ウェブソケット通信用
 import connect from "./connect";
 import disconnect from "./disconnect";
 
+import addOnlineUser from "./addOnlineUser";
 import fetchOnlineUsers from "./fetchOnlineUsers";
 import removeOnlineUser from "./removeOnlineUser";
-import addOnlineUser from "./addOnlineUser";
 
 import infoServer from "./InfoServer";
 
-import fetchChannelInfo from "./fetchChannelInfo";
 import deleteChannel from "./deleteChannel";
+import fetchChannelInfo from "./fetchChannelInfo";
 import fetchUserChannelOrder from "./fetchUserChannelOrder";
 
-import receiveMessage from "./receiveMessage";
-import fetchHistory from "./fetchHistory";
-import updateMessage from "./updateMessage";
 import deleteMessage from "./deleteMessage";
+import fetchHistory from "./fetchHistory";
 import newNotification from "./newNotification";
+import receiveMessage from "./receiveMessage";
+import updateMessage from "./updateMessage";
 
-import fetchUserInfo from "./fetchUserInfo";
 import fetchUserConfig from "./fetchUserConfig";
-import saveUserConfig from "./saveUserConfig";
+import fetchUserInbox from "./fetchUserInbox";
+import fetchUserInfo from "./fetchUserInfo";
 //import getMessageReadId from "./getMessageReadId";
 import getMessageReadTime from "./getMessageReadTime";
-import fetchUserInbox from "./fetchUserInbox";
 import removeFromUserInbox from "./removeFromUserInbox";
+import saveUserConfig from "./saveUserConfig";
 
-import fetchRoles from "./fetchRoles";
 import fetchRoleSingle from "./fetchRoleSingle";
+import fetchRoles from "./fetchRoles";
 
-import EventEmitter from 'events';
+import EventEmitter from "events";
 EventEmitter.defaultMaxListeners = 25; // 新しいリスナーの上限を25に設定
 
 console.log("socketInit :: INITIALIZED");
 
 //Socket接続
-export const socket:Socket = io({
+export const socket: Socket = io({
   path: "/socket.io",
   reconnection: true,
   reconnectionDelay: 100,

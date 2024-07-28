@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useMyUserinfo } from "../../stores/userinfo";
 import { useConfig } from "~/stores/config";
 //import { setConfigLocalSync } from "~/composables/setConfigLocalSync";
 import { socket } from "../../socketHandlers/socketInit";
+import { useMyUserinfo } from "../../stores/userinfo";
 
 //Store取得用
 const { getConfig } = storeToRefs(useConfig());
@@ -20,9 +20,9 @@ const configOverwrite = () => {
   socket.emit("saveUserConfig", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
-    config: getConfig.value
+    config: getConfig.value,
   });
 
   //同期スイッチの値を設定Storeの同期設定へ適用
@@ -32,7 +32,7 @@ const configOverwrite = () => {
 
   //ダイアログを閉じる
   emit("closeDialog");
-}
+};
 
 /**
  * 設定を取得してそれを適用する
@@ -51,8 +51,7 @@ const configFetchAndApply = () => {
 
   //ダイアログを閉じる
   emit("closeDialog");
-}
-
+};
 </script>
 
 <template>

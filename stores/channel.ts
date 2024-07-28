@@ -7,25 +7,25 @@ import { useMyUserinfo } from "./userinfo";
 
 export const useChannelinfo = defineStore("channelinfo", {
   state: () =>
-  ({
-    _Channelinfo: {
-      /*
+    ({
+      _Channelinfo: {
+        /*
       "0001": {
         ...
       }
       */
-    },
-    _ChannelOrder: [
-      /*
+      },
+      _ChannelOrder: [
+        /*
       {channelId:"0001", ...}
       */
-    ]
-  } as {
-    _Channelinfo: {
-      [key: string]: channel
+      ],
+    }) as {
+      _Channelinfo: {
+        [key: string]: channel;
+      };
+      _ChannelOrder: channelOrder[];
     },
-    _ChannelOrder: channelOrder[]
-  }),
 
   getters: {
     //すべてのチャンネルを返す
@@ -34,7 +34,7 @@ export const useChannelinfo = defineStore("channelinfo", {
     },
 
     //チャンネル単体を返す
-    getChannelinfoSingle: (state) => (channelId:string) => {
+    getChannelinfoSingle: (state) => (channelId: string) => {
       //チャンネル情報がないならfetchしてホルダーを返す、あるならそれを返す
       if (state._Channelinfo[channelId] === undefined) {
         //ホルダー
@@ -44,20 +44,21 @@ export const useChannelinfo = defineStore("channelinfo", {
           createdBy: "xxxxx",
           description: "...",
           isPrivate: false,
-          speakableRole: []
+          speakableRole: [],
         };
 
         //チャンネル情報を取得
         const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-        console.log("store(channel) :: getChannelinfoSingle : userId->",
-          getMyUserinfo.value.userId
+        console.log(
+          "store(channel) :: getChannelinfoSingle : userId->",
+          getMyUserinfo.value.userId,
         );
         socket.emit("fetchChannelInfo", {
           RequestSender: {
             userId: getMyUserinfo.value.userId,
-            sessionId: getSessionId.value
+            sessionId: getSessionId.value,
           },
-          channelId: channelId
+          channelId: channelId,
         });
         console.log("store(channel) :: getChannelinfoSingle : 送信した");
 
@@ -70,24 +71,26 @@ export const useChannelinfo = defineStore("channelinfo", {
     //チャンネル順序取得
     getChannelOrder: (state) => {
       return state._ChannelOrder;
-    }
+    },
   },
-  
+
   actions: {
     //チャンネル情報を更新(代入)
-    updateChannelinfo(channelId:string, data: channel) {
-      this._Channelinfo[channelId] = {...this._Channelinfo[channelId], ...data};
+    updateChannelinfo(channelId: string, data: channel) {
+      this._Channelinfo[channelId] = {
+        ...this._Channelinfo[channelId],
+        ...data,
+      };
     },
 
     //チャンネル順序を更新(代入)
-    updateChannelOrder(channelOrder:channelOrder[]) {
+    updateChannelOrder(channelOrder: channelOrder[]) {
       this._ChannelOrder = channelOrder;
     },
 
     //チャンネル情報を削除
-    deleteChannelinfo(channeId:string) {
+    deleteChannelinfo(channeId: string) {
       delete this._Channelinfo[channeId];
-    }
-  }
+    },
+  },
 });
-

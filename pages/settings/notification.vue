@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useConfig } from '~/stores/config';
+import { useConfig } from "~/stores/config";
 
 const { getConfig } = storeToRefs(useConfig());
 
@@ -18,16 +18,16 @@ const askNotificationPermission = () => {
   Notification.requestPermission().then((permission) => {
     statusNotificationAllowed.value = permission;
   });
-}
+};
 
 /**
  * 通知テストするだけ
  */
 const testNotification = () => {
   const notification = new Notification("通知テスト", {
-    body: "これはGirack-m-による通知テストです。"
+    body: "これはGirack-m-による通知テストです。",
   });
-}
+};
 </script>
 
 <template>

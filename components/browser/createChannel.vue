@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
+import { socket } from "~/socketHandlers/socketInit";
+import type { channel } from "~/types/channel";
 import { useMyUserinfo } from "../../stores/userinfo";
-import type { channel } from '~/types/channel';
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 /**
  * emit
  */
- const emit = defineEmits(["closeDialog"]);
+const emit = defineEmits(["closeDialog"]);
 
 /**
  * data
  */
 //チャンネル作成用に使うデータ
 const channelCreationData = ref<any>({
-  channelName: '',
-  description: '',
+  channelName: "",
+  description: "",
   isPrivate: false,
 });
 //チャンネル作成結果用変数
-const channelCreateResult = ref<"SUCCESS"|"ERROR"|null>(null);
+const channelCreateResult = ref<"SUCCESS" | "ERROR" | null>(null);
 
 /**
  * チャンネルを作成する
@@ -29,7 +29,7 @@ const createChannel = () => {
   socket.emit("createChannel", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     channelName: channelCreationData.value.channelName,
     description: channelCreationData.value.description,
@@ -45,8 +45,8 @@ const closeProcess = () => {
   emit("closeDialog");
   //チャンネル作成用データを初期化
   channelCreationData.value = {
-    channelName: '',
-    description: '',
+    channelName: "",
+    description: "",
     isPrivate: false,
   };
   //チャンネル作成結果を初期化
@@ -59,7 +59,7 @@ const closeProcess = () => {
  * チャンネル作成結果受け取り
  * @param dat
  */
-const SOCKETcreateChannel = (dat:{result:string, data:boolean|null}) => {
+const SOCKETcreateChannel = (dat: { result: string; data: boolean | null }) => {
   console.log("createChannel :: SOCKETcreateChannel : dat->", dat);
   //結果に応じて表示を変更
   if (dat.result !== "SUCCESS") {
@@ -70,8 +70,8 @@ const SOCKETcreateChannel = (dat:{result:string, data:boolean|null}) => {
     socket.emit("fetchChannelList", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
-      }
+        sessionId: getSessionId.value,
+      },
     });
   }
 };
@@ -85,7 +85,6 @@ onMounted(() => {
 onUnmounted(() => {
   socket.off("RESULT::createChannel", SOCKETcreateChannel);
 });
-
 </script>
 
 <template>
