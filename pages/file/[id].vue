@@ -28,6 +28,7 @@ const fileData = ref<file>({
   size: 0,
   type: "",
   uploadedDate: "",
+  directory: "",
 });
 const fileBufferData = ref<{
   blob: Blob | null;
