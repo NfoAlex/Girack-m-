@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { socket } from "~/socketHandlers/socketInit";
-import { useMyUserinfo } from "~/stores/userinfo";
 import { useChannelinfo } from "~/stores/channel";
+import { useMyUserinfo } from "~/stores/userinfo";
 import type { file, folder } from "~/types/file";
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getChannelinfoSingle } = useChannelinfo();

@@ -14,7 +14,7 @@ const emits = defineEmits<(e: "closeDialog") => void>();
 /**
  * data
  */
-const statusUpload = ref<"WAITING"|"UPLOADING"|"DONE">("WAITING");
+const statusUpload = ref<"WAITING" | "UPLOADING" | "DONE">("WAITING");
 const fileItems = ref<File[]>([]);
 const fileUploadStatus = ref<
   {
@@ -68,7 +68,7 @@ const trimFileItem = (index: number) => {
 const uploadFiles = async () => {
   //アップロード中と設定
   statusUpload.value = "UPLOADING";
-  
+
   //送信者情報
   const metadataForForm = {
     RequestSender: {
@@ -147,7 +147,7 @@ const uploadFiles = async () => {
  */
 const clickUploadButton = () => {
   document.getElementById("elFileInput")?.click();
-}
+};
 
 onMounted(() => {
   if (elFileInput !== null) {
