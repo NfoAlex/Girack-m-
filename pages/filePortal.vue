@@ -134,13 +134,13 @@ const deleteSelectedFile = () => {
  */
 const toggleFileIsPublic = () => {
   //選択したファイルの数分
-  for (const fileId of fileSelected.value) {
+  for (const file of fileSelected.value) {
     socket.emit("toggleFileIsPublic", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
         sessionId: getSessionId.value,
       },
-      fileId: fileId,
+      fileId: file.id,
     });
   }
 };
@@ -241,6 +241,24 @@ const SOCKETcalcFullFolderSize = (dat: {
 };
 
 /**
+ * ファイルの公開設定のトグルを受け取る
+ * @param dat 
+ */
+const SOCKETtoggleFileIsPublic = (dat:{result:string, data:string}) => {
+  //console.log("filePortal :: SOCKETtoggleFileIsPublic : dat->", dat);
+
+  //成功なら結果を適用させる
+  if (dat.result === "SUCCESS") {
+    //ループして該当ファイルを探して公開設定をトグル
+    for (const index in fileIndex.value) {
+      if (fileIndex.value[index].id === dat.data) {
+        fileIndex.value[index].isPublic = !fileIndex.value[index].isPublic;
+      }
+    }
+  }
+};
+
+/**
  * ファイルインデックス受け取り
  * @param dat
  */
@@ -263,6 +281,7 @@ onMounted(() => {
   socket.on("RESULT::fetchFolders", SOCKETfetchFolders);
   socket.on("RESULT::calcFullFolderSize", SOCKETcalcFullFolderSize);
   socket.on("RESULT::deleteFile", SOCKETdeleteFile);
+  socket.on("RESULT::toggleFileIsPublic", SOCKETtoggleFileIsPublic);
 
   //ファイルインデックスを取得
   fetchFilesAndFolders();
@@ -273,6 +292,7 @@ onUnmounted(() => {
   socket.off("RESULT::fetchFolders", SOCKETfetchFolders);
   socket.off("RESULT::calcFullFolderSize", SOCKETcalcFullFolderSize);
   socket.off("RESULT::deleteFile", SOCKETdeleteFile);
+  socket.off("RESULT::toggleFileIsPublic", SOCKETtoggleFileIsPublic);
 });
 </script>
 
@@ -383,7 +403,7 @@ onUnmounted(() => {
             <!-- チャンネル用だった時のチャンネル名表示 -->
             <span v-else class="mx-auto d-flex align-center">
               <v-icon size="small" class="mr-1">mdi-pound</v-icon>
-              <p class="text-truncate">{{ getChannelinfoSingle(folderInfo.id.slice(1)).channelName }}</p>
+              <p class="text-truncate">{{ getChannelinfoSingle(folderInfo.id.slice(1,5)).channelName }}</p>
             </span>
           </m-card-compact>
         </div>
