@@ -29,7 +29,7 @@ const fileData = ref<file>({
   type: "",
   uploadedDate: "",
   directory: "",
-  isDelete: false
+  isDelete: false,
 });
 const fileBufferData = ref<{
   blob: Blob | null;
@@ -140,8 +140,8 @@ const prepareFile = async () => {
 const SOCKETfetchFileInfo = (dat: {
   result: "" | "SUCCESS" | "ERROR_FILE_MISSING" | "ERROR_FILE_IS_PRIVATE";
   data: {
-    fileId: string,
-    fileInfo: file
+    fileId: string;
+    fileInfo: file;
   };
 }) => {
   console.log("SOCKETfetchFileInfo :: dat->", dat);
@@ -163,10 +163,7 @@ const SOCKETfetchFileInfo = (dat: {
 onMounted(() => {
   console.log("/file :: route->", route.params.id);
 
-  socket.on(
-    "RESULT::fetchFileInfo",
-    SOCKETfetchFileInfo,
-  );
+  socket.on("RESULT::fetchFileInfo", SOCKETfetchFileInfo);
 
   //タブ名に初期表示用にインスタンス名を表示
   title.value = `${getServerinfo.value.servername} : ファイル`;
