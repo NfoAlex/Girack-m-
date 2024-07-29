@@ -159,7 +159,7 @@ const getImageUrl = (fileId: string) => {
 
       <span class="mt-1 d-flex align-center" style="max-height:150px;">
         <v-icon
-          v-if="getFileInfoSingle(fileId).id !== 'ERROR_FILE_MISSING'"
+          v-if="!getFileInfoSingle(fileId).isDelete"
           class="mr-1"
         >mdi-folder</v-icon>
         <v-icon
@@ -168,16 +168,17 @@ const getImageUrl = (fileId: string) => {
         >mdi-delete</v-icon>
 
         <a
-          v-if="getFileInfoSingle(fileId).id !== 'ERROR_FILE_MISSING'"
+          v-if="!getFileInfoSingle(fileId).isDelete"
           :href="'/file/' + getFileInfoSingle(fileId).id"
           rel="noopener noreferrer" target="_blank"
           class="text-truncate flex-shrink-1"
         >
           {{ getFileInfoSingle(fileId).name }}
         </a>
-        <p v-if="getFileInfoSingle(fileId).id === 'ERROR_FILE_MISSING'" class="text-disabled">このファイルは削除されています。</p>
+        <p v-if="getFileInfoSingle(fileId).isDelete" class="text-disabled">このファイルは削除されています。</p>
 
         <m-btn
+          v-if="!getFileInfoSingle(fileId).isDelete"
           @click="downloadFile(getFileInfoSingle(fileId).id)"
           icon="mdi-download"
           variant="text"
@@ -185,7 +186,11 @@ const getImageUrl = (fileId: string) => {
           class="ml-auto"
         />
 
-        <v-chip size="small" class="flex-shrink-0">{{ calcSizeInHumanFormat(getFileInfoSingle(fileId).size) }}</v-chip>
+        <v-chip
+          v-if="!getFileInfoSingle(fileId).isDelete"
+          size="small"
+          class="flex-shrink-0"
+        >{{ calcSizeInHumanFormat(getFileInfoSingle(fileId).size) }}</v-chip>
       </span>
     </m-card>
   </span>
