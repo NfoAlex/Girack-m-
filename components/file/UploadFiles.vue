@@ -9,9 +9,12 @@ const props = defineProps<{
   currentDirectory: folder;
 }>();
 
+const emits = defineEmits<(e: "closeDialog") => void>();
+
 /**
  * data
  */
+const statusUpload = ref<"WAITING"|"UPLOADING"|"DONE">("WAITING");
 const fileItems = ref<File[]>([]);
 const fileUploadStatus = ref<
   {
@@ -63,6 +66,10 @@ const trimFileItem = (index: number) => {
  * ファイルをアップロードする
  */
 const uploadFiles = async () => {
+  //アップロード中と設定
+  statusUpload.value = "UPLOADING";
+  
+  //送信者情報
   const metadataForForm = {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
@@ -70,6 +77,11 @@ const uploadFiles = async () => {
     },
     directory: props.currentDirectory.id,
   };
+
+  //ファイル数
+  const fileNum = fileItems.value.length;
+  //完了したファイル数
+  let fileUploadedNum = 0;
 
   for (const fileIndex in fileItems.value) {
     //アップロードするデータフォームオブジェクト生成
@@ -88,6 +100,15 @@ const uploadFiles = async () => {
         fileUploadStatus.value[fileIndex].progress = Math.round(
           (event.loaded / event.total) * 100,
         );
+
+        //もし進捗状況が100なら完了したファイル数を加算、同時に全部確認
+        if (Math.round((event.loaded / event.total) * 100) === 100) {
+          fileUploadedNum++;
+          //もし完了した数とファイル数が同じなら完了したと設定
+          if (fileUploadedNum === fileNum) {
+            statusUpload.value = "DONE";
+          }
+        }
       }
     });
 
@@ -198,10 +219,20 @@ onMounted(() => {
 
     <v-card-actions>
       <m-btn
+        v-if="statusUpload !== 'DONE'"
         @click="uploadFiles"
         color="primary"
+        :disabled="statusUpload==='UPLOADING'"
+        :loading="statusUpload==='UPLOADING'"
       >
         アップロードする
+      </m-btn>
+
+      <m-btn
+        v-if="statusUpload === 'DONE'"
+        @click="emits('closeDialog')"
+      >
+        閉じる
       </m-btn>
     </v-card-actions>
   </m-card>

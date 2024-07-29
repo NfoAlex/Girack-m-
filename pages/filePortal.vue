@@ -100,10 +100,12 @@ const trimFolderLevel = (directoryLevel: string) => {
  */
 const deleteSelectedFile = () => {
   for (const file of fileSelected.value) {
+    /*
     console.log(
       "filePortal :: deleteSelectedFile : 消そうとしているファイル->",
       file,
     );
+    */
     socket.emit("deleteFile", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
@@ -138,10 +140,6 @@ const toggleFileIsPublic = () => {
  */
 const copyUrlsToClipBoard = () => {
   let urls = "";
-  console.log(
-    "filePortal :: copyUrlsToClipBoard : url->",
-    window.location.origin,
-  );
 
   for (const file of fileSelected.value) {
     urls += `${window.location.origin}/file/${file.id}\n`;
@@ -204,13 +202,6 @@ const SOCKETfetchFolders = (dat: { result: string; data: folder[] }) => {
     //ディレクトリーツリーの長さ取得
     const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
 
-    console.log(
-      "filePortal :: SOCKETfetchFolders : dat,data->",
-      dat.data,
-      " 今いるdirectoryTreeの最初->",
-      directoryTree.value[(lengthOfDirectoryTree - 1).toString()][0],
-    );
-
     //フォルダデータの最初と現階層の最初が同じフォルダなら上書き
     if (
       dat.data[0] ===
@@ -244,7 +235,7 @@ const SOCKETcalcFullFolderSize = (dat: {
  * @param dat
  */
 const SOCKETdeleteFile = (dat: { result: string; data: null }) => {
-  console.log("deleteFile :: dat->", dat);
+  //console.log("deleteFile :: dat->", dat);
   if (dat.result === "SUCCESS") {
     //ファイルインデックスを取り直す
     socket.emit("fetchFileIndex", {
@@ -282,7 +273,10 @@ onUnmounted(() => {
     v-model="displayUpload"
     style="max-width:750px; width:85vw; height:75vh; max-height:650px;"
   >
-    <UploadFiles :currentDirectory />
+    <UploadFiles 
+      @closeDialog="displayUpload = false;"
+      :currentDirectory
+    />
   </v-dialog>
 
   <!-- フォルダー作成用 -->
