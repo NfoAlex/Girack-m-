@@ -383,7 +383,7 @@ onUnmounted(() => {
             <!-- チャンネル用だった時のチャンネル名表示 -->
             <span v-else class="mx-auto d-flex align-center">
               <v-icon size="small" class="mr-1">mdi-pound</v-icon>
-              <p class="text-truncate">{{ getChannelinfoSingle(folderInfo.id.slice(1)).channelName }}</p>
+              <p class="text-truncate">{{ getChannelinfoSingle(folderInfo.id.slice(1,5)).channelName }}</p>
             </span>
           </m-card-compact>
         </div>
