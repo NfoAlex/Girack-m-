@@ -7,6 +7,7 @@ export interface file {
   type: File["type"];
   directory: string;
   uploadedDate: string;
+  isDelete: boolean;
 }
 
 export interface folder {
