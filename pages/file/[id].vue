@@ -215,8 +215,6 @@ onUnmounted(() => {
       style="max-width:500px; height:100vh;"
     >
 
-      <p>result : {{ fetchResult }}</p>
-
       <!-- ロード中表示 -->
       <m-card
         v-if="fetchResult === ''"
