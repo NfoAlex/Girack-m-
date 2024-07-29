@@ -134,13 +134,13 @@ const deleteSelectedFile = () => {
  */
 const toggleFileIsPublic = () => {
   //選択したファイルの数分
-  for (const fileId of fileSelected.value) {
+  for (const file of fileSelected.value) {
     socket.emit("toggleFileIsPublic", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
         sessionId: getSessionId.value,
       },
-      fileId: fileId,
+      fileId: file.id,
     });
   }
 };
