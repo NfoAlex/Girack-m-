@@ -139,19 +139,24 @@ const prepareFile = async () => {
  */
 const SOCKETfetchFileInfo = (dat: {
   result: "" | "SUCCESS" | "ERROR_FILE_MISSING" | "ERROR_FILE_IS_PRIVATE";
-  data: file;
+  data: {
+    fileId: string,
+    fileInfo: file
+  };
 }) => {
   console.log("SOCKETfetchFileInfo :: dat->", dat);
-  fetchResult.value = dat.result;
 
   //成功ならデータを格納
   if (dat.result === "SUCCESS") {
-    fileData.value = dat.data;
+    fileData.value = dat.data.fileInfo;
+    fetchResult.value = dat.result;
 
     //タブ名にファイル名設定
     title.value = `${getServerinfo.value.servername} : ${fileData.value.name}`;
 
     prepareFile();
+  } else {
+    fetchResult.value = dat.result;
   }
 };
 
@@ -213,6 +218,8 @@ onUnmounted(() => {
       style="max-width:500px; height:100vh;"
     >
 
+      <p>result : {{ fetchResult }}</p>
+
       <!-- ロード中表示 -->
       <m-card
         v-if="fetchResult === ''"
@@ -229,7 +236,7 @@ onUnmounted(() => {
         color="messageHovered"
       >
         <!-- 画像ファイルだった時のプレビュー表示 -->
-        <div v-if="fileData.type.startsWith('image/')">
+        <div v-if="fileData.type.startsWith('image/') || undefined">
           <img :src="fileBufferData.fileURL" width="100%" />
           <v-divider class="my-2" />
         </div>
