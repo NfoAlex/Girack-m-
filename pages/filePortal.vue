@@ -321,6 +321,12 @@ onUnmounted(() => {
         class="text-h5"
         style="font-weight:700;"
       >ファイルポータル</p>
+
+      <v-chip class="ml-3" color="orange">
+        <v-icon>mdi-test-tube</v-icon>
+        テスト
+      </v-chip>
+
       <m-btn
         @click="
           moveDirectory(currentDirectory, (Object.keys(directoryTree).length-2).toString())
