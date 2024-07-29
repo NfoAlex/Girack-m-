@@ -48,3 +48,17 @@ export function getBlobUrl(fileId: string):
   | undefined {
   return blobUrlCache.get(fileId);
 }
+
+/**
+ * BlobUrl削除
+ * @param fileId 
+ */
+export function deleteBlobUrl(fileId: string) {
+  const fileBlobData = blobUrlCache.get(fileId);
+  if (fileBlobData === undefined) return;
+
+  //blobURLを無効化
+  URL.revokeObjectURL(fileBlobData.blobUrl);
+  //キャッシュから削除
+  blobUrlCache.delete(fileId);
+}
