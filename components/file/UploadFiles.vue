@@ -121,9 +121,16 @@ const uploadFiles = async () => {
   }
 };
 
+/**
+ * ファイル入力ボタンを仮想的にクリックするだけ
+ */
+const clickUploadButton = () => {
+  document.getElementById("elFileInput")?.click();
+}
+
 onMounted(() => {
   if (elFileInput !== null) {
-    document.getElementById("elFileInput")?.click();
+    clickUploadButton();
   }
 });
 </script>
@@ -143,6 +150,12 @@ onMounted(() => {
 
     <v-card-text>
 
+      <!-- ファイル選択させる -->
+      <m-btn @click="clickUploadButton" block variant="text">
+        <v-icon>mdi-plus</v-icon>
+      </m-btn>
+
+      <!-- ファイル情報の表示 -->
       <m-card
         v-for="file,index of fileItems"
         color="cardInner"
