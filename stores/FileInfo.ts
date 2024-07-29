@@ -38,6 +38,7 @@ export const useFileInfo = defineStore("fileinfo", {
           type: "*/*",
           directory: "",
           uploadedDate: "",
+          isDelete: false
         };
 
         //ファイル情報を取得
@@ -60,5 +61,20 @@ export const useFileInfo = defineStore("fileinfo", {
     updateFileInfo(data: file) {
       this._FileInfo[data.id] = data;
     },
+
+    //指定のファイルデータを削除されたと設定
+    deleteFileInfo(fileId: string) {
+      this._FileInfo[fileId] = {
+        id: fileId,
+        userId: "",
+        name: "",
+        isPublic: false,
+        size: 0,
+        type: "*/*",
+        directory: "",
+        uploadedDate: "",
+        isDelete: true
+      };
+    }
   },
 });
