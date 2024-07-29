@@ -387,7 +387,9 @@ watch(atSkeletonNewer, (newValue, oldValue) => {
     //表示している履歴方向の設定
     displayDirection.value = "newer";
     //メッセId格納
-    messageIdToScroll.value = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId;
+    messageIdToScroll.value = getHistoryFromChannel(
+      props.channelInfo.channelId,
+    )[0].messageId;
 
     //console.log("/channel/:id :: watch(atSkeletonNewer) : REVERSED!");
 
