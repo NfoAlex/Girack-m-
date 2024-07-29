@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useMyUserinfo } from "../stores/userinfo";
-import getMyRolePower from "~/composables/getMyRolePower";
 import calcMyRole from "~/composables/calcMyRole";
+import getMyRolePower from "~/composables/getMyRolePower";
+import { useMyUserinfo } from "../stores/userinfo";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
@@ -12,20 +12,21 @@ const dialogLogout = ref<boolean>(false); //ログアウト確認
 const dialogChangePassword = ref<boolean>(false); //パスワード変更
 const dialogChangeUsername = ref<boolean>(false); //ユーザー名変更用
 const dialogChangeProfileIcon = ref<boolean>(false); //プロフィール画像変更用
-const myRolePower = ref<{ //自分の権力用
-  ServerManage: boolean,
-  RoleManage: boolean,
-  ChannelManage: boolean,
-  UserManage: boolean,
-  MessageDelete: boolean,
-  MessageAttatchFile: boolean
+const myRolePower = ref<{
+  //自分の権力用
+  ServerManage: boolean;
+  RoleManage: boolean;
+  ChannelManage: boolean;
+  UserManage: boolean;
+  MessageDelete: boolean;
+  MessageAttatchFile: boolean;
 }>({
   ServerManage: false,
   RoleManage: false,
   ChannelManage: false,
   UserManage: false,
   MessageDelete: false,
-  MessageAttatchFile: false
+  MessageAttatchFile: false,
 });
 
 onMounted(() => {
@@ -37,7 +38,6 @@ onMounted(() => {
     myRolePower.value = getMyRolePower();
   });
 });
-
 </script>
 
 <template>

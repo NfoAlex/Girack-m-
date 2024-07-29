@@ -1,6 +1,6 @@
 {
   "name": "girack-m-",
-  "version": "v20240714",
+  "version": "v20240729",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,6 +11,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
     "@nuxt/devtools": "latest",
     "@nuxtjs/google-fonts": "^3.2.0",
     "nuxt": "^3.8.2",

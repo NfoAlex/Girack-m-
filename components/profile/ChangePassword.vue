@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useMyUserinfo } from "../../stores/userinfo";
 import { socket } from "../../socketHandlers/socketInit";
+import { useMyUserinfo } from "../../stores/userinfo";
 
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
@@ -32,20 +32,20 @@ const changePassword = () => {
       sessionId: sessionId,
     },
   });
-}
+};
 
 /**
  * パスワード変更結果受け取り用
  * @param dat
  */
-const SOCKETchangePassword = (dat:{result:string, data:any}) => {
+const SOCKETchangePassword = (dat: { result: string; data: null }) => {
   console.log("ChangePassword :: SOCKETchangePassword : dat->", dat);
   if (dat.result === "SUCCESS") {
     resultChangePasswordSuccess.value = true;
   } else if (dat.result === "ERROR_WRONGPASSWORD") {
     resultChangePasswordError.value = true;
   }
-}
+};
 
 onMounted(() => {
   socket.on("RESULT::changePassword", SOCKETchangePassword);
@@ -53,8 +53,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("RESULT::changePassword", SOCKETchangePassword);
-})
-
+});
 </script>
 
 <template>

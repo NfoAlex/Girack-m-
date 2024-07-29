@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import calcRole from '~/composables/calcRole';
-import calcMyRole from '~/composables/calcMyRole';
-import getMyRolePower from '~/composables/getMyRolePower';
-import { useMyUserinfo } from '~/stores/userinfo';
-import { useRole } from '~/stores/role';
+import calcMyRole from "~/composables/calcMyRole";
+import calcRole from "~/composables/calcRole";
+import getMyRolePower from "~/composables/getMyRolePower";
+import { socket } from "~/socketHandlers/socketInit";
+import { useRole } from "~/stores/role";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getRoleSingle } = storeToRefs(useRole());
 
 const props = defineProps<{
-  roleId: string,
-  userId?: string
+  roleId: string;
+  userId?: string;
 }>();
 
 /**
@@ -29,13 +29,13 @@ const unlinkRole = () => {
     socket.emit("unlinkRole", {
       RequestSender: {
         userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
+        sessionId: getSessionId.value,
       },
       targetUserId: props.userId,
-      roleId: props.roleId
+      roleId: props.roleId,
     });
   }
-}
+};
 
 onMounted(() => {
   //ユーザーIDが渡されているならレベル比較処理
@@ -45,11 +45,12 @@ onMounted(() => {
     //権限レベル計算
     const roleLevel = calcRole(roleInfo);
     const MyRoleLevel = calcMyRole();
-    
+
     //レベル比較して外せるかどうか設定
-    if (roleLevel <= MyRoleLevel && getMyRolePower().RoleManage) canUnlinkThis.value = true;
+    if (roleLevel <= MyRoleLevel && getMyRolePower().RoleManage)
+      canUnlinkThis.value = true;
   }
-})
+});
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { socket } from "../../socketHandlers/socketInit";
 import { useServerinfo } from "~/stores/serverinfo";
+import { socket } from "../../socketHandlers/socketInit";
 
 import type { MyUserinfo } from "~/types/user";
 
@@ -14,19 +14,19 @@ const processingAuth = ref<boolean>(false); //ボタンの処理中表示用
 const username = ref<string>("");
 const invitecode = ref<string>("");
 // 結果用
-const resultDisplay = ref<"SUCCESS"|"FAILED"|"">("");
+const resultDisplay = ref<"SUCCESS" | "FAILED" | "">("");
 const resultRegisterDone = ref<boolean>(false);
 const passwordRegistered = ref<string>("");
 
 //emit
 const emits = defineEmits<{
-  (e:"applyChangeUserName", username:string):void,
-  (e:"registered", username:string):void
+  (e: "applyChangeUserName", username: string): void;
+  (e: "registered", username: string): void;
 }>();
 
 //prop
 const props = defineProps<{
-  sharedUserName: string
+  sharedUserName: string;
 }>();
 
 /**
@@ -34,7 +34,7 @@ const props = defineProps<{
  */
 const applyChangeUserName = () => {
   emits("applyChangeUserName", username.value);
-}
+};
 
 /**
  * 新規登録
@@ -56,12 +56,10 @@ const register = () => {
  * 登録結果の受け取りと処理
  * @param dat
  */
-const SOCKETRESULTauthRegister = (
-  dat: {
-    result: string;
-    data: {datUser:MyUserinfo, password:string}
-  }
-) => {
+const SOCKETRESULTauthRegister = (dat: {
+  result: string;
+  data: { datUser: MyUserinfo; password: string };
+}) => {
   console.log("auth :: SOCKETRESULTauthRegister : dat->", dat);
   //結果処理
   if (dat.result === "SUCCESS") {

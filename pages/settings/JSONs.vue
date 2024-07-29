@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useConfig } from '~/stores/config';
-import { useHistory } from '~/stores/history';
-import { useInbox } from '~/stores/inbox';
+import { useConfig } from "~/stores/config";
+import { useHistory } from "~/stores/history";
+import { useInbox } from "~/stores/inbox";
 
 const { getConfig, getConfigSyncStatus } = storeToRefs(useConfig());
 const { getHasNewMessage } = storeToRefs(useHistory());

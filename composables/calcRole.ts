@@ -3,6 +3,8 @@ import type role from "~/types/role";
 
 /*
 //権限それぞれの持つレベル(数値)
+// この値はとても古いため更新が必要です
+// 詳細はtypes/role.tsを参照してください
 const roleLevel:{
   [key:string]: number
 } = {
@@ -17,35 +19,24 @@ const roleLevel:{
 };
 */
 
-export default function calcRole(roleDataChecking:role) {
+export default function calcRole(roleDataChecking: role): number {
   try {
-
-    //権限をそれぞれ調べてレベルを返す
     if (roleDataChecking.ServerManage) {
       return 5;
-    } else if (roleDataChecking.RoleManage) {
+    }
+    if (roleDataChecking.RoleManage) {
       return 4;
-    } else if (
-      roleDataChecking.ChannelViewPrivate
-      ||
-      roleDataChecking.UserManage
-    ) {
+    }
+    if (roleDataChecking.UserManage || roleDataChecking.ChannelManage) {
       return 3;
-    } else if (
-      roleDataChecking.ChannelRename
-      ||
-      roleDataChecking.MessageDelete
-    ) {
+    }
+    if (roleDataChecking.MessageDelete) {
       return 2;
     }
-
     //2以下はもう1として返す
     return 1;
-
-  } catch(e) {
-
+  } catch (e) {
     console.log("calcRole :: エラー ->", e);
     return 0;
-
   }
 }

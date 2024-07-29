@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
-import { useRole } from '~/stores/role';
+import { socket } from "~/socketHandlers/socketInit";
+import { useRole } from "~/stores/role";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getRoleSingle } = storeToRefs(useRole());
 
-import type { MyUserinfo } from '~/types/user';
+import type { MyUserinfo } from "~/types/user";
 
 /**
  * data
@@ -21,11 +21,9 @@ const lengthPage = ref<number>(1);
 //ユーザー数格納用
 const userCount = ref<number>(0);
 //ユーザー情報格納用
-const users = ref<
-  {
-    [key:string]: MyUserinfo
-  }
->({});
+const users = ref<{
+  [key: string]: MyUserinfo;
+}>({});
 //ユーザーダイアログ表示用
 const userIdForDialog = ref<string>(""); //表示するユーザーのID
 const displayUserpage = ref<boolean>(false); //ダイアログ制御用
@@ -40,31 +38,31 @@ watch(currentPage, () => {
 /**
  * 指定するページ部分にあたるユーザー取得(30人ごと)
  */
-const fetchUsers = (page:number) => {
+const fetchUsers = (page: number) => {
   //ユーザーを取得
   socket.emit("fetchUserAll", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
-    indexPage: page
+    indexPage: page,
   });
   //ロード中と設定
   stateLoading.value = true;
-}
+};
 
 /**
  * ユーザーリストを取得
  * @param dat
  */
-const SOCKETfetchUserAll = (dat:{
-  result: string,
+const SOCKETfetchUserAll = (dat: {
+  result: string;
   data: {
     datUser: {
-      [key: string]: MyUserinfo
-    },
-    countUser: number
-  }
+      [key: string]: MyUserinfo;
+    };
+    countUser: number;
+  };
 }) => {
   console.log("/users :: SOCKETfetchUserAll : dat->", dat);
 
@@ -81,20 +79,20 @@ const SOCKETfetchUserAll = (dat:{
     //もし30での除算で1以上いればもう1ページ追加
     if (userCount.value % 30 >= 1) lengthPage.value++;
   }
-}
+};
 
 /**
  * ユーザー情報を受信したらそのユーザー分データを更新
  * @param dat
  */
-const SOCKETfetchUserInfo = (dat:{result:string, data:MyUserinfo}) => {
+const SOCKETfetchUserInfo = (dat: { result: string; data: MyUserinfo }) => {
   console.log("/users :: SOCKETfetchUserInfo : dat->", dat);
 
   //ユーザー格納用変数に該当するユーザーIDがあれば更新する
   if (users.value[dat.data.userId] !== undefined) {
     users.value[dat.data.userId] = dat.data;
   }
-}
+};
 
 onMounted(() => {
   socket.on("RESULT::fetchUserAll", SOCKETfetchUserAll);
@@ -107,7 +105,6 @@ onUnmounted(() => {
   socket.off("RESULT::fetchUserAll", SOCKETfetchUserAll);
   socket.off("RESULT::fetchUserInfo", SOCKETfetchUserInfo);
 });
-
 </script>
 
 <template>

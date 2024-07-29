@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const router = useRouter();//ページ移動用
+const router = useRouter(); //ページ移動用
 
 /**
  * data
@@ -17,16 +17,16 @@ const askNotificationPermission = () => {
   Notification.requestPermission().then((permission) => {
     statusNotificationAllowed.value = permission;
   });
-}
+};
 
 /**
  * 通知テストするだけ
  */
 const testNotification = () => {
   const notification = new Notification("通知テスト", {
-    body: "これはGirack-m-による通知テストです。"
+    body: "これはGirack-m-による通知テストです。",
   });
-}
+};
 </script>
 
 <template>

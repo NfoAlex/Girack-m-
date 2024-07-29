@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { socket } from "../socketHandlers/socketInit";
+import { useAppStatus } from "../stores/AppStatus";
+import { useConfig } from "../stores/config";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
-import { useConfig } from "../stores/config";
-import { useAppStatus } from "../stores/AppStatus";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -19,19 +19,19 @@ definePageMeta({
 /**
  * data
  */
-const authMode = ref<"LOGIN"|"REGISTER">("LOGIN"); // "LOGIN" | "REGISTER"
+const authMode = ref<"LOGIN" | "REGISTER">("LOGIN"); // "LOGIN" | "REGISTER"
 const stateProcesingWithCookie = ref<boolean>(true); //クッキーでログイン処理中かどうか
 const sharedUserName = ref<string>("");
 const isNewUser = ref<boolean>(false); //新規登録者かどうか
-const registrationData = ref<{userName:string, done:boolean}>({
+const registrationData = ref<{ userName: string; done: boolean }>({
   userName: "",
-  done: false
+  done: false,
 });
 
 /**
  * ログイン後のGirack-m-準備処理
  */
-const initialize = (userId:string, sessionId:string) => {
+const initialize = (userId: string, sessionId: string) => {
   console.log("/auth :: initialize : INITIALIZEするね");
 
   //全ロールを取得
@@ -67,7 +67,8 @@ const initialize = (userId:string, sessionId:string) => {
       //同期設定をオフとして設定
       useConfig().updateConfigSyncStatus(false);
     }
-  } else { //設定データがないなら絶対取得
+  } else {
+    //設定データがないなら絶対取得
     //設定データを取得する
     socket.emit("fetchUserConfig", {
       userId: userId,
@@ -111,35 +112,36 @@ const initialize = (userId:string, sessionId:string) => {
 /**
  * Cookieからセッションデータを取得
  */
-const getSessionFromCookie = ():{
-  userId:string,
-  sessionId:string
-}|undefined => {
+const getSessionFromCookie = ():
+  | {
+      userId: string;
+      sessionId: string;
+    }
+  | undefined => {
   //取得
   const tempCookie = useCookie("session").value;
 
   //無効な値ならundefuned
   if (
-    tempCookie === undefined || tempCookie === null || typeof(tempCookie) !== "object"
-  ) return undefined;
-  //値を確認してあるならそれを返す
-    //ここで型エラーが出るが結果はきちんとJSONを返すためこのまま
-  if (
-    tempCookie.userId !== undefined
-    &&
-    tempCookie.sessionId != undefined
-  ) {
-    return tempCookie;
-  } else {
+    tempCookie === undefined ||
+    tempCookie === null ||
+    typeof tempCookie !== "object"
+  )
     return undefined;
+
+  //値を確認してあるならそれを返す
+  //ここで型エラーが出るが結果はきちんとJSONを返すためこのまま
+  if (tempCookie.userId !== undefined && tempCookie.sessionId !== undefined) {
+    return tempCookie;
   }
-}
+  return undefined;
+};
 
 /**
  * 共有用ユーザー名を格納
  * @param userNameNew
  */
-const bindUserName = (userNameNew:string) => {
+const bindUserName = (userNameNew: string) => {
   //現セッションで登録していて...
   if (registrationData.value.done) {
     //もし入力するユーザー名が違うなら新ユーザーじゃないと設定、逆なら逆
@@ -158,7 +160,7 @@ const bindUserName = (userNameNew:string) => {
  * セッション認証結果の受け取り
  * @param dat
  */
-const SOCKEtauthSession = (dat:{result:string, dat:boolean}) => {
+const SOCKEtauthSession = (dat: { result: string; dat: boolean }) => {
   console.log("/auth :: SOCKETauthSession : dat->", dat);
 
   //成功なら初期ロード開始
@@ -204,14 +206,14 @@ onNuxtReady(() => {
       //セッション認証
       socket.emit("authSession", {
         userId: sessionData.userId,
-        sessionId: sessionData.sessionId
+        sessionId: sessionData.sessionId,
       });
     } else {
       //クッキーがないなら認証画面を表示するためにクッキー処理状態を解除
       stateProcesingWithCookie.value = false;
     }
   });
-})
+});
 </script>
 
 <template>

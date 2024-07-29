@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { useMyUserinfo } from "../../stores/userinfo";
+import type { MyUserinfo } from "~/types/user";
 import { socket } from "../../socketHandlers/socketInit";
+import { useMyUserinfo } from "../../stores/userinfo";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -17,7 +18,8 @@ const newUsername = ref<string>("");
 const stateUsernameSearching = ref<boolean>(false);
 // 結果保存用
 const resultNewUsername = ref<TresultNewUsername>("");
-const resultNewUsernameAlertDisplay = ref<TresultNewUsernameAlertDisplay>("info");
+const resultNewUsernameAlertDisplay =
+  ref<TresultNewUsernameAlertDisplay>("info");
 
 /**
  * emit
@@ -41,13 +43,13 @@ watch(newUsername, () => {
     socket.emit("searchUserInfo", {
       RequestSender: {
         userId: MyUserinfo.userId,
-        sessionId: sessionId
+        sessionId: sessionId,
       },
       userName: newUsername.value,
-      rule: "FULL"
+      rule: "FULL",
     });
-
-  } else if (newUsername.value.length === 0) { //新ユーザー名が0なら初期化
+  } else if (newUsername.value.length === 0) {
+    //新ユーザー名が0なら初期化
     resultNewUsername.value = "";
     resultNewUsernameAlertDisplay.value = "info";
   } else {
@@ -77,14 +79,14 @@ const changeUsername = () => {
   });
 
   //ダイアログを閉じる
-  emit('closeDialog');
-}
+  emit("closeDialog");
+};
 
 /**
  * ユーザー名が使えるかどうかのVAlert用の表示ラベルを返す
  */
 const checkUsernameResultDisplay = () => {
-  switch(resultNewUsername.value) {
+  switch (resultNewUsername.value) {
     case "ALREADY_USED":
       resultNewUsernameAlertDisplay.value = "error";
       break;
@@ -101,16 +103,19 @@ const checkUsernameResultDisplay = () => {
       resultNewUsernameAlertDisplay.value = "info";
       break;
   }
-}
+};
 
 /**
  * ユーザー名変更用の名前検索ハンドラ
  * @param result
  */
-const SOCKETsearchUserInfo = (result:{result:string, data:[any]}) => {
+const SOCKETsearchUserInfo = (result: {
+  result: string;
+  data: [MyUserinfo];
+}) => {
   console.log("profile :: SOCKETsearchUserInfo : result->", result);
   //結果を一つずつ調べる
-  for (let index in result.data) {
+  for (const index in result.data) {
     //名前が検索結果にあったら
     if (result.data[index].userName === newUsername.value) {
       //この名前を使えないと設定
@@ -131,7 +136,7 @@ const SOCKETsearchUserInfo = (result:{result:string, data:[any]}) => {
   resultNewUsername.value = "SUCCESS";
   //表示する結果設定
   checkUsernameResultDisplay();
-}
+};
 
 onMounted(() => {
   //ユーザー検索結果受け取り用
@@ -142,7 +147,6 @@ onUnmounted(() => {
   //ハンドラ解除
   socket.off("RESULT::searchUserInfo", SOCKETsearchUserInfo);
 });
-
 </script>
 
 <template>

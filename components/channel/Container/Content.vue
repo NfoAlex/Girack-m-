@@ -1,37 +1,44 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useAppStatus } from '~/stores/AppStatus';
-import { useHistory } from '~/stores/history';
+import updateMessageReadTimeCloudAndLocal from "~/composables/updateMessageReadTimeCloudAndLocal";
+import { socket } from "~/socketHandlers/socketInit";
+import { useAppStatus } from "~/stores/AppStatus";
+import { useHistory } from "~/stores/history";
+import { useMessageReadTime } from "~/stores/messageReadTime";
 import { useMyUserinfo } from "~/stores/userinfo";
-import { useMessageReadTime } from '~/stores/messageReadTime';
-import updateMessageReadTimeCloudAndLocal from '~/composables/updateMessageReadTimeCloudAndLocal';
-import MessageRender from './Content/MessageRender.vue';
-import type { channel } from '~/types/channel';
-import type message from '~/types/message';
+import type { channel } from "~/types/channel";
+import type message from "~/types/message";
+import MessageRender from "./Content/MessageRender.vue";
 
-import { useElementVisibility, useScroll, useWindowFocus, onKeyStroke } from '@vueuse/core';
+import {
+  onKeyStroke,
+  useElementVisibility,
+  useScroll,
+  useWindowFocus,
+} from "@vueuse/core";
 
 //スクロール位置取得用
 const ChannelContainerContent = ref<HTMLElement | null>(null);
-const { y, arrivedState } = useScroll(ChannelContainerContent)
+const { y, arrivedState } = useScroll(ChannelContainerContent);
 //ウィンドウのフォーカス取得用
 const windowFocused = useWindowFocus();
 
 //Storeデータ用
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-const { getHistoryFromChannel, getHistoryAvailability, setHasNewMessage } = useHistory();
-const { getMessageReadTime, updateMessageReadTimeBefore } = useMessageReadTime();
+const { getHistoryFromChannel, getHistoryAvailability, setHasNewMessage } =
+  useHistory();
+const { getMessageReadTime, updateMessageReadTimeBefore } =
+  useMessageReadTime();
 
 //props(チャンネル情報)
 const props = defineProps<{
-  channelInfo: channel
+  channelInfo: channel;
 }>();
 
 /**
  * data
  */
-const displayDirection = ref<"newer"|"older">("older"); //履歴の取得、表示方向
+const displayDirection = ref<"newer" | "older">("older"); //履歴の取得、表示方向
 const skeletonLoaderOlder = ref(null); //要素位置監視用
 const atSkeletonOlder = useElementVisibility(skeletonLoaderOlder); //スケルトンローダーが画面内にあるかどうか
 const skeletonLoaderNewer = ref(null); //要素位置監視用
@@ -47,25 +54,30 @@ const messageIdEditing = ref<string>(""); //編集をするメッセージのId
  */
 const fetchOlderHistory = () => {
   //一番新しいメッセージID用変数
-  let oldestMessageId:string = "";
+  let oldestMessageId = "";
   //メッセージIDを取得しようとして無理なのなら停止
   try {
     //履歴の長さカウント
-  const lengthOfHistory = getHistoryFromChannel(props.channelInfo.channelId).length;
+    const lengthOfHistory = getHistoryFromChannel(
+      props.channelInfo.channelId,
+    ).length;
     //一番古いメッセージID
-    oldestMessageId = getHistoryFromChannel(
-      props.channelInfo.channelId
-    )[lengthOfHistory-1].messageId;
-    console.log("/channel/:id :: fetchOlderHistory : oldestMessageContent->", 
-      getHistoryFromChannel(
-        props.channelInfo.channelId
-      )[lengthOfHistory-1].content
+    oldestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[
+      lengthOfHistory - 1
+    ].messageId;
+    console.log(
+      "/channel/:id :: fetchOlderHistory : oldestMessageContent->",
+      getHistoryFromChannel(props.channelInfo.channelId)[lengthOfHistory - 1]
+        .content,
     );
-  } catch(e) {
+  } catch (e) {
     return;
   }
 
-  console.log("/channel/:id :: fetchOlderHistory : oldestMessageId->", oldestMessageId);
+  console.log(
+    "/channel/:id :: fetchOlderHistory : oldestMessageId->",
+    oldestMessageId,
+  );
 
   //履歴を取得中であるとグローバルで設定
   getAppStatus.value.fetchingHistory = true;
@@ -74,14 +86,14 @@ const fetchOlderHistory = () => {
   socket.emit("fetchHistory", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
       positionMessageId: oldestMessageId,
       includeThisPosition: false,
-      fetchDirection: "older"
-    }
+      fetchDirection: "older",
+    },
   });
 
   /*
@@ -97,20 +109,19 @@ const fetchOlderHistory = () => {
     }
   });
   */
-}
+};
 
 /**
  * 新しい履歴の追加取得
  */
 const fetchNewerHistory = () => {
   //一番新しいメッセージID用変数
-  let newestMessageId:string = "";
+  let newestMessageId = "";
   //メッセージIDを取得しようとして無理なのなら停止
   try {
-    newestMessageId = getHistoryFromChannel(
-      props.channelInfo.channelId
-    )[0].messageId;
-  } catch(e) {
+    newestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[0]
+      .messageId;
+  } catch (e) {
     return;
   }
 
@@ -123,14 +134,14 @@ const fetchNewerHistory = () => {
   socket.emit("fetchHistory", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     channelId: props.channelInfo.channelId,
     fetchingPosition: {
       positionMessageId: newestMessageId,
       includeThisPosition: false,
-      fetchDirection: "newer"
-    }
+      fetchDirection: "newer",
+    },
   });
 
   /*
@@ -146,17 +157,16 @@ const fetchNewerHistory = () => {
     }
   });
   */
-}
+};
 
 /**
  * 最新既読時間から該当するメッセージデータを取得する
  */
-const getLatestReadMessage = computed(():message|null => {
+const getLatestReadMessage = computed((): message | null => {
   //このチャンネルの履歴分ループ
-  for (let index in getHistoryFromChannel(props.channelInfo.channelId)) {
+  for (const index in getHistoryFromChannel(props.channelInfo.channelId)) {
     if (
-      getHistoryFromChannel(props.channelInfo.channelId)[index].time
-      ===
+      getHistoryFromChannel(props.channelInfo.channelId)[index].time ===
       getMessageReadTime(props.channelInfo.channelId)
     ) {
       return getHistoryFromChannel(props.channelInfo.channelId)[index];
@@ -170,26 +180,30 @@ const getLatestReadMessage = computed(():message|null => {
  * 前後のメッセージからの時差が5分以上あるか計算
  * @param messageIndex
  */
-const calculateTimeDiff = (messageIndex:number) => {
+const calculateTimeDiff = (messageIndex: number) => {
   try {
     //メッセージの前後を取得
     const messageAvailable = {
-      next: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1] || null,
+      next:
+        getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1] ||
+        null,
       here: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex],
-      before: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex - 1] || null,
+      before:
+        getHistoryFromChannel(props.channelInfo.channelId)[messageIndex - 1] ||
+        null,
     };
 
     const result = {
       next: false,
-      before: false
+      before: false,
     };
 
     if (messageAvailable.before !== null) {
       if (
-        (
-          new Date(messageAvailable.before.time).valueOf() - new Date(messageAvailable.here.time).valueOf()
-        ) / 1000 / 60
-          >
+        (new Date(messageAvailable.before.time).valueOf() -
+          new Date(messageAvailable.here.time).valueOf()) /
+          1000 /
+          60 >
         5
       ) {
         //console.log("時差 -> ", (new Date(messageAvailable.before.time).valueOf() - new Date(messageAvailable.here.time).valueOf()) / 1000 / 60);
@@ -200,10 +214,10 @@ const calculateTimeDiff = (messageIndex:number) => {
 
     if (messageAvailable.next !== null) {
       if (
-        (
-          new Date(messageAvailable.here.time).valueOf() - new Date(messageAvailable.next.time).valueOf()
-        ) / 1000 / 60
-          >
+        (new Date(messageAvailable.here.time).valueOf() -
+          new Date(messageAvailable.next.time).valueOf()) /
+          1000 /
+          60 >
         5
       ) {
         //console.log("時差 -> ", (new Date(messageAvailable.before.time).valueOf() - new Date(messageAvailable.here.time).valueOf()) / 1000 / 60);
@@ -213,36 +227,34 @@ const calculateTimeDiff = (messageIndex:number) => {
     }
 
     return result;
-
   } catch (e) {
     return {
       next: false,
-      before: false
+      before: false,
     };
   }
-
 };
 
 /**
  * 前のメッセージと日付が違うかどうか
  * @param messageIndex
  */
-const calculateDateDiffFromNext = (messageIndex:number) => {
+const calculateDateDiffFromNext = (messageIndex: number) => {
   try {
     //メッセージの前後を取得
     const messageAvailable = {
-      next: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1] || null,
-      here: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex]
+      next:
+        getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1] ||
+        null,
+      here: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex],
     };
 
     //ひとつ前のメッセージがnullじゃないなら計算、nullなら日付線を表示させる
     if (messageAvailable.next !== null) {
       if (
-        new Date(messageAvailable.here.time).getDate()
-          !==
+        new Date(messageAvailable.here.time).getDate() !==
         new Date(messageAvailable.next.time).getDate()
       ) {
-
         return true;
       }
     } else {
@@ -257,12 +269,16 @@ const calculateDateDiffFromNext = (messageIndex:number) => {
  * メッセージ枠のスタイル計算用
  * @param messageIndex
  */
-const calculateMessageBorder = (messageIndex:number) => {
+const calculateMessageBorder = (messageIndex: number) => {
   //メッセージの前後を取得
   const messageAvailable = {
-    next: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1] || null,
+    next:
+      getHistoryFromChannel(props.channelInfo.channelId)[messageIndex + 1] ||
+      null,
     here: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex],
-    before: getHistoryFromChannel(props.channelInfo.channelId)[messageIndex - 1] || null,
+    before:
+      getHistoryFromChannel(props.channelInfo.channelId)[messageIndex - 1] ||
+      null,
   };
 
   //最初のメッセージだったら
@@ -277,66 +293,69 @@ const calculateMessageBorder = (messageIndex:number) => {
     //次のメッセージが違う送信者なら
     if (messageAvailable.next.userId !== messageAvailable.here.userId) {
       return "messageSingle";
-    } else {
-      //時差計算
-      const timeDiffs = calculateTimeDiff(messageIndex);
-      return timeDiffs.next ? "messageSingle" : "messageBottom";
     }
-  } else if (messageAvailable.next === null) { //最初でなく、次のメッセージがなければ(最後)
+    //時差計算
+    const timeDiffs = calculateTimeDiff(messageIndex);
+    return timeDiffs.next ? "messageSingle" : "messageBottom";
+  }
+
+  if (messageAvailable.next === null) {
+    //最初でなく、次のメッセージがなければ(最後)
     //次(下)のメッセージと送信者が同じなら
     if (messageAvailable.before.userId === messageAvailable.here.userId) {
       //時差計算
       const timeDiffs = calculateTimeDiff(messageIndex);
-      
+
       return timeDiffs.before ? "messageSingle" : "messageTop";
-    } else { //違うなら
-      return "messageSingle";
     }
-  } else { //最初でも最後のメッセージでもないなら
-    //前のメッセージと同じ送信者で
-    if (messageAvailable.next.userId === messageAvailable.here.userId) {
+    //違うなら
+    return "messageSingle";
+  }
 
-      //かつ次のメッセージとも同じなら
-      if (messageAvailable.before.userId === messageAvailable.here.userId) {
-        //時差計算
-        const timeDiffs = calculateTimeDiff(messageIndex);
-        //ひとつ前から時差があるなら
-        if (timeDiffs.next && timeDiffs.before) {
-          return "messageSingle";
-        } else if (timeDiffs.next) {
-          return "messageTop";
-        } else if (timeDiffs.before) {
-          return "messageBottom";
-        }
-        return "messageMiddle";
-      } else {
-        //時差計算
-        const timeDiffs = calculateTimeDiff(messageIndex);
-        return timeDiffs.next ? "messageSingle" : "messageBottom";
-      }
-
-    } else { //前のメッセージが違う送信者
-
-      //次のメッセージが同じ送信者なら
-      if (messageAvailable.before.userId === messageAvailable.here.userId) {
-        //時差計算
-        const timeDiffs = calculateTimeDiff(messageIndex);
-        //一つ後から時差があるなら
-        if (timeDiffs.before) {
-          return "messageSingle";
-        }
-        return "messageTop";
-      } else {
+  //最初でも最後のメッセージでもないなら
+  //前のメッセージと同じ送信者で
+  if (messageAvailable.next.userId === messageAvailable.here.userId) {
+    //かつ次のメッセージとも同じなら
+    if (messageAvailable.before.userId === messageAvailable.here.userId) {
+      //時差計算
+      const timeDiffs = calculateTimeDiff(messageIndex);
+      //ひとつ前から時差があるなら
+      if (timeDiffs.next && timeDiffs.before) {
         return "messageSingle";
       }
-
+      if (timeDiffs.next) {
+        return "messageTop";
+      }
+      if (timeDiffs.before) {
+        return "messageBottom";
+      }
+      return "messageMiddle";
     }
+
+    //時差計算
+    const timeDiffs = calculateTimeDiff(messageIndex);
+    return timeDiffs.next ? "messageSingle" : "messageBottom";
   }
-}
+
+  //前のメッセージが違う送信者
+  //次のメッセージが同じ送信者なら
+  if (messageAvailable.before.userId === messageAvailable.here.userId) {
+    //時差計算
+    const timeDiffs = calculateTimeDiff(messageIndex);
+    //一つ後から時差があるなら
+    if (timeDiffs.before) {
+      return "messageSingle";
+    }
+
+    return "messageTop";
+  }
+
+  return "messageSingle";
+};
 
 // *************  位置監視  ************* //
 //上のスケルトンローダーの位置変数の監視
-watch(atSkeletonOlder, function (newValue, oldValue) {
+watch(atSkeletonOlder, (newValue, oldValue) => {
   //ロードできてないなら停止
   if (!stateLoaded.value) return;
 
@@ -345,8 +364,8 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
 
   //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
   if (newValue) {
-    displayDirection.value = "older"
-    
+    displayDirection.value = "older";
+
     //console.log("/channel/:id :: watch(atSkeletonOlder) : もとに戻った");
 
     getAppStatus.value.fetchingHistory = true;
@@ -355,7 +374,7 @@ watch(atSkeletonOlder, function (newValue, oldValue) {
 });
 
 //下のスケルトンローダーの位置変数の監視
-watch(atSkeletonNewer, function (newValue, oldValue) {
+watch(atSkeletonNewer, (newValue, oldValue) => {
   //ロードできてないなら停止
   if (!stateLoaded.value) return;
 
@@ -374,7 +393,7 @@ watch(atSkeletonNewer, function (newValue, oldValue) {
 });
 
 //最新のメッセージにいるかどうか
-watch(atLatestMessage, function (newValue, oldValue) {
+watch(atLatestMessage, (newValue, oldValue) => {
   //console.log("/channel/:id :: watch(atLatestMessage) : 最新にいそうだな->", newValue);
 
   //最新メッセから離れたときを除く
@@ -387,9 +406,14 @@ watch(atLatestMessage, function (newValue, oldValue) {
       //新着があるという状態を解除
       setHasNewMessage(props.channelInfo.channelId, false);
       //表示している内の最新のメッセージ時間を取得
-      const latestMessageTime = getHistoryFromChannel(props.channelInfo.channelId)[0].time
+      const latestMessageTime = getHistoryFromChannel(
+        props.channelInfo.channelId,
+      )[0].time;
       //最新既読時間を更新
-      updateMessageReadTimeCloudAndLocal(props.channelInfo.channelId, latestMessageTime);
+      updateMessageReadTimeCloudAndLocal(
+        props.channelInfo.channelId,
+        latestMessageTime,
+      );
     }
   }
 });
@@ -408,22 +432,23 @@ watch(
         try {
           //履歴追加をし始めたメッセージId
           const messageScrolledPosition = getHistoryFromChannel(
-              props.channelInfo.channelId
-            )[
-              getHistoryAvailability(props.channelInfo.channelId).latestFetchedHistoryLength - 1
-            ].messageId;
+            props.channelInfo.channelId,
+          )[
+            getHistoryAvailability(props.channelInfo.channelId)
+              .latestFetchedHistoryLength - 1
+          ].messageId;
 
           // console.log("/channel/[id] :: watch(getAppStatus) : 要素->",
           //   document.getElementById("msg" + messageScrolledPosition),
           // );
 
           //その要素へスクロールする
-            //要素DOMオブジェクト取得
-          const el = document.getElementById("msg" + messageScrolledPosition);
-            //要素がnullじゃないならその要素へスクロール
+          //要素DOMオブジェクト取得
+          const el = document.getElementById(`msg${messageScrolledPosition}`);
+          //要素がnullじゃないならその要素へスクロール
           if (el !== null) {
             document.getElementById("ChannelContainerContent")?.scrollTo({
-              top: el.getBoundingClientRect().top
+              top: el.getBoundingClientRect().top,
             });
           }
 
@@ -431,16 +456,21 @@ watch(
           if (y.value === 0) {
             setHasNewMessage(props.channelInfo.channelId, false);
             //表示している内の最新のメッセージ時間を取得
-            const latestMessageTime = getHistoryFromChannel(props.channelInfo.channelId)[0].time;
+            const latestMessageTime = getHistoryFromChannel(
+              props.channelInfo.channelId,
+            )[0].time;
             //最新既読時間を更新
-            updateMessageReadTimeCloudAndLocal(props.channelInfo.channelId, latestMessageTime);
+            updateMessageReadTimeCloudAndLocal(
+              props.channelInfo.channelId,
+              latestMessageTime,
+            );
           }
-        } catch(e) {
+        } catch (e) {
           //なにもしない
           console.log("/channel/[id] :: watch(getAppStatus) : エラー->", e);
         }
       }
-      
+
       //上方向での処理
       if (displayDirection.value === "older" && !newValue.fetchingHistory) {
         //履歴を取得できた時に一番下にいるなら再度取得
@@ -448,28 +478,30 @@ watch(
           fetchOlderHistory();
         }
       }
-
     });
   },
-  {deep: true}
+  { deep: true },
 );
 
 // *************  ウィンドウフォーカス  ************* //
 //フォーカスしたとき、一番下にいるのなら最新既読Idを更新
 watch(windowFocused, (newValue, oldValue) => {
   if (
-    newValue
-      &&
-    y.value === 0
-      &&
+    newValue &&
+    y.value === 0 &&
     getHistoryAvailability(props.channelInfo.channelId).atEnd
   ) {
     //新着状態を消す
     setHasNewMessage(props.channelInfo.channelId, false);
     //最新メッセ時間を取得
-    const latestMessageTime = getHistoryFromChannel(props.channelInfo.channelId)[0].time;
+    const latestMessageTime = getHistoryFromChannel(
+      props.channelInfo.channelId,
+    )[0].time;
     //Storeとサーバーで同期
-    updateMessageReadTimeCloudAndLocal(props.channelInfo.channelId, latestMessageTime);
+    updateMessageReadTimeCloudAndLocal(
+      props.channelInfo.channelId,
+      latestMessageTime,
+    );
   }
 });
 
@@ -479,31 +511,30 @@ onMounted(() => {
   stateLoaded.value = false;
 
   nextTick(() => {
-
     //スクロール位置を取り出し
     const scrollPosition = sessionStorage.getItem(
-      "scrollPositionY::" + props.channelInfo.channelId
+      `scrollPositionY::${props.channelInfo.channelId}`,
     );
     //console.log("/channel/[id] :: onMounted : スクロール記憶位置->", scrollPosition);
 
     //最新既読Idの要素を取得
-    const latestReadEl = document.getElementById("msg" + getLatestReadMessage.value?.messageId);
+    const latestReadEl = document.getElementById(
+      `msg${getLatestReadMessage.value?.messageId}`,
+    );
 
     //最新既読Idへスクロール、ないなら一番古いやつへ
-    if (
-      scrollPosition !== null
-    ) {
+    if (scrollPosition !== null) {
       //console.log("scrolling to ...->", scrollPositionCalculated);
       //VuetifyのgoToだと数値での移動ができないためscrollTo
       //console.log("/channel/[id] :: onMounted : (記憶位置)スクロールします->", scrollPosition);
       document.getElementById("ChannelContainerContent")?.scrollTo({
-        top: parseInt(scrollPosition)
+        top: Number.parseInt(scrollPosition),
       });
     } else if (latestReadEl !== null) {
       //console.log("/channel/[id] :: onMounted : (最新既読Id)スクロールします->", scrollPosition);
       //最新既読Idへ
       document.getElementById("ChannelContainerContent")?.scrollTo({
-        top: latestReadEl.getBoundingClientRect().top
+        top: latestReadEl.getBoundingClientRect().top,
       });
     }
 
@@ -518,16 +549,27 @@ onMounted(() => {
 
     //もし履歴の最後にいるなら新着を消す
     if (
-      getHistoryAvailability(props.channelInfo.channelId).atEnd
-      &&
+      getHistoryAvailability(props.channelInfo.channelId).atEnd &&
       y.value === 0
     ) {
       //新着削除
       setHasNewMessage(props.channelInfo.channelId, false);
-      //表示している内の最新のメッセージ時間を取得
-      const latestMessageTime = getHistoryFromChannel(props.channelInfo.channelId)[0].time;
-      //最新既読時間を更新
-      updateMessageReadTimeCloudAndLocal(props.channelInfo.channelId, latestMessageTime);
+
+      //最新のメッセージを取得
+      const firstMessage: message | undefined = getHistoryFromChannel(
+        props.channelInfo.channelId,
+      )[0];
+
+      //メッセージが空でないなら最新の時間を更新
+      if (firstMessage !== undefined) {
+        //表示している内の最新のメッセージ時間を取得
+        const latestMessageTime = firstMessage.time;
+        //最新既読時間を更新
+        updateMessageReadTimeCloudAndLocal(
+          props.channelInfo.channelId,
+          latestMessageTime,
+        );
+      }
     }
 
     //移動前のチャンネル用の最新既読IdBeforeを更新
@@ -537,7 +579,7 @@ onMounted(() => {
     }
 
     //編集に入る用の上キー監視
-    onKeyStroke('ArrowUp', (e) => {
+    onKeyStroke("ArrowUp", (e) => {
       //編集中なら停止
       if (messageIdEditing.value !== "") return;
       //入力欄の要素取得、nullなら停止
@@ -549,7 +591,9 @@ onMounted(() => {
         //console.log("Content :: onMounted : 編集に入ります");
 
         //履歴データをループして最新の自分のメッセージIdを探す
-        for (let message of getHistoryFromChannel(props.channelInfo.channelId)) {
+        for (const message of getHistoryFromChannel(
+          props.channelInfo.channelId,
+        )) {
           if (message.userId === getMyUserinfo.value.userId) {
             //console.log("一番最後の自分のメッセ", message.messageId);
             //編集するメッセージIdへ格納
@@ -562,14 +606,16 @@ onMounted(() => {
 
     //ロードできたと設定
     stateLoaded.value = true;
-
   });
 });
 
 //別のチャンネルへ移動する前に最後にいたチャンネルIdとスクロール位置を記録
 onBeforeUnmount(() => {
-  sessionStorage.setItem('latestChannel', props.channelInfo.channelId);
-  sessionStorage.setItem('scrollPositionY::'+props.channelInfo.channelId, y.value.toString());
+  sessionStorage.setItem("latestChannel", props.channelInfo.channelId);
+  sessionStorage.setItem(
+    `scrollPositionY::${props.channelInfo.channelId}`,
+    y.value.toString(),
+  );
 
   //DEBUG :: スクロール位置を取り出し
   /*

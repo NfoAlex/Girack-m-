@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Channelinfo from "./Header/Channelinfo.vue";
 import type { channel } from "~/types/channel";
+import Channelinfo from "./Header/Channelinfo.vue";
 
 /**
  * data
@@ -8,7 +8,7 @@ import type { channel } from "~/types/channel";
 const displayChannelinfo = ref<boolean>(false);
 
 const props = defineProps<{
-  channelInfo: channel
+  channelInfo: channel;
 }>();
 </script>
 

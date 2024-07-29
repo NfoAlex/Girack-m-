@@ -2,7 +2,10 @@
 import { socket } from "~/socketHandlers/socketInit";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type { channel } from "~/types/channel";
+import type { file } from "~/types/file";
 import type { MyUserinfo } from "~/types/user";
+import FileInputsDisplay from "./Input/FileInputsDisplay.vue";
+import RemoteFileSelect from "./Input/RemoteFileSelect.vue";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -26,8 +29,22 @@ interface SearchData {
  * data
  */
 const messageInput = ref<string>(""); //メッセージ入力用変数
-const elInput = ref(null); //入力欄要素を取得するためのref
+
+const allFileReady = ref<boolean>(true);
+const fileData = ref<
+  {
+    fileId: string;
+    fileBuffer: File | null;
+    fileInfo: file | null;
+    uploadedFrom: "remote" | "local";
+    ready: boolean;
+  }[]
+>([]);
+
+const elInput = ref<Element | null>(null); //入力欄要素を取得するためのref
+const elFileInput = ref(null); //ファイル入力要素を取得するためのref
 const inputRowNum = ref<number>(1); //入力欄の行数
+const displayData = ref<boolean>(false);
 const searchData = ref<SearchData>({
   //検索データ
   query: "",
@@ -40,6 +57,8 @@ const searchData = ref<SearchData>({
 });
 const searchDataResult = ref<MyUserinfo[]>([]);
 const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リスト
+
+const displayRemoteFileSelect = ref<boolean>(false);
 
 /**
  * 入力テキストの監視
@@ -76,7 +95,7 @@ watch(messageInput, () => {
     //検索文字列を取得
     searchData.value.query = messageInput.value.substring(
       searchData.value.searchStartingAt + 1,
-      searchData.value.searchEndingAt
+      searchData.value.searchEndingAt,
     );
     //console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
 
@@ -84,7 +103,7 @@ watch(messageInput, () => {
     searchDataResult.value = userAtHere.value.filter((user) =>
       user.userName
         .toLocaleLowerCase()
-        .includes(searchData.value.query.toLocaleLowerCase())
+        .includes(searchData.value.query.toLocaleLowerCase()),
     );
   }
 });
@@ -97,14 +116,103 @@ const canISpeakHere = computed((): boolean => {
   if (props.channelInfo.speakableRole.length === 0) return true;
 
   //自分のロールに話せるロールが含まれるか調べてboolで結果を返す
-  for (let role of props.channelInfo.speakableRole) {
-    console.log("/channel/[id] :: Input :: canISpeakHere : forロール->", role);
+  for (const role of props.channelInfo.speakableRole) {
     if (getMyUserinfo.value.role.includes(role)) return true;
     break;
   }
 
   return false;
 });
+
+/**
+ * 入力欄からのペーストイベントの受け取り
+ */
+const receivePasteObject = async (event: ClipboardEvent) => {
+  //入力受付
+  const fileInputs = event.clipboardData?.files;
+
+  //クリップボードの配列ループしてファイルが有効か調べてファイル用配列へ追加
+  for (const index in fileInputs) {
+    //console.log("Input :: receivePasteObject : index->", fileInputs[parseInt(index)]);
+    try {
+      //有効か？
+      if (fileInputs[Number.parseInt(index)] !== undefined) {
+        //ファイルの準備状況をfalseへ
+        allFileReady.value = false;
+        //ファイル入力用配列へ追加
+        fileData.value.push({
+          fileId: "",
+          fileBuffer: fileInputs[Number.parseInt(index)],
+          fileInfo: null,
+          uploadedFrom: "local",
+          ready: false,
+        });
+      }
+    } catch (e) {}
+  }
+};
+
+/**
+ * ファイルの入力を受け取る
+ */
+const fileInputDirectly = () => {
+  if (elFileInput.value === null) return;
+
+  /*
+  console.log("filePortal :: fileInput : ファイルデータ->",
+    elFileInput.value.files[0].size < 1,
+    elFileInput.value.files[0].size === undefined
+  );
+  */
+
+  //inputに入力されたファイルの数ぶん処理する
+  for (const index in elFileInput.value.files) {
+    //条件を調べる
+    if (
+      elFileInput.value.files[index].size < 1 ||
+      elFileInput.value.files[index].size === undefined
+    ) {
+      console.log("filePortal :: fileInput : ファイル入力エラー");
+    } else {
+      //ファイルの準備状況をfalseへ
+      allFileReady.value = false;
+      fileData.value.push({
+        fileId: "",
+        fileBuffer: elFileInput.value.files[index],
+        fileInfo: null,
+        uploadedFrom: "local",
+        ready: false,
+      });
+    }
+  }
+};
+
+/**
+ * ファイルデータの更新、あとすべてのファイルが送信できる状態か調べる
+ * @param file
+ */
+const updateFileDataValue = (
+  fileNew: {
+    fileId: string;
+    fileBuffer: File | null;
+    fileInfo: file | null;
+    uploadedFrom: "remote" | "local";
+    ready: boolean;
+  },
+  index: number,
+) => {
+  //格納
+  fileData.value[index] = fileNew;
+
+  //console.log("Input :: updateFileData : fileData今->", fileData.value, " もらった値->", fileNew);
+
+  //ループしてファイルがいけるかどうか調べる
+  for (const file of fileData.value) {
+    if (!file.ready) return;
+  }
+  //ループを抜け出せたら準備完了と設定
+  allFileReady.value = true;
+};
 
 /**
  * Enterキー入力の処理
@@ -124,23 +232,21 @@ const triggerEnter = (event: KeyboardEvent) => {
     //もし要素が取得できなかったら停止
     if (elInput.value === null) return;
 
-    //console.log("/channel/[id] :: Input : 要素->", elInput.value.selectionStart);
-
     //現在の入力欄上のカーソル位置
     const currentTxtCursor: number = elInput.value.selectionStart;
 
     //テキストを現在のカーソル位置をもとに分裂させる
-    let txtBefore = messageInput.value.slice(0, currentTxtCursor);
-    let txtAfter = messageInput.value.slice(currentTxtCursor);
+    const txtBefore = messageInput.value.slice(0, currentTxtCursor);
+    const txtAfter = messageInput.value.slice(currentTxtCursor);
 
     //改行を挿入
-    messageInput.value = txtBefore + "\n" + txtAfter;
+    messageInput.value = `${txtBefore}\n${txtAfter}`;
 
     //カーソル位置を改行のすぐ次へ移動
     nextTick(() => {
       elInput.value.setSelectionRange(
         currentTxtCursor + 1,
-        currentTxtCursor + 1
+        currentTxtCursor + 1,
       );
     });
     //関数終了
@@ -174,6 +280,14 @@ const triggerEnter = (event: KeyboardEvent) => {
     return;
   }
 
+  //もし全ファイルが準備できていないなら止める
+  if (!allFileReady.value) return;
+  //ファイルIdを抽出して配列にする
+  const fileIdArr = [];
+  for (const file of fileData.value) {
+    fileIdArr.push(file.fileId);
+  }
+
   //console.log("/channel/:id :: triggerEnter : Enterメッセージ->", messageInput.value, event, props);
   socket.emit("sendMessage", {
     RequestSender: {
@@ -183,9 +297,12 @@ const triggerEnter = (event: KeyboardEvent) => {
     message: {
       channelId: props.channelInfo.channelId,
       content: messageInput.value,
+      fileId: fileIdArr,
     },
   });
 
+  //ファイルデータを初期化
+  fileData.value = [];
   //入力欄を初期化
   messageInput.value = "";
   inputRowNum.value = 1;
@@ -255,14 +372,15 @@ const triggerDown = (e: Event) => {
 const insertResult = (targetId: string) => {
   //入力テキストの@部分をメンション文で代入
   if (searchData.value.query === "") {
-    messageInput.value =
-      messageInput.value.substring(0, searchData.value.searchStartingAt) +
-      ("@<" + targetId + "> ") +
-      messageInput.value.substring(searchData.value.searchStartingAt + 1);
+    messageInput.value = `
+        ${messageInput.value.substring(0, searchData.value.searchStartingAt)}
+        @<${targetId}> 
+        ${messageInput.value.substring(searchData.value.searchStartingAt + 1)}
+      `;
   } else {
     messageInput.value = messageInput.value.replace(
-      "@" + searchData.value.query,
-      "@<" + targetId + "> "
+      `@${searchData.value.query}`,
+      `@<${targetId}> `,
     );
   }
 
@@ -292,6 +410,25 @@ onUnmounted(() => {
 </script>
 
 <template>
+
+  <!-- クラウドからのファイル選択 -->
+  <v-dialog
+    v-if="displayRemoteFileSelect"
+    v-model="displayRemoteFileSelect"
+    width="75vw"
+    max-width="850px"
+    height="80vh"
+  >
+    <RemoteFileSelect
+      @applySelectedFile="
+        (fileSelected) => {
+          fileData = [...fileData, ...fileSelected];
+          displayRemoteFileSelect = false;
+        }
+      "
+    />
+  </v-dialog>
+
   <div style="height: fit-content">
     <!-- メンションウィンドウ -->
     <m-card
@@ -329,27 +466,95 @@ onUnmounted(() => {
         </template>
       </v-virtual-scroll>
     </m-card>
-    <v-textarea
-      v-model="messageInput"
-      id="elInput"
-      @keydown.enter.prevent="triggerEnter"
-      @keydown.up="triggerUp"
-      @keydown.down="triggerDown"
-      @keydown.@="AtsignTrigger"
-      variant="solo-filled"
-      rows="1"
-      maxRows="5"
-      ref="elInput"
-      no-resize
-      autoGrow
-      autofocus
-      rounded
-      :disabled="!canISpeakHere"
-      :placeholder="
-        canISpeakHere
-          ? props.channelInfo.channelName + ' へ送信'
-          : 'このチャンネルで話せません。'
-      "
+
+    <m-card-compact color="surface" class="">
+      <!-- 情報、ボタン表示用 -->
+      <div v-if="displayData || fileData.length>=1" class="px-3 pt-4">
+        <div>
+          <!-- 添付ファイル表示用 -->
+          <FileInputsDisplay
+            :fileData
+            :channelId="props.channelInfo.channelId"
+            @trimFile="(index)=>{ fileData.splice(index,1) }"
+            @updateFileData="args=>{ updateFileDataValue(args.fileData, args.index)}"
+          />
+        </div>
+        <v-divider class="mx-auto mt-2" />
+      </div>
+
+      <v-textarea
+        v-model="messageInput"
+        id="elInput"
+        @keydown.enter.prevent="triggerEnter"
+        @keydown.up="triggerUp"
+        @keydown.down="triggerDown"
+        @keydown.@="AtsignTrigger"
+        @paste="receivePasteObject"
+        variant="solo"
+        rows="1"
+        maxRows="5"
+        ref="elInput"
+        no-resize
+        autoGrow
+        autofocus
+        rounded
+        hide-details
+        :disabled="!canISpeakHere"
+        :placeholder="
+          canISpeakHere
+            ? props.channelInfo.channelName + ' へ送信'
+            : 'このチャンネルで話せません。'
+        "
+      >
+
+      <!-- アップロードボタン -->
+        <template v-slot:prepend-inner>
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-bind="props"
+                icon="mdi-plus"
+                size="small"
+              >
+              </v-btn>
+            </template>
+            <v-list rounded="xl">
+              <v-list-item
+                key="uploadDirectly"
+              >
+                <m-btn
+                  @click="displayRemoteFileSelect = true"
+                >
+                  <v-icon class="mr-1">mdi-cloud-download</v-icon>
+                  クラウドから選択
+                </m-btn>
+              </v-list-item>
+              <v-list-item
+                key="uploadDirectly"
+              >
+                <m-btn
+                  @click="elFileInput?.click()"
+                >
+                  <v-icon class="mr-1">mdi-upload</v-icon>
+                  直接アップロード
+                </m-btn>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </template>
+
+      </v-textarea>
+    </m-card-compact>
+
+    <!-- ファイル受け取り部分(非表示) -->
+    <input
+      @change="fileInputDirectly"
+      type="file"
+      id="elFileInput"
+      ref="elFileInput"
+      style="display: none"
+      multiple
     />
   </div>
+  
 </template>

@@ -7,9 +7,9 @@ import { useMyUserinfo } from "./userinfo";
 
 export const useUserIndex = defineStore("userindex", {
   state: () =>
-  ({
-    _UserIndex: {
-      /*
+    ({
+      _UserIndex: {
+        /*
       "xxx": {
         userName: "User",
         role: ["Member"],
@@ -18,61 +18,63 @@ export const useUserIndex = defineStore("userindex", {
         channelJoined: ["0001"]
       }
       */
-     "SYSTEM": {
-        userName: "SYSTEM",
-        role: ["HOST"],
-        userId: "SYSTEM",
-        banned: false,
-        channelJoined: []
-     }
+        SYSTEM: {
+          userName: "SYSTEM",
+          role: ["HOST"],
+          userId: "SYSTEM",
+          banned: false,
+          channelJoined: [],
+        },
+      },
+      _OnlineUsers: [],
+    }) as {
+      _UserIndex: {
+        [key: string]: MyUserinfo;
+      };
+      _OnlineUsers: string[];
     },
-    _OnlineUsers: []
-  } as {
-    _UserIndex: {
-      [key: string]: MyUserinfo
-    };
-    _OnlineUsers: string[];
-  }),
 
   getters: {
     //指定したユーザー情報を返す
-    getUserinfo: (state) => (userId:string):MyUserinfo => {
-      //空じゃなければそのデータを返す、空ならホルダー作成して情報取得
-      if (state._UserIndex[userId] !== undefined) {
-        return state._UserIndex[userId];
-      } else {
+    getUserinfo:
+      (state) =>
+      (userId: string): MyUserinfo => {
+        //空じゃなければそのデータを返す、空ならホルダー作成して情報取得
+        if (state._UserIndex[userId] !== undefined) {
+          return state._UserIndex[userId];
+        }
+
         //ホルダーとしてデータ追加
         state._UserIndex[userId] = {
           userName: "User",
           role: ["Member"],
           userId: userId,
           banned: false,
-          channelJoined: ["0001"]
+          channelJoined: ["0001"],
         };
 
         //ユーザー情報を取得する
-          //RequestSender用
+        //RequestSender用
         const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-          //WS通信
+        //WS通信
         socket.emit("fetchUserInfo", {
           RequestSender: {
             userId: getMyUserinfo.value.userId,
-            sessionId: getSessionId.value
+            sessionId: getSessionId.value,
           },
-          userId: userId
+          userId: userId,
         });
 
         //ホルダー用データを返しておく
         return state._UserIndex[userId];
-      }
-    },
+      },
 
     //オンラインユーザーリストを返す
     getOnlineUsers: (state) => {
       return state._OnlineUsers;
-    }
+    },
   },
-  
+
   actions: {
     setUserIndex(Userinfo: MyUserinfo) {
       if (Userinfo === null) return;
@@ -103,7 +105,6 @@ export const useUserIndex = defineStore("userindex", {
     //オンラインユーザーStoreの中身を丸ごと削除
     removeOnlineUsers() {
       this._OnlineUsers = [];
-    }
-  }
+    },
+  },
 });
-

@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import getMyRolePower from '~/composables/getMyRolePower';
-import { useElementBounding, useWindowSize  } from '@vueuse/core';
-import { useMyUserinfo } from '~/stores/userinfo';
+import { useElementBounding, useWindowSize } from "@vueuse/core";
+import getMyRolePower from "~/composables/getMyRolePower";
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
 
-import { Picker, EmojiIndex } from 'emoji-mart-vue-fast/src'; //TS...
 import data from "emoji-mart-vue-fast/data/twitter.json";
+import { EmojiIndex, Picker } from "emoji-mart-vue-fast/src"; //TS...
 import "emoji-mart-vue-fast/css/emoji-mart.css";
 
-import type message from '~/types/message';
+import type message from "~/types/message";
 
-const emits = defineEmits<{(e: 'enterEditing'): void}>();
+const emits = defineEmits<(e: "enterEditing") => void>();
 
 const pickerRef = ref(null);
 const { y } = useElementBounding(pickerRef);
@@ -20,10 +20,10 @@ const { height } = useWindowSize();
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 //絵文字ピッカー用データ
-let emojiIndex = new EmojiIndex(data);
+const emojiIndex = new EmojiIndex(data);
 
 const propsMessage = defineProps<{
-  message: message,
+  message: message;
 }>();
 
 /**
@@ -34,18 +34,19 @@ const displayEmojiPicker = ref<boolean>(false);
 /**
  * リアクションする
  */
-const reactIt = (emoji:any) => {
+// biome-ignore lint/suspicious/noExplicitAny: vue-emoji-martはtypeがない
+const reactIt = (emoji: any) => {
   //console.log("/channel/:id :: reactIt : emoji->", emoji);
   socket.emit("reactMessage", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     channelId: propsMessage.message.channelId,
     messageId: propsMessage.message.messageId,
-    reactionName: emoji._sanitized.id
+    reactionName: emoji._sanitized.id,
   });
-}
+};
 
 /**
  * メッセージを削除する
@@ -54,13 +55,12 @@ const deleteIt = () => {
   socket.emit("deleteMessage", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     channelId: propsMessage.message.channelId,
-    messageId: propsMessage.message.messageId
+    messageId: propsMessage.message.messageId,
   });
-}
-
+};
 </script>
 
 <template>

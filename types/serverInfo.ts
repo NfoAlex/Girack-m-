@@ -1,24 +1,26 @@
 export interface Serverinfo {
-  servername: string,
+  servername: string;
   registration: {
-    available: boolean,
+    available: boolean;
     invite: {
-      inviteOnly: boolean,
-      inviteCode?: string
-    },
-  },
+      inviteOnly: boolean;
+      inviteCode?: string;
+    };
+  };
   config: {
     PROFILE: {
-      iconMaxSize: number,
-      usernameMaxLength: number
-    },
+      iconMaxSize: number;
+      usernameMaxLength: number;
+    };
     CHANNEL: {
-      channelIdAnnounceRegistration: string,
-      defaultJoinOnRegister: string[],
-    },
+      channelIdAnnounceRegistration: string;
+      defaultJoinOnRegister: string[];
+    };
     MESSAGE: {
-      TxtMaxLength: number,
-      FileMaxSize: number,
-    },
-  }
+      TxtMaxLength: number;
+    };
+    STORAGE: {
+      StorageSizeLimit: number;
+    };
+  };
 }

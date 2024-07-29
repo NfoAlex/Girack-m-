@@ -1,14 +1,14 @@
 <script setup lang="ts">
+import draggable from "vuedraggable";
 import { socket } from "~/socketHandlers/socketInit";
-import { useMyUserinfo } from '~/stores/userinfo';
-import { useServerinfo } from '~/stores/serverinfo';
 import { useChannelinfo } from "~/stores/channel";
-import { useHistory } from '~/stores/history';
+import { useHistory } from "~/stores/history";
 import { useInbox } from "~/stores/inbox";
 import { useMessageReadTime } from "~/stores/messageReadTime";
-import draggable from 'vuedraggable';
+import { useServerinfo } from "~/stores/serverinfo";
+import { useMyUserinfo } from "~/stores/userinfo";
 
-import type { channelOrder } from '~/types/channel';
+import type { channel, channelOrder } from "~/types/channel";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -27,31 +27,31 @@ const route = useRoute();
  * data
  */
 const currentPath = ref<string>(""); //チャンネルID
-const channelOrderedData =ref<any[]>([]);
+const channelOrderedData = ref<channel[]>([]);
 
 /**
  * チャンネルリストを保存した順序へ補完しつつソートして表示に使う格納する
  */
 const getChannelListOrdered = () => {
   //チャンネル順序結果用配列
-  let channelOrderPushing:channelOrder[] = [];
+  let channelOrderPushing: channelOrder[] = [];
 
   //console.log('Channelbar :: getChannelListOrdered : getChannelOrder->', toRaw(getChannelOrder.value));
 
   //まず保存されているチャンネル順序配列をプッシュ
   try {
     channelOrderPushing = [...toRaw(getChannelOrder.value)];
-  } catch(e) {}
+  } catch (e) {}
 
   //保存されていない順序データに無かったチャンネルId用配列
   const channelNotUsed = [];
 
   //順序に保存されていないチャンネルを調べる
-  for (let channelIdChecking of getMyUserinfo.value.channelJoined) {
+  for (const channelIdChecking of getMyUserinfo.value.channelJoined) {
     //チャンネルがすでに順序データに入っているかどうかフラグ
     let thisChannelIsIncluded = false;
     //ループで一致したものを探す
-    for (let index in getChannelOrder.value) {
+    for (const index in getChannelOrder.value) {
       if (getChannelOrder.value[index].channelId === channelIdChecking) {
         thisChannelIsIncluded = true;
         break;
@@ -63,35 +63,20 @@ const getChannelListOrdered = () => {
   }
 
   //入ってなかった配列分プッシュ
-  for (let channelId of channelNotUsed) {
+  for (const channelId of channelNotUsed) {
     channelOrderPushing.push({
       channelId: channelId,
       isThread: false,
-      isFolder: false
+      isFolder: false,
     });
   }
 
   //結果を適用
-  channelOrderedData.value = [...channelOrderedData.value, ...channelOrderPushing];
+  channelOrderedData.value = [
+    ...channelOrderedData.value,
+    ...channelOrderPushing,
+  ];
 };
-
-/**
- * 指定のチャンネルに新着があるかどうかを判別する
- * @param channelId 
- */
-const getThereIsNew = (channelId:string):boolean => {
-  if (
-    ( //最新メッセと時間を比較
-      new Date(getLatestMessage.value(channelId)?.time || "").valueOf()
-      >
-      new Date(getMessageReadTime.value(channelId)).valueOf()
-    )
-  ) {
-    return true;
-  } else {
-    return false;
-  }
-}
 
 //チャンネルボタン用配列処理
 onBeforeMount(() => {
@@ -100,7 +85,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
   //なぜかpathが配列ならブラウザへ
-  if (typeof(route.params.id) !== "object") {
+  if (typeof route.params.id !== "object") {
     currentPath.value = route.params.id;
   } else {
     router.push("/browser");
@@ -114,11 +99,11 @@ onMounted(() => {
     updateChannelOrder(newValue);
 
     socket.emit("saveUserChannelOrder", {
-      RequestSender : {
+      RequestSender: {
         userId: getMyUserinfo.value.userId,
-        sessionId: getSessionId.value
+        sessionId: getSessionId.value,
       },
-      channelOrder: newValue
+      channelOrder: newValue,
     });
   });
 });

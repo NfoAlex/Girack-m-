@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
-import type role from '~/types/role';
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
+import type role from "~/types/role";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -9,22 +9,23 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
  * prop
  */
 const props = defineProps<{
-  roleEditing: role
+  roleEditing: role;
 }>();
 
 /**
  * data
  */
-const roleEditingClone = ref<role>({ //編集用のロールデータ
-  roleId: '',
-  name: '',
-  color: '',
+const roleEditingClone = ref<role>({
+  //編集用のロールデータ
+  roleId: "",
+  name: "",
+  color: "",
   ServerManage: false,
   RoleManage: false,
   ChannelManage: false,
   UserManage: false,
   MessageDelete: false,
-  MessageAttatchFile: false
+  MessageAttatchFile: false,
 });
 const stateEdited = ref<boolean>(false); //編集済み
 const displayDeleteConfirm = ref<boolean>(false); //削除確認ダイアログ
@@ -41,13 +42,16 @@ const restoreRoleData = () => {
   //ロール編集データの監視しなおす
   watch(roleEditingClone.value, () => {
     //console.log("roleManager :: restoreRoleData : データ変わったな");
-    if (JSON.stringify(roleEditingClone.value) === JSON.stringify(props.roleEditing)) {
+    if (
+      JSON.stringify(roleEditingClone.value) ===
+      JSON.stringify(props.roleEditing)
+    ) {
       stateEdited.value = false;
     } else {
       stateEdited.value = true;
     }
   });
-}
+};
 
 /**
  * ロールデータの更新
@@ -56,11 +60,11 @@ const updateRole = () => {
   socket.emit("updateRole", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
-    roleData: roleEditingClone.value
+    roleData: roleEditingClone.value,
   });
-}
+};
 
 /**
  * ロールの削除
@@ -70,20 +74,20 @@ const deleteRole = () => {
   socket.emit("deleteRole", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
-    roleId: roleEditingClone.value.roleId
+    roleId: roleEditingClone.value.roleId,
   });
   //ロールリストの再取得
   socket.emit("fetchRoles", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
+      sessionId: getSessionId.value,
+    },
   });
   //削除ダイアログの非表示
   displayDeleteConfirm.value = false;
-}
+};
 
 /**
  * watch
@@ -96,7 +100,10 @@ watch(props, () => {
   //ロール編集データの監視
   watch(roleEditingClone.value, () => {
     //console.log("roleManager :: watch(roleEditingClone) : データ変わったな");
-    if (JSON.stringify(roleEditingClone.value) === JSON.stringify(props.roleEditing)) {
+    if (
+      JSON.stringify(roleEditingClone.value) ===
+      JSON.stringify(props.roleEditing)
+    ) {
       stateEdited.value = false;
     } else {
       stateEdited.value = true;
@@ -109,21 +116,20 @@ watch(props, () => {
   //console.log("roleManager :: watch(roleEditing) : ", roleEditingClone.value);
 });
 
-
 /**
  * ロール更新結果の受け取り
  * @param dat
  */
-const SOCKETupdateRole = (dat:{result:string, dat:null}) => {
+const SOCKETupdateRole = (dat: { result: string; dat: null }) => {
   console.log("roleManager :: SOCKETupdateRole : dat->", dat);
   //現在のロール情報を取得する
   socket.emit("fetchRoles", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
+      sessionId: getSessionId.value,
+    },
   });
-}
+};
 
 onMounted(() => {
   socket.on("RESULT::updateRole", SOCKETupdateRole);

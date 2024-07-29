@@ -1,23 +1,24 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { EmojiIndex } from 'emoji-mart-vue-fast/src'; //TS...
-import { useMyUserinfo } from '~/stores/userinfo';
 import data from "emoji-mart-vue-fast/data/twitter.json";
+import { EmojiIndex } from "emoji-mart-vue-fast/src"; //TS...
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
 
-let emojiIndex:any; //絵文字データ用(onMountedでロードする)
+// biome-ignore lint/suspicious/noExplicitAny: emoji-mart-vue-fast用のタイプが存在しないため
+let emojiIndex: any; //絵文字データ用(onMountedでロードする)
 
 //Socket通信のユーザー情報用
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 //props(リアクション)
 const props = defineProps<{
-  channelId: string,
-  messageId: string,
+  channelId: string;
+  messageId: string;
   reaction: {
     [key: string]: {
-      [key: string]: number
-    }
-  }
+      [key: string]: number;
+    };
+  };
 }>();
 
 //リアクションデータがあるなら絵文字データをロード、格納する
@@ -38,36 +39,36 @@ watch(props, () => {
 /**
  * 絵文字のレンダー
  */
-const emojiRender = (emojiId:string) => {
+const emojiRender = (emojiId: string) => {
   //総リアクション数
-  let totalReactionNumber:number = 0;
+  let totalReactionNumber = 0;
   try {
     //リアクション数を加算
-    for (let reactionedUserId in props.reaction[emojiId]) {
+    for (const reactionedUserId in props.reaction[emojiId]) {
       totalReactionNumber += props.reaction[emojiId][reactionedUserId];
     }
     //絵文字と合わせて総数を文字列として返す
     return emojiIndex._emojis[emojiId].native + totalReactionNumber.toString();
-  } catch(e) {
+  } catch (e) {
     console.log("EmojiReader :: onMounted : e->", e);
   }
-}
+};
 
 /**
  * 絵文字表示をクリックしたらそれに対してリアクション
  * @param emojiId
  */
-const addMoreReaction = (emojiId:string) => {
+const addMoreReaction = (emojiId: string) => {
   socket.emit("reactMessage", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     channelId: props.channelId,
     messageId: props.messageId,
-    reactionName: emojiId
+    reactionName: emojiId,
   });
-}
+};
 </script>
 
 <template>
