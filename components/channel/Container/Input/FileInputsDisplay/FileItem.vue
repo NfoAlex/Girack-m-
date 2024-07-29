@@ -51,7 +51,7 @@ const uploadFile = () => {
       userId: getMyUserinfo.value.userId,
       sessionId: getSessionId.value,
     },
-    directory: `C${props.channelId}`,
+    directory: `C${props.channelId}_${getMyUserinfo.value.userId}`,
   };
 
   //アップロードするデータフォームオブジェクト生成
