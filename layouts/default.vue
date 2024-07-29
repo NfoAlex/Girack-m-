@@ -112,23 +112,7 @@ const { getMentionNumTotal } = storeToRefs(useInbox());
       <!-- ファイルポータルボタン -->
       <span class="mt-4">
         <NuxtLink to="/fileportal">
-          <v-badge
-            v-if="getThereIsNewMessage"
-            :dot="getMentionNumTotal===0"
-            :content="getMentionNumTotal!==0 ? getMentionNumTotal : undefined"
-            :color="getMentionNumTotal!==0 ? 'error' : 'primary'"
-          >
-            <v-btn
-              icon=""
-              :variant="$route.path.startsWith('/fileportal') ? 'tonal' : 'text'"
-              :color="$route.path.startsWith('/fileportal') ? 'primary' : ''"
-              rounded="lg"
-            >
-              <v-icon size="large">mdi:mdi-folder</v-icon>
-            </v-btn>
-          </v-badge>
           <v-btn
-            v-else
             icon=""
             :variant="$route.path.startsWith('/fileportal') ? 'tonal' : 'text'"
             :color="$route.path.startsWith('/fileportal') ? 'primary' : ''"
