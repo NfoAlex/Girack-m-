@@ -5,9 +5,11 @@ import UploadFiles from "~/components/file/UploadFiles.vue";
 import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
 import { socket } from "~/socketHandlers/socketInit";
 import { useServerinfo } from "~/stores/serverinfo";
+import { useChannelinfo } from "~/stores/channel";
 import { useMyUserinfo } from "~/stores/userinfo";
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getServerinfo } = storeToRefs(useServerinfo());
+const { getChannelinfoSingle } = useChannelinfo();
 
 import type { file, folder } from "~/types/file";
 
@@ -362,7 +364,13 @@ onUnmounted(() => {
             class="px-3 py-2 mb-1 flex-shrink-0"
             :color="currentDirectory.id === folderInfo.id ?'primary':null"
           >
-            {{ folderInfo.name }}
+            <!-- フォルダ名表示 -->
+            <span v-if="!folderInfo.id.startsWith('C')">{{ folderInfo.name }}</span>
+            <!-- チャンネル用だった時のチャンネル名表示 -->
+            <span v-else class="mx-auto d-flex align-center">
+              <v-icon size="small" class="mr-1">mdi-pound</v-icon>
+              <p class="text-truncate">{{ getChannelinfoSingle(folderInfo.id.slice(1)).channelName }}</p>
+            </span>
           </m-card-compact>
         </div>
       </div>
