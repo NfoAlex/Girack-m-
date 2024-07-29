@@ -38,7 +38,7 @@ const SOCKETcreateFolder = (dat: { result: string; dat: null }) => {
 
   //ダイアログを閉じてフォルダ構成を再取得させる(親のtrimFolderLevelにて)
   if (dat.result === "SUCCESS") {
-    emits('trimFolderLevel');
+    emits("trimFolderLevel");
   }
 };
 
