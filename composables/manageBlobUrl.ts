@@ -51,7 +51,7 @@ export function getBlobUrl(fileId: string):
 
 /**
  * BlobUrl削除
- * @param fileId 
+ * @param fileId
  */
 export function deleteBlobUrl(fileId: string) {
   const fileBlobData = blobUrlCache.get(fileId);

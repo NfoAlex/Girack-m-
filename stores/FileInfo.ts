@@ -38,7 +38,7 @@ export const useFileInfo = defineStore("fileinfo", {
           type: "*/*",
           directory: "",
           uploadedDate: "",
-          isDelete: false
+          isDelete: false,
         };
 
         //ファイル情報を取得
@@ -73,8 +73,8 @@ export const useFileInfo = defineStore("fileinfo", {
         type: "*/*",
         directory: "",
         uploadedDate: "",
-        isDelete: true
+        isDelete: true,
       };
-    }
+    },
   },
 });

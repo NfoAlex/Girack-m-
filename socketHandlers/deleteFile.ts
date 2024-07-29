@@ -1,8 +1,8 @@
 //ファイルの削除を受け取る
 
 import type { Socket } from "socket.io-client"; //クラス識別用
-import { useFileInfo } from "~/stores/FileInfo";
 import { deleteBlobUrl } from "~/composables/manageBlobUrl";
+import { useFileInfo } from "~/stores/FileInfo";
 
 export default function deleteFile(socket: Socket): void {
   socket.on(

@@ -31,8 +31,8 @@ import saveUserConfig from "./saveUserConfig";
 import fetchRoleSingle from "./fetchRoleSingle";
 import fetchRoles from "./fetchRoles";
 
-import fetchFileInfo from "./fetchFileInfo";
 import deleteFile from "./deleteFile";
+import fetchFileInfo from "./fetchFileInfo";
 
 import EventEmitter from "node:events";
 EventEmitter.defaultMaxListeners = 25; // 新しいリスナーの上限を25に設定

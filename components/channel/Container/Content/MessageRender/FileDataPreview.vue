@@ -120,7 +120,6 @@ const downloadFile = (fileId: string) => {
  * @param fileId
  */
 const getImageUrl = (fileId: string) => {
-
   //キャッシュにあるか確認して取得
   const blobCacheUrl = getBlobUrl(fileId)?.blobUrl;
   if (blobCacheUrl !== undefined) {

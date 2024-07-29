@@ -30,7 +30,7 @@ export default function fetchFileInfo(socket: Socket): void {
           type: "*/*",
           directory: "",
           uploadedDate: "",
-          isDelete: true
+          isDelete: true,
         });
       }
     },
