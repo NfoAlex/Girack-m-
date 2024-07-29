@@ -140,7 +140,7 @@ const SOCKETfetchFileInfo = (dat: {
   result: "" | "SUCCESS" | "ERROR_FILE_MISSING" | "ERROR_FILE_IS_PRIVATE";
   data: file;
 }) => {
-  console.log("/file :: dat->", dat);
+  console.log("SOCKETfetchFileInfo :: dat->", dat);
   fetchResult.value = dat.result;
 
   //成功ならデータを格納
@@ -158,7 +158,7 @@ onMounted(() => {
   console.log("/file :: route->", route.params.id);
 
   socket.on(
-    `RESULT :: fetchFileInfo : ${route.params.id} `,
+    "RESULT::fetchFileInfo",
     SOCKETfetchFileInfo,
   );
 
