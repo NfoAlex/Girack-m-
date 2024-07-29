@@ -236,10 +236,10 @@ onUnmounted(() => {
         
         <span class="d-flex align-center py-2" style="width:100%;">
           <v-icon v-if="channel.isPrivate">mdi-lock</v-icon>
-          <p class="text-h6">{{ channel.channelName }}</p>
+          <p class="text-h6 text-truncate">{{ channel.channelName }}</p>
           <v-divider vertical class="mx-2 my-1" />
           <p class="text-truncate">{{ channel.description }}</p>
-          <span class="ml-auto">
+          <span class="ml-auto flex-shrink-0">
             <m-btn
               v-if="getMyRolePower().ChannelManage"
               @click="
