@@ -87,9 +87,17 @@ const trimFolderLevel = (directoryLevel: string) => {
   //ディレクトリーツリーの深さ取得
   const lengthOfDirectoryTree = Object.keys(directoryTree.value).length;
 
+  let directoryLevelReal = directoryLevel;
+
+  //-1なら同じ階層までディレクトリツリーを削り取得しなおす
+  if (directoryLevel === "-1") {
+    directoryLevelReal = (lengthOfDirectoryTree - 2).toString();
+    fetchFilesAndFolders();
+  }
+
   //ディレクトリーツリーから移動先の深さより下のものを削除
   for (
-    let i = Number.parseInt(directoryLevel) + 1;
+    let i = Number.parseInt(directoryLevelReal) + 1;
     i <= lengthOfDirectoryTree;
     i++
   ) {
