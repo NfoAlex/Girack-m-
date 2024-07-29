@@ -48,6 +48,7 @@ const atLatestMessage = useElementVisibility(latestMessageAnchor); //最終メ�
 
 const stateLoaded = ref<boolean>(false); //履歴や処理準備ができたかどうか
 const messageIdEditing = ref<string>(""); //編集をするメッセージのId
+const messageIdToScroll = ref<string>(""); //履歴取得完了後にスクロールするメッセージId
 
 /**
  * 古い履歴の追加取得
@@ -383,7 +384,10 @@ watch(atSkeletonNewer, (newValue, oldValue) => {
 
   //もしスケルトンローダーの位置にいるのなら履歴を追加で取得
   if (newValue) {
+    //表示している履歴方向の設定
     displayDirection.value = "newer";
+    //メッセId格納
+    messageIdToScroll.value = getHistoryFromChannel(props.channelInfo.channelId)[0].messageId;
 
     //console.log("/channel/:id :: watch(atSkeletonNewer) : REVERSED!");
 
@@ -430,21 +434,8 @@ watch(
       if (displayDirection.value === "newer" && !newValue.fetchingHistory) {
         //console.log("/channe/[id] :: watch(getAppStatus) : 最後->", getHistoryAvailability(props.channelInfo.channelId).atEnd);
         try {
-          //履歴追加をし始めたメッセージId
-          const messageScrolledPosition = getHistoryFromChannel(
-            props.channelInfo.channelId,
-          )[
-            getHistoryAvailability(props.channelInfo.channelId)
-              .latestFetchedHistoryLength - 1
-          ].messageId;
-
-          // console.log("/channel/[id] :: watch(getAppStatus) : 要素->",
-          //   document.getElementById("msg" + messageScrolledPosition),
-          // );
-
-          //その要素へスクロールする
           //要素DOMオブジェクト取得
-          const el = document.getElementById(`msg${messageScrolledPosition}`);
+          const el = document.getElementById(`msg${messageIdToScroll.value}`);
           //要素がnullじゃないならその要素へスクロール
           if (el !== null) {
             document.getElementById("ChannelContainerContent")?.scrollTo({
