@@ -79,7 +79,6 @@ onErrorCaptured((err, instance, info) => {
         :src="props.linkData[index].url"
         style="max-height:150px; width:auto"
         class="rounded-xl mt-1"
-        :alt="props.linkData[index].url"
       />
     </span>
   </span>
