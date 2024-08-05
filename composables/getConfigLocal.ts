@@ -6,7 +6,7 @@ export default function getConfigLocal(): {
   config: Config;
 } | null {
   try {
-    const sync = localStorage.getItem("sync") === "true";
+    const sync = localStorage.getItem("syncConfig") === "true";
     const config = JSON.parse(localStorage.getItem("config") ?? "{}");
     return {
       sync: sync,
