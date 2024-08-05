@@ -28,7 +28,7 @@ const fileBlobArr = ref<{
 const prepareFile = async (fileId: string) => {
   if (getBlobUrl(fileId) !== undefined) return;
 
-  console.log("FileDataPreview :: prepareFile : 準備します->", fileId);
+  //console.log("FileDataPreview :: prepareFile : 準備します->", fileId);
 
   const formData = new FormData();
 
@@ -123,7 +123,7 @@ const getImageUrl = (fileId: string) => {
   //キャッシュにあるか確認して取得
   const blobCacheUrl = getBlobUrl(fileId)?.blobUrl;
   if (blobCacheUrl !== undefined) {
-    console.log("FileDataPreview :: キャッシュから");
+    //console.log("FileDataPreview :: キャッシュから");
     return blobCacheUrl;
   }
 
