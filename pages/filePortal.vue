@@ -242,9 +242,9 @@ const SOCKETcalcFullFolderSize = (dat: {
 
 /**
  * ファイルの公開設定のトグルを受け取る
- * @param dat 
+ * @param dat
  */
-const SOCKETtoggleFileIsPublic = (dat:{result:string, data:string}) => {
+const SOCKETtoggleFileIsPublic = (dat: { result: string; data: string }) => {
   //console.log("filePortal :: SOCKETtoggleFileIsPublic : dat->", dat);
 
   //成功なら結果を適用させる

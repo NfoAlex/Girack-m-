@@ -3,20 +3,20 @@ import { defineStore } from "pinia";
 import type Config from "~/types/config";
 
 //上書きに使うよう設定データ
-const configSample:Config = {
+const configSample: Config = {
   notification: {
     notifyAllMessages: false,
-    notifyMention: false
+    notifyMention: false,
   },
   theme: "dark",
   channel: {
     displayRole: false,
-    displayAttatchmentSizeLimit: 0
+    displayAttatchmentSizeLimit: 0,
   },
   sidebar: {
     ReadAllButtonEnabled: false,
-    ReadAllButtonByShiftKey: false
-  }
+    ReadAllButtonByShiftKey: false,
+  },
 };
 
 export const useConfig = defineStore("config", {
@@ -55,7 +55,7 @@ export const useConfig = defineStore("config", {
   actions: {
     //マージする形式で適用
     updateConfig(data: Config) {
-      this._Config = {...configSample, ...data};
+      this._Config = { ...configSample, ...data };
     },
     updateConfigSyncStatus(syncSwitch: boolean) {
       this._SyncConfig = syncSwitch;
