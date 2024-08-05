@@ -41,6 +41,6 @@ const getChannelPath = computed(() => {
       />
     </KeepAlive>
     <!--<ChannelContainerContent :channel-info="getChannelinfoSingle(getChannelPath)" class="flex-grow-1" />-->
-    <ChannelContainerInput :channel-info="getChannelinfoSingle(getChannelPath ?? '' )" class="flex-shrink-0"/>
+    <ChannelContainerInput :channel-info="getChannelinfoSingle(getChannelPath ?? '' )" />
   </div>
 </template>
