@@ -463,7 +463,6 @@ watch(
           console.log("/channel/[id] :: watch(getAppStatus) : エラー->", e);
         }
       }
-      
     });
   },
   { deep: true },
