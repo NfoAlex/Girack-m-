@@ -463,14 +463,6 @@ watch(
           console.log("/channel/[id] :: watch(getAppStatus) : エラー->", e);
         }
       }
-
-      //上方向での処理
-      if (displayDirection.value === "older" && !newValue.fetchingHistory) {
-        //履歴を取得できた時に一番下にいるなら再度取得
-        if (arrivedState.top) {
-          fetchOlderHistory();
-        }
-      }
     });
   },
   { deep: true },

@@ -372,11 +372,12 @@ const triggerDown = (e: Event) => {
 const insertResult = (targetId: string) => {
   //入力テキストの@部分をメンション文で代入
   if (searchData.value.query === "") {
-    // biome-ignore lint/style/useTemplate: Biomeが${}を使わせようとするけどそれだと無駄な改行が入る
-    const messageResult = messageInput.value.substring(0, searchData.value.searchStartingAt)
-        + `@<${targetId}>`
-        + messageInput.value.substring(searchData.value.searchStartingAt + 1);
-        
+    const messageResult =
+      // biome-ignore lint/style/useTemplate: Biomeが${}を使わせようとするけどそれだと無駄な改行が入る
+      messageInput.value.substring(0, searchData.value.searchStartingAt) +
+      `@<${targetId}>` +
+      messageInput.value.substring(searchData.value.searchStartingAt + 1);
+
     //console.log("Input :: insertResult : 挿入しようとしている文字列->", messageResult);
 
     messageInput.value = messageResult;
