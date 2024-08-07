@@ -130,7 +130,7 @@ const getImageUrl = (fileId: string) => {
   //キャッシュにあるか確認して取得
   const blobCacheUrl = getBlobUrl(fileId)?.blobUrl;
   const blobStatus = getBlobUrl(fileId)?.status;
-  if (blobCacheUrl !== undefined) {
+  if (blobCacheUrl !== undefined && blobStatus === "DONE") {
     //console.log("FileDataPreview :: キャッシュから");
     //無ければ画像URL配列へプッシュ
     if (imageUrls.value.indexOf(blobCacheUrl) === -1)
