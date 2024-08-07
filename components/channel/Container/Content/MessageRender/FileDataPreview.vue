@@ -32,6 +32,9 @@ const imageUrls = ref<string[]>([]);
 const prepareFile = async (fileId: string) => {
   if (getBlobUrl(fileId) !== undefined) return;
 
+  //取得中と登録
+  registerBlobUrl(fileId, { fileName: "", status: "FETCHING", blobUrl: "" });
+
   //console.log("FileDataPreview :: prepareFile : 準備します->", fileId);
 
   const formData = new FormData();
@@ -55,7 +58,7 @@ const prepareFile = async (fileId: string) => {
 
   if (!response.ok) {
     //blobキャッシュへ保存
-    registerBlobUrl(fileId, { fileName: "", blobUrl: "ERROR" });
+    registerBlobUrl(fileId, { fileName: "", status: "FAILED", blobUrl: "" });
     return;
   }
 
@@ -73,7 +76,7 @@ const prepareFile = async (fileId: string) => {
   const url = window.URL.createObjectURL(blob);
 
   //blobキャッシュへ保存
-  registerBlobUrl(fileId, { fileName: fileName, blobUrl: url });
+  registerBlobUrl(fileId, { fileName: fileName, status: "DONE", blobUrl: url });
 
   //ファイルデータ用JSONへ格納
   fileBlobArr.value[fileId] = {
@@ -126,6 +129,7 @@ const downloadFile = (fileId: string) => {
 const getImageUrl = (fileId: string) => {
   //キャッシュにあるか確認して取得
   const blobCacheUrl = getBlobUrl(fileId)?.blobUrl;
+  const blobStatus = getBlobUrl(fileId)?.status;
   if (blobCacheUrl !== undefined) {
     //console.log("FileDataPreview :: キャッシュから");
     //無ければ画像URL配列へプッシュ
@@ -144,7 +148,7 @@ const getImageUrl = (fileId: string) => {
     return fileBlobArr.value[fileId].blobUrl;
   }
 
-  if (blobCacheUrl !== "ERROR") {
+  if (blobStatus !== "FAILED" && blobStatus !== "FETCHING") {
     prepareFile(fileId);
     return;
   }
