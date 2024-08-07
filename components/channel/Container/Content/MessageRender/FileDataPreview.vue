@@ -33,7 +33,7 @@ const prepareFile = async (fileId: string) => {
   if (getBlobUrl(fileId) !== undefined) return;
 
   //取得中と登録
-  registerBlobUrl(fileId, { fileName: "", status: "FETCHING", blobUrl: "" });
+  registerBlobUrl(fileId, { fileName: "", status: "FETCHING", blobUrl: "/loading.svg" });
 
   //console.log("FileDataPreview :: prepareFile : 準備します->", fileId);
 
@@ -126,34 +126,36 @@ const downloadFile = (fileId: string) => {
  * 画像用のblobUrl取得
  * @param fileId
  */
-const getImageUrl = (fileId: string) => {
+const getImageUrl = (fileId: string):string => {
   //キャッシュにあるか確認して取得
   const blobCacheUrl = getBlobUrl(fileId)?.blobUrl;
   const blobStatus = getBlobUrl(fileId)?.status;
   if (blobCacheUrl !== undefined && blobStatus === "DONE") {
-    //console.log("FileDataPreview :: キャッシュから");
     //無ければ画像URL配列へプッシュ
     if (imageUrls.value.indexOf(blobCacheUrl) === -1)
       imageUrls.value.push(blobCacheUrl);
 
+    /*
     console.log(
       "FileDataPreview :: getImageUrl : imageUrls->",
       imageUrls.value,
     );
+    */
+
     return blobCacheUrl;
   }
 
   //今取得したものであるか確認して取得
   if (fileBlobArr.value[fileId] !== undefined) {
-    return fileBlobArr.value[fileId].blobUrl;
+    return fileBlobArr.value[fileId].blobUrl || "";
   }
 
   if (blobStatus !== "FAILED" && blobStatus !== "FETCHING") {
     prepareFile(fileId);
-    return;
+    return "/loading.svg";
   }
 
-  return "";
+  return "/loading.svg";
 };
 </script>
 
@@ -216,15 +218,24 @@ const getImageUrl = (fileId: string) => {
       </m-card>
 
       <!-- 画像表示 -->
-      <img
+      <NuxtImg
         v-else
         @click="imageViewingIndex=index, displayImageViewer=true"
-        :src="getImageUrl(getFileInfoSingle(fileId).id) || undefined"
+        :src="getImageUrl(getFileInfoSingle(fileId).id)"
+        placeholderClass="ImagePlaceHolder"
         class="rounded-lg"
-        maxHeight="150px"
         width="fit-content"
-        style="max-height:150px; width:fit;"
+        style="max-height:150px;"
+        quality="75"
+        loading="lazy"
       />
     </span>
   </div>
 </template>
+
+<style scoped>
+.ImagePlaceHolder {
+  height: 150px;
+  width: 50%;
+}
+</style>
