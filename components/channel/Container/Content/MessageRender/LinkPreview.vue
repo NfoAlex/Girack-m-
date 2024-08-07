@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ImageViewer from "./ImageViewer.vue";
 import type message from "~/types/message";
+import ImageViewer from "./ImageViewer.vue";
 
 const props = defineProps<{ linkData: message["linkData"] }>();
 

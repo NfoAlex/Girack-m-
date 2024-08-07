@@ -1,11 +1,13 @@
 <script setup lang="ts">
-
-const props = withDefaults(defineProps<{
-  imageUrls: string[],
-  indexSelected: number
-}>(), {
-  indexSelected: 0
-});
+const props = withDefaults(
+  defineProps<{
+    imageUrls: string[];
+    indexSelected: number;
+  }>(),
+  {
+    indexSelected: 0,
+  },
+);
 
 const emits = defineEmits<(e: "closeDialog") => void>();
 
@@ -16,7 +18,7 @@ const activeImageUrl = ref<string>(props.imageUrls[0]);
 
 onMounted(() => {
   //console.log("ImageViewer :: マウントされた");
-  
+
   //表示画像をマウント時の指定インデックスへ変更
   activeImageUrl.value = props.imageUrls[props.indexSelected];
 });

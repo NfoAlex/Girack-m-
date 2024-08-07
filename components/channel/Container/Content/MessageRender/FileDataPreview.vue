@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import ImageViewer from "./ImageViewer.vue";
 import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
 import { getBlobUrl, registerBlobUrl } from "~/composables/manageBlobUrl";
 import { useFileInfo } from "~/stores/FileInfo";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type { file } from "~/types/file";
+import ImageViewer from "./ImageViewer.vue";
 const { getFileInfoSingle } = useFileInfo();
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -132,7 +132,10 @@ const getImageUrl = (fileId: string) => {
     if (imageUrls.value.indexOf(blobCacheUrl) === -1)
       imageUrls.value.push(blobCacheUrl);
 
-    console.log("FileDataPreview :: getImageUrl : imageUrls->", imageUrls.value);
+    console.log(
+      "FileDataPreview :: getImageUrl : imageUrls->",
+      imageUrls.value,
+    );
     return blobCacheUrl;
   }
 

@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     "vuetify-nuxt-module",
     "@vueuse/nuxt",
     "@nuxtjs/google-fonts",
-    "@nuxt/image"
+    "@nuxt/image",
   ],
 
   pinia: {
