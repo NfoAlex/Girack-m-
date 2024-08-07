@@ -1,8 +1,11 @@
 <script setup lang="ts">
 
-const props = defineProps<{
-  imageUrls: string[]
-}>();
+const props = withDefaults(defineProps<{
+  imageUrls: string[],
+  indexSelected: number
+}>(), {
+  indexSelected: 0
+});
 
 const emits = defineEmits<(e: "closeDialog") => void>();
 
@@ -12,7 +15,10 @@ const emits = defineEmits<(e: "closeDialog") => void>();
 const activeImageUrl = ref<string>(props.imageUrls[0]);
 
 onMounted(() => {
-  console.log("ImageViewer :: マウントされた");
+  //console.log("ImageViewer :: マウントされた");
+  
+  //表示画像をマウント時の指定インデックスへ変更
+  activeImageUrl.value = props.imageUrls[props.indexSelected];
 });
 </script>
 
@@ -25,7 +31,7 @@ onMounted(() => {
       <img
         @click.stop="console.log('pic')"
         :src="activeImageUrl"
-        style="width:auto; height:auto; max-height:70vh;"
+        style="width:auto; height:auto; max-height:70vh; max-width:95vw;"
       />
     </div>
 
