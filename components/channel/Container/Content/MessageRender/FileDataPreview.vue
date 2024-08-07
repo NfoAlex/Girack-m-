@@ -22,6 +22,7 @@ const fileBlobArr = ref<{
   };
 }>({});
 const displayImageViewer = ref<boolean>(false);
+const imageViewingIndex = ref<number>(0);
 const imageUrls = ref<string[]>([]);
 
 /**
@@ -155,9 +156,10 @@ const getImageUrl = (fileId: string) => {
     v-model="displayImageViewer"
     @closeDialog="displayImageViewer=false"
     :imageUrls
+    :indexSelected="imageViewingIndex"
   />
 
-  <span v-for="fileId in propsMessage.fileId" style="width:100%">
+  <span v-for="fileId,index in propsMessage.fileId" style="width:100%">
     <m-card
       color="cardInner"
       class="mt-1 d-flex flex-column"
@@ -166,7 +168,7 @@ const getImageUrl = (fileId: string) => {
       <!-- プレビュー用画像表示 -->
       <v-img
         v-if="getImageUrl(getFileInfoSingle(fileId).id)"
-        @click="displayImageViewer=true"
+        @click="imageViewingIndex=index, displayImageViewer=true"
         :src="getImageUrl(getFileInfoSingle(fileId).id) || undefined"
         class="rounded-lg"
         maxHeight="150px"
