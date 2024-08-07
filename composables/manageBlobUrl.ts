@@ -44,6 +44,7 @@ export function registerBlobUrl(
 export function getBlobUrl(fileId: string):
   | {
       fileName: string;
+      status: "DONE"|"FETCHING"|"FAILED";
       blobUrl: string;
     }
   | undefined {
