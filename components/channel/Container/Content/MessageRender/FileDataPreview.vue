@@ -33,7 +33,11 @@ const prepareFile = async (fileId: string) => {
   if (getBlobUrl(fileId) !== undefined) return;
 
   //取得中と登録
-  registerBlobUrl(fileId, { fileName: "", status: "FETCHING", blobUrl: "/loading.svg" });
+  registerBlobUrl(fileId, {
+    fileName: "",
+    status: "FETCHING",
+    blobUrl: "/loading.svg",
+  });
 
   //console.log("FileDataPreview :: prepareFile : 準備します->", fileId);
 
@@ -126,7 +130,7 @@ const downloadFile = (fileId: string) => {
  * 画像用のblobUrl取得
  * @param fileId
  */
-const getImageUrl = (fileId: string):string => {
+const getImageUrl = (fileId: string): string => {
   //キャッシュにあるか確認して取得
   const blobCacheUrl = getBlobUrl(fileId)?.blobUrl;
   const blobStatus = getBlobUrl(fileId)?.status;
