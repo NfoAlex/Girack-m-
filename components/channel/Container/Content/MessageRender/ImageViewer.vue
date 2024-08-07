@@ -22,11 +22,10 @@ onMounted(() => {
       @click="emits('closeDialog')"
       class="flex-grow-1 flex-shrink-1 pa-1 d-flex align-center justify-center"
     >
-      <v-img
+      <img
         @click.stop="console.log('pic')"
         :src="activeImageUrl"
-        maxHeight="70vh"
-        width="fit-content"
+        style="width:auto; height:auto; max-height:70vh;"
       />
     </div>
 
