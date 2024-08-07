@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ImageViewer from "./ImageViewer.vue";
 import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
 import { getBlobUrl, registerBlobUrl } from "~/composables/manageBlobUrl";
 import { useFileInfo } from "~/stores/FileInfo";
@@ -20,6 +21,8 @@ const fileBlobArr = ref<{
     blobUrl: string | null;
   };
 }>({});
+const displayImageViewer = ref<boolean>(false);
+const imageUrls = ref<string[]>([]);
 
 /**
  * ファイルダウンロード用のURLを生成する
@@ -124,6 +127,11 @@ const getImageUrl = (fileId: string) => {
   const blobCacheUrl = getBlobUrl(fileId)?.blobUrl;
   if (blobCacheUrl !== undefined) {
     //console.log("FileDataPreview :: キャッシュから");
+    //無ければ画像URL配列へプッシュ
+    if (imageUrls.value.indexOf(blobCacheUrl) === -1)
+      imageUrls.value.push(blobCacheUrl);
+
+    console.log("FileDataPreview :: getImageUrl : imageUrls->", imageUrls.value);
     return blobCacheUrl;
   }
 
@@ -142,6 +150,13 @@ const getImageUrl = (fileId: string) => {
 </script>
 
 <template>
+  <ImageViewer
+    v-if="displayImageViewer"
+    v-model="displayImageViewer"
+    @closeDialog="displayImageViewer=false"
+    :imageUrls
+  />
+
   <span v-for="fileId in propsMessage.fileId" style="width:100%">
     <m-card
       color="cardInner"
@@ -151,6 +166,7 @@ const getImageUrl = (fileId: string) => {
       <!-- プレビュー用画像表示 -->
       <v-img
         v-if="getImageUrl(getFileInfoSingle(fileId).id)"
+        @click="displayImageViewer=true"
         :src="getImageUrl(getFileInfoSingle(fileId).id) || undefined"
         class="rounded-lg"
         maxHeight="150px"
