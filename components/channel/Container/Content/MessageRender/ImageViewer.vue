@@ -39,7 +39,7 @@ onMounted(() => {
 
     <m-card
       v-if="props.imageUrls.length!==1"
-      class="flex-shrink-0 mt-auto mx-auto d-flex flex-row align-center"
+      class="flex-shrink-0 mt-auto mx-auto d-flex flex-row align-center overflow-x-auto"
       maxWidth="650"
       width="100%"
     >
