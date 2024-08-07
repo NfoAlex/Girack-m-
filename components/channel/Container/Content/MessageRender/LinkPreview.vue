@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import type message from "~/types/message";
+import ImageViewer from "./ImageViewer.vue";
 
 const props = defineProps<{ linkData: message["linkData"] }>();
+
+/**
+ * data
+ */
+const displayImageViewer = ref<boolean>(false);
+const activeImageUrl = ref<string>("");
 
 /**
  * リンクプレビューデータJSONのキーを配列にしたものを返す
@@ -24,6 +31,14 @@ onErrorCaptured((err, instance, info) => {
 </script>
 
 <template>
+
+  <ImageViewer
+    v-if="displayImageViewer"
+    v-model="displayImageViewer"
+    @closeDialog="displayImageViewer=false"
+    :imageUrls="[activeImageUrl]"
+  />
+
   <span
     v-for="index of linkDataKeyArr"
     v-if="props.linkData!==null"
@@ -38,8 +53,16 @@ onErrorCaptured((err, instance, info) => {
 
       <span class="flex-shrink-1" style="overflow-y:auto; max-height:90%">
         <span class="d-flex" style="width:100%;">
-          <span v-if="props.linkData[index].favicon !== undefined" style="max-width:50px;" class="mr-1 mt-1">
-            <v-img width="20px" height="auto" :src="props.linkData[index].favicon" />
+          <span
+            v-if="props.linkData[index].favicon !== undefined"
+            style="max-width:50px;"
+            class="mr-1 mt-1"
+          >
+            <v-img
+              width="20px"
+              height="auto"
+              :src="props.linkData[index].favicon"
+            />
           </span>
           <a :href="linkData[index].url" rel="noopener noreferrer" target="_blank">
             <span v-if="props.linkData[index].title !== undefined">
@@ -66,6 +89,7 @@ onErrorCaptured((err, instance, info) => {
       >
         <img
           :src="props.linkData[index].images[0].url"
+          @click="activeImageUrl=props.linkData[index].images[0].url; displayImageViewer=true;"
           style="max-width:97.5%; height:auto; max-height:170px; border-radius: 20px !important;"
         >
         </img>

@@ -4,6 +4,7 @@ import { getBlobUrl, registerBlobUrl } from "~/composables/manageBlobUrl";
 import { useFileInfo } from "~/stores/FileInfo";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type { file } from "~/types/file";
+import ImageViewer from "./ImageViewer.vue";
 const { getFileInfoSingle } = useFileInfo();
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -20,6 +21,9 @@ const fileBlobArr = ref<{
     blobUrl: string | null;
   };
 }>({});
+const displayImageViewer = ref<boolean>(false);
+const imageViewingIndex = ref<number>(0);
+const imageUrls = ref<string[]>([]);
 
 /**
  * ファイルダウンロード用のURLを生成する
@@ -27,6 +31,9 @@ const fileBlobArr = ref<{
  */
 const prepareFile = async (fileId: string) => {
   if (getBlobUrl(fileId) !== undefined) return;
+
+  //取得中と登録
+  registerBlobUrl(fileId, { fileName: "", status: "FETCHING", blobUrl: "/loading.svg" });
 
   //console.log("FileDataPreview :: prepareFile : 準備します->", fileId);
 
@@ -51,7 +58,7 @@ const prepareFile = async (fileId: string) => {
 
   if (!response.ok) {
     //blobキャッシュへ保存
-    registerBlobUrl(fileId, { fileName: "", blobUrl: "ERROR" });
+    registerBlobUrl(fileId, { fileName: "", status: "FAILED", blobUrl: "" });
     return;
   }
 
@@ -69,7 +76,7 @@ const prepareFile = async (fileId: string) => {
   const url = window.URL.createObjectURL(blob);
 
   //blobキャッシュへ保存
-  registerBlobUrl(fileId, { fileName: fileName, blobUrl: url });
+  registerBlobUrl(fileId, { fileName: fileName, status: "DONE", blobUrl: url });
 
   //ファイルデータ用JSONへ格納
   fileBlobArr.value[fileId] = {
@@ -119,78 +126,116 @@ const downloadFile = (fileId: string) => {
  * 画像用のblobUrl取得
  * @param fileId
  */
-const getImageUrl = (fileId: string) => {
+const getImageUrl = (fileId: string):string => {
   //キャッシュにあるか確認して取得
   const blobCacheUrl = getBlobUrl(fileId)?.blobUrl;
-  if (blobCacheUrl !== undefined) {
-    //console.log("FileDataPreview :: キャッシュから");
+  const blobStatus = getBlobUrl(fileId)?.status;
+  if (blobCacheUrl !== undefined && blobStatus === "DONE") {
+    //無ければ画像URL配列へプッシュ
+    if (imageUrls.value.indexOf(blobCacheUrl) === -1)
+      imageUrls.value.push(blobCacheUrl);
+
+    /*
+    console.log(
+      "FileDataPreview :: getImageUrl : imageUrls->",
+      imageUrls.value,
+    );
+    */
+
     return blobCacheUrl;
   }
 
   //今取得したものであるか確認して取得
   if (fileBlobArr.value[fileId] !== undefined) {
-    return fileBlobArr.value[fileId].blobUrl;
+    return fileBlobArr.value[fileId].blobUrl || "";
   }
 
-  if (blobCacheUrl !== "ERROR") {
+  if (blobStatus !== "FAILED" && blobStatus !== "FETCHING") {
     prepareFile(fileId);
-    return;
+    return "/loading.svg";
   }
 
-  return "";
+  return "/loading.svg";
 };
 </script>
 
 <template>
-  <span v-for="fileId in propsMessage.fileId" style="width:100%">
-    <m-card
-      color="cardInner"
-      class="mt-1 d-flex flex-column"
+  <ImageViewer
+    v-if="displayImageViewer"
+    v-model="displayImageViewer"
+    @closeDialog="displayImageViewer=false"
+    :imageUrls
+    :indexSelected="imageViewingIndex"
+  />
+
+  <div class="d-flex flex-wrap align-center">
+    <span
+      v-for="fileId,index in propsMessage.fileId"
+      class="mr-1 mt-1"
     >
+      <!-- 通常ファイル表示 -->
+      <m-card
+        v-if="!getFileInfoSingle(fileId).type.startsWith('image/')"
+        color="cardInner"
+        class="mt-1 d-flex flex-column"
+      >
 
-      <!-- プレビュー用画像表示 -->
-      <v-img
-        v-if="getImageUrl(getFileInfoSingle(fileId).id)"
-        :src="getImageUrl(getFileInfoSingle(fileId).id) || undefined"
+        <span class="mt-1 d-flex align-center" style="max-height:150px;">
+          <v-icon
+            v-if="!getFileInfoSingle(fileId).isDelete"
+            class="mr-1"
+          >mdi-folder</v-icon>
+          <v-icon
+            v-else
+            class="mr-1"
+          >mdi-delete</v-icon>
+
+          <a
+            v-if="!getFileInfoSingle(fileId).isDelete"
+            :href="'/file/' + getFileInfoSingle(fileId).id"
+            rel="noopener noreferrer" target="_blank"
+            class="text-truncate flex-shrink-1"
+          >
+            {{ getFileInfoSingle(fileId).name }}
+          </a>
+          <p v-if="getFileInfoSingle(fileId).isDelete" class="text-disabled">このファイルは削除されています。</p>
+
+          <m-btn
+            v-if="!getFileInfoSingle(fileId).isDelete"
+            @click="downloadFile(getFileInfoSingle(fileId).id)"
+            icon="mdi-download"
+            variant="text"
+            size="small"
+            class="ml-auto"
+          />
+
+          <v-chip
+            v-if="!getFileInfoSingle(fileId).isDelete"
+            size="small"
+            class="flex-shrink-0"
+          >{{ calcSizeInHumanFormat(getFileInfoSingle(fileId).size) }}</v-chip>
+        </span>
+      </m-card>
+
+      <!-- 画像表示 -->
+      <NuxtImg
+        v-else
+        @click="imageViewingIndex=index, displayImageViewer=true"
+        :src="getImageUrl(getFileInfoSingle(fileId).id)"
+        placeholderClass="ImagePlaceHolder"
         class="rounded-lg"
-        maxHeight="150px"
+        width="fit-content"
+        style="max-height:150px;"
+        quality="75"
+        loading="lazy"
       />
-
-      <span class="mt-1 d-flex align-center" style="max-height:150px;">
-        <v-icon
-          v-if="!getFileInfoSingle(fileId).isDelete"
-          class="mr-1"
-        >mdi-folder</v-icon>
-        <v-icon
-          v-else
-          class="mr-1"
-        >mdi-delete</v-icon>
-
-        <a
-          v-if="!getFileInfoSingle(fileId).isDelete"
-          :href="'/file/' + getFileInfoSingle(fileId).id"
-          rel="noopener noreferrer" target="_blank"
-          class="text-truncate flex-shrink-1"
-        >
-          {{ getFileInfoSingle(fileId).name }}
-        </a>
-        <p v-if="getFileInfoSingle(fileId).isDelete" class="text-disabled">このファイルは削除されています。</p>
-
-        <m-btn
-          v-if="!getFileInfoSingle(fileId).isDelete"
-          @click="downloadFile(getFileInfoSingle(fileId).id)"
-          icon="mdi-download"
-          variant="text"
-          size="small"
-          class="ml-auto"
-        />
-
-        <v-chip
-          v-if="!getFileInfoSingle(fileId).isDelete"
-          size="small"
-          class="flex-shrink-0"
-        >{{ calcSizeInHumanFormat(getFileInfoSingle(fileId).size) }}</v-chip>
-      </span>
-    </m-card>
-  </span>
+    </span>
+  </div>
 </template>
+
+<style scoped>
+.ImagePlaceHolder {
+  height: 150px;
+  width: 50%;
+}
+</style>

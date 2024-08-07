@@ -2,6 +2,7 @@ export const blobUrlCache = new Map<
   string,
   {
     fileName: string;
+    status: "DONE"|"FETCHING"|"FAILED"
     blobUrl: string;
   }
 >();
@@ -13,7 +14,7 @@ export const blobUrlCache = new Map<
  */
 export function registerBlobUrl(
   fileId: string,
-  args: { fileName: string; blobUrl: string },
+  args: { fileName: string; status: "DONE"|"FETCHING"|"FAILED", blobUrl: string },
 ) {
   //キャッシュへ登録
   blobUrlCache.set(fileId, args);
@@ -43,6 +44,7 @@ export function registerBlobUrl(
 export function getBlobUrl(fileId: string):
   | {
       fileName: string;
+      status: "DONE"|"FETCHING"|"FAILED";
       blobUrl: string;
     }
   | undefined {
