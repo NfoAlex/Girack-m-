@@ -20,11 +20,11 @@ onMounted(() => {
     <div
       @click="emits('closeDialog')"
       class="flex-grow-1 d-flex align-center justify-center"
-      style="height:max-content;"
     >
       <v-img
-        @click.stop="console.log('ここ画像')"
+        @click.stop="null"
         :src="activeImageUrl"
+        maxHeight="70vh"
       />
     </div>
 
