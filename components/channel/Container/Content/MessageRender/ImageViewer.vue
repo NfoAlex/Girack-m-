@@ -28,8 +28,32 @@ onMounted(() => {
       />
     </div>
 
-    <m-card v-if="props.imageUrls.length!==1" class="mt-auto mx-auto" maxWidth="650" width="100%">
-      asdf
+    <m-card
+      v-if="props.imageUrls.length!==1"
+      class="mt-auto mx-auto d-flex flex-row align-center"
+      maxWidth="650"
+      width="100%"
+    >
+      <div
+        v-for="imageUrl of props.imageUrls"
+        style="max-height:90%; max-width:75px;"
+        class="mr-1 pa-1"
+      >
+        <v-img
+          @click="activeImageUrl=imageUrl"
+          :src="imageUrl"
+          :class="imageUrl===activeImageUrl?'imageSelected':null"
+          height="100%"
+          width="auto"
+          rounded
+        />
+      </div>
     </m-card>
   </v-dialog>
 </template>
+
+<style scoped>
+.imageSelected {
+  border: 2px solid rgb(var(--v-theme-primary));
+}
+</style>
