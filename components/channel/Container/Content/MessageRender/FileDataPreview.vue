@@ -159,7 +159,7 @@ const getImageUrl = (fileId: string) => {
     :indexSelected="imageViewingIndex"
   />
 
-  <div class="d-flex flex-wrap">
+  <div class="d-flex flex-wrap align-center">
     <span
       v-for="fileId,index in propsMessage.fileId"
       class="mr-1 mt-1"
