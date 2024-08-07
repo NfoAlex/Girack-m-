@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 const props = defineProps<{
   imageUrls: string[]
 }>();
@@ -19,33 +20,37 @@ onMounted(() => {
   <v-dialog height="85vh" class="d-flex flex-column align-center justify-center">
     <div
       @click="emits('closeDialog')"
-      class="flex-grow-1 d-flex align-center justify-center"
+      class="flex-grow-1 flex-shrink-1 pa-1 d-flex align-center justify-center"
     >
       <v-img
-        @click.stop="null"
+        @click.stop="console.log('pic')"
         :src="activeImageUrl"
         maxHeight="70vh"
+        width="fit-content"
       />
     </div>
 
     <m-card
       v-if="props.imageUrls.length!==1"
-      class="mt-auto mx-auto d-flex flex-row align-center"
+      class="flex-shrink-0 mt-auto mx-auto d-flex flex-row align-center"
       maxWidth="650"
       width="100%"
     >
       <div
         v-for="imageUrl of props.imageUrls"
-        style="max-height:90%; max-width:75px;"
-        class="mr-1 pa-1"
+        style="max-width:100px; max-height:75px; height:fit-content;"
+        :class="imageUrl===activeImageUrl?'imageSelected':'imageNotSelected'"
+        class="mr-1 rounded-lg d-flex justify-center align-center"
       >
-        <v-img
+        <NuxtImg
           @click="activeImageUrl=imageUrl"
           :src="imageUrl"
-          :class="imageUrl===activeImageUrl?'imageSelected':null"
+          :modifiers="{ roundCorner: '12', fit: 'contain', format: 'jpg', }"
           height="100%"
-          width="auto"
-          rounded
+          class="rounded-lg"
+          style="max-height:70px; max-width:95px; width:auto"
+          loading="lazy"
+          quality="50"
         />
       </div>
     </m-card>
@@ -54,6 +59,10 @@ onMounted(() => {
 
 <style scoped>
 .imageSelected {
-  border: 2px solid rgb(var(--v-theme-primary));
+  border: 2.5px solid rgb(var(--v-theme-primary));
+}
+
+.imageNotSelected {
+  border: 2.5px solid rgba(0,0,0,0);
 }
 </style>
