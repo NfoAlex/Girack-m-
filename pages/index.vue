@@ -20,11 +20,11 @@ const route = useRoute();
     </h4>
     <IndexOnlineUsers />
   </div>
-  <div>
-    <v-row>
+  <div >
+    <v-row class="ma-0" >
       <v-col cols="">
         <m-card class="mb-5">
-          <div class="px-2 my-2 d-flex">
+          <div class="px-2 my-2 d-flex pa-2 border-b-lg">
             <v-avatar size="70" class="mr-3 mx-2">
               <v-img
                 :alt="getMyUserinfo.userId"
@@ -48,10 +48,6 @@ const route = useRoute();
               </div>
             </div>
           </div>
-
-          <m-card variant="outlined">
-            {{ getMyUserinfo }}
-          </m-card>
           <!-- アクティブ状況を草で表示 -->
           <!-- https://razorness.github.io/vue3-calendar-heatmap/ -->
           <calendar-heatmap
@@ -75,7 +71,7 @@ const route = useRoute();
       <v-col>
         <m-card>
           <div class="text-h5 pa-2 border-b-lg" style="font-weight: 600">
-            ここがホーム
+            ページデータ
           </div>
           <p>piniaデータ :</p>
           <p>Serverinfo :</p>
