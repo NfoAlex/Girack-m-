@@ -28,7 +28,7 @@
             :variant="$route.path==='/profile/session'?'tonal':'text'"
             :ripple="false"
           >
-            <v-icon class="mr-2" size="small">mdi:mdi-theme-light-dark</v-icon>
+            <v-icon class="mr-2" size="small">mdi:mdi-key-chain</v-icon>
             セッション
           </v-card>
         </NuxtLink>
