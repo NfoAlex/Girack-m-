@@ -36,6 +36,7 @@ const getChannelPath = computed(() => {
     <KeepAlive>
       <component
         :is="ChannelContainerContent"
+        :key="route.fullPath"
         :channel-info="getChannelinfoSingle(getChannelPath ?? '')"
         class="flex-grow-1"
       />
