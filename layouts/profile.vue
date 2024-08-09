@@ -18,9 +18,7 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
             :variant="$route.path==='/profile/me'?'tonal':'text'"
             :ripple="false"
           >
-            <v-avatar class="mr-2" size="x-small">
-              <v-img :src="'/icon/' + getMyUserinfo.userId" />
-            </v-avatar>
+            <v-icon class="mr-2">mdi:mdi-account</v-icon>
             あなた
           </v-card>
         </NuxtLink>
