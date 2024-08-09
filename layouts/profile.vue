@@ -16,7 +16,9 @@
             :variant="$route.path==='/profile/me'?'tonal':'text'"
             :ripple="false"
           >
-            <v-icon class="mr-2" size="small">mdi:mdi-sync</v-icon>
+            <v-avatar class="mr-2" size="x-small">
+              <v-img :src="'/icon/' + getMyUserinfo.userId" />
+            </v-avatar>
             あなた
           </v-card>
         </NuxtLink>
