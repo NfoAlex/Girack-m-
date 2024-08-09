@@ -191,7 +191,7 @@ const { getMentionNumTotal } = storeToRefs(useInbox());
 
       <!-- 設定ボタン -->
       <span class="mt-4">
-        <NuxtLink to="/settings">
+        <NuxtLink to="/settings/sync">
           <v-btn
             icon="mdi:mdi-cog"
             :variant="$route.path.includes('/settings') ? 'tonal' : 'text'"
