@@ -20,6 +20,7 @@ export interface IUserSession {
  * data
  */
 const sessionData = ref<IUserSession[]>([]);
+const fullFetched = ref<boolean>(false);
 const currentIndexNum = ref<number>(1);
 
 /**
@@ -45,9 +46,13 @@ const SOCKETfetchSession = (dat:{result:string, data:IUserSession[]|null}) => {
   if (dat.result === "SUCCESS" && dat.data !== null) {
     sessionData.value = [...sessionData.value, ...dat.data];
 
+    //データの数に応じて状況用変数を設定
     if (dat.data.length >= 1) {
       //インデックスの位置を加算
       currentIndexNum.value++;
+    } else {
+      //すべて取り切ったと設定
+      fullFetched.value = true;
     }
   }
 }
@@ -82,7 +87,7 @@ onUnmounted(() => {
           </div>
         </m-card>
 
-        <m-btn class="mx-auto mt-2">
+        <m-btn @click="fetchSession" v-if="!fullFetched" class="mx-auto mt-2">
           さらに読み込む
         </m-btn>
       </div>
