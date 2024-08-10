@@ -200,13 +200,18 @@ onUnmounted(() => {
               <v-icon size="small">mdi-pencil</v-icon>
               セッション名を変更
             </m-btn>
-            <m-btn
-              @dblclick="logoutSession(index)"
-              size="small"
-              variant="text"
-              class="ml-auto"
-              color="error"
-            >ログアウト</m-btn>
+            <v-tooltip text="ダブルクリックでログアウト">
+              <template v-slot:activator="{ props }">
+                <m-btn
+                  @dblclick="logoutSession(index)"
+                  v-bind="props"
+                  size="small"
+                  variant="text"
+                  class="ml-auto"
+                  color="error"
+                >ログアウト</m-btn>
+              </template>
+            </v-tooltip>
           </div>
         </m-card>
 
