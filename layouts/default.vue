@@ -135,7 +135,7 @@ const { getMentionNumTotal } = storeToRefs(useInbox());
 
       <!-- プロフィールボタン -->
       <span class="mt-2">
-        <NuxtLink to="/profile" class="d-flex flex-column align-center">
+        <NuxtLink to="/profile/me" class="d-flex flex-column align-center">
           <v-avatar
             class="rounded-lg"
             :style="$route.path.startsWith('/profile')?'border:solid 3px rgba(var(--v-theme-primary))':null"
@@ -191,7 +191,7 @@ const { getMentionNumTotal } = storeToRefs(useInbox());
 
       <!-- 設定ボタン -->
       <span class="mt-4">
-        <NuxtLink to="/settings">
+        <NuxtLink to="/settings/sync">
           <v-btn
             icon="mdi:mdi-cog"
             :variant="$route.path.includes('/settings') ? 'tonal' : 'text'"

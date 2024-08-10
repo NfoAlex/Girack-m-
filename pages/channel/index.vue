@@ -15,4 +15,10 @@ onMounted(() => {
   }
 });
 </script>
-<template>ここチャンネルトップ</template>
+
+<template>
+  <div class="text-center ma-4">
+    <v-progress-circular indeterminate></v-progress-circular>
+    <p>ここチャンネルトップ</p>
+  </div>
+</template>
