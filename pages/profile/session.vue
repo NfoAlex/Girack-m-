@@ -104,7 +104,9 @@ onUnmounted(() => {
         <m-card v-for="session in sessionArray" class="mb-2" style="width:100%">
           <span class="d-flex">
             <p class="text-truncate">{{ session.sessionName }}</p>
-            <v-chip class="ml-auto flex-shrink-0">最終ログイン : {{ new Date(session.loggedinTime).toLocaleDateString() }}</v-chip>
+            <v-chip class="ml-auto flex-shrink-0 align-center" size="small">
+              最終ログイン : {{ new Date(session.loggedinTime).toLocaleDateString() }}
+            </v-chip>
           </span>
           <v-divider :thickness="3" class="my-2" />
           <div class="d-flex">
