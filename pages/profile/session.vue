@@ -24,6 +24,10 @@ const currentActiveSession = ref<IUserSession|null>();
 const fullFetched = ref<boolean>(false);
 const currentIndexNum = ref<number>(1);
 
+const displayChangingName = ref<boolean>(false);
+const sessionChangingName = ref<IUserSession|null>();
+const newNameChanging = ref<string>("");
+
 /**
  * セッション情報を取得する
  */
@@ -35,6 +39,42 @@ const fetchSession = () => {
     },
     indexNum: currentIndexNum.value
   });
+}
+
+/**
+ * セッション名を変更
+ * @param arrIndex 
+ */
+const changeSessionName = () => {
+  //値がないなら停止
+  if (!currentActiveSession.value) return;
+  if (!sessionChangingName.value) return;
+
+  socket.emit("changeSessionName", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    targetSessionId: sessionChangingName.value.sessionId,
+    newName: newNameChanging.value
+  });
+
+  //ダイアログを非表示に
+  displayChangingName.value = false;
+
+  //現在のセッションとセッションIdが一緒なら名前更新を適用して終了
+  if (currentActiveSession.value.sessionId === sessionChangingName.value.sessionId) {
+    currentActiveSession.value.sessionName = newNameChanging.value;
+    return;
+  }
+
+  //セッション配列から探して名前更新を適用
+  for (const index in sessionArray.value) {
+    if (sessionArray.value[index].sessionId === sessionChangingName.value.sessionId) {
+      sessionArray.value[index].sessionName = newNameChanging.value;
+      return;
+    }
+  }
 }
 
 /**
@@ -98,6 +138,28 @@ onUnmounted(() => {
 </script>
 
 <template>
+
+  <v-dialog v-model="displayChangingName" width="75vw" max-width="650px">
+    <m-card>
+      <v-card-title>セッション名の変更</v-card-title>
+      <v-card-text>
+        <m-card variant="outlined" style="border: 2px gray solid" class="mb-4 d-flex align-center">
+          <span class="mr-2">現在のセッション名 : </span>
+          <p class="text-truncate" style="color:rgb(var(--v-theme-primary))">{{ sessionChangingName?.sessionName }}</p>
+        </m-card>
+        <v-text-field
+          v-model="newNameChanging"
+          label="変更後の名前"
+        />
+      </v-card-text>
+      <v-card-actions>
+        <m-btn @click="changeSessionName" color="primary">
+          名前を変更
+        </m-btn>
+      </v-card-actions>
+    </m-card>
+  </v-dialog>
+
   <div>
     <NuxtLayout name="profile">
       <div class="pa-4 d-flex flex-column align-center">
@@ -108,7 +170,11 @@ onUnmounted(() => {
           </span>
           <v-divider :thickness="3" class="my-2" />
           <div class="d-flex">
-            <m-btn size="small" variant="text">
+            <m-btn
+              @click="sessionChangingName=currentActiveSession; displayChangingName=true;"
+              size="small"
+              variant="text"
+            >
               <v-icon size="small">mdi-pencil</v-icon>
               セッション名を変更
             </m-btn>
@@ -126,7 +192,11 @@ onUnmounted(() => {
           </span>
           <v-divider :thickness="3" class="my-2" />
           <div class="d-flex">
-            <m-btn size="small" variant="text">
+            <m-btn
+              @click="sessionChangingName=session; displayChangingName=true;"
+              size="small"
+              variant="text"
+            >
               <v-icon size="small">mdi-pencil</v-icon>
               セッション名を変更
             </m-btn>
