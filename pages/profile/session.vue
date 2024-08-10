@@ -38,6 +38,22 @@ const fetchSession = () => {
 }
 
 /**
+ * ログアウトさせる
+ */
+const logoutSession = (arrIndex:number) => {
+  socket.emit("sessionLogout", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    targetSessionId: sessionArray.value[arrIndex].sessionId
+  });
+
+  //指定のセッション情報を表示から削除
+  sessionArray.value.splice(arrIndex, 1);
+}
+
+/**
  * セッション情報受け取り
  * @param dat 
  */
@@ -101,7 +117,7 @@ onUnmounted(() => {
 
         <v-divider class="my-6" width="100%"></v-divider>
 
-        <m-card v-for="session in sessionArray" class="mb-2" style="width:100%">
+        <m-card v-for="session,index in sessionArray" class="mb-2" style="width:100%">
           <span class="d-flex">
             <p class="text-truncate">{{ session.sessionName }}</p>
             <v-chip class="ml-auto flex-shrink-0 align-center" size="small">
@@ -115,6 +131,7 @@ onUnmounted(() => {
               セッション名を変更
             </m-btn>
             <m-btn
+              @dblclick="logoutSession(index)"
               size="small"
               variant="text"
               class="ml-auto"
