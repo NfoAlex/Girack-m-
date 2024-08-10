@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useMyUserinfo } from '~/stores/userinfo';
+import { useMyUserinfo } from "~/stores/userinfo";
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 </script>
 

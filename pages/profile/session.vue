@@ -1,31 +1,29 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
-definePageMeta(
-  {key: route => route.fullPath}
-);
+definePageMeta({ key: (route) => route.fullPath });
 
 //セッション情報のInterface
 export interface IUserSession {
-  userId: string,
-  sessionId: string,
-  sessionName: string,
-  loggedinTime: Date,
-  loggedinTimeFirst: Date
-};
+  userId: string;
+  sessionId: string;
+  sessionName: string;
+  loggedinTime: Date;
+  loggedinTimeFirst: Date;
+}
 
 /**
  * data
  */
 const sessionArray = ref<IUserSession[]>([]);
-const currentActiveSession = ref<IUserSession|null>();
+const currentActiveSession = ref<IUserSession | null>();
 const fullFetched = ref<boolean>(false);
 const currentIndexNum = ref<number>(1);
 
 const displayChangingName = ref<boolean>(false);
-const sessionChangingName = ref<IUserSession|null>();
+const sessionChangingName = ref<IUserSession | null>();
 const newNameChanging = ref<string>("");
 
 /**
@@ -35,15 +33,15 @@ const fetchSession = () => {
   socket.emit("fetchSession", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
-    indexNum: currentIndexNum.value
+    indexNum: currentIndexNum.value,
   });
-}
+};
 
 /**
  * セッション名を変更
- * @param arrIndex 
+ * @param arrIndex
  */
 const changeSessionName = () => {
   //値がないなら停止
@@ -53,51 +51,59 @@ const changeSessionName = () => {
   socket.emit("changeSessionName", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     targetSessionId: sessionChangingName.value.sessionId,
-    newName: newNameChanging.value
+    newName: newNameChanging.value,
   });
 
   //ダイアログを非表示に
   displayChangingName.value = false;
 
   //現在のセッションとセッションIdが一緒なら名前更新を適用して終了
-  if (currentActiveSession.value.sessionId === sessionChangingName.value.sessionId) {
+  if (
+    currentActiveSession.value.sessionId === sessionChangingName.value.sessionId
+  ) {
     currentActiveSession.value.sessionName = newNameChanging.value;
     return;
   }
 
   //セッション配列から探して名前更新を適用
   for (const index in sessionArray.value) {
-    if (sessionArray.value[index].sessionId === sessionChangingName.value.sessionId) {
+    if (
+      sessionArray.value[index].sessionId ===
+      sessionChangingName.value.sessionId
+    ) {
       sessionArray.value[index].sessionName = newNameChanging.value;
       return;
     }
   }
-}
+};
 
 /**
  * ログアウトさせる
  */
-const logoutSession = (arrIndex:number) => {
+const logoutSession = (arrIndex: number) => {
   socket.emit("sessionLogout", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
-    targetSessionId: sessionArray.value[arrIndex].sessionId
+    targetSessionId: sessionArray.value[arrIndex].sessionId,
   });
 
   //指定のセッション情報を表示から削除
   sessionArray.value.splice(arrIndex, 1);
-}
+};
 
 /**
  * セッション情報受け取り
- * @param dat 
+ * @param dat
  */
-const SOCKETfetchSession = (dat:{result:string, data:IUserSession[]|null}) => {
+const SOCKETfetchSession = (dat: {
+  result: string;
+  data: IUserSession[] | null;
+}) => {
   console.log("session :: SOCKETfetchSession : dat->", dat);
   //結果成功で、データがnullじゃないなら格納
   if (dat.result === "SUCCESS" && dat.data !== null) {
@@ -123,7 +129,7 @@ const SOCKETfetchSession = (dat:{result:string, data:IUserSession[]|null}) => {
       fullFetched.value = true;
     }
   }
-}
+};
 
 onMounted(() => {
   socket.on("RESULT::fetchSession", SOCKETfetchSession);
