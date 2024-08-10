@@ -96,7 +96,6 @@ onUnmounted(() => {
               <v-icon size="small">mdi-pencil</v-icon>
               セッション名を変更
             </m-btn>
-            <m-btn variant="tonal" class="ml-auto" color="error">ログアウト</m-btn>
           </div>
         </m-card>
 
