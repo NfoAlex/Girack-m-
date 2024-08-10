@@ -92,7 +92,7 @@ onUnmounted(() => {
           </span>
           <v-divider :thickness="3" class="my-2" />
           <div class="d-flex">
-            <m-btn>
+            <m-btn size="small" variant="text">
               <v-icon size="small">mdi-pencil</v-icon>
               セッション名を変更
             </m-btn>
@@ -108,11 +108,16 @@ onUnmounted(() => {
           </span>
           <v-divider :thickness="3" class="my-2" />
           <div class="d-flex">
-            <m-btn>
+            <m-btn size="small" variant="text">
               <v-icon size="small">mdi-pencil</v-icon>
               セッション名を変更
             </m-btn>
-            <m-btn variant="tonal" class="ml-auto" color="error">ログアウト</m-btn>
+            <m-btn
+              size="small"
+              variant="text"
+              class="ml-auto"
+              color="error"
+            >ログアウト</m-btn>
           </div>
         </m-card>
 
