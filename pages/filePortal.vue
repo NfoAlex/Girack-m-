@@ -382,6 +382,7 @@ onUnmounted(() => {
       class=""
       variant="outlined"
       height="20%"
+      minHeight="200px"
       width="100%"
     >
       <div class="d-flex flex-row overflow-x-auto" style="width:100%; height:100%;">
@@ -389,7 +390,7 @@ onUnmounted(() => {
         <div
           v-for="directory,index in directoryTree"
           class="d-flex flex-column flex-shrink-0 mr-1 overflow-y-auto"
-          style="width:25%; height:100%;"
+          style="width:25%; max-width:250px; height:100%;"
         >
           <!-- フォルダそのもの -->
           <m-card-compact
@@ -492,7 +493,7 @@ onUnmounted(() => {
     <!-- ファイル表示 -->
     <v-data-table
       v-model="fileSelected"
-      class="flex-grow-1 rounded-xl mt-3"
+      class="flex-grow-1 flex-shrink-1 rounded-xl mt-3 overflow-x-auto"
       :items="fileIndex"
       return-object
       :headers="header"
