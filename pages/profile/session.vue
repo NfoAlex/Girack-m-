@@ -99,7 +99,7 @@ onUnmounted(() => {
           </div>
         </m-card>
 
-        <v-divider :thickness="3" class="my-2" color="primary" />
+        <v-divider class="my-4" width="100%"></v-divider>
 
         <m-card v-for="session in sessionArray" class="mb-2" style="width:100%">
           {{ session }}
