@@ -19,7 +19,8 @@ export interface IUserSession {
 /**
  * data
  */
-const sessionData = ref<IUserSession[]>([]);
+const sessionArray = ref<IUserSession[]>([]);
+const currentActiveSession = ref<IUserSession|null>();
 const fullFetched = ref<boolean>(false);
 const currentIndexNum = ref<number>(1);
 
@@ -44,7 +45,18 @@ const SOCKETfetchSession = (dat:{result:string, data:IUserSession[]|null}) => {
   console.log("session :: SOCKETfetchSession : dat->", dat);
   //結果成功で、データがnullじゃないなら格納
   if (dat.result === "SUCCESS" && dat.data !== null) {
-    sessionData.value = [...sessionData.value, ...dat.data];
+    //現在使っているセッションを抜き出して格納
+    const sessionWithOutActiveOne = dat.data.filter((_session) => {
+      if (_session.sessionId !== getSessionId.value) {
+        return true;
+      }
+
+      //使っているセッションを格納
+      currentActiveSession.value = _session;
+      return false;
+    });
+
+    sessionArray.value = [...sessionArray.value, ...sessionWithOutActiveOne];
 
     //データの数に応じて状況用変数を設定
     if (dat.data.length >= 1) {
@@ -73,7 +85,24 @@ onUnmounted(() => {
   <div>
     <NuxtLayout name="profile">
       <div class="pa-4 d-flex flex-column align-center">
-        <m-card v-for="session in sessionData" class="mb-2">
+        <m-card v-if="currentActiveSession" style="width:100%">
+          <span class="d-flex">
+            <p>{{ currentActiveSession.sessionName }}</p>
+            <v-chip size="small" color="success" class="ml-auto">現在のセッション</v-chip>
+          </span>
+          <v-divider :thickness="3" class="my-2" />
+          <div class="d-flex">
+            <m-btn>
+              <v-icon size="small">mdi-pencil</v-icon>
+              セッション名を変更
+            </m-btn>
+            <m-btn variant="tonal" class="ml-auto" color="error">ログアウト</m-btn>
+          </div>
+        </m-card>
+
+        <v-divider :thickness="3" class="my-2" color="primary" />
+
+        <m-card v-for="session in sessionArray" class="mb-2" style="width:100%">
           {{ session }}
 
           <p>{{ session.sessionName }}</p>
