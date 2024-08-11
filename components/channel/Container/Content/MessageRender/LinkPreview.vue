@@ -91,6 +91,7 @@ onErrorCaptured((err, instance, info) => {
           :src="props.linkData[index].images[0].url"
           @click="activeImageUrl=props.linkData[index].images[0].url; displayImageViewer=true;"
           style="max-width:97.5%; height:auto; max-height:170px; border-radius: 20px !important;"
+          class="cursor-pointer"
         >
         </img>
       </span>

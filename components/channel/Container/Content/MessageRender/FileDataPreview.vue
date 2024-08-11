@@ -227,7 +227,7 @@ const getImageUrl = (fileId: string): string => {
         @click="imageViewingIndex=index, displayImageViewer=true"
         :src="getImageUrl(getFileInfoSingle(fileId).id)"
         placeholderClass="ImagePlaceHolder"
-        class="rounded-lg"
+        class="rounded-lg cursor-pointer"
         width="fit-content"
         style="max-height:150px;"
         quality="75"
