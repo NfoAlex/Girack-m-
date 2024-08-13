@@ -389,25 +389,33 @@ onUnmounted(() => {
         <!-- ディレクトリの中身のフォルダ表示部分 -->
         <div
           v-for="directory,index in directoryTree"
-          class="d-flex flex-column flex-shrink-0 mr-1 overflow-y-auto"
+          class="flex-shrink-0 d-flex flex-row mr-2"
           style="width:25%; max-width:250px; height:100%;"
         >
-          <!-- フォルダそのもの -->
-          <m-card-compact
-            @click="moveDirectory(folderInfo, index.toString())"
-            v-for="folderInfo in directory"
-            class="px-3 py-2 mb-1 flex-shrink-0"
-            :color="currentDirectory.id === folderInfo.id ?'primary':null"
+          <!-- 一つのディレクトリ一覧 -->
+          <div
+            class="flex-grow-1 d-flex flex-column mr-2 overflow-y-auto"
           >
-            <!-- フォルダ名表示 -->
-            <span v-if="!folderInfo.id.startsWith('C')">{{ folderInfo.name }}</span>
-            <!-- チャンネル用だった時のチャンネル名表示 -->
-            <span v-else class="mx-auto d-flex align-center">
-              <v-icon size="small" class="mr-1">mdi-pound</v-icon>
-              <p class="text-truncate">{{ getChannelinfoSingle(folderInfo.id.slice(1,5)).channelName }}</p>
-            </span>
-          </m-card-compact>
+            <!-- フォルダそのもの -->
+            <m-card-compact
+              @click="moveDirectory(folderInfo, index.toString())"
+              v-for="folderInfo in directory"
+              class="px-3 py-2 mb-1 flex-shrink-0"
+              :color="currentDirectory.id === folderInfo.id ?'primary':null"
+            >
+              <!-- フォルダ名表示 -->
+              <span v-if="!folderInfo.id.startsWith('C')">{{ folderInfo.name }}</span>
+              <!-- チャンネル用だった時のチャンネル名表示 -->
+              <span v-else class="mx-auto d-flex align-center">
+                <v-icon size="small" class="mr-1">mdi-pound</v-icon>
+                <p class="text-truncate">{{ getChannelinfoSingle(folderInfo.id.slice(1,5)).channelName }}</p>
+              </span>
+            </m-card-compact>
+          </div>
+
+          <v-divider :thickness="2" vertical />
         </div>
+
       </div>
     </m-card>
 
