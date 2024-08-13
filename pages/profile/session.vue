@@ -103,8 +103,8 @@ const logoutSession = (arrIndex: number) => {
 const SOCKETfetchSession = (dat: {
   result: string;
   data: {
-    sessionData: IUserSession[],
-    activeSession: IUserSession
+    sessionData: IUserSession[];
+    activeSession: IUserSession;
   };
 }) => {
   console.log("session :: SOCKETfetchSession : dat->", dat);
