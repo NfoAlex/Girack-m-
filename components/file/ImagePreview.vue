@@ -107,6 +107,10 @@ onBeforeMount(() => {
 
 <template>
   <div>
-    プレビュー
+    <NuxtImg
+      :src="getImageUrl(props.fileId)"
+      quality="75"
+      loading="lazy"
+    />
   </div>
 </template>
