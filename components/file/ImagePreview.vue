@@ -71,6 +71,38 @@ const prepareFile = async (fileId: string) => {
 
   fileBlob.value = blob;
 };
+
+/**
+ * 画像用のblobUrl取得
+ * @param fileId
+ */
+const getImageUrl = (fileId: string): string => {
+  //キャッシュにあるか確認して取得
+  const blobCacheUrl = getBlobUrl(fileId)?.blobUrl;
+  const blobStatus = getBlobUrl(fileId)?.status;
+  if (blobCacheUrl !== undefined && blobStatus === "DONE") {
+    /*
+    console.log(
+      "ImagePreview :: getImageUrl : imageUrls->",
+      imageUrls.value,
+    );
+    */
+
+    return blobCacheUrl;
+  }
+
+  if (blobStatus !== "FAILED" && blobStatus !== "FETCHING") {
+    prepareFile(fileId);
+    return "/loading.svg";
+  }
+
+  return "/loading.svg";
+};
+
+onBeforeMount(() => {
+  //BlobURLを生成する
+  prepareFile(props.fileId);
+});
 </script>
 
 <template>
