@@ -2,6 +2,7 @@
 import CreateFolder from "~/components/file/CreateFolder.vue";
 import DeleteFolder from "~/components/file/DeleteFolder.vue";
 import UploadFiles from "~/components/file/UploadFiles.vue";
+import ImagePreview from "~/components/file/ImagePreview.vue";
 import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
 import { socket } from "~/socketHandlers/socketInit";
 import { useChannelinfo } from "~/stores/channel";
