@@ -16,6 +16,7 @@ import type { file, folder } from "~/types/file";
 //ファイルインデックス表示ヘッダ
 const header = [
   { title: "ファイル名", value: "name" },
+  { title: "プレビュー" },
   {
     title: "公開設定",
     key: "isPublic",
