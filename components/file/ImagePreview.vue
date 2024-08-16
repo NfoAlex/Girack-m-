@@ -3,6 +3,10 @@ import { useMyUserinfo } from "~/stores/userinfo";
 import { getBlobUrl, registerBlobUrl } from "~/composables/manageBlobUrl";
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
+const props = defineProps<{
+  fileId: string;
+}>();
+
 /**
  * data
  */
