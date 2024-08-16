@@ -1,5 +1,5 @@
 export const blobUrlCache = new Map<
-  string,
+  string, //ファイルId
   {
     fileName: string;
     status: "DONE" | "FETCHING" | "FAILED";
