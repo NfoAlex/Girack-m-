@@ -1,13 +1,56 @@
 <script setup lang="ts">
+import { socket } from "~/socketHandlers/socketInit";
 import { CalendarHeatmap } from "vue3-calendar-heatmap";
 import { useServerinfo } from "../stores/serverinfo";
 import { useMyUserinfo } from "../stores/userinfo";
+import type message from "~/types/message";
 
 const { getServerinfo } = storeToRefs(useServerinfo());
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getInbox } = storeToRefs(useInbox());
 
 const route = useRoute();
+
+const notificationList = ref<message[]>([]);
+
+/**
+ * getInboxからメッセージを取得
+ * @param channelId
+ * @param messageId
+ */
+const getMessage = (channelId:string ,messageId:string) => {
+  //メッセージを取得
+  socket.emit("fetchMessage",{
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value,
+    },
+    channelId: channelId,
+    messageId: messageId,
+  },(data:{
+    result:string,
+    data:message
+  }) =>{
+    if(data.result === "success"){
+      console.log("メッセージ取得成功");
+      notificationList.value.push(data.data);
+
+    }else{
+      console.log("メッセージ取得失敗");
+    }
+  });
+};
+
+watch(getInbox, () => {
+  //メッセージを取得
+  for (const key in getInbox.value.event) {
+    getMessage(Object.keys(getInbox.value.event[key])[0], key);
+  }
+  for (const key in getInbox.value.mention) {
+    getMessage(Object.keys(getInbox.value.mention[key])[0], key);
+  }
+});
+
 </script>
 
 <template>
