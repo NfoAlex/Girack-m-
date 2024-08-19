@@ -10,7 +10,8 @@ const props = defineProps<{
 /**
  * data
  */
-const fileBlob = ref<Blob|null>(null);
+const imageUrl = ref<string>("/loading.svg");
+const tryCount = ref<number>(0);
 
 /**
  * ファイルダウンロード用のURLを生成する
@@ -69,46 +70,47 @@ const prepareFile = async (fileId: string) => {
   //blobキャッシュへ保存
   registerBlobUrl(fileId, { fileName: fileName, status: "DONE", blobUrl: url });
 
-  fileBlob.value = blob;
+  imageUrl.value = url;
 };
 
 /**
  * 画像用のblobUrl取得
  * @param fileId
  */
-const getImageUrl = (fileId: string): string => {
+const getImageUrl = (fileId: string): void => {
   //キャッシュにあるか確認して取得
   const blobCacheUrl = getBlobUrl(fileId)?.blobUrl;
   const blobStatus = getBlobUrl(fileId)?.status;
   if (blobCacheUrl !== undefined && blobStatus === "DONE") {
-    /*
-    console.log(
-      "ImagePreview :: getImageUrl : imageUrls->",
-      imageUrls.value,
-    );
-    */
-
-    return blobCacheUrl;
+    imageUrl.value = blobCacheUrl;
+    return;
   }
 
   if (blobStatus !== "FAILED" && blobStatus !== "FETCHING") {
-    prepareFile(fileId);
-    return "/loading.svg";
+    if (tryCount.value <= 5) {
+      console.log("tryします");
+      setTimeout(()=>prepareFile(fileId), 2000);
+      tryCount.value++;
+    }
+    imageUrl.value = "/loading.svg";
+    return;
   }
 
-  return "/loading.svg";
+  imageUrl.value = "/loading.svg";
 };
 
 onBeforeMount(() => {
   //BlobURLを生成する
   prepareFile(props.fileId);
+
+  nextTick(() => getImageUrl(props.fileId));
 });
 </script>
 
 <template>
   <div>
     <NuxtImg
-      :src="getImageUrl(props.fileId)"
+      :src="imageUrl"
       quality="75"
       class="rounded-lg py-1 px-1"
       style="max-width:64px; max-height:64px;"
