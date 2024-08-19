@@ -419,8 +419,8 @@ onUnmounted(() => {
   <v-dialog
     v-if="displayRemoteFileSelect"
     v-model="displayRemoteFileSelect"
-    width="75vw"
-    max-width="850px"
+    width="95vw"
+    max-width="1200px"
     height="80vh"
   >
     <RemoteFileSelect
