@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { socket } from "~/socketHandlers/socketInit";
 import ImagePreview from "~/components/file/ImagePreview.vue";
+import { socket } from "~/socketHandlers/socketInit";
 import { useChannelinfo } from "~/stores/channel";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type { file, folder } from "~/types/file";
@@ -27,7 +27,7 @@ const header = [
   {
     title: "プレビュー",
     key: "preview",
-    value: (item: file) => item.type.startsWith("image/") ? item.id : null
+    value: (item: file) => (item.type.startsWith("image/") ? item.id : null),
   },
   {
     title: "公開設定",

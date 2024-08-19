@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import CreateFolder from "~/components/file/CreateFolder.vue";
 import DeleteFolder from "~/components/file/DeleteFolder.vue";
-import UploadFiles from "~/components/file/UploadFiles.vue";
 import ImagePreview from "~/components/file/ImagePreview.vue";
+import UploadFiles from "~/components/file/UploadFiles.vue";
 import calcSizeInHumanFormat from "~/composables/calcSizeInHumanFormat";
 import { socket } from "~/socketHandlers/socketInit";
 import { useChannelinfo } from "~/stores/channel";
@@ -17,7 +17,11 @@ import type { file, folder } from "~/types/file";
 //ファイルインデックス表示ヘッダ
 const header = [
   { title: "ファイル名", value: "name" },
-  { title: "プレビュー", key: "preview", value: (item: file) => item.type.startsWith("image/") ? item.id : null },
+  {
+    title: "プレビュー",
+    key: "preview",
+    value: (item: file) => (item.type.startsWith("image/") ? item.id : null),
+  },
   {
     title: "公開設定",
     key: "isPublic",

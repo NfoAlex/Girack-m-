@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useMyUserinfo } from "~/stores/userinfo";
 import { getBlobUrl, registerBlobUrl } from "~/composables/manageBlobUrl";
+import { useMyUserinfo } from "~/stores/userinfo";
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 const props = defineProps<{
@@ -89,7 +89,7 @@ const getImageUrl = (fileId: string): void => {
   if (blobStatus !== "FAILED" && blobStatus !== "FETCHING") {
     if (tryCount.value <= 5) {
       console.log("tryします");
-      setTimeout(()=>prepareFile(fileId), 2000);
+      setTimeout(() => prepareFile(fileId), 2000);
       tryCount.value++;
     }
     imageUrl.value = "/loading.svg";
