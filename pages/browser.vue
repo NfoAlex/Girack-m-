@@ -146,6 +146,17 @@ const SOCKETleaveChannel = (dat: { result: string; data: boolean }) => {
 };
 
 /**
+ * チャンネル作成結果受け取り
+ * @param dat 
+ */
+const SOCKETcreateChannel = (dat:{ result:string, data:null}) => {
+  //成功ならチャンネルリストを再取得
+  if (dat.result === "SUCCESS") {
+    fetchChannelListTrigger();
+  }
+}
+
+/**
  * チャンネル削除結果の受け取り
  * @param dat
  */
@@ -163,6 +174,7 @@ onMounted(() => {
   socket.on("RESULT::fetchChannelList", SOCKETRfetchChannelList);
   socket.on("RESULT::joinChannel", SOCKETjoinChannel);
   socket.on("RESULT::leaveChannel", SOCKETleaveChannel);
+  socket.on("RESULT::createChannel", SOCKETcreateChannel);
   socket.on("RESULT::deleteChannel", SOCKETdeleteChannel);
 
   //チャンネルリストの取得
@@ -173,6 +185,7 @@ onUnmounted(() => {
   socket.off("RESULT::fetchChannelList", SOCKETRfetchChannelList);
   socket.off("RESULT::joinChannel", SOCKETjoinChannel);
   socket.off("RESULT::leaveChannel", SOCKETleaveChannel);
+  socket.off("RESULT::createChannel", SOCKETcreateChannel);
   socket.off("RESULT::deleteChannel", SOCKETdeleteChannel);
 });
 </script>
