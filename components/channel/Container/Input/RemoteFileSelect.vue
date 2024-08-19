@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { socket } from "~/socketHandlers/socketInit";
+import ImagePreview from "~/components/file/ImagePreview.vue";
 import { useChannelinfo } from "~/stores/channel";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type { file, folder } from "~/types/file";
@@ -23,6 +24,11 @@ const emits =
 //ファイルインデックス表示ヘッダ
 const header = [
   { title: "ファイル名", value: "name" },
+  {
+    title: "プレビュー",
+    key: "preview",
+    value: (item: file) => item.type.startsWith("image/") ? item.id : null
+  },
   {
     title: "公開設定",
     key: "isPublic",
@@ -223,7 +229,13 @@ onUnmounted(() => {
           :headers="header"
           hide-default-footer
           show-select
-        ></v-data-table>
+        >
+          <template v-slot:item.preview="{ value }">
+            <!-- 画像プレビューする -->
+            <ImagePreview v-if="value !== null" :fileId="value" class="text-center" />
+            <p v-else class="text-center">-</p>
+          </template>
+        </v-data-table>
       </div>
 
       <!-- 選択したファイルのプレビュー -->
