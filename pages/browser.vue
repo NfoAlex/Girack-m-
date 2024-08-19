@@ -147,14 +147,14 @@ const SOCKETleaveChannel = (dat: { result: string; data: boolean }) => {
 
 /**
  * チャンネル作成結果受け取り
- * @param dat 
+ * @param dat
  */
-const SOCKETcreateChannel = (dat:{ result:string, data:null}) => {
+const SOCKETcreateChannel = (dat: { result: string; data: null }) => {
   //成功ならチャンネルリストを再取得
   if (dat.result === "SUCCESS") {
     fetchChannelListTrigger();
   }
-}
+};
 
 /**
  * チャンネル削除結果の受け取り
