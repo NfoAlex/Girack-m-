@@ -35,33 +35,33 @@ export default function fetchHistory(socket: Socket): void {
         setLatestmessage,
       } = useHistory(); //piniaのActionsインポート
 
-      //もし履歴データがnullならホルダーだけ作って終わり
+      const histroyInitStatus = mapHistoryInitStatus.get(dat.data.channelId);
+
+      //もし履歴データがnullだった時の処理
       if (dat.data.historyData === null) {
         insertHistory(dat.data.channelId, []);
-        setAvailability(
-          dat.data.channelId, //履歴の位置データ
-          {
-            atTop: true,
-            atEnd: true,
-            latestFetchedHistoryLength: 0,
-          },
-        );
 
-        /*
-      //履歴を一番下から再取得する
-      const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-      socket.emit("fetchHistory", {
-        RequestSender: {
-          userId: getMyUserinfo.value.userId,
-          sessionId: getSessionId.value
-        },
-        channelId: dat.data.channelId,
-        fetchingPosition: {
-          positionMessageId: "",
-          fetchDirection: "older"
+        //初回の履歴取得だったら最新から取り直す
+        if (histroyInitStatus === undefined) {
+          //履歴を一番下から再取得する
+          const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+          socket.emit("fetchHistory", {
+            RequestSender: {
+              userId: getMyUserinfo.value.userId,
+              sessionId: getSessionId.value
+            },
+            channelId: dat.data.channelId,
+            fetchingPosition: {
+              positionMessageId: "",
+              fetchDirection: "older"
+            }
+          });
         }
-      });
-      */
+
+        //すでに１回読まれていてまだnullなら完了と設定
+        if (histroyInitStatus === "LOADED_FIRST") {
+          mapHistoryInitStatus.set(dat.data.channelId, "DONE");
+        }
 
         return;
       }
@@ -94,6 +94,9 @@ export default function fetchHistory(socket: Socket): void {
 
       //履歴をStoreへ格納
       insertHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
+      //挿入処理まで来たら履歴の取得状況を完了と設定
+      mapHistoryInitStatus.set(dat.data.channelId, "DONE");
+
       //この履歴が一番最新のものなら最新メッセージを更新
       if (
         dat.data.historyData.atEnd &&
