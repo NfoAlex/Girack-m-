@@ -7,6 +7,9 @@ import { useHistory } from "~/stores/history";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type message from "~/types/message";
 
+//履歴の初期だけの取得状態
+const mapHistoryInitStatus = new Map<string, "LOADED_FIRST"|"DONE">();
+
 export default function fetchHistory(socket: Socket): void {
   //履歴データの受け取り
   socket.on(
