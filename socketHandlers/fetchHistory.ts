@@ -66,19 +66,6 @@ export default function fetchHistory(socket: Socket): void {
         return;
       }
 
-      /*
-    //履歴の位置データ保存
-    setAvailability(dat.data.channelId,
-      { //falseの時のみ変更を適用する
-        atTop: !getHistoryAvailability(dat.data.channelId).atTop
-          ? dat.data.historyData.atTop : true,
-        atEnd: !getHistoryAvailability(dat.data.channelId).atTop
-          ? dat.data.historyData.atEnd : true,
-        latestFetchedHistoryLength: dat.data.historyData.history.length
-      }
-    );
-    */
-
       //今の履歴データの可用性取得
       const historyAtTop = getHistoryAvailability(dat.data.channelId).atTop;
       const historyAtEnd = getHistoryAvailability(dat.data.channelId).atEnd;
