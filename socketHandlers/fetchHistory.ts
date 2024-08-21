@@ -1,4 +1,4 @@
-//自ユーザー情報の受け取り
+//履歴データの受け取り
 
 import type { Socket } from "socket.io-client"; //クラス識別用
 import { useAppStatus } from "~/stores/AppStatus";
