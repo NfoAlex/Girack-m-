@@ -40,8 +40,6 @@ export default function fetchHistory(socket: Socket): void {
 
       //もし履歴データがnullだった時の処理
       if (dat.data.historyData === null) {
-        insertHistory(dat.data.channelId, []);
-
         //初回の履歴取得だったら最新から取り直す
         if (histroyInitStatus === undefined) {
           //履歴を一番下から再取得する
