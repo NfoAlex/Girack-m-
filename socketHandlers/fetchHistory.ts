@@ -35,6 +35,7 @@ export default function fetchHistory(socket: Socket): void {
         setLatestmessage,
       } = useHistory(); //piniaのActionsインポート
 
+      //現在の履歴取得状況を格納
       const histroyInitStatus = mapHistoryInitStatus.get(dat.data.channelId);
 
       //もし履歴データがnullだった時の処理
