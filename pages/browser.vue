@@ -8,6 +8,7 @@ import type { channel } from "~/types/channel";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getUserinfo } = storeToRefs(useUserIndex());
+const router = useRouter();
 
 /**
  * data
@@ -204,12 +205,12 @@ onUnmounted(() => {
     transition="blank"
   >
     <m-card>
-      <v-card-title>
-        チャンネルの削除確認
-      </v-card-title>
+      <v-card-title> チャンネルの削除確認 </v-card-title>
       <v-card-text>
         次のチャンネルを削除します
-        <p class="text-center text-h5 my-4">{{ channelInfoDeleting.channelName }}</p>
+        <p class="text-center text-h5 my-4">
+          {{ channelInfoDeleting.channelName }}
+        </p>
       </v-card-text>
       <v-card-actions class="d-flex flex-row-reverse">
         <m-btn
@@ -222,13 +223,9 @@ onUnmounted(() => {
     </m-card>
   </v-dialog>
 
-  <div class="pt-5 px-5 d-flex flex-column" style="height:100%;">
-    
+  <div class="pt-5 px-5 d-flex flex-column" style="height: 100%">
     <span class="d-flex align-center">
-      <p
-        class="text-h5"
-        style="font-weight:700;"
-      >チャンネルブラウザ</p>
+      <p class="text-h5" style="font-weight: 700">チャンネルブラウザ</p>
       <v-btn
         @click="fetchChannelListTrigger"
         color="primary"
@@ -237,17 +234,19 @@ onUnmounted(() => {
         rounded="lg"
       />
     </span>
-    <v-divider class="pb-0 mt-3" style="border-radius:8px;" thickness="3" />
-    <div class="pt-3 px-2" style="overflow-y:auto; padding-bottom:15vh;">
+    <v-divider class="pb-0 mt-3" style="border-radius: 8px" thickness="3" />
+    <div class="pt-3 px-2" style="overflow-y: auto; padding-bottom: 15vh">
       <!-- チャンネルロード中表示 -->
-      <div v-if="stateLoding" style="width:fit-content;" class="mx-auto my-10">
+      <div v-if="stateLoding" style="width: fit-content" class="mx-auto my-10">
         <v-progress-circular :size="50" indeterminate />
       </div>
 
       <!-- チャンネルカード -->
-      <m-card v-for="channel of channelList" class="mb-2 pb-3 pt-2 d-flex-column">
-        
-        <span class="d-flex align-center py-2" style="width:100%;">
+      <m-card
+        v-for="channel of channelList"
+        class="mb-2 pb-3 pt-2 d-flex-column"
+      >
+        <span class="d-flex align-center py-2" style="width: 100%">
           <v-icon v-if="channel.isPrivate">mdi-lock</v-icon>
           <p class="text-h6 text-truncate">{{ channel.channelName }}</p>
           <v-divider vertical class="mx-2 my-1" />
@@ -258,8 +257,8 @@ onUnmounted(() => {
               @click="
                 displayDeleteChannel = true;
                 channelInfoDeleting = {
-                  channelName:channel.channelName,
-                  channelId: channel.channelId
+                  channelName: channel.channelName,
+                  channelId: channel.channelId,
                 };
               "
               icon="mdi-delete"
@@ -270,7 +269,6 @@ onUnmounted(() => {
             <m-btn
               v-if="!getMyUserinfo.channelJoined.includes(channel.channelId)"
               @click="joinChannel(channel.channelId)"
-              
             >
               参加
             </m-btn>
@@ -284,11 +282,11 @@ onUnmounted(() => {
           </span>
         </span>
         <v-divider />
-        <p class="text-disabled text-caption">作成者 : {{ getUserinfo(channel.createdBy).userName }}</p>
-
+        <p class="text-disabled text-caption">
+          作成者 : {{ getUserinfo(channel.createdBy).userName }}
+        </p>
       </m-card>
     </div>
-    
   </div>
 
   <!-- チャンネル作成ボタン -->
@@ -296,7 +294,7 @@ onUnmounted(() => {
     v-if="getMyRolePower().ChannelManage"
     @click="displayCreateChannel = true"
     position="absolute"
-    style="right:5%; bottom: 5%;"
+    style="right: 5%; bottom: 5%"
     color="primary"
     icon="mdi:mdi-plus"
     size="x-large"
