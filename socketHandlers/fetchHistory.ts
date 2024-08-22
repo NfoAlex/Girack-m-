@@ -1,4 +1,4 @@
-//自ユーザー情報の受け取り
+//履歴データの受け取り
 
 import type { Socket } from "socket.io-client"; //クラス識別用
 import { useAppStatus } from "~/stores/AppStatus";
@@ -6,6 +6,9 @@ import { useHistory } from "~/stores/history";
 //import { useMessageReadId } from "~/stores/messageReadId";
 import { useMyUserinfo } from "~/stores/userinfo";
 import type message from "~/types/message";
+
+//履歴の初期だけの取得状態
+const mapHistoryInitStatus = new Map<string, "LOADED_FIRST" | "DONE">();
 
 export default function fetchHistory(socket: Socket): void {
   //履歴データの受け取り
@@ -32,49 +35,36 @@ export default function fetchHistory(socket: Socket): void {
         setLatestmessage,
       } = useHistory(); //piniaのActionsインポート
 
-      //もし履歴データがnullならホルダーだけ作って終わり
-      if (dat.data.historyData === null) {
-        insertHistory(dat.data.channelId, []);
-        setAvailability(
-          dat.data.channelId, //履歴の位置データ
-          {
-            atTop: true,
-            atEnd: true,
-            latestFetchedHistoryLength: 0,
-          },
-        );
+      //現在の履歴取得状況を格納
+      const histroyInitStatus = mapHistoryInitStatus.get(dat.data.channelId);
 
-        /*
-      //履歴を一番下から再取得する
-      const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-      socket.emit("fetchHistory", {
-        RequestSender: {
-          userId: getMyUserinfo.value.userId,
-          sessionId: getSessionId.value
-        },
-        channelId: dat.data.channelId,
-        fetchingPosition: {
-          positionMessageId: "",
-          fetchDirection: "older"
+      //もし履歴データがnullだった時の処理
+      if (dat.data.historyData === null) {
+        //初回の履歴取得だったら最新から取り直す
+        if (histroyInitStatus === undefined) {
+          //履歴を一番下から再取得する
+          const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+          socket.emit("fetchHistory", {
+            RequestSender: {
+              userId: getMyUserinfo.value.userId,
+              sessionId: getSessionId.value,
+            },
+            channelId: dat.data.channelId,
+            fetchingPosition: {
+              positionMessageId: "",
+              includeThisPosition: true,
+              fetchDirection: "older",
+            },
+          });
         }
-      });
-      */
+
+        //すでに１回読まれていてまだnullなら完了と設定
+        if (histroyInitStatus === "LOADED_FIRST") {
+          mapHistoryInitStatus.set(dat.data.channelId, "DONE");
+        }
 
         return;
       }
-
-      /*
-    //履歴の位置データ保存
-    setAvailability(dat.data.channelId,
-      { //falseの時のみ変更を適用する
-        atTop: !getHistoryAvailability(dat.data.channelId).atTop
-          ? dat.data.historyData.atTop : true,
-        atEnd: !getHistoryAvailability(dat.data.channelId).atTop
-          ? dat.data.historyData.atEnd : true,
-        latestFetchedHistoryLength: dat.data.historyData.history.length
-      }
-    );
-    */
 
       //今の履歴データの可用性取得
       const historyAtTop = getHistoryAvailability(dat.data.channelId).atTop;
@@ -91,6 +81,9 @@ export default function fetchHistory(socket: Socket): void {
 
       //履歴をStoreへ格納
       insertHistory(dat.data.channelId, dat.data.historyData.history); //履歴データ
+      //挿入処理まで来たら履歴の取得状況を完了と設定
+      mapHistoryInitStatus.set(dat.data.channelId, "DONE");
+
       //この履歴が一番最新のものなら最新メッセージを更新
       if (
         dat.data.historyData.atEnd &&
