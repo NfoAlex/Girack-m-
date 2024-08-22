@@ -12,11 +12,11 @@ export default function updateMessageReadTimeCloudAndLocal(
   const { updateMessageReadTime, getMessageReadTime } = useMessageReadTime();
 
   //今の既読時間と比較して更新する値が古いなら同期を停止
-    //今
+  //今
   const currentReadTime: number = new Date(
     getMessageReadTime(channelId),
   ).valueOf();
-    //更新する予定の値
+  //更新する予定の値
   const newReadTime: number = new Date(dateString).valueOf();
   if (newReadTime < currentReadTime) return;
 
