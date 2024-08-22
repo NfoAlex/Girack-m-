@@ -463,10 +463,10 @@ onUnmounted(() => {
         :disabled="fileSelected.length === 0"
         variant="text"
         class="ml-2"
-        icon="mdi-content-copy"
+        icon="mdi-link-variant"
         size="small"
       >
-        <v-icon>mdi-content-copy</v-icon>
+        <v-icon>mdi-link-variant</v-icon>
         <v-tooltip activator="parent" location="top">ファイルのURLをコピーする</v-tooltip>
       </m-btn>
 
