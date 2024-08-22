@@ -52,6 +52,7 @@ export default function fetchHistory(socket: Socket): void {
             channelId: dat.data.channelId,
             fetchingPosition: {
               positionMessageId: "",
+              includeThisPosition: true,
               fetchDirection: "older",
             },
           });
