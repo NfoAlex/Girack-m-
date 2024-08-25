@@ -32,13 +32,13 @@ const formatedUserId = computed(() => {
     />
     <span
       @click="()=>{displayUserinfo=true;}"
-      class="px-2 py-1 userIdStringContainer cursor-pointer"
+      class="px-2 pb-1 d-flex align-center justify-center userIdStringContainer cursor-pointer"
       :class="formatedUserId===getMyUserinfo.userId ? 'userIdMentioningMe':null"
       style="width:fit-content;"
     >
       <span>@</span>
       <span>
-        <v-avatar v-bind="props" size="16" class="mx-1 mb-1">
+        <v-avatar v-bind="props" size="16" class="mx-1 mb-0">
           <v-img
             :src="'/icon/' + formatedUserId"
           ></v-img>
@@ -53,7 +53,7 @@ const formatedUserId = computed(() => {
 .userIdStringContainer {
   border-radius: 99999px;
   background-color: rgba(var(--v-theme-cardInner),0.2);
-  font-size:14px;
+  font-size:16px;
 }
 
 .userIdMentioningMe {
