@@ -9,7 +9,12 @@ const props = defineProps<{
 //システムメッセージ文表示用
 const flagDictionary = new Map<ISystemMessageFlag, string>([
   ["CHANNEL_JOINED", "がチャンネルへ参加しました!"],
+  ["CHANNEL_INVITED", "がチャンネルへ招待されました"],
+  ["CHANNEL_LEFT", "がチャンネルから退出しました。"],
+  ["CHANNEL_INFO_UPDATED", "がチャンネル情報を更新しました。"],
+  ["CHANNEL_KICKED", "がチャンネルからキックされました。"],
   ["SERVER_JOINED", "がサーバーへ参加しました!"],
+  ["SERVER_UPDATED", "がサーバー情報を更新しました。"]
 ]);
 
 /**
