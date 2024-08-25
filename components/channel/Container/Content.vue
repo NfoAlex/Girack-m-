@@ -8,6 +8,7 @@ import { useMyUserinfo } from "~/stores/userinfo";
 import type { channel } from "~/types/channel";
 import type message from "~/types/message";
 import MessageRender from "./Content/MessageRender.vue";
+import SystemMessageRender from "./Content/SystemMessageRender.vue";
 
 import {
   onKeyStroke,
@@ -654,22 +655,18 @@ onBeforeUnmount(() => {
           <v-divider class="flex-shrink-1" :thickness="3" />
         </div>
 
-        <span v-if="index===0" ref="latestMessageAnchor">
+        <span :ref="index===0?'latestMessageAnchor':undefined">
           <MessageRender
+            v-if="!message.isSystemMessage"
             :message="message"
             :index
             :editThisMessage="messageIdEditing === message.messageId"
             @leaveEditingParent="messageIdEditing = ''"
             :borderClass="calculateMessageBorder(index)"
           />
-        </span>
-        <span v-else>
-          <MessageRender
-            :message="message"
-            :index
-            :editThisMessage="messageIdEditing === message.messageId"
-            @leaveEditingParent="messageIdEditing = ''"
-            :borderClass="calculateMessageBorder(index)"
+          <SystemMessageRender
+            v-else
+            :content="message.content"
           />
         </span>
 
