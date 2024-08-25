@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UserChip from './MessageRender/TextRender/UserChip.vue';
 import type { ISystemMessageContent, ISystemMessageFlag } from '~/types/message';
 
 const props = defineProps<{
@@ -32,9 +33,10 @@ onMounted(() => {
 <template>
   <div
     v-if="systemMessageJson.senderUserId !== ''"
-    class="text-center text-medium-emphasis mx-auto my-3"
+    class="d-flex align-center justify-center text-medium-emphasis mx-auto my-3"
     style="width:100%;"
   >
-    {{ systemMessageJson.senderUserId }} {{ flagDictionary.get(systemMessageJson.flag) }}
+    <UserChip :userId="systemMessageJson.senderUserId" class="mr-1" />
+    <p>{{ flagDictionary.get(systemMessageJson.flag) }}</p>
   </div>
 </template>
