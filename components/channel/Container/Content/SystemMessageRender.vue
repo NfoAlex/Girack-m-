@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import type { ISystemMessageContent } from '~/types/message';
+import type { ISystemMessageContent, ISystemMessageFlag } from '~/types/message';
 
 const props = defineProps<{
   content: string;
 }>();
+
+//システムメッセージ文表示用
+const flagDictionary = new Map<ISystemMessageFlag, string>([
+  ["CHANNEL_JOINED", "がチャンネルへ参加しました!"],
+  ["SERVER_JOINED", "がサーバーへ参加しました!"],
+]);
 
 /**
  * data
@@ -24,7 +30,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    {{ JSON.stringify(systemMessageJson) }}
+  <div
+    v-if="systemMessageJson.senderUserId !== ''"
+    class="text-center text-medium-emphasis mx-auto my-3"
+    style="width:100%;"
+  >
+    {{ systemMessageJson.senderUserId }} {{ flagDictionary.get(systemMessageJson.flag) }}
   </div>
 </template>
