@@ -41,7 +41,7 @@ onMounted(() => {
     class="d-flex align-center justify-center text-medium-emphasis mx-auto my-3"
     style="width:100%;"
   >
-    <UserChip :userId="systemMessageJson.senderUserId" class="mr-1 text-truncate" />
-    <p>{{ flagDictionary.get(systemMessageJson.flag) }}</p>
+    <UserChip :userId="systemMessageJson.senderUserId" style="min-width:25%" class="mr-1 text-truncate flex-shrink-0" />
+    <p class="text-truncate">{{ flagDictionary.get(systemMessageJson.flag) }}</p>
   </div>
 </template>
