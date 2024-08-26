@@ -40,7 +40,7 @@ onMounted(() => {
 <template>
   <div
     v-if="systemMessageJson.senderUserId !== ''"
-    class="d-flex align-center justify-center text-medium-emphasis mx-auto my-3"
+    class="d-flex align-center justify-center text-medium-emphasis mx-auto my-1"
     style="width:100%;"
   >
     <UserChip :userId="systemMessageJson.senderUserId" style="min-width:25%" class="mr-1 text-truncate flex-shrink-0" />
