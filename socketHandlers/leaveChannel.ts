@@ -16,7 +16,6 @@ export default function leaveChannel(socket: Socket): void {
 
     //成功ならチャンネル情報を削除する
     if (dat.result === "SUCCESS") {
-
       //取得
       socket.emit("fetchUserInfo", {
         RequestSender: {
