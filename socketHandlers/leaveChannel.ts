@@ -6,14 +6,25 @@ import { useMessageReadId } from "~/stores/messageReadId";
 import { useMyUserinfo } from "~/stores/userinfo";
 
 export default function leaveChannel(socket: Socket): void {
-  const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+  const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
   //チャンネル情報更新関数を取得
   const { updateMyUserinfo } = useMyUserinfo();
 
   //チャンネル脱退結果
   socket.on("RESULT::leaveChannel", (dat: { result: string; data: string }) => {
+    //console.log("socket(leaveChannel) :: dat->", dat);
+
     //成功ならチャンネル情報を削除する
     if (dat.result === "SUCCESS") {
+      //取得
+      socket.emit("fetchUserInfo", {
+        RequestSender: {
+          userId: getMyUserinfo.value.userId,
+          sessionId: getSessionId.value,
+        },
+        userId: getMyUserinfo.value.userId,
+      });
+
       //参加チャンネル配列を抽出
       const channelJoined: string[] = getMyUserinfo.value.channelJoined;
       //チャンネルIDを削除した配列を作成
