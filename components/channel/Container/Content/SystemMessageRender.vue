@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import UserChip from './MessageRender/TextRender/UserChip.vue';
-import type { ISystemMessageContent, ISystemMessageFlag } from '~/types/message';
+import type {
+  ISystemMessageContent,
+  ISystemMessageFlag,
+} from "~/types/message";
+import UserChip from "./MessageRender/TextRender/UserChip.vue";
 
 const props = defineProps<{
   content: string;
@@ -14,25 +17,24 @@ const flagDictionary = new Map<ISystemMessageFlag, string>([
   ["CHANNEL_INFO_UPDATED", "がチャンネル情報を更新しました。"],
   ["CHANNEL_KICKED", "がチャンネルからキックされました。"],
   ["SERVER_JOINED", "がサーバーへ参加しました!"],
-  ["SERVER_UPDATED", "がサーバー情報を更新しました。"]
+  ["SERVER_UPDATED", "がサーバー情報を更新しました。"],
 ]);
 
 /**
  * data
  */
 const systemMessageJson = ref<ISystemMessageContent>({
-  flag: 'SERVER_JOINED',
+  flag: "SERVER_JOINED",
   targetUserId: null,
-  senderUserId: ''
+  senderUserId: "",
 });
 
 onMounted(() => {
   try {
     //パースして格納してみる
     systemMessageJson.value = JSON.parse(props.content);
-  } catch(e) {}
+  } catch (e) {}
 });
-
 </script>
 
 <template>

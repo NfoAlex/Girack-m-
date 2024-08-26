@@ -43,18 +43,17 @@ export interface inbox {
 
 //システムメッセージの内容用フラッグ
 export type ISystemMessageFlag =
-  "SERVER_JOINED" |
-  "SERVER_UPDATED" |
-  "CHANNEL_INVITED" |
-  "CHANNEL_JOINED" |
-  "CHANNEL_LEFT" |
-  "CHANNEL_KICKED" |
-  "CHANNEL_INFO_UPDATED"
-;
+  | "SERVER_JOINED"
+  | "SERVER_UPDATED"
+  | "CHANNEL_INVITED"
+  | "CHANNEL_JOINED"
+  | "CHANNEL_LEFT"
+  | "CHANNEL_KICKED"
+  | "CHANNEL_INFO_UPDATED";
 
 //システムメッセージの内容用型
 export interface ISystemMessageContent {
-  flag: ISystemMessageFlag,
-  targetUserId: string | null,
-  senderUserId: string
+  flag: ISystemMessageFlag;
+  targetUserId: string | null;
+  senderUserId: string;
 }
