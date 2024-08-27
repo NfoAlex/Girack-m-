@@ -492,7 +492,6 @@ watch(windowFocused, (newValue, oldValue) => {
 });
 
 onMounted(() => {
-  console.log("/channel/[id] :: マウントされた？");
   //ロード状態を解除
   stateLoaded.value = false;
 

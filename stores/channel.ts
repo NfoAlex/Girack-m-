@@ -49,10 +49,7 @@ export const useChannelinfo = defineStore("channelinfo", {
 
         //チャンネル情報を取得
         const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
-        console.log(
-          "store(channel) :: getChannelinfoSingle : userId->",
-          getMyUserinfo.value.userId,
-        );
+
         socket.emit("fetchChannelInfo", {
           RequestSender: {
             userId: getMyUserinfo.value.userId,
@@ -60,7 +57,6 @@ export const useChannelinfo = defineStore("channelinfo", {
           },
           channelId: channelId,
         });
-        console.log("store(channel) :: getChannelinfoSingle : 送信した");
 
         return state._Channelinfo[channelId];
       }

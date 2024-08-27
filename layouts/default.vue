@@ -11,6 +11,21 @@ const { getOnlineUsers } = storeToRefs(useUserIndex());
 const { getAppStatus } = storeToRefs(useAppStatus());
 const { getThereIsNewMessage } = storeToRefs(useHistory());
 const { getMentionNumTotal } = storeToRefs(useInbox());
+
+/**
+ * 最後にいたチャンネルへ移動
+ */
+const moveToLatestChannel = () => {
+  //今チャンネルページにいるなら何もしない
+  const route = useRoute();
+  if (route.path.startsWith("/channel")) return;
+
+  //最後にいたチャンネルIdを取得
+  const channelId = sessionStorage.getItem("latestChannel") || "";
+  //移動
+  const router = useRouter();
+  router.push(`/channel/${channelId}`);
+};
 </script>
 
 <template>
@@ -75,7 +90,7 @@ const { getMentionNumTotal } = storeToRefs(useInbox());
 
       <!-- チャンネルボタン -->
       <span class="mt-4">
-        <NuxtLink to="/channel">
+        <NuxtLink @click="moveToLatestChannel">
           <v-badge
             v-if="getThereIsNewMessage"
             :dot="getMentionNumTotal===0"
