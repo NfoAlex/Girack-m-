@@ -100,12 +100,20 @@ watch(messageInput, () => {
     );
     //console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
 
-    //クエリーでユーザーリストへフィルターかけて結果格納
-    searchDataResult.value = userAtHere.value.filter((user) =>
-      user.userName
-        .toLocaleLowerCase()
-        .includes(searchData.value.query.toLocaleLowerCase()),
-    );
+    //ユーザー検索だった時に検索結果をフィルターするように
+    if (searchData.value.searchingTerm === "user") {
+      //クエリーでユーザーリストへフィルターかけて結果格納
+      searchDataResultUser.value = userAtHere.value.filter((user) =>
+        user.userName
+          .toLocaleLowerCase()
+          .includes(searchData.value.query.toLocaleLowerCase()),
+      );
+    }
+
+    //２文字以上で、かつ検索するのがチャンネルなら検索
+    if (searchData.value.searchingTerm === "channel" && searchData.value.query.length >= 2) {
+      console.log("Input :: watch(messageInput) : チャンネル検索する予定->", searchData.value.query);
+    }
   }
 });
 
@@ -339,6 +347,22 @@ const AtsignTrigger = () => {
 };
 
 /**
+ * #キーの入力
+ */
+const HashSignTrigger = () => {
+  //ユーザーを検索すると設定
+  searchData.value.searchingTerm = "channel";
+  //検索モードを有効化
+  searchData.value.searching = true;
+  //この時の文章の長さを格納
+  searchData.value.txtLengthWhenStartSearching = messageInput.value.length;
+  //選択を初期化
+  searchData.value.selectedIndex = 0;
+  //入力の開始位置を格納
+  searchData.value.searchStartingAt = elInput.value.selectionStart;
+}
+
+/**
  * 上キーによる検索結果上の選択カーソル移動
  * @param e
  */
@@ -496,6 +520,7 @@ onUnmounted(() => {
         @keydown.up="triggerUp"
         @keydown.down="triggerDown"
         @keydown.@="AtsignTrigger"
+        @keydown.#="HashSignTrigger"
         @paste="receivePasteObject"
         variant="solo"
         rows="1"
