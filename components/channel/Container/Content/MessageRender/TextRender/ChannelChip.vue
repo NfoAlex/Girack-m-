@@ -19,7 +19,7 @@ const formatedChannelId = computed(() => {
  */
 const moveChannel = () => {
   const router = useRouter();
-  router.push(`/channel/${formatedChannelId}`);
+  router.push(`/channel/${formatedChannelId.value}`);
 }
 </script>
 
