@@ -501,7 +501,11 @@ onUnmounted(() => {
       width="100%"
       color="messageHovered"
     >
-      <v-virtual-scroll height="100%" :items="searchDataResultUser">
+      <v-virtual-scroll
+        v-if="searchData.searchingTerm==='user'"
+        height="100%"
+        :items="searchDataResultUser"
+      >
         <template v-slot:default="{ item, index }">
           <span
             @click="insertResult(item.userId)"
@@ -518,6 +522,27 @@ onUnmounted(() => {
               <v-img :alt="item.userId" :src="'/icon/' + item.userId"></v-img>
             </v-avatar>
             <p>{{ item.userName }}</p>
+          </span>
+        </template>
+      </v-virtual-scroll>
+      <v-virtual-scroll
+        v-if="searchData.searchingTerm==='channel'"
+        height="100%"
+        :items="searchDataResultChannel"
+      >
+        <template v-slot:default="{ item, index }">
+          <span
+            @click="insertResult(item.channelId)"
+            class="d-flex align-center px-1 py-1 cursor-pointer rounded-pill"
+            v-ripple
+            :style="
+              'background-color:' +
+              (index === searchData.selectedIndex
+                ? 'rgba(var(--v-theme-primary), 0.3)'
+                : '')
+            "
+          >
+            <p>{{ item.channelName }}</p>
           </span>
         </template>
       </v-virtual-scroll>
