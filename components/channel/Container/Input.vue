@@ -578,6 +578,9 @@ onUnmounted(() => {
           </span>
         </template>
       </v-virtual-scroll>
+      <span v-if="searchData.searchingTerm==='channel' && searchDataResultChannel.length === 30">
+        <p class="text-center mx-2 my-2">結果が30件あります。もっと検索するには検索文字列で絞り込んでください。</p>
+      </span>
     </m-card>
 
     <m-card-compact color="surface" class="">
