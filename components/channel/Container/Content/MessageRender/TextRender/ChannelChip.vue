@@ -33,7 +33,7 @@ const moveChannel = () => {
 <template>
   <span
     @click="moveChannel"
-    class="px-2 pb-1 d-flex align-center justify-center ChannelIdStringContainer cursor-pointer"
+    class="px-2 pb-1 mx-1 d-flex align-center justify-center ChannelIdStringContainer cursor-pointer"
     style="width:fit-content;"
   >
     <span>#</span>
