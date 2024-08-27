@@ -447,6 +447,11 @@ const SOCKETsearchUserInfo = (dat: { result: string; data: MyUserinfo[] }) => {
  */
 const SOCKETsearchChannelInfo = (dat: {result:string, data:channel[]}) => {
   console.log("Input :: SOCKETsearchChannelInfo : データ->", dat);
+
+  //成功ならデータ格納
+  if (dat.result === "SUCCESS") {
+    searchDataResultChannel.value = dat.data;
+  }
 }
 
 onMounted(() => {
