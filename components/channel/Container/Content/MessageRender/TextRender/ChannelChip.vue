@@ -31,15 +31,13 @@ const moveChannel = () => {
 </script>
 
 <template>
-  <span>
-    <span
-      @click="moveChannel"
-      class="px-2 pb-1 d-flex align-center justify-center ChannelIdStringContainer cursor-pointer"
-      style="width:fit-content;"
-    >
-      <span>#</span>
-      <span>{{ getChannelinfoSingle(formatedChannelId).channelName }}</span>
-    </span>
+  <span
+    @click="moveChannel"
+    class="px-2 pb-1 d-flex align-center justify-center ChannelIdStringContainer cursor-pointer"
+    style="width:fit-content;"
+  >
+    <span>#</span>
+    <span>{{ getChannelinfoSingle(formatedChannelId).channelName }}</span>
   </span>
 </template>
 
