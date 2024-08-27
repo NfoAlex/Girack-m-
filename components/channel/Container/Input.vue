@@ -15,7 +15,7 @@ const props = defineProps<{
 }>();
 
 //メンションデータ用interface
-interface SearchData {
+interface ISearchData {
   query: string; //検索文字列
   searching: boolean; //検索モードに入っているかどうか
   selectedIndex: number; //選択しているもの
@@ -45,7 +45,7 @@ const elInput = ref<Element | null>(null); //入力欄要素を取得するた�
 const elFileInput = ref(null); //ファイル入力要素を取得するためのref
 const inputRowNum = ref<number>(1); //入力欄の行数
 const displayData = ref<boolean>(false);
-const searchData = ref<SearchData>({
+const searchData = ref<ISearchData>({
   //検索データ
   query: "",
   searching: false,
@@ -55,7 +55,8 @@ const searchData = ref<SearchData>({
   txtLengthWhenStartSearching: 0,
   searchingTerm: "user",
 });
-const searchDataResult = ref<MyUserinfo[]>([]);
+const searchDataResultUser = ref<MyUserinfo[]>([]);
+const searchDataResultChannel = ref<channel[]>([])
 const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リスト
 
 const displayRemoteFileSelect = ref<boolean>(false);
@@ -272,7 +273,7 @@ const triggerEnter = (event: KeyboardEvent) => {
     }
 
     //挿入
-    insertResult(searchDataResult.value[searchData.value.selectedIndex].userId);
+    insertResult(searchDataResultUser.value[searchData.value.selectedIndex].userId);
     //改行防止
     event.preventDefault();
     //選択インデックス初期化
@@ -325,6 +326,8 @@ const AtsignTrigger = () => {
     channelId: props.channelInfo.channelId,
   });
 
+  //ユーザーを検索すると設定
+  searchData.value.searchingTerm = "user";
   //検索モードを有効化
   searchData.value.searching = true;
   //この時の文章の長さを格納
@@ -357,7 +360,7 @@ const triggerUp = (e: Event) => {
 const triggerDown = (e: Event) => {
   //下キーの処理
   if (
-    searchDataResult.value.length > searchData.value.selectedIndex + 1 && //Indexを足すときにまだ結果配列長より下なら
+    searchDataResultUser.value.length > searchData.value.selectedIndex + 1 && //Indexを足すときにまだ結果配列長より下なら
     searchData.value.searching
   ) {
     e.preventDefault();
@@ -449,7 +452,7 @@ onUnmounted(() => {
       width="100%"
       color="messageHovered"
     >
-      <v-virtual-scroll height="100%" :items="searchDataResult">
+      <v-virtual-scroll height="100%" :items="searchDataResultUser">
         <template v-slot:default="{ item, index }">
           <span
             @click="insertResult(item.userId)"
