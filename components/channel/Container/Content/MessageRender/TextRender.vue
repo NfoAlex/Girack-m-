@@ -8,10 +8,12 @@ import ChannelChip from "./TextRender/ChannelChip.vue";
 const URLRegex: RegExp = /((https|http)?:\/\/[^\s]+)/g;
 const MentionRegex: RegExp = /@<([0-9]*)>/g;
 const BrRegex: RegExp = /\n/g;
+const ChannelRegex: RegExp = /#<([0-9]*)>/g;
 
 const URLMatched = ref<RegExpMatchArray | null>(null);
 const MentionMatched = ref<RegExpMatchArray | null>(null);
 const BrMatched = ref<RegExpMatchArray | null>(null);
+const ChannelMatched = ref<RegExpMatchArray | null>(null);
 
 /**
  * data
@@ -29,8 +31,8 @@ const props = defineProps<{
 const parseVNode = () => {
   //それぞれの要素の位置と種類を記録する要素データ配列
   const ObjectIndex: {
-    context: string; //内容(URLあるいはユーザーId)
-    type: "link" | "userId" | "breakLine"; //要素がリンク用かメンション用か改行用か
+    context: string; //内容(URLあるいはユーザーId、またはチャンネルId)
+    type: "link" | "userId" | "breakLine" | "channel"; //要素がリンク用かメンション用か改行用か
     index: number; //メッセ上の位置
   }[] = [];
 
@@ -40,6 +42,8 @@ const parseVNode = () => {
   MentionMatched.value = props.content.match(MentionRegex);
   //メッセから改行を抽出
   BrMatched.value = props.content.match(BrRegex);
+  //メッセからチャンネルIdを抽出
+  ChannelMatched.value = props.content.match(ChannelRegex);
 
   //URLがnullじゃなければindexを取得して格納
   if (URLMatched.value !== null) {
@@ -102,6 +106,27 @@ const parseVNode = () => {
       contentCloned =
         contentCloned.slice(0, contentCloned.indexOf(br)) +
         contentCloned.slice(contentCloned.indexOf(br) + br.length);
+    }
+  }
+  //URLがnullじゃなければindexを取得して格納
+  if (ChannelMatched.value !== null) {
+    //複数回の検索に対応させるために検索終えた文を排除するため、排除する文字の長さを貯める
+    let removedLengthTotal = 0;
+    let contentCloned = props.content;
+
+    for (const channelId of ChannelMatched.value) {
+      ObjectIndex.push({
+        context: channelId,
+        type: "channel",
+        index: contentCloned.indexOf(channelId) + removedLengthTotal,
+      });
+
+      //これから排除する文の長さを貯める
+      removedLengthTotal += channelId.length;
+      //メッセージからURLを排除
+      contentCloned =
+        contentCloned.slice(0, contentCloned.indexOf(channelId)) +
+        contentCloned.slice(contentCloned.indexOf(channelId) + channelId.length);
     }
   }
 
@@ -199,6 +224,12 @@ const parseVNode = () => {
       //改行
       if (ObjectIndex[index].type === "breakLine") {
         MessageRenderingFinal.value.push(h("br"));
+      }
+      //チャンネルリンク
+      if (ObjectIndex[index].type === "channel") {
+        MessageRenderingFinal.value.push(
+          h(ChannelChip, { channelId: ObjectIndex[index].context }),
+        );
       }
     }
   }
