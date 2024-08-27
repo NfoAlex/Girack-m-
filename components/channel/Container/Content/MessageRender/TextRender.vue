@@ -256,7 +256,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <span class="text-medium-emphasis" style="word-break: break-all;">
+  <span class="text-medium-emphasis d-flex flex-wrap" style="word-break: break-all;">
     <ContentRenderParsed />
   </span>
 </template>
