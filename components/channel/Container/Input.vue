@@ -387,12 +387,13 @@ const HashSignTrigger = () => {
  * @param e
  */
 const triggerUp = (e: Event) => {
+  //カーソル移動防止
+  e.preventDefault();
   //上キーの処理
   if (
     0 <= searchData.value.selectedIndex - 1 && //Indexを引くときに0以上なら
     searchData.value.searching
   ) {
-    e.preventDefault();
     searchData.value.selectedIndex--;
   }
 };
@@ -402,6 +403,9 @@ const triggerUp = (e: Event) => {
  * @param e
  */
 const triggerDown = (e: Event) => {
+  //カーソル移動防止
+  e.preventDefault();
+
   //検索しているカテゴリに応じて参照する配列を選択
   const targetArr =
     searchData.value.searchingTerm === "user"
@@ -413,7 +417,6 @@ const triggerDown = (e: Event) => {
     targetArr.length > searchData.value.selectedIndex + 1 && //Indexを足すときにまだ結果配列長より下なら
     searchData.value.searching
   ) {
-    e.preventDefault();
     searchData.value.selectedIndex++;
   }
 };
