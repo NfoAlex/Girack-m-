@@ -15,7 +15,7 @@ const props = defineProps<{
 }>();
 
 //メンションデータ用interface
-interface SearchData {
+interface ISearchData {
   query: string; //検索文字列
   searching: boolean; //検索モードに入っているかどうか
   selectedIndex: number; //選択しているもの
@@ -45,7 +45,7 @@ const elInput = ref<Element | null>(null); //入力欄要素を取得するた�
 const elFileInput = ref(null); //ファイル入力要素を取得するためのref
 const inputRowNum = ref<number>(1); //入力欄の行数
 const displayData = ref<boolean>(false);
-const searchData = ref<SearchData>({
+const searchData = ref<ISearchData>({
   //検索データ
   query: "",
   searching: false,
@@ -55,7 +55,8 @@ const searchData = ref<SearchData>({
   txtLengthWhenStartSearching: 0,
   searchingTerm: "user",
 });
-const searchDataResult = ref<MyUserinfo[]>([]);
+const searchDataResultUser = ref<MyUserinfo[]>([]);
+const searchDataResultChannel = ref<channel[]>([]);
 const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リスト
 
 const displayRemoteFileSelect = ref<boolean>(false);
@@ -99,12 +100,31 @@ watch(messageInput, () => {
     );
     //console.log("/channel/[id] :: watch(messageInput) : 検索クエリー->", searchData.value.query);
 
-    //クエリーでユーザーリストへフィルターかけて結果格納
-    searchDataResult.value = userAtHere.value.filter((user) =>
-      user.userName
-        .toLocaleLowerCase()
-        .includes(searchData.value.query.toLocaleLowerCase()),
-    );
+    //ユーザー検索だった時に検索結果をフィルターするように
+    if (searchData.value.searchingTerm === "user") {
+      //クエリーでユーザーリストへフィルターかけて結果格納
+      searchDataResultUser.value = userAtHere.value.filter((user) =>
+        user.userName
+          .toLocaleLowerCase()
+          .includes(searchData.value.query.toLocaleLowerCase()),
+      );
+    }
+
+    //２文字以上で、かつ検索するのがチャンネルなら検索
+    if (
+      searchData.value.searchingTerm === "channel" &&
+      searchData.value.query.length >= 2
+    ) {
+      //チャンネルを検索
+      socket.emit("searchChannelInfo", {
+        RequestSender: {
+          userId: getMyUserinfo.value.userId,
+          sessionId: getSessionId.value,
+        },
+        query: searchData.value.query,
+        pageIndex: 1,
+      });
+    }
   }
 });
 
@@ -272,7 +292,16 @@ const triggerEnter = (event: KeyboardEvent) => {
     }
 
     //挿入
-    insertResult(searchDataResult.value[searchData.value.selectedIndex].userId);
+    if (searchData.value.searchingTerm === "user") {
+      insertResult(
+        searchDataResultUser.value[searchData.value.selectedIndex].userId,
+      );
+    }
+    if (searchData.value.searchingTerm === "channel") {
+      insertResult(
+        searchDataResultChannel.value[searchData.value.selectedIndex].channelId,
+      );
+    }
     //改行防止
     event.preventDefault();
     //選択インデックス初期化
@@ -325,6 +354,24 @@ const AtsignTrigger = () => {
     channelId: props.channelInfo.channelId,
   });
 
+  //ユーザーを検索すると設定
+  searchData.value.searchingTerm = "user";
+  //検索モードを有効化
+  searchData.value.searching = true;
+  //この時の文章の長さを格納
+  searchData.value.txtLengthWhenStartSearching = messageInput.value.length;
+  //選択を初期化
+  searchData.value.selectedIndex = 0;
+  //入力の開始位置を格納
+  searchData.value.searchStartingAt = elInput.value.selectionStart;
+};
+
+/**
+ * #キーの入力
+ */
+const HashSignTrigger = () => {
+  //ユーザーを検索すると設定
+  searchData.value.searchingTerm = "channel";
   //検索モードを有効化
   searchData.value.searching = true;
   //この時の文章の長さを格納
@@ -340,12 +387,13 @@ const AtsignTrigger = () => {
  * @param e
  */
 const triggerUp = (e: Event) => {
+  //カーソル移動防止
+  e.preventDefault();
   //上キーの処理
   if (
     0 <= searchData.value.selectedIndex - 1 && //Indexを引くときに0以上なら
     searchData.value.searching
   ) {
-    e.preventDefault();
     searchData.value.selectedIndex--;
   }
 };
@@ -355,12 +403,20 @@ const triggerUp = (e: Event) => {
  * @param e
  */
 const triggerDown = (e: Event) => {
+  //カーソル移動防止
+  e.preventDefault();
+
+  //検索しているカテゴリに応じて参照する配列を選択
+  const targetArr =
+    searchData.value.searchingTerm === "user"
+      ? searchDataResultUser.value
+      : searchDataResultChannel.value;
+
   //下キーの処理
   if (
-    searchDataResult.value.length > searchData.value.selectedIndex + 1 && //Indexを足すときにまだ結果配列長より下なら
+    targetArr.length > searchData.value.selectedIndex + 1 && //Indexを足すときにまだ結果配列長より下なら
     searchData.value.searching
   ) {
-    e.preventDefault();
     searchData.value.selectedIndex++;
   }
 };
@@ -370,12 +426,16 @@ const triggerDown = (e: Event) => {
  * @param targetId
  */
 const insertResult = (targetId: string) => {
-  //入力テキストの@部分をメンション文で代入
+  //検索しているカテゴリ別に#か@でクエリが始まっているかを調べる
+  const searchingString =
+    searchData.value.searchingTerm === "channel" ? "#" : "@";
+
+  //入力テキストの@か#部分をメンション文で代入
   if (searchData.value.query === "") {
     const messageResult =
       // biome-ignore lint/style/useTemplate: Biomeが${}を使わせようとするけどそれだと無駄な改行が入る
       messageInput.value.substring(0, searchData.value.searchStartingAt) +
-      `@<${targetId}>` +
+      `${searchingString}<${targetId}>` +
       messageInput.value.substring(searchData.value.searchStartingAt + 1);
 
     //console.log("Input :: insertResult : 挿入しようとしている文字列->", messageResult);
@@ -383,8 +443,8 @@ const insertResult = (targetId: string) => {
     messageInput.value = messageResult;
   } else {
     messageInput.value = messageInput.value.replace(
-      `@${searchData.value.query}`,
-      `@<${targetId}> `,
+      `${searchingString}${searchData.value.query}`,
+      `${searchingString}<${targetId}> `,
     );
   }
 
@@ -401,15 +461,30 @@ const SOCKETsearchUserInfo = (dat: { result: string; data: MyUserinfo[] }) => {
   //ユーザーリストを格納
   userAtHere.value = dat.data;
   //初期結果にも格納する
-  searchDataResult.value = dat.data;
+  searchDataResultUser.value = dat.data;
+};
+
+/**
+ * チャンネルの検索結果受け取り
+ * @dat
+ */
+const SOCKETsearchChannelInfo = (dat: { result: string; data: channel[] }) => {
+  console.log("Input :: SOCKETsearchChannelInfo : データ->", dat);
+
+  //成功ならデータ格納
+  if (dat.result === "SUCCESS") {
+    searchDataResultChannel.value = dat.data;
+  }
 };
 
 onMounted(() => {
   socket.on("RESULT::searchUserInfo", SOCKETsearchUserInfo);
+  socket.on("RESULT::searchChannelInfo", SOCKETsearchChannelInfo);
 });
 
 onUnmounted(() => {
   socket.off("RESULT::searchUserInfo", SOCKETsearchUserInfo);
+  socket.off("RESULT::searchChannelInfo", SOCKETsearchChannelInfo);
 });
 </script>
 
@@ -449,7 +524,11 @@ onUnmounted(() => {
       width="100%"
       color="messageHovered"
     >
-      <v-virtual-scroll height="100%" :items="searchDataResult">
+      <v-virtual-scroll
+        v-if="searchData.searchingTerm==='user'"
+        height="100%"
+        :items="searchDataResultUser"
+      >
         <template v-slot:default="{ item, index }">
           <span
             @click="insertResult(item.userId)"
@@ -469,6 +548,39 @@ onUnmounted(() => {
           </span>
         </template>
       </v-virtual-scroll>
+
+      <!-- 結果ラベル表示 -->
+      <span v-if="searchData.searchingTerm==='channel' && searchData.query.length < 2">
+        <p class="text-center text-disabled mx-2 my-2">２文字以上を入力して検索</p>
+      </span>
+      <span v-if="searchData.searchingTerm==='channel' && searchDataResultChannel.length === 0">
+        <p class="text-center mx-2 my-2">結果が空です...</p>
+      </span>
+      <v-virtual-scroll
+        v-if="searchData.searchingTerm==='channel'"
+        height="100%"
+        :items="searchDataResultChannel"
+      >
+        <template v-slot:default="{ item, index }">
+          <span
+            @click="insertResult(item.channelId)"
+            class="d-flex align-center px-2 py-1 cursor-pointer rounded-pill"
+            v-ripple
+            :style="
+              'background-color:' +
+              (index === searchData.selectedIndex
+                ? 'rgba(var(--v-theme-primary), 0.3)'
+                : '')
+            "
+          >
+            <v-icon size="small">mdi-pound</v-icon>
+            <p>{{ item.channelName }}</p>
+          </span>
+        </template>
+      </v-virtual-scroll>
+      <span v-if="searchData.searchingTerm==='channel' && searchDataResultChannel.length === 30">
+        <p class="text-center mx-2 my-2">結果が30件あります。もっと検索するには検索文字列で絞り込んでください。</p>
+      </span>
     </m-card>
 
     <m-card-compact color="surface" class="">
@@ -493,6 +605,7 @@ onUnmounted(() => {
         @keydown.up="triggerUp"
         @keydown.down="triggerDown"
         @keydown.@="AtsignTrigger"
+        @keydown.#="HashSignTrigger"
         @paste="receivePasteObject"
         variant="solo"
         rows="1"
