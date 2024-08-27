@@ -21,11 +21,11 @@ const moveToLatestChannel = () => {
   if (route.path.startsWith("/channel")) return;
 
   //最後にいたチャンネルIdを取得
-  const channelId = sessionStorage.getItem('latestChannel') || '';
+  const channelId = sessionStorage.getItem("latestChannel") || "";
   //移動
   const router = useRouter();
   router.push(`/channel/${channelId}`);
-}
+};
 </script>
 
 <template>
