@@ -404,7 +404,7 @@ const SOCKETsearchUserInfo = (dat: { result: string; data: MyUserinfo[] }) => {
   //ユーザーリストを格納
   userAtHere.value = dat.data;
   //初期結果にも格納する
-  searchDataResult.value = dat.data;
+  searchDataResultUser.value = dat.data;
 };
 
 onMounted(() => {
