@@ -113,6 +113,16 @@ watch(messageInput, () => {
     //２文字以上で、かつ検索するのがチャンネルなら検索
     if (searchData.value.searchingTerm === "channel" && searchData.value.query.length >= 2) {
       console.log("Input :: watch(messageInput) : チャンネル検索する予定->", searchData.value.query);
+
+      //チャンネルを検索
+      socket.emit("searchChannelInfo", {
+        RequestSender: {
+          userId: getMyUserinfo.value.userId,
+          sessionId: getSessionId.value
+        },
+        query: searchData.value.query,
+        pageIndex: 1
+      });
     }
   }
 });
@@ -431,12 +441,22 @@ const SOCKETsearchUserInfo = (dat: { result: string; data: MyUserinfo[] }) => {
   searchDataResultUser.value = dat.data;
 };
 
+/**
+ * チャンネルの検索結果受け取り
+ * @dat
+ */
+const SOCKETsearchChannelInfo = (dat: {result:string, data:channel[]}) => {
+  console.log("Input :: SOCKETsearchChannelInfo : データ->", dat);
+}
+
 onMounted(() => {
   socket.on("RESULT::searchUserInfo", SOCKETsearchUserInfo);
+  socket.on("RESULT::searchChannelInfo", SOCKETsearchChannelInfo);
 });
 
 onUnmounted(() => {
   socket.off("RESULT::searchUserInfo", SOCKETsearchUserInfo);
+  socket.off("RESULT::searchChannelInfo", SOCKETsearchChannelInfo);
 });
 </script>
 
