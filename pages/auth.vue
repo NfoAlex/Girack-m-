@@ -32,8 +32,6 @@ const registrationData = ref<{ userName: string; done: boolean }>({
  * ログイン後のGirack-m-準備処理
  */
 const initialize = (userId: string, sessionId: string) => {
-  console.log("/auth :: initialize : INITIALIZEするね");
-
   //全ロールを取得
   socket.emit("fetchRoles", {
     RequestSender: {
@@ -161,7 +159,7 @@ const bindUserName = (userNameNew: string) => {
  * @param dat
  */
 const SOCKEtauthSession = (dat: { result: string; dat: boolean }) => {
-  console.log("/auth :: SOCKETauthSession : dat->", dat);
+  //console.log("/auth :: SOCKETauthSession : dat->", dat);
 
   //成功なら初期ロード開始
   if (dat.result === "SUCCESS") {
@@ -176,8 +174,6 @@ const SOCKEtauthSession = (dat: { result: string; dat: boolean }) => {
 onMounted(() => {
   //認証結果受け取り
   socket.on("RESULT::authSession", SOCKEtauthSession);
-
-  console.log("/auth :: onMounted : session->", useCookie("session").value);
 });
 
 onUnmounted(() => {
