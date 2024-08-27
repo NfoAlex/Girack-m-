@@ -3,6 +3,7 @@ import type { VNode } from "vue";
 import { defineComponent, h } from "vue";
 import URLChip from "./TextRender/URLChip.vue";
 import UserChip from "./TextRender/UserChip.vue";
+import ChannelChip from "./TextRender/ChannelChip.vue";
 
 const URLRegex: RegExp = /((https|http)?:\/\/[^\s]+)/g;
 const MentionRegex: RegExp = /@<([0-9]*)>/g;
