@@ -291,7 +291,12 @@ const triggerEnter = (event: KeyboardEvent) => {
     }
 
     //挿入
-    insertResult(searchDataResultUser.value[searchData.value.selectedIndex].userId);
+    if (searchData.value.searchingTerm === "user") {
+      insertResult(searchDataResultUser.value[searchData.value.selectedIndex].userId);
+    }
+    if (searchData.value.searchingTerm === "channel") {
+      insertResult(searchDataResultChannel.value[searchData.value.selectedIndex].channelId);
+    }
     //改行防止
     event.preventDefault();
     //選択インデックス初期化
@@ -407,12 +412,15 @@ const triggerDown = (e: Event) => {
  * @param targetId
  */
 const insertResult = (targetId: string) => {
-  //入力テキストの@部分をメンション文で代入
+  //検索しているカテゴリ別に#か@でクエリが始まっているかを調べる
+  const searchingString = searchData.value.searchingTerm === 'channel' ? "#" : "@";
+
+  //入力テキストの@か#部分をメンション文で代入
   if (searchData.value.query === "") {
     const messageResult =
       // biome-ignore lint/style/useTemplate: Biomeが${}を使わせようとするけどそれだと無駄な改行が入る
       messageInput.value.substring(0, searchData.value.searchStartingAt) +
-      `@<${targetId}>` +
+      `${searchingString}<${targetId}>` +
       messageInput.value.substring(searchData.value.searchStartingAt + 1);
 
     //console.log("Input :: insertResult : 挿入しようとしている文字列->", messageResult);
@@ -420,8 +428,8 @@ const insertResult = (targetId: string) => {
     messageInput.value = messageResult;
   } else {
     messageInput.value = messageInput.value.replace(
-      `@${searchData.value.query}`,
-      `@<${targetId}> `,
+      `${searchingString}${searchData.value.query}`,
+      `${searchingString}<${targetId}> `,
     );
   }
 
@@ -533,7 +541,7 @@ onUnmounted(() => {
         <template v-slot:default="{ item, index }">
           <span
             @click="insertResult(item.channelId)"
-            class="d-flex align-center px-1 py-1 cursor-pointer rounded-pill"
+            class="d-flex align-center px-2 py-1 cursor-pointer rounded-pill"
             v-ripple
             :style="
               'background-color:' +
@@ -542,6 +550,7 @@ onUnmounted(() => {
                 : '')
             "
           >
+            <v-icon size="small">mdi-pound</v-icon>
             <p>{{ item.channelName }}</p>
           </span>
         </template>
