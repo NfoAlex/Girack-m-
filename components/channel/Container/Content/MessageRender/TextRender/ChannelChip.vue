@@ -36,8 +36,13 @@ const moveChannel = () => {
     class="px-2 pb-1 mx-1 d-flex align-center justify-center ChannelIdStringContainer cursor-pointer"
     style="width:fit-content;"
   >
-    <span>#</span>
-    <span>{{ getChannelinfoSingle(formatedChannelId).channelName }}</span>
+    <v-icon class="mr-1 mt-1" size="x-small">mdi-pound</v-icon>
+    <span v-if="getChannelinfoSingle(formatedChannelId).createdBy !== 'xxxxx'">
+      {{ getChannelinfoSingle(formatedChannelId).channelName }}
+    </span>
+    <span v-else class="text-disabled">
+      不明なチャンネル
+    </span>
   </span>
 </template>
 
