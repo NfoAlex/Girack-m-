@@ -8,7 +8,7 @@ const props = defineProps<{
 }>();
 
 /**
- * #<123...>から数字のユーザーIdのみを取り出す
+ * #<123...>からチャンネルIdのみを取り出す
  */
 const formatedChannelId = computed(() => {
   return props.channelId.split("#<").join("").split(">")[0];
