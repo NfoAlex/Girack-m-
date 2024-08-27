@@ -544,6 +544,14 @@ onUnmounted(() => {
           </span>
         </template>
       </v-virtual-scroll>
+
+      <!-- 結果ラベル表示 -->
+      <span v-if="searchData.searchingTerm==='channel' && searchData.query.length < 2">
+        <p class="text-center text-disabled mx-2 my-2">２文字以上を入力して検索</p>
+      </span>
+      <span v-if="searchData.searchingTerm==='channel' && searchDataResultChannel.length === 0">
+        <p class="text-center mx-2 my-2">結果が空です...</p>
+      </span>
       <v-virtual-scroll
         v-if="searchData.searchingTerm==='channel'"
         height="100%"
