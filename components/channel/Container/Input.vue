@@ -407,11 +407,15 @@ const triggerUp = (e: Event) => {
  * @param e
  */
 const triggerDown = (e: Event) => {
+  console.log("Input :: triggerDown : 下押された(検索中でない)->", searchData.value.selectedIndex);
+  //検索しているカテゴリに応じて参照する配列を選択
+  const targetArr = searchData.value.searchingTerm==='user' ? searchDataResultUser.value : searchDataResultChannel.value;
   //下キーの処理
   if (
-    searchDataResultUser.value.length > searchData.value.selectedIndex + 1 && //Indexを足すときにまだ結果配列長より下なら
+    targetArr.length > searchData.value.selectedIndex + 1 && //Indexを足すときにまだ結果配列長より下なら
     searchData.value.searching
   ) {
+    console.log("Input :: triggerDown : 下押された処理された");
     e.preventDefault();
     searchData.value.selectedIndex++;
   }
