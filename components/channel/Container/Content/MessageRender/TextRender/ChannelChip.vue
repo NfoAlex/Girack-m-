@@ -13,17 +13,24 @@ const props = defineProps<{
 const formatedChannelId = computed(() => {
   return props.channelId.split("#<").join("").split(">")[0];
 });
+
+/**
+ * チャンネルを移動する
+ */
+const moveChannel = () => {
+  const router = useRouter();
+  router.push(`/channel/${props.channelId}`);
+}
 </script>
 
 <template>
   <span>
     <span
+      @click="moveChannel"
       class="px-2 pb-1 d-flex align-center justify-center ChannelIdStringContainer cursor-pointer"
       style="width:fit-content;"
     >
       <span>#</span>
-      <span>
-      </span>
       <span>{{ getChannelinfoSingle(formatedChannelId).channelName }}</span>
     </span>
   </span>
