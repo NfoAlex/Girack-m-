@@ -12,12 +12,14 @@ const { getAppStatus } = storeToRefs(useAppStatus());
 const { getThereIsNewMessage } = storeToRefs(useHistory());
 const { getMentionNumTotal } = storeToRefs(useInbox());
 
+//現在のパス取得用
+const route = useRoute();
+
 /**
  * 最後にいたチャンネルへ移動
  */
 const moveToLatestChannel = () => {
   //今チャンネルページにいるなら何もしない
-  const route = useRoute();
   if (route.path.startsWith("/channel")) return;
 
   //最後にいたチャンネルIdを取得
@@ -51,8 +53,8 @@ const moveToLatestChannel = () => {
         <NuxtLink to="/">
           <v-btn
             icon=""
-            :variant="$route.path === '/' ? 'tonal' : 'text'"
-            :color="$route.path === '/' ? 'primary' : ''"
+            :variant="route.path === '/' ? 'tonal' : 'text'"
+            :color="route.path === '/' ? 'primary' : ''"
             rounded="lg"
             class="mt-2"
           >
@@ -60,7 +62,7 @@ const moveToLatestChannel = () => {
           </v-btn>
           <p
             class="text-caption text-center"
-            :class="$route.path === '/' ? 'text-primary' : null"
+            :class="route.path === '/' ? 'text-primary' : null"
           >
             ホーム
           </p>
@@ -72,8 +74,8 @@ const moveToLatestChannel = () => {
         <NuxtLink to="/browser">
           <v-btn
             icon=""
-            :variant="$route.path === '/browser' ? 'tonal' : 'text'"
-            :color="$route.path === '/browser' ? 'primary' : ''"
+            :variant="route.path === '/browser' ? 'tonal' : 'text'"
+            :color="route.path === '/browser' ? 'primary' : ''"
             rounded="lg"
             class="mt-2"
           >
@@ -81,7 +83,7 @@ const moveToLatestChannel = () => {
           </v-btn>
           <p
             class="text-caption text-center"
-            :class="$route.path === '/browser' ? 'text-primary' : null"
+            :class="route.path === '/browser' ? 'text-primary' : null"
           >
             一覧
           </p>
@@ -99,8 +101,8 @@ const moveToLatestChannel = () => {
           >
             <v-btn
               icon=""
-              :variant="$route.path.startsWith('/channel') ? 'tonal' : 'text'"
-              :color="$route.path.startsWith('/channel') ? 'primary' : ''"
+              :variant="route.path.startsWith('/channel') ? 'tonal' : 'text'"
+              :color="route.path.startsWith('/channel') ? 'primary' : ''"
               rounded="lg"
             >
               <v-icon size="large">mdi:mdi-pound</v-icon>
@@ -109,15 +111,15 @@ const moveToLatestChannel = () => {
           <v-btn
             v-else
             icon=""
-            :variant="$route.path.startsWith('/channel') ? 'tonal' : 'text'"
-            :color="$route.path.startsWith('/channel') ? 'primary' : ''"
+            :variant="route.path.startsWith('/channel') ? 'tonal' : 'text'"
+            :color="route.path.startsWith('/channel') ? 'primary' : ''"
             rounded="lg"
           >
             <v-icon size="large">mdi:mdi-pound</v-icon>
           </v-btn>
           <p
             class="text-caption text-center"
-            :class="$route.path.startsWith('/channel') ? 'text-primary' : null"
+            :class="route.path.startsWith('/channel') ? 'text-primary' : null"
           >
             会話
           </p>
@@ -129,15 +131,15 @@ const moveToLatestChannel = () => {
         <NuxtLink to="/fileportal">
           <v-btn
             icon=""
-            :variant="$route.path.startsWith('/fileportal') ? 'tonal' : 'text'"
-            :color="$route.path.startsWith('/fileportal') ? 'primary' : ''"
+            :variant="route.path.startsWith('/fileportal') ? 'tonal' : 'text'"
+            :color="route.path.startsWith('/fileportal') ? 'primary' : ''"
             rounded="lg"
           >
             <v-icon size="large">mdi:mdi-folder</v-icon>
           </v-btn>
           <p
             class="text-caption text-center"
-            :class="$route.path.startsWith('/fileportal') ? 'text-primary' : null"
+            :class="route.path.startsWith('/fileportal') ? 'text-primary' : null"
           >
             ファイル
           </p>
@@ -153,13 +155,13 @@ const moveToLatestChannel = () => {
         <NuxtLink to="/profile/me" class="d-flex flex-column align-center">
           <v-avatar
             class="rounded-lg"
-            :style="$route.path.startsWith('/profile')?'border:solid 3px rgba(var(--v-theme-primary))':null"
+            :style="route.path.startsWith('/profile')?'border:solid 3px rgba(var(--v-theme-primary))':null"
           >
             <v-img :src="'/icon/' + getMyUserinfo.userId" :alt="getMyUserinfo.userId" />
           </v-avatar>
           <p
             class="text-caption text-center"
-            :class="$route.path.startsWith('/profile') ? 'text-primary' : null"
+            :class="route.path.startsWith('/profile') ? 'text-primary' : null"
           >
             あなた
           </p>
@@ -171,14 +173,14 @@ const moveToLatestChannel = () => {
         <NuxtLink to="/users">
           <v-btn
             icon="mdi:mdi-account-group"
-            :variant="$route.path.includes('/users') ? 'tonal' : 'text'"
-            :color="$route.path.includes('/users') ? 'primary' : ''"
+            :variant="route.path.includes('/users') ? 'tonal' : 'text'"
+            :color="route.path.includes('/users') ? 'primary' : ''"
             rounded="lg"
           >
           </v-btn>
           <p
             class="text-caption text-center"
-            :class="$route.path.startsWith('/users') ? 'text-primary' : null"
+            :class="route.path.startsWith('/users') ? 'text-primary' : null"
           >
             仲間
           </p>
@@ -190,14 +192,14 @@ const moveToLatestChannel = () => {
         <NuxtLink to="/server">
           <v-btn
             icon="mdi:mdi-server-security"
-            :variant="$route.path.includes('/server') ? 'tonal' : 'text'"
-            :color="$route.path.includes('/server') ? 'primary' : ''"
+            :variant="route.path.includes('/server') ? 'tonal' : 'text'"
+            :color="route.path.includes('/server') ? 'primary' : ''"
             rounded="lg"
           >
           </v-btn>
           <p
             class="text-caption text-center"
-            :class="$route.path.startsWith('/server') ? 'text-primary' : null"
+            :class="route.path.startsWith('/server') ? 'text-primary' : null"
           >
             管理
           </p>
@@ -209,14 +211,14 @@ const moveToLatestChannel = () => {
         <NuxtLink to="/settings/sync">
           <v-btn
             icon="mdi:mdi-cog"
-            :variant="$route.path.includes('/settings') ? 'tonal' : 'text'"
-            :color="$route.path.includes('/settings') ? 'primary' : ''"
+            :variant="route.path.includes('/settings') ? 'tonal' : 'text'"
+            :color="route.path.includes('/settings') ? 'primary' : ''"
             rounded="lg"
           >
           </v-btn>
           <p
             class="text-caption text-center"
-            :class="$route.path.startsWith('/settings') ? 'text-primary' : null"
+            :class="route.path.startsWith('/settings') ? 'text-primary' : null"
           >
             設定
           </p>
