@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { VNode } from "vue";
 import { defineComponent, h } from "vue";
+import ChannelChip from "./TextRender/ChannelChip.vue";
 import URLChip from "./TextRender/URLChip.vue";
 import UserChip from "./TextRender/UserChip.vue";
-import ChannelChip from "./TextRender/ChannelChip.vue";
 
 const URLRegex: RegExp = /((https|http)?:\/\/[^\s]+)/g;
 const MentionRegex: RegExp = /@<([0-9]*)>/g;
@@ -126,7 +126,9 @@ const parseVNode = () => {
       //メッセージからURLを排除
       contentCloned =
         contentCloned.slice(0, contentCloned.indexOf(channelId)) +
-        contentCloned.slice(contentCloned.indexOf(channelId) + channelId.length);
+        contentCloned.slice(
+          contentCloned.indexOf(channelId) + channelId.length,
+        );
     }
   }
 

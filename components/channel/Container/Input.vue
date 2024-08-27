@@ -56,7 +56,7 @@ const searchData = ref<ISearchData>({
   searchingTerm: "user",
 });
 const searchDataResultUser = ref<MyUserinfo[]>([]);
-const searchDataResultChannel = ref<channel[]>([])
+const searchDataResultChannel = ref<channel[]>([]);
 const userAtHere = ref<MyUserinfo[]>([]); //チャンネルに参加する人リスト
 
 const displayRemoteFileSelect = ref<boolean>(false);
@@ -111,17 +111,23 @@ watch(messageInput, () => {
     }
 
     //２文字以上で、かつ検索するのがチャンネルなら検索
-    if (searchData.value.searchingTerm === "channel" && searchData.value.query.length >= 2) {
-      console.log("Input :: watch(messageInput) : チャンネル検索する予定->", searchData.value.query);
+    if (
+      searchData.value.searchingTerm === "channel" &&
+      searchData.value.query.length >= 2
+    ) {
+      console.log(
+        "Input :: watch(messageInput) : チャンネル検索する予定->",
+        searchData.value.query,
+      );
 
       //チャンネルを検索
       socket.emit("searchChannelInfo", {
         RequestSender: {
           userId: getMyUserinfo.value.userId,
-          sessionId: getSessionId.value
+          sessionId: getSessionId.value,
         },
         query: searchData.value.query,
-        pageIndex: 1
+        pageIndex: 1,
       });
     }
   }
@@ -292,10 +298,14 @@ const triggerEnter = (event: KeyboardEvent) => {
 
     //挿入
     if (searchData.value.searchingTerm === "user") {
-      insertResult(searchDataResultUser.value[searchData.value.selectedIndex].userId);
+      insertResult(
+        searchDataResultUser.value[searchData.value.selectedIndex].userId,
+      );
     }
     if (searchData.value.searchingTerm === "channel") {
-      insertResult(searchDataResultChannel.value[searchData.value.selectedIndex].channelId);
+      insertResult(
+        searchDataResultChannel.value[searchData.value.selectedIndex].channelId,
+      );
     }
     //改行防止
     event.preventDefault();
@@ -375,7 +385,7 @@ const HashSignTrigger = () => {
   searchData.value.selectedIndex = 0;
   //入力の開始位置を格納
   searchData.value.searchStartingAt = elInput.value.selectionStart;
-}
+};
 
 /**
  * 上キーによる検索結果上の選択カーソル移動
@@ -413,7 +423,8 @@ const triggerDown = (e: Event) => {
  */
 const insertResult = (targetId: string) => {
   //検索しているカテゴリ別に#か@でクエリが始まっているかを調べる
-  const searchingString = searchData.value.searchingTerm === 'channel' ? "#" : "@";
+  const searchingString =
+    searchData.value.searchingTerm === "channel" ? "#" : "@";
 
   //入力テキストの@か#部分をメンション文で代入
   if (searchData.value.query === "") {
@@ -453,14 +464,14 @@ const SOCKETsearchUserInfo = (dat: { result: string; data: MyUserinfo[] }) => {
  * チャンネルの検索結果受け取り
  * @dat
  */
-const SOCKETsearchChannelInfo = (dat: {result:string, data:channel[]}) => {
+const SOCKETsearchChannelInfo = (dat: { result: string; data: channel[] }) => {
   console.log("Input :: SOCKETsearchChannelInfo : データ->", dat);
 
   //成功ならデータ格納
   if (dat.result === "SUCCESS") {
     searchDataResultChannel.value = dat.data;
   }
-}
+};
 
 onMounted(() => {
   socket.on("RESULT::searchUserInfo", SOCKETsearchUserInfo);

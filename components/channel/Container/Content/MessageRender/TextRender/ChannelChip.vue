@@ -27,7 +27,7 @@ const moveChannel = () => {
   } else {
     router.push("/browser");
   }
-}
+};
 </script>
 
 <template>
