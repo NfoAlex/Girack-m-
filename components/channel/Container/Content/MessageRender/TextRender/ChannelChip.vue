@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useChannelinfo } from "~/stores/channel";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 const { getChannelinfoSingle } = storeToRefs(useChannelinfo());
+const { getMyUserinfo } = storeToRefs(useMyUserinfo());
 
 const props = defineProps<{
   channelId: string;
@@ -19,7 +21,12 @@ const formatedChannelId = computed(() => {
  */
 const moveChannel = () => {
   const router = useRouter();
-  router.push(`/channel/${formatedChannelId.value}`);
+  //参加しているならそのチャンネルへ移動、ないならブラウザへ
+  if (getMyUserinfo.value.channelJoined.includes(formatedChannelId.value)) {
+    router.push(`/channel/${formatedChannelId.value}`);
+  } else {
+    router.push("/browser");
+  }
 }
 </script>
 
