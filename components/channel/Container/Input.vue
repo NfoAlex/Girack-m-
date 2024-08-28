@@ -314,12 +314,12 @@ const triggerEnter = (event: KeyboardEvent) => {
     fileIdArr.push(file.fileId);
   }
 
-   //添付ファイルが無く、かつメッセージが空なら停止
+  //添付ファイルが無く、かつメッセージが空なら停止
   if (
-    ( messageInput.value === "" || messageInput.value === " " )
-    &&
+    (messageInput.value === "" || messageInput.value === " ") &&
     fileIdArr.length === 0
-  ) return;
+  )
+    return;
 
   //console.log("/channel/:id :: triggerEnter : Enterメッセージ->", messageInput.value, event, props);
   socket.emit("sendMessage", {
