@@ -229,7 +229,7 @@ const getImageUrl = (fileId: string): string => {
         placeholderClass="ImagePlaceHolder"
         class="rounded-lg cursor-pointer"
         width="fit-content"
-        style="max-height:150px;"
+        style="max-height:150px; max-width:100%;"
         quality="75"
         loading="lazy"
       />
