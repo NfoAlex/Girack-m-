@@ -273,9 +273,6 @@ const triggerEnter = (event: KeyboardEvent) => {
     return;
   }
 
-  //メッセージが空なら停止
-  if (messageInput.value === "" || messageInput.value === " ") return;
-
   //検索中なら指定のユーザーIdあるいはチャンネルIdを挿入
   if (searchData.value.searching) {
     //検索位置の終わり取得
@@ -316,6 +313,13 @@ const triggerEnter = (event: KeyboardEvent) => {
   for (const file of fileData.value) {
     fileIdArr.push(file.fileId);
   }
+
+   //添付ファイルが無く、かつメッセージが空なら停止
+  if (
+    ( messageInput.value === "" || messageInput.value === " " )
+    &&
+    fileIdArr.length === 0
+  ) return;
 
   //console.log("/channel/:id :: triggerEnter : Enterメッセージ->", messageInput.value, event, props);
   socket.emit("sendMessage", {
