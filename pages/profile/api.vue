@@ -10,7 +10,7 @@ const page = ref<"MANAGE"|"TEST">("MANAGE");
 
 <template>
   <NuxtLayout name="profile">
-    <div class="pa-4 d-flex flex-col" style="height:100%;">
+    <div class="pa-4 d-flex flex-column" style="height:100%;">
       <span class="d-flex flex-wrap">
         <m-btn
           @click="page='MANAGE'"
