@@ -1,27 +1,30 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
-import ApiClientCreate from './ApiClientCreate.vue';
-import type { IAPIClientInfo } from '~/types/api';
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
+import type { IAPIClientInfo } from "~/types/api";
+import ApiClientCreate from "./ApiClientCreate.vue";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
 /**
  * data
-*/
+ */
 const apiClientInfos = ref<IAPIClientInfo[]>([]);
 const displayAPIClientCreate = ref<boolean>(false);
 
 /**
  * api管理情報受け取り用ハンドラ
-*/
-const SOCKETfetchApiInfo = (dat:{result:string, data:IAPIClientInfo[]}) => {
+ */
+const SOCKETfetchApiInfo = (dat: {
+  result: string;
+  data: IAPIClientInfo[];
+}) => {
   console.log("api :: SOCKETfetchApiInfo : dat->", dat);
 
   if (dat.result === "SUCCESS") {
     apiClientInfos.value = dat.data;
   }
-}
+};
 
 onMounted(() => {
   socket.on("RESULT::fetchApiInfo", SOCKETfetchApiInfo);
@@ -29,8 +32,8 @@ onMounted(() => {
   socket.emit("fetchApiInfo", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
-    }
+      sessionId: getSessionId.value,
+    },
   });
 });
 

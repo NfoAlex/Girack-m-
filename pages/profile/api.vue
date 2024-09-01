@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import ApiManage from '~/components/profile/api/ApiManage.vue';
+import ApiManage from "~/components/profile/api/ApiManage.vue";
 
 /**
  * data
  */
-const page = ref<"MANAGE"|"TEST">("MANAGE");
-
+const page = ref<"MANAGE" | "TEST">("MANAGE");
 </script>
 
 <template>

@@ -26,7 +26,7 @@ const roleEditingClone = ref<role>({
   UserManage: false,
   MessageDelete: false,
   MessageAttatchFile: false,
-  APIUse: false
+  APIUse: false,
 });
 const stateEdited = ref<boolean>(false); //編集済み
 const displayDeleteConfirm = ref<boolean>(false); //削除確認ダイアログ

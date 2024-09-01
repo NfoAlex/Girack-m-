@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { socket } from "~/socketHandlers/socketInit";
 import calcRole from "~/composables/calcRole";
+import { socket } from "~/socketHandlers/socketInit";
 import { useMyUserinfo } from "~/stores/userinfo";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
@@ -21,7 +21,7 @@ const roleEditing = ref<role>({
   UserManage: false,
   MessageDelete: false,
   MessageAttatchFile: false,
-  APIUse: false
+  APIUse: false,
 });
 const displayCreateRole = ref<boolean>(false); //ロール作成画面表示用
 

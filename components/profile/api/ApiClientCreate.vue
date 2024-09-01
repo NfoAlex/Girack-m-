@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { socket } from '~/socketHandlers/socketInit';
-import { useMyUserinfo } from '~/stores/userinfo';
+import { socket } from "~/socketHandlers/socketInit";
+import { useMyUserinfo } from "~/stores/userinfo";
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 
@@ -9,7 +9,7 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
  */
 const apiClientCreateInfo = ref({
   name: "",
-  description: ""
+  description: "",
 });
 const resultSuccess = ref<boolean>(false);
 const displayError = ref<boolean>(false);
@@ -21,27 +21,27 @@ const createApiClient = () => {
   socket.emit("createApiClient", {
     RequestSender: {
       userId: getMyUserinfo.value.userId,
-      sessionId: getSessionId.value
+      sessionId: getSessionId.value,
     },
     name: apiClientCreateInfo.value.name,
-    description: apiClientCreateInfo.value.description
+    description: apiClientCreateInfo.value.description,
   });
 
   displayError.value = false;
-}
+};
 
 /**
  * APIクライアントの作成結果受け取り
- * @param dat 
+ * @param dat
  */
-const SOCKETcreateApiClient = (dat:{result:string, data:null}) => {
+const SOCKETcreateApiClient = (dat: { result: string; data: null }) => {
   if (dat.result === "SUCCESS") {
     resultSuccess.value = true;
   } else {
     displayError.value = true;
     resultSuccess.value = false;
   }
-}
+};
 
 onMounted(() => {
   socket.on("RESULT::createApiClient", SOCKETcreateApiClient);
