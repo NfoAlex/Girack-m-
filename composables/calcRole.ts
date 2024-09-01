@@ -15,7 +15,8 @@ const roleLevel:{
   ChannelCreateAndDelete: 2,
   UserManage: 3,
   MessageDelete: 2,
-  MessageAttatchFile: 1
+  MessageAttatchFile: 1,
+  APIUser: 1
 };
 */
 

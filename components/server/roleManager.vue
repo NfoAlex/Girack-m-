@@ -26,6 +26,7 @@ const roleEditingClone = ref<role>({
   UserManage: false,
   MessageDelete: false,
   MessageAttatchFile: false,
+  APIUse: false
 });
 const stateEdited = ref<boolean>(false); //編集済み
 const displayDeleteConfirm = ref<boolean>(false); //削除確認ダイアログ
@@ -237,6 +238,10 @@ onUnmounted(() => {
       <p>メッセージの管理</p>
       <v-checkbox v-model="roleEditingClone.MessageDelete" label="他人のメッセージの削除" />
       <v-checkbox v-model="roleEditingClone.MessageAttatchFile" label="メッセージへのファイル添付" />
+
+      <v-divider class="my-2" />
+
+      <v-checkbox v-model="roleEditingClone.APIUse" :hide-details="true" label="APIの利用" />
 
       <v-divider class="my-2" />
 

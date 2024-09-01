@@ -8,4 +8,5 @@ export default interface role {
   UserManage: boolean;
   MessageDelete: boolean;
   MessageAttatchFile: boolean;
+  APIUse: boolean;
 }
