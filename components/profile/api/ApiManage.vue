@@ -42,8 +42,8 @@ onUnmounted(() => {
 <template>
   <ApiClientCreate v-model="displayAPIClientCreate" v-if="displayAPIClientCreate" />
 
-  <div style="height:100%; overflow-y:auto;">
-    <m-card v-for="apiClient of apiClientInfos">
+  <div style="height:100%; overflow-y:auto;" class="pt-2 pb-3">
+    <m-card v-for="apiClient of apiClientInfos" class="mb-2">
       {{ apiClient }}
     </m-card>
   </div>
