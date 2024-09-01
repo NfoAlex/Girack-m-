@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useMyUserinfo } from "~/stores/userinfo";
 const { getMyUserinfo } = storeToRefs(useMyUserinfo());
+
+const route = useRoute();
 </script>
 
 <template>
@@ -15,7 +17,7 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
         <NuxtLink to="/profile/me">
           <v-card
             class="rounded-pill py-2 px-3 d-flex align-center"
-            :variant="$route.path==='/profile/me'?'tonal':'text'"
+            :variant="route.path==='/profile/me'?'tonal':'text'"
             :ripple="false"
           >
             <v-icon class="mr-2">mdi:mdi-account</v-icon>
@@ -25,11 +27,21 @@ const { getMyUserinfo } = storeToRefs(useMyUserinfo());
         <NuxtLink to="/profile/session">
           <v-card
             class="rounded-pill py-2 px-3 d-flex align-center"
-            :variant="$route.path==='/profile/session'?'tonal':'text'"
+            :variant="route.path==='/profile/session'?'tonal':'text'"
             :ripple="false"
           >
             <v-icon class="mr-2" size="small">mdi:mdi-key-chain</v-icon>
             セッション
+          </v-card>
+        </NuxtLink>
+        <NuxtLink to="/profile/api">
+          <v-card
+            class="rounded-pill py-2 px-3 d-flex align-center"
+            :variant="route.path==='/profile/api'?'tonal':'text'"
+            :ripple="false"
+          >
+            <v-icon class="mr-2" size="small">mdi:mdi-api</v-icon>
+            API利用情報
           </v-card>
         </NuxtLink>
       </span>
