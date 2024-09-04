@@ -42,6 +42,17 @@ import getMyRolePower from "~/composables/getMyRolePower";
             ロール
           </v-card>
         </NuxtLink>
+
+        <NuxtLink  v-if="getMyRolePower().ServerManage" to="/server/modapi">
+          <v-card
+            class="rounded-pill py-2 px-3 d-flex align-center"
+            :variant="$route.path==='/server/modapi'?'tonal':'text'"
+            :ripple="false"
+          >
+            <v-icon class="mr-2" size="small">mdi:mdi-api</v-icon>
+            API管理
+          </v-card>
+        </NuxtLink>
       </span>
 
     </div>
