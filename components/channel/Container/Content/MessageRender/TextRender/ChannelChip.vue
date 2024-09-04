@@ -34,7 +34,7 @@ const moveChannel = () => {
   <span style="display:inline-block;">
     <span
       @click="moveChannel"
-      class="px-2 pb-1 mx-1 d-flex align-center justify-center ChannelIdStringContainer cursor-pointer"
+      class="px-2 pb-1 d-flex align-center justify-center ChannelIdStringContainer cursor-pointer"
       style="width:fit-content;"
     >
       <v-icon class="mr-1 mt-1" size="x-small">mdi-pound</v-icon>
