@@ -24,7 +24,7 @@ const formatedUserId = computed(() => {
 </script>
 
 <template>
-  <span>
+  <span style="display: inline-block;">
     <Userinfo
       v-if="displayUserinfo"
       v-model="displayUserinfo"
