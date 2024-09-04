@@ -40,10 +40,12 @@ onMounted(() => {
 <template>
   <div
     v-if="systemMessageJson.senderUserId !== ''"
-    class="d-flex align-center justify-center text-medium-emphasis mx-auto my-1"
-    style="width:100%;"
+    class="d-flex align-center justify-center  text-medium-emphasis mx-auto my-1"
+    style="width:100%; height:min-content;"
   >
-    <UserChip :userId="systemMessageJson.senderUserId" style="min-width:25%" class="mr-1 text-truncate flex-shrink-0" />
+    <div class="mr-1">
+      <UserChip :userId="systemMessageJson.senderUserId" style="min-width:25%" class="text-truncate" />
+    </div>
     <p class="text-truncate">{{ flagDictionary.get(systemMessageJson.flag) }}</p>
   </div>
 </template>
