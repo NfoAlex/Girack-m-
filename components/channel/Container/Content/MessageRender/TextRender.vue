@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineComponent, h, computed } from "vue";
+import { computed, defineComponent, h } from "vue";
 import ChannelChip from "./TextRender/ChannelChip.vue";
 import URLChip from "./TextRender/URLChip.vue";
 import UserChip from "./TextRender/UserChip.vue";
@@ -22,7 +22,10 @@ const parseVNode = computed(() => {
   }[] = [];
 
   //メッセージ本文からRegexを使い要素データとテキストデータを分けて順番に追加する関数
-  const addMatches = (regex: RegExp, type: "link" | "userId" | "breakLine" | "channel") => {
+  const addMatches = (
+    regex: RegExp,
+    type: "link" | "userId" | "breakLine" | "channel",
+  ) => {
     let match;
     let contentClone = props.content;
     let offset = 0;
@@ -30,7 +33,7 @@ const parseVNode = computed(() => {
       ObjectIndex.push({
         context: match[0],
         type: type,
-        index: match.index + offset
+        index: match.index + offset,
       });
       offset += match.index + match[0].length;
       contentClone = contentClone.slice(match.index + match[0].length);
@@ -57,7 +60,7 @@ const parseVNode = computed(() => {
   //// ここからVNodeへパース ////
 
   //結果保存用配列
-  const MessageRenderingFinal:VNode[] = [];
+  const MessageRenderingFinal: VNode[] = [];
   //レンダーする要素配列をループしてVNodeへパース
   for (let i = 0; i < content.length; i++) {
     //まず最初のデータをパースする
@@ -75,7 +78,9 @@ const parseVNode = computed(() => {
           MessageRenderingFinal.push(h("br"));
           break;
         case "channel":
-          MessageRenderingFinal.push(h(ChannelChip, { channelId: obj.context }));
+          MessageRenderingFinal.push(
+            h(ChannelChip, { channelId: obj.context }),
+          );
           break;
       }
     }
