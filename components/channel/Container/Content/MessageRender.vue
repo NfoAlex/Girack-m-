@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useScroll } from "@vueuse/core";
 import { socket } from "~/socketHandlers/socketInit";
 import { useInbox } from "~/stores/inbox";
 import { useMessageReadTime } from "~/stores/messageReadTime";
@@ -11,7 +12,6 @@ import FileDataPreview from "./MessageRender/FileDataPreview.vue";
 import HoverMenu from "./MessageRender/HoverMenu.vue";
 import LinkPreview from "./MessageRender/LinkPreview.vue";
 import TextRender from "./MessageRender/TextRender.vue";
-import { useScroll } from '@vueuse/core'
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getUserinfo } = useUserIndex();
