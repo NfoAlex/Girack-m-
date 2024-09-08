@@ -35,9 +35,10 @@ const propsMessage = defineProps<{
   borderClass: string;
 }>();
 
+//スクロール監視用のref
 const el = ref<HTMLElement | null>(null);
 const { isScrolling } = useScroll(el);
-
+//スクロール監視用の要素割り当て
 el.value = document.getElementById("ChannelContainerContent");
 
 //このメッセージが通知Inboxにあるかどうかを調べてその通知を消す
