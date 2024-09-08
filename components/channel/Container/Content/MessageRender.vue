@@ -11,6 +11,7 @@ import FileDataPreview from "./MessageRender/FileDataPreview.vue";
 import HoverMenu from "./MessageRender/HoverMenu.vue";
 import LinkPreview from "./MessageRender/LinkPreview.vue";
 import TextRender from "./MessageRender/TextRender.vue";
+import { useScroll } from '@vueuse/core'
 
 const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 const { getUserinfo } = useUserIndex();
@@ -33,6 +34,11 @@ const propsMessage = defineProps<{
   editThisMessage: boolean;
   borderClass: string;
 }>();
+
+const el = ref<HTMLElement | null>(null);
+const { isScrolling } = useScroll(el);
+
+el.value = document.getElementById("ChannelContainerContent");
 
 //このメッセージが通知Inboxにあるかどうかを調べてその通知を消す
 onMounted(() => {
@@ -83,7 +89,7 @@ onMounted(() => {
   -->
 
   <div
-    @mouseover="displayHoverMenu=true"
+    @mouseover="() => {if (!isScrolling) {displayHoverMenu=true}}"
     @mouseleave="displayHoverMenu=false"
     class="d-flex pr-2"
     style="width:100%; height:100%; position:relative;"
