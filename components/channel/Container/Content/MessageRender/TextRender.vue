@@ -97,7 +97,7 @@ const ContentRenderParsed = defineComponent({
 </script>
 
 <template>
-  <span class="text-medium-emphasis" style="word-break:normal;">
+  <span class="text-medium-emphasis" style="word-break: break-all;">
     <ContentRenderParsed />
   </span>
 </template>
