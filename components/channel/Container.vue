@@ -33,7 +33,7 @@ const getChannelPath = computed(() => {
       class="flex-shrink-0"
       :channel-info="getChannelinfoSingle(getChannelPath ?? '')"
     />
-    <KeepAlive>
+    <KeepAlive :max="5">
       <component
         :is="ChannelContainerContent"
         :key="route.fullPath"

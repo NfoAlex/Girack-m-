@@ -1,6 +1,6 @@
 {
   "name": "girack-m-",
-  "version": "v20240904-1",
+  "version": "v20240908",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,7 +15,7 @@
     "@nuxt/devtools": "latest",
     "@nuxt/image": "^1.7.0",
     "@nuxtjs/google-fonts": "^3.2.0",
-    "nuxt": "^3.12.4",
+    "nuxt": "^3.13.1",
     "vue": "^3.3.10",
     "vue-router": "^4.2.5",
     "vuetify-nuxt-module": "^0.14.0"
