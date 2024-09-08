@@ -23,6 +23,7 @@ const { getInbox } = storeToRefs(useInbox());
 const userIdForDialog = ref<string>("");
 const displayUserpage = ref<boolean>(false);
 const stateEditingMessage = ref<boolean>(false);
+const displayHoverMenu = ref<boolean>(false);
 
 const emits = defineEmits<(e: "leaveEditingParent") => void>();
 
@@ -63,6 +64,7 @@ onMounted(() => {
     :userId="userIdForDialog"
   />
   
+  <!--
   <v-menu
     open-on-hover
     location="end"
@@ -74,111 +76,121 @@ onMounted(() => {
   >
     <template v-slot:activator="{ props }">
 
-      <div v-bind="props" class="d-flex pr-2" style="width:100%; height:100%;">
-
-        <!-- アバター -->
-        <span style="width:65px" class="px-1">
-          <v-avatar
-            @click="() => { 
-              userIdForDialog = message.userId;
-              displayUserpage = true;
-            }"
-            class="mr-2 cursor-pointer"
-            v-show="
-              propsMessage.borderClass==='messageSingle'
-              ||
-              propsMessage.borderClass==='messageTop'
-            "
-            size="45px"
-          >
-            <v-img :src="'/icon/' + message.userId" :alt="message.userId" />
-          </v-avatar>
-        </span>
-
-        <div
-          class="px-3 flex-grow-1 d-flex flex-column flex-wrap messageContainer"
-          :class="propsMessage.borderClass"
-          style="width:calc(100% - 65px);"
-        >
-          <span
-            v-if="
-              propsMessage.borderClass==='messageSingle'
-              ||
-              propsMessage.borderClass==='messageTop'
-            "
-            class="d-flex align-center"
-          >
-            <p>{{ getUserinfo(message.userId).userName }}</p>
-            <p class="text-medium-emphasis text-caption ml-2">
-              {{ new Date(message.time).toLocaleString() }}
-            </p>
-          </span>
-          
-          <!-- メッセージ文レンダーあるいは編集枠 -->
-          <TextRender v-if="!stateEditingMessage && !propsMessage.editThisMessage" :content="message.content" />
-          <ContentEditing
-            v-else
-            @leave-editing="stateEditingMessage=false; emits('leaveEditingParent');"
-            :content="message.content"
-            :channelId="message.channelId"
-            :messageId="message.messageId"
-          />
-
-          <!-- メッセージが編集されたものだった時の表示 -->
-          <span v-if="message.isEdited && !stateEditingMessage" class="text-disabled text-subtitle-2">編集済み</span>
-
-          <!-- ファイル表示 -->
-          <FileDataPreview v-if="message.fileId.length >= 1" :fileId="message.fileId" />
-
-          <!-- リンクプレビューレンダー -->
-          <LinkPreview :linkData="message.linkData" />
-
-          <!-- 絵文字表示 -->
-          <EmojiRender :channelId="message.channelId" :messageId="message.messageId" :reaction="message.reaction" />
-
-        </div>
-      </div>
-
-      <!-- 新着メッセージ表示 -->
-      <span
-        v-if="
-          (
-            getMessageReadTimeBefore(propsMessage.message.channelId)
-              ===
-            propsMessage.message.time
-          )
-            &&
-          propsMessage.index !== 0
-        "
-        class="d-flex align-center"
-        style="margin-top:-10px; margin-bottom:-10px;"
-      >
-        <v-divider
-          color="secondary"
-        />
-        <v-chip
-          class="flex-shrink-0"
-          size="x-small"
-          color="secondary"
-          variant="flat"
-        >
-          ここから新着
-        </v-chip>
-        <v-divider
-          color="secondary"
-        />
-      </span>
+      
       
     </template>
+  </v-menu>
+  -->
+
+  <div
+    @mouseover="displayHoverMenu=true"
+    @mouseleave="displayHoverMenu=false"
+    class="d-flex pr-2"
+    style="width:100%; height:100%; position:relative;"
+  >
 
     <!-- ホバーメニュー -->
     <HoverMenu
+      v-if="displayHoverMenu"
+      @mouseleave.prevent="null"
       :message="propsMessage.message"
       @enter-editing="stateEditingMessage = true"
-      style="width:fit-content;"
+      style="width:fit-content; position:absolute; z-index:9999; right:0; bottom:90%;"
     />
 
-  </v-menu>
+    <!-- アバター -->
+    <span style="width:65px" class="px-1">
+      <v-avatar
+        @click="() => { 
+          userIdForDialog = message.userId;
+          displayUserpage = true;
+        }"
+        class="mr-2 cursor-pointer"
+        v-show="
+          propsMessage.borderClass==='messageSingle'
+          ||
+          propsMessage.borderClass==='messageTop'
+        "
+        size="45px"
+      >
+        <v-img :src="'/icon/' + message.userId" :alt="message.userId" />
+      </v-avatar>
+    </span>
+
+    <div
+      class="px-3 flex-grow-1 d-flex flex-column flex-wrap messageContainer"
+      :class="propsMessage.borderClass"
+      style="width:calc(100% - 65px);"
+    >
+      <span
+        v-if="
+          propsMessage.borderClass==='messageSingle'
+          ||
+          propsMessage.borderClass==='messageTop'
+        "
+        class="d-flex align-center"
+      >
+        <p>{{ getUserinfo(message.userId).userName }}</p>
+        <p class="text-medium-emphasis text-caption ml-2">
+          {{ new Date(message.time).toLocaleString() }}
+        </p>
+      </span>
+      
+      <!-- メッセージ文レンダーあるいは編集枠 -->
+      <TextRender v-if="!stateEditingMessage && !propsMessage.editThisMessage" :content="message.content" />
+      <ContentEditing
+        v-else
+        @leave-editing="stateEditingMessage=false; emits('leaveEditingParent');"
+        :content="message.content"
+        :channelId="message.channelId"
+        :messageId="message.messageId"
+      />
+
+      <!-- メッセージが編集されたものだった時の表示 -->
+      <span v-if="message.isEdited && !stateEditingMessage" class="text-disabled text-subtitle-2">編集済み</span>
+
+      <!-- ファイル表示 -->
+      <FileDataPreview v-if="message.fileId.length >= 1" :fileId="message.fileId" />
+
+      <!-- リンクプレビューレンダー -->
+      <LinkPreview :linkData="message.linkData" />
+
+      <!-- 絵文字表示 -->
+      <EmojiRender :channelId="message.channelId" :messageId="message.messageId" :reaction="message.reaction" />
+
+    </div>
+  </div>
+
+  <!-- 新着メッセージ表示 -->
+  <span
+    v-if="
+      (
+        getMessageReadTimeBefore(propsMessage.message.channelId)
+          ===
+        propsMessage.message.time
+      )
+        &&
+      propsMessage.index !== 0
+    "
+    class="d-flex align-center"
+    style="margin-top:-10px; margin-bottom:-10px;"
+  >
+    <v-divider
+      color="secondary"
+    />
+    <v-chip
+      class="flex-shrink-0"
+      size="x-small"
+      color="secondary"
+      variant="flat"
+    >
+      ここから新着
+    </v-chip>
+    <v-divider
+      color="secondary"
+    />
+  </span>
+
 </template>
 
 <style scoped>
