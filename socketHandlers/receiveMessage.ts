@@ -22,6 +22,9 @@ export default function receiveMessage(socket: Socket): void {
 
     addMessage(message);
 
+    //システムメッセなら通知しないのでここで停止
+    if (message.isSystemMessage) return;
+
     //現在そのチャンネルにいて、フォーカスしていてかつ一番下にスクロールしているのなら最新既読Id更新
     const route = useRoute();
     if (typeof route.params.id !== "object") {
