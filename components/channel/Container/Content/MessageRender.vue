@@ -71,24 +71,6 @@ onMounted(() => {
     :userId="userIdForDialog"
   />
   
-  <!--
-  <v-menu
-    open-on-hover
-    location="end"
-    origin="end center"
-    :close-on-content-click="false"
-    close-delay="10"
-    open-delay="10"
-    transition="none"
-  >
-    <template v-slot:activator="{ props }">
-
-      
-      
-    </template>
-  </v-menu>
-  -->
-
   <div
     @mouseover="() => {if (!isScrolling) {displayHoverMenu=true}}"
     @mouseleave="displayHoverMenu=false"
