@@ -37,6 +37,7 @@ onErrorCaptured((err, instance, info) => {
     v-model="displayImageViewer"
     @closeDialog="displayImageViewer=false"
     :imageUrls="[activeImageUrl]"
+    :indexSelected="0"
   />
 
   <span
