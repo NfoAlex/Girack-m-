@@ -89,7 +89,6 @@ onErrorCaptured((err, instance, info) => {
         style="height:auto; max-width:40%; border-radius:24px;"
       >
         <NuxtImg
-          provider="ipx"
           :src="props.linkData[index].images[0].url"
           @click="activeImageUrl=props.linkData[index].images[0].url; displayImageViewer=true;"
           :modifiers="{ quality: 50, }"
