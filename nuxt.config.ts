@@ -59,6 +59,15 @@ export default defineNuxtConfig({
     { path: "/socket.io", handler: "./server/middleware/proxy.ts" },
   ],
 
+  image: {
+    domains: [
+      "i.imgur.com",
+      "i.ytimg.com",
+      "pbs.twimg.com",
+      "64.media.tumblr.com",
+    ],
+  },
+
   vuetify: {
     moduleOptions: {
       /* module specific options */
