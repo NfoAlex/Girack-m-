@@ -391,9 +391,7 @@ const HashSignTrigger = () => {
  * @param e
  */
 const triggerUp = (e: Event) => {
-  //カーソル移動防止
-  //e.preventDefault();
-
+  //メンション・チャンネル選択中ならカーソル移動を阻止
   if (searchData.value.searching) e.preventDefault();
 
   //上キーの処理
@@ -410,15 +408,13 @@ const triggerUp = (e: Event) => {
  * @param e
  */
 const triggerDown = (e: Event) => {
-  //カーソル移動防止
-  //e.preventDefault();
-
   //検索しているカテゴリに応じて参照する配列を選択
   const targetArr =
     searchData.value.searchingTerm === "user"
       ? searchDataResultUser.value
       : searchDataResultChannel.value;
 
+  //メンション・チャンネル選択中ならカーソル移動を阻止
   if (searchData.value.searching) e.preventDefault();
 
   //下キーの処理
