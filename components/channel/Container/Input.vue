@@ -397,7 +397,8 @@ const triggerUp = (e: Event) => {
   //上キーの処理
   if (
     //Indexを引くときに0以上なら
-    0 <= searchData.value.selectedIndex - 1
+    0 <=
+    searchData.value.selectedIndex - 1
   ) {
     searchData.value.selectedIndex--;
   }
@@ -420,7 +421,8 @@ const triggerDown = (e: Event) => {
   //下キーの処理
   if (
     //Indexを足すときにまだ結果配列長より下なら
-    targetArr.length > searchData.value.selectedIndex + 1
+    targetArr.length >
+    searchData.value.selectedIndex + 1
   ) {
     searchData.value.selectedIndex++;
   }
