@@ -9,7 +9,8 @@ const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
 /**
  * data
  */
-const file = ref<File[]>([]); //プロフィール画像ファイル入力用
+const file = ref<File|null>(); //プロフィール画像ファイル入力用
+const canUploadThis = ref<boolean>(false);
 const stateUploading = ref<boolean>(false); //アップロード途中であるかどうか
 const uploadResult = ref<"SUCCESS" | "ERROR" | null>(null);
 const metadata = ref<{ userId: string; sessionId: string }>({
@@ -21,7 +22,13 @@ const uploadRule = ref([
   //アップロードするファイルのサイズ制限確認
   (fileInput: File[]) => {
     try {
-      console.log("fileInput->", fileInput[0]);
+      //console.log("fileInput->", fileInput[0]);
+
+      //条件で一度調べていけるなら画像アップロード許可状態を設定
+      if (
+        fileInput[0].size < getServerinfo.value.config.PROFILE.iconMaxSize
+      ) canUploadThis.value = true;
+
       return (
         fileInput[0].size < getServerinfo.value.config.PROFILE.iconMaxSize ||
         `画像サイズを${avatarLimitSizeHumanDisplay()}以下にしてください!`
@@ -64,7 +71,9 @@ const submit = async () => {
   //ファイルがあると処理をする
   if (file.value) {
     const formData = new FormData();
-    formData.append("file", file.value[0]);
+    
+    //画像ファイルを格納
+    formData.append("file", file.value);
     // JSONデータを文字列に変換して追加
     formData.append("metadata", JSON.stringify(metadata.value));
 
@@ -119,6 +128,7 @@ const submit = async () => {
       <v-card-text>
         <v-file-input
           v-model="file"
+          :multiple="false"
           accept="image/png, image/jpeg, image/gif"
           :rules="uploadRule"
           :label="'プロフィール画像(' + avatarLimitSizeHumanDisplay() + ')'"
@@ -130,11 +140,7 @@ const submit = async () => {
       <v-card-actions class="d-flex flex-row-reverse">
         <m-btn
           @click="submit"
-          :disabled="
-            file.length === 0 ||
-            file[0].size > getServerinfo.config.PROFILE.iconMaxSize ||
-            stateUploading
-          "
+          :disabled="!canUploadThis || file === null"
           color="primary"
         >アップロード</m-btn>
       </v-card-actions>
