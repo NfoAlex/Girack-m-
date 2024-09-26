@@ -92,7 +92,8 @@ onErrorCaptured((err, instance, info) => {
           :src="props.linkData[index].images[0].url"
           @click="activeImageUrl=props.linkData[index].images[0].url; displayImageViewer=true;"
           :modifiers="{ quality: 50, }"
-          style="max-width:97.5%; height:auto; max-height:170px; border-radius: 20px !important;"
+          style="max-width:97.5%; height:auto; max-height:190px; border-radius: 20px !important;"
+          :height="170"
           class="cursor-pointer"
         />
       </span>
@@ -101,10 +102,13 @@ onErrorCaptured((err, instance, info) => {
 
     <!-- 画像単体用 -->
     <span v-if="props.linkData[index].mediaType==='image'" >
-      <img
+      <NuxtImg
         :src="props.linkData[index].url"
+        @click="activeImageUrl=props.linkData[index].url; displayImageViewer=true;"
+        :modifiers="{ quality: 65 }"
         style="max-height:150px; width:auto"
-        class="rounded-xl mt-1"
+        :height="150"
+        class="cursor-pointer rounded-xl mt-1"
       />
     </span>
   </span>
