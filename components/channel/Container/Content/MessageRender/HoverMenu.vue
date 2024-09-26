@@ -79,7 +79,7 @@ const deleteIt = () => {
         border-radius: 18px;
       "
       color="lightblue"
-      :style="height/2 > y ? 'top:50px;' : 'bottom:50px;'"
+      :style="height/2 > y ? 'top:50px;' : 'bottom:50px; margin-bottom:-2.5px;'"
     />
 
     <v-card
