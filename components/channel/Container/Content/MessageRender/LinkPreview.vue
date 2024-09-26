@@ -85,16 +85,17 @@ onErrorCaptured((err, instance, info) => {
 
       <span
         v-if="props.linkData[index].images[0] !== undefined"
-        class="rounded-lg flex-grow-0 flex-shrink-0 d-flex flex-column align-center my-auto ml-3"
+        class="rounded-lg flex-grow-1 flex-shrink-1 d-flex flex-column align-center my-auto ml-3"
         style="height:auto; max-width:250px; border-radius:24px;"
       >
-        <img
+        <NuxtImg
+          provider="ipx"
           :src="props.linkData[index].images[0].url"
           @click="activeImageUrl=props.linkData[index].images[0].url; displayImageViewer=true;"
+          :modifiers="{ quality: 50, width: '50%' }"
           style="max-width:97.5%; height:auto; max-height:170px; border-radius: 20px !important;"
           class="cursor-pointer"
-        >
-        </img>
+        />
       </span>
 
     </m-card>
