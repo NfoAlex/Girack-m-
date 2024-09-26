@@ -26,18 +26,18 @@ const parseVNode = computed(() => {
     regex: RegExp,
     type: "link" | "userId" | "breakLine" | "channel",
   ) => {
-    let match;
-    let contentClone = props.content;
-    let offset = 0;
-    while ((match = regex.exec(contentClone)) !== null) {
+    let match = regex.exec(props.content);
+    let lastIndex = 0;
+
+    //Regex結果がある限りオブジェクト格納
+    while (match !== null) {
       ObjectIndex.push({
         context: match[0],
         type: type,
-        index: match.index + offset,
+        index: match.index,
       });
-      offset += match.index + match[0].length;
-      contentClone = contentClone.slice(match.index + match[0].length);
-      regex.lastIndex = 0;
+      lastIndex = regex.lastIndex;
+      match = regex.exec(props.content);
     }
   };
 

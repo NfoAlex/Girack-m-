@@ -60,7 +60,12 @@ export default defineNuxtConfig({
   ],
 
   image: {
-    domains: ['i.imgur.com', 'i.ytimg.com', 'pbs.twimg.com', '64.media.tumblr.com']
+    domains: [
+      "i.imgur.com",
+      "i.ytimg.com",
+      "pbs.twimg.com",
+      "64.media.tumblr.com",
+    ],
   },
 
   vuetify: {
