@@ -52,7 +52,7 @@ onErrorCaptured((err, instance, info) => {
       style="max-height:200px; max-width:800px; width:fit-content;"
     >
 
-      <span class="flex-shrink-1" style="overflow-y:auto; max-height:90%">
+      <span class="flex-shrink-1 flex-grow-1" style="overflow-y:auto; max-height:90%">
         <span class="d-flex" style="width:100%;">
           <span
             v-if="props.linkData[index].favicon !== undefined"
@@ -85,14 +85,14 @@ onErrorCaptured((err, instance, info) => {
 
       <span
         v-if="props.linkData[index].images[0] !== undefined"
-        class="rounded-lg flex-grow-1 flex-shrink-1 d-flex flex-column align-center my-auto ml-3"
-        style="height:auto; max-width:250px; border-radius:24px;"
+        class="rounded-lg flex-grow-1 flex-shrink-0 d-flex flex-column align-center my-auto ml-3"
+        style="height:auto; max-width:40%; border-radius:24px;"
       >
         <NuxtImg
           provider="ipx"
           :src="props.linkData[index].images[0].url"
           @click="activeImageUrl=props.linkData[index].images[0].url; displayImageViewer=true;"
-          :modifiers="{ quality: 50, width: '50%' }"
+          :modifiers="{ quality: 50, }"
           style="max-width:97.5%; height:auto; max-height:170px; border-radius: 20px !important;"
           class="cursor-pointer"
         />
