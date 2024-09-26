@@ -52,12 +52,11 @@ onMounted(() => {
         <NuxtImg
           @click="activeImageUrl=imageUrl"
           :src="imageUrl"
-          :modifiers="{ roundCorner: '12', fit: 'contain', format: 'jpg', }"
+          :modifiers="{ roundCorner: '12', fit: 'contain', format: 'jpg', quality: 30, }"
           height="100%"
           class="rounded-lg"
           style="max-height:70px; max-width:95px; width:auto"
           loading="lazy"
-          quality="50"
         />
       </div>
     </m-card>
