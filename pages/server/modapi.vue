@@ -25,6 +25,15 @@ const fetchAllApiInfo = () => {
 }
 
 /**
+ * API利用情報の承諾状態を更新する
+ * @param apiClientId 
+ * @param newStatus 
+ */
+const changeApproveStatus = (apiClientId: string, newStatus: IAPIClientInfo["approvedStatus"]) => {
+  console.log("modapi :: changeApproveStatus : 更新->", newStatus);
+}
+
+/**
  * API利用情報を取得
  * @param dat
  */
@@ -68,13 +77,23 @@ onUnmounted(() => {
           >mdi-circle</v-icon>
           <p>{{ apiClient.clientName }}</p>
           <v-divider vertical class="mx-2" />
-          <p>{{ apiClient.description }}</p>
+          <p class="text-truncate">{{ apiClient.description }}</p>
         </div>
         <v-divider class="my-2" />
-        <div class="d-flex flex-row">
+        <div class="d-flex flex-row align-center flex-wrap mb-2">
           <v-chip class="mr-2">最新利用日時 : {{ apiClient.latestUsedTime || "未利用" }}</v-chip>
-          <v-chip>{{ getUserinfo(apiClient.createdUserId).userName }}</v-chip>
+          <v-chip class="mr-2">{{ getUserinfo(apiClient.createdUserId).userName }}</v-chip>
         </div>
+        <v-btn-toggle
+          v-model="apiClient.approvedStatus"
+          @update:model-value="changeApproveStatus(apiClient.apiClientId, apiClient.approvedStatus)"
+          variant="outlined"
+          rounded="xl"
+        >
+          <v-btn icon="mdi-cancel" size="small" value="BANNED"></v-btn>
+          <v-btn icon="mdi-check-bold" size="small" value="APPROVED"></v-btn>
+        </v-btn-toggle>
+        {{ apiClient.approvedStatus }}
       </m-card>
     </NuxtLayout>
   </div>
