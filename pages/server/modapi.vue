@@ -96,7 +96,7 @@ onUnmounted(() => {
           <v-select
             v-model="apiClient.approvedStatus"
             @update:model-value="changeApproveStatus(apiClient.apiClientId, apiClient.approvedStatus)"
-            variant="outlined"
+            variant="solo-filled"
             density="compact"
             hide-details
             :items="['WAITING', 'APPROVED', 'BANNED']"
