@@ -30,7 +30,16 @@ const fetchAllApiInfo = () => {
  * @param newStatus 
  */
 const changeApproveStatus = (apiClientId: string, newStatus: IAPIClientInfo["approvedStatus"]) => {
-  console.log("modapi :: changeApproveStatus : 更新->", newStatus);
+  //console.log("modapi :: changeApproveStatus : 更新->", newStatus);
+
+  socket.emit("modApiApprove", {
+    RequestSender: {
+      userId: getMyUserinfo.value.userId,
+      sessionId: getSessionId.value
+    },
+    apiClientId,
+    newStatus
+  });
 }
 
 /**
