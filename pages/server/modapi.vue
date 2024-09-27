@@ -35,7 +35,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  socket.off("fetchAllApiInfo", SOCKETfetchAllApiInfo);
+  socket.off("RESULT::fetchAllApiInfo", SOCKETfetchAllApiInfo);
 });
 </script>
 
