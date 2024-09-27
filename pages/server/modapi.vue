@@ -84,16 +84,24 @@ onUnmounted(() => {
           <v-chip class="mr-2">最新利用日時 : {{ apiClient.latestUsedTime || "未利用" }}</v-chip>
           <v-chip class="mr-2">{{ getUserinfo(apiClient.createdUserId).userName }}</v-chip>
         </div>
-        <v-btn-toggle
-          v-model="apiClient.approvedStatus"
-          @update:model-value="changeApproveStatus(apiClient.apiClientId, apiClient.approvedStatus)"
-          variant="outlined"
-          rounded="xl"
-        >
-          <v-btn icon="mdi-cancel" size="small" value="BANNED"></v-btn>
-          <v-btn icon="mdi-check-bold" size="small" value="APPROVED"></v-btn>
-        </v-btn-toggle>
-        {{ apiClient.approvedStatus }}
+        <div class="d-flex flex-row align-center">
+          <p class="mr-2 text-body-2">許可状況</p>
+
+          <v-chip
+            v-if="apiClient.approvedStatus === 'WAITING'"
+            color="warning"
+            class="mr-2"
+          >承諾待機中</v-chip>
+
+          <v-select
+            v-model="apiClient.approvedStatus"
+            @update:model-value="changeApproveStatus(apiClient.apiClientId, apiClient.approvedStatus)"
+            variant="outlined"
+            density="compact"
+            hide-details
+            :items="['WAITING', 'APPROVED', 'BANNED']"
+          ></v-select>
+        </div>
       </m-card>
     </NuxtLayout>
   </div>
