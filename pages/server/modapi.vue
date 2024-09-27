@@ -68,7 +68,7 @@ onUnmounted(() => {
           icon="mdi-refresh"
         />
       </div>
-      <m-card v-for="apiClient,index of APIInfos">
+      <m-card v-for="apiClient,index of APIInfos" class="mb-2">
         <div class="d-flex flex-row align-center">
           <v-icon
             size="x-small"
