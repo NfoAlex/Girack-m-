@@ -4,7 +4,7 @@ export interface IAPIClientInfo {
   clientName: string;
   description: string;
   latestUsedTime: string;
-  createdBy: string;
+  createdUserId: string;
   isEnabled: boolean;
   approvedStatus: "WAITING" | "APPROVED" | "BANNED";
 }
