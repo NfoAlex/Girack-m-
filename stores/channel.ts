@@ -1,6 +1,6 @@
 //チャンネル情報
 import { defineStore } from "pinia";
-import type { channel, channelOrder } from "~/types/channel";
+import type { Thread, channel, channelOrder } from "~/types/channel";
 
 import { socket } from "~/socketHandlers/socketInit";
 import { useMyUserinfo } from "./userinfo";
@@ -15,6 +15,13 @@ export const useChannelinfo = defineStore("channelinfo", {
       }
       */
       },
+      _Threadinfo: {
+        /*
+      "987654": {
+        ...
+      }
+      */
+      },
       _ChannelOrder: [
         /*
       {channelId:"0001", ...}
@@ -23,6 +30,9 @@ export const useChannelinfo = defineStore("channelinfo", {
     }) as {
       _Channelinfo: {
         [key: string]: channel;
+      };
+      _Threadinfo: {
+        [key: string]: Thread;
       };
       _ChannelOrder: channelOrder[];
     },
@@ -62,6 +72,37 @@ export const useChannelinfo = defineStore("channelinfo", {
       }
 
       return state._Channelinfo[channelId];
+    },
+
+    //スレッド単体を返す
+    getThreadinfoSingle: (state) => (threadId: string) => {
+      //スレッド情報がないならfetchしてホルダーを返す、あるならそれを返す
+      if (state._Threadinfo[threadId] === undefined) {
+        //ホルダー
+        state._Threadinfo[threadId] = {
+          threadId: threadId,
+          threadName: threadId,
+          createdBy: "xxxxx",
+          speakableRole: [],
+          parentChannelId: "",
+          parentMessageId: ""
+        };
+
+        //チャンネル情報を取得
+        const { getMyUserinfo, getSessionId } = storeToRefs(useMyUserinfo());
+
+        socket.emit("fetchThreadInfo", {
+          RequestSender: {
+            userId: getMyUserinfo.value.userId,
+            sessionId: getSessionId.value,
+          },
+          threadId: threadId,
+        });
+
+        return state._Threadinfo[threadId];
+      }
+
+      return state._Threadinfo[threadId];
     },
 
     //チャンネル順序取得
