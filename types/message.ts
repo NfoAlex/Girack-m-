@@ -4,6 +4,7 @@ export default interface message {
   userId: string;
   isEdited: boolean;
   isSystemMessage: boolean;
+  hasThread: boolean;
   content: string;
   linkData: {
     [key: string]:
