@@ -18,3 +18,12 @@ export interface channel {
   isPrivate: boolean;
   speakableRole: string[];
 }
+
+export interface Thread {
+  threadId: string;
+  threadName: string;
+  createdBy: string;
+  speakableRole: string[];
+  parentChannelId: string;
+  parentMessageId: string;
+}
