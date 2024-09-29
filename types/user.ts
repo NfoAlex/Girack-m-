@@ -4,13 +4,5 @@ export interface MyUserinfo {
   userId: string; //ユーザーID
   banned: boolean; //BANされたかどうか
   channelJoined: string[]; //参加しているチャンネル
-}
-
-export interface GirakAuthInfo {
-  result: boolean;
-  userid: string;
-  username: string;
-  sessionid: string;
-  role: string;
-  channelJoined: [string];
+  threadJoined: string[];
 }
