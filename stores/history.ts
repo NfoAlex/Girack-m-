@@ -124,6 +124,8 @@ export const useHistory = defineStore("history", {
         channelId: "UNDEFINED",
         userId: "UNDEFINED",
         content: "",
+        isSystemMessage: false,
+        hasThread: false,
         linkData: {},
         time: "",
         reaction: {},
