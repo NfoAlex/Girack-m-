@@ -72,8 +72,14 @@ const SOCKETRESULTauthLogin = (dat: {
     updateSessionId(dat.data.sessionId);
 
     //セッション情報をクッキーへ保存
-    useCookie("userId", { maxAge: 1.296e6 }).value = dat.data.UserInfo.userId;
-    useCookie("sessionId", { maxAge: 1.296e6 }).value = dat.data.sessionId;
+    useCookie("userId", {
+      maxAge: 1.296e6,
+      sameSite: "strict",
+    }).value = dat.data.UserInfo.userId;
+    useCookie("sessionId", {
+      maxAge: 1.296e6,
+      sameSite: "strict"
+    }).value = dat.data.sessionId;
 
     //準備処理開始
     //initialize(dat.data.UserInfo.userId, dat.data.sessionId);
