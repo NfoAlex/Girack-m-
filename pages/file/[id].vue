@@ -53,83 +53,21 @@ const download = async () => {
   try {
     const link = document.createElement("a");
 
-    link.href = fileBufferData.value.fileURL;
-    link.download = fileBufferData.value.filename;
+    link.href = `/downloadfile/${fileData.value.id}`;
+    link.download = fileData.value.name;
     link.style.display = "none";
+
+    console.log("/file :: download : fileData.value->", fileData.value);
 
     document.body.appendChild(link);
     link.click();
 
     // Clean up
+    window.URL.revokeObjectURL(link.href);
     document.body.removeChild(link);
-    window.URL.revokeObjectURL(fileBufferData.value.fileURL);
   } catch (error) {
     console.error("/file :: エラー->", error);
     downloadStatus.value = "FAILED";
-  }
-};
-
-/**
- * ファイル情報をあらかじめ取得、ダウンロードできる体制に
- */
-const prepareFile = async () => {
-  try {
-    const formData = new FormData();
-
-    //クッキーからセッションデータを取得、格納
-    const cookieLoaded = useCookie("session").value;
-    let RequestSenderLoaded = { userId: "", sessionId: "" };
-    //クッキーの値が有効なら格納、VueUseのアレでエラーが出るが値はJSONで帰ってくる
-    if (cookieLoaded !== undefined) {
-      //送信者情報を格納
-      RequestSenderLoaded = {
-        userId: cookieLoaded.userId,
-        sessionId: cookieLoaded.sessionId,
-      };
-    }
-
-    // JSONデータを文字列に変換して追加
-    formData.append(
-      "metadata",
-      JSON.stringify({
-        RequestSender: {
-          userId: RequestSenderLoaded.userId,
-          sessionId: RequestSenderLoaded.sessionId,
-        },
-      }),
-    );
-
-    console.log("formData->", formData);
-
-    const response = await fetch(`/downloadfile/${route.params.id}`, {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    // Content-Dispositionヘッダーからファイル名を取得
-    const contentDisposition = response.headers.get("Content-Disposition");
-    let fileName = "download"; // デフォルトのファイル名
-    if (contentDisposition) {
-      const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/i);
-      if (fileNameMatch) {
-        fileName = fileNameMatch[1];
-        fileBufferData.value.filename = fileNameMatch[1];
-      }
-    }
-
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-
-    fileBufferData.value.blob = blob;
-    fileBufferData.value.fileURL = url;
-
-    console.log("/file :: prepareFile : 今のデータ->", fileBufferData.value);
-  } catch (error) {
-    console.error("/file :: エラー->", error);
   }
 };
 
@@ -154,7 +92,7 @@ const SOCKETfetchFileInfo = (dat: {
     //タブ名にファイル名設定
     title.value = `${getServerinfo.value.servername} : ${fileData.value.name}`;
 
-    prepareFile();
+    //prepareFile();
   } else {
     fetchResult.value = dat.result;
   }
@@ -172,13 +110,14 @@ onMounted(() => {
   let RequestSenderLoaded = { userId: "", sessionId: "" };
 
   //クッキーからセッションデータを取得、格納
-  const cookieLoaded = useCookie("session").value;
+  const tempCookieUserId = useCookie("userId").value?.toString();
+  const tempCookieSessionId = useCookie("sessionId").value?.toString();
   //クッキーの値が有効なら格納、VueUseのアレでエラーが出るが値はJSONで帰ってくる
-  if (cookieLoaded !== undefined) {
+  if (tempCookieUserId !== undefined && tempCookieSessionId !== undefined) {
     //送信者情報を格納
     RequestSenderLoaded = {
-      userId: cookieLoaded.userId,
-      sessionId: cookieLoaded.sessionId,
+      userId: tempCookieUserId,
+      sessionId: tempCookieSessionId,
     };
     //ファイル情報取得
     socket.emit("fetchFileInfo", {
@@ -232,7 +171,7 @@ onUnmounted(() => {
       >
         <!-- 画像ファイルだった時のプレビュー表示 -->
         <div v-if="fileData.type.startsWith('image/') || undefined">
-          <img :src="fileBufferData.fileURL" width="100%" />
+          <img :src="'/downloadfile/' + route.params.id" width="100%" />
           <v-divider class="my-2" />
         </div>
         <p class="text-h5 text-center mb-3">{{ fileData.name }}</p>
