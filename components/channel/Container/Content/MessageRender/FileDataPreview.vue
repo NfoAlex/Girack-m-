@@ -172,9 +172,10 @@ const getImageUrl = (fileId: string): string => {
     :indexSelected="imageViewingIndex"
   />
 
-  <div class="d-flex flex-wrap align-center">
+  <div class="d-flex flex-wrap align-center" style="width:100%;">
     <span
       v-for="fileId,index in propsMessage.fileId"
+      style="width:100%;"
       class="mr-1 mt-1"
     >
       <!-- 通常ファイル表示 -->
@@ -182,6 +183,7 @@ const getImageUrl = (fileId: string): string => {
         v-if="!getFileInfoSingle(fileId).type.startsWith('image/')"
         color="cardInner"
         class="mt-1 d-flex flex-column"
+        max-width="100%"
       >
 
         <span class="mt-1 d-flex align-center" style="max-height:150px;">
