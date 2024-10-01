@@ -12,15 +12,8 @@ const propsMessage = defineProps<{
 /**
  * data
  */
-const fileBlobArr = ref<{
-  [key: string]: {
-    fileName: string;
-    blobUrl: string | null;
-  };
-}>({});
 const displayImageViewer = ref<boolean>(false);
 const imageViewingIndex = ref<number>(0);
-const imageUrls = ref<string[]>([]);
 
 /**
  * ファイルをダウンロードする
@@ -47,6 +40,21 @@ const downloadFile = (fileId: string) => {
   document.body.removeChild(link);
 };
 
+/**
+ * 画像ビューワー用のURL格納用関数
+ */
+const getFileIdURL = computed(() => {
+  const result = [];
+
+  for (const id of propsMessage.fileId) {
+    if (getFileInfoSingle(id).type.startsWith("image/")) {
+      result.push(`/downloadfile/${id}`);
+    }
+  }
+
+  return result;
+});
+
 </script>
 
 <template>
@@ -54,7 +62,7 @@ const downloadFile = (fileId: string) => {
     v-if="displayImageViewer"
     v-model="displayImageViewer"
     @closeDialog="displayImageViewer=false"
-    :imageUrls
+    :imageUrls="getFileIdURL"
     :indexSelected="imageViewingIndex"
   />
 
