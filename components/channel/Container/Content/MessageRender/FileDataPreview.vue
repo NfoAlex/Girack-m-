@@ -224,15 +224,14 @@ const getImageUrl = (fileId: string): string => {
       </m-card>
 
       <!-- 画像表示 -->
-      <NuxtImg
+      <img
         v-else
         @click="imageViewingIndex=index, displayImageViewer=true"
-        :src="getImageUrl(getFileInfoSingle(fileId).id)"
+        :src="'/downloadfile/' + fileId"
         placeholderClass="ImagePlaceHolder"
         class="rounded-lg cursor-pointer"
         width="fit-content"
         style="max-height:150px; max-width:100%;"
-        quality="75"
         loading="lazy"
       />
     </span>
