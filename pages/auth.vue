@@ -117,22 +117,28 @@ const getSessionFromCookie = ():
     }
   | undefined => {
   //取得
-  const tempCookie = useCookie("session").value;
+  const tempCookieSessionId = useCookie("sessionId").value;
+  const tempCookieUserId = useCookie("userId").value;
 
   //無効な値ならundefuned
   if (
-    tempCookie === undefined ||
-    tempCookie === null ||
-    typeof tempCookie !== "object"
+    tempCookieUserId === undefined ||
+    tempCookieUserId === null
+  )
+    return undefined;
+  
+  if (
+    tempCookieSessionId === undefined ||
+    tempCookieSessionId === null
   )
     return undefined;
 
   //値を確認してあるならそれを返す
   //ここで型エラーが出るが結果はきちんとJSONを返すためこのまま
-  if (tempCookie.userId !== undefined && tempCookie.sessionId !== undefined) {
-    return tempCookie;
-  }
-  return undefined;
+  return {
+    userId: tempCookieUserId,
+    sessionId: tempCookieSessionId
+  };
 };
 
 /**
