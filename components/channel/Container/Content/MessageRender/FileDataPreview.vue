@@ -22,13 +22,11 @@ const imageViewingIndex = ref<number>(0);
 const downloadFile = (fileId: string) => {
   //仮想ボタン用のアンカーオブジェクト
   const link = document.createElement("a");
-  
+
   //ダウンロードするための仮想ボタン作成(見えない)
   link.href = "/downloadfile/" + fileId;
   link.download = getFileInfoSingle(fileId).name;
   link.style.display = "none";
-
-  console.log("ダウンロードに使う名前->", link.download, " 情報->", getFileInfoSingle(fileId));
 
   if (link.href === "/downloadfile/") return;
 
@@ -54,7 +52,6 @@ const getFileIdURL = computed(() => {
 
   return result;
 });
-
 </script>
 
 <template>
