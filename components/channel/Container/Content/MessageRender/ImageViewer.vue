@@ -49,7 +49,18 @@ onMounted(() => {
         :class="imageUrl===activeImageUrl?'imageSelected':'imageNotSelected'"
         class="mr-1 rounded-lg d-flex justify-center align-center"
       >
+        <!-- ユーザーアップロードのものならNuxtImgを使わない -->
+        <img
+          v-if="imageUrl.startsWith('/downloadfile/')"
+          @click="activeImageUrl=imageUrl"
+          :src="imageUrl"
+          height="100%"
+          class="rounded-lg"
+          style="max-height:70px; max-width:95px; width:auto"
+          loading="lazy"
+        />
         <NuxtImg
+          v-else
           @click="activeImageUrl=imageUrl"
           :src="imageUrl"
           :modifiers="{ roundCorner: '12', fit: 'contain', format: 'jpg', quality: 30, }"
