@@ -52,7 +52,9 @@ const triggerEnter = (event: KeyboardEvent) => {
   //Enterキーによる改行を止める
   event.preventDefault();
   //メッセージ入力欄へフォーカスを戻す
-  document.getElementById("elInput")?.focus();
+  nextTick(() => {
+    document.getElementById("elInput")?.focus();
+  });
 
   //編集内容が違ったらメッセージを更新する
   if (contentUpdating.value !== propsMessage.content) {
@@ -62,13 +64,25 @@ const triggerEnter = (event: KeyboardEvent) => {
     emits("leaveEditing");
   }
 };
+
+/**
+ * escキー処理
+ */
+const escTrigger = () => {
+  //メッセージ入力欄へフォーカスを戻す
+  nextTick(() => {
+    document.getElementById("elInput")?.focus();
+  });
+  //編集を終える
+  emits("leaveEditing");
+}
 </script>
 
 <template>
   <div>
     <v-textarea
       v-model="contentUpdating"
-      @keydown.esc="emits('leaveEditing')"
+      @keydown.esc="escTrigger"
       @keydown.enter="triggerEnter"
       variant="outlined"
       :rows="contentUpdating.split('\n').length"
