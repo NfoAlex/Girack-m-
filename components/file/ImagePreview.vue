@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useMyUserinfo } from "~/stores/userinfo";
-
 const props = defineProps<{
   fileId: string;
 }>();
