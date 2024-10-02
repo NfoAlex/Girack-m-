@@ -491,7 +491,7 @@ watch(windowFocused, (newValue, oldValue) => {
   }
 });
 
-onMounted(() => {
+onActivated(() => {
   //ロード状態を解除
   stateLoaded.value = false;
 
