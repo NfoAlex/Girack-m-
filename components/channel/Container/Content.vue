@@ -495,6 +495,11 @@ onActivated(() => {
   //ロード状態を解除
   stateLoaded.value = false;
 
+  //もし未参加のチャンネルだと別のチャンネルへ移動するように
+  if (!getMyUserinfo.value.channelJoined.includes(props.channelInfo.channelId)) {
+    useRouter().push(getMyUserinfo.value.channelJoined[0]);
+  }
+
   nextTick(() => {
     //スクロール位置を取り出し
     const scrollPosition = sessionStorage.getItem(
