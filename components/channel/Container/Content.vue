@@ -568,7 +568,7 @@ onActivated(() => {
       //編集中なら停止
       if (messageIdEditing.value !== "") return;
       //入力欄の要素取得、nullなら停止
-      const elInput = document.getElementById("elInput");
+      const elInput: HTMLFormElement|null = document.getElementById("elInput") as HTMLFormElement;
       if (elInput === null) return;
 
       //もしカーソル位置が最初にあるなら編集に入る
