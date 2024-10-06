@@ -66,14 +66,14 @@ const getFileIdURL = computed(() => {
   <div class="d-flex flex-wrap align-center" style="width:100%;">
     <span
       v-for="fileId,index in propsMessage.fileId"
-      style="width:fit-content;"
+      style="width:fit-content; max-width: 100%;"
       class="mr-1 mt-1"
     >
       <!-- 通常ファイル表示 -->
       <m-card
         v-if="!getFileInfoSingle(fileId).type.startsWith('image/')"
         color="cardInner"
-        class="mt-1 d-flex flex-column"
+        class="mt-1 d-flex flex-column text-truncate"
         max-width="100%"
       >
 
