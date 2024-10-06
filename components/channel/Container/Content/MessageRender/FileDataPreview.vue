@@ -24,7 +24,7 @@ const downloadFile = (fileId: string) => {
   const link = document.createElement("a");
 
   //ダウンロードするための仮想ボタン作成(見えない)
-  link.href = "/downloadfile/" + fileId;
+  link.href = `/downloadfile/${fileId}`;
   link.download = getFileInfoSingle(fileId).name;
   link.style.display = "none";
 
@@ -66,7 +66,7 @@ const getFileIdURL = computed(() => {
   <div class="d-flex flex-wrap align-center" style="width:100%;">
     <span
       v-for="fileId,index in propsMessage.fileId"
-      style="width:100%;"
+      style="width:fit-content;"
       class="mr-1 mt-1"
     >
       <!-- 通常ファイル表示 -->
