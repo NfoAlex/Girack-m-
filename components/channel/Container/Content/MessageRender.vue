@@ -60,6 +60,22 @@ onMounted(() => {
       });
     }
   }
+
+  //もし新着メッセの最初ならレンダー時、自動スクロールさせる
+  if (
+    (
+      getMessageReadTimeBefore.value(propsMessage.message.channelId)
+        ===
+      propsMessage.message.time
+    )
+      &&
+    propsMessage.index !== 0
+  ) {
+    nextTick(() => {
+      document.getElementById(`msgBody${propsMessage.message.messageId}`)?.scrollIntoView(true);
+      console.log("スクロールしたつもり", document.getElementById(`msgBody${propsMessage.message.messageId}`));
+    });
+  }
 });
 </script>
 
@@ -75,6 +91,7 @@ onMounted(() => {
     @mouseover="() => {if (!isScrolling) {displayHoverMenu=true}}"
     @mouseleave="displayHoverMenu=false"
     class="d-flex pr-2"
+    :id="`msgBody${propsMessage.message.messageId}`"
     style="width:100%; height:100%; position:relative;"
   >
 
