@@ -29,7 +29,7 @@ const cleanHistory = (addingLength:number, excludingChannelId:string) => {
     }
   }
 
-  console.log("history :: cleanHistory : 削るチャンネル->", {largestChannelId}, {largestLength}, {totalLength});
+  //console.log("history :: cleanHistory : 削るチャンネル->", {largestChannelId}, {largestLength}, {totalLength});
 
   //もし総量が400未満なら停止
   if (totalLength < 400) return;
