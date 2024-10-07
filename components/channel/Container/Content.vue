@@ -155,6 +155,30 @@ const fetchNewerHistory = () => {
 };
 
 /**
+ * 一番下までスクロールする
+ */
+onKeyStroke('Escape', (e) => {
+  //スクロール
+  y.value = 0;
+  //console.log("Content :: onKeyStroke(esc) : y->", y.value);
+
+  //もし履歴の最後にいるなら更新処理
+  if (getHistoryAvailability(props.channelInfo.channelId).atEnd) {
+    //新着があるという状態を解除
+    setHasNewMessage(props.channelInfo.channelId, false);
+    //表示している内の最新のメッセージ時間を取得
+    const latestMessageTime = getHistoryFromChannel(
+      props.channelInfo.channelId,
+    )[0].time;
+    //最新既読時間を更新
+    updateMessageReadTimeCloudAndLocal(
+      props.channelInfo.channelId,
+      latestMessageTime,
+    );
+  }
+});
+
+/**
  * 最新既読時間から該当するメッセージデータを取得する
  */
 const getLatestReadMessage = computed((): message | null => {
