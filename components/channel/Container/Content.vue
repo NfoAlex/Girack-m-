@@ -19,7 +19,7 @@ import {
 
 //スクロール位置取得用
 const ChannelContainerContent = ref<HTMLElement | null>(null);
-const { y, arrivedState } = useScroll(ChannelContainerContent);
+const { y } = useScroll(ChannelContainerContent);
 //ウィンドウのフォーカス取得用
 const windowFocused = useWindowFocus();
 
