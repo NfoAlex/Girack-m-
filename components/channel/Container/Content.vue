@@ -523,9 +523,11 @@ onActivated(() => {
     } else if (latestReadEl !== null) {
       //console.log("/channel/[id] :: onMounted : (最新既読Id)スクロールします->", scrollPosition);
       //最新既読Idへ
+      /*
       document.getElementById("ChannelContainerContent")?.scrollTo({
         top: latestReadEl.getBoundingClientRect().top,
       });
+      */
     }
 
     /*
