@@ -40,6 +40,7 @@ export default function getMessageReadTime(socket: Socket): void {
               includeThisPosition: true,
               fetchDirection: "older",
             },
+            historyLength: 2
           });
         }
       }
