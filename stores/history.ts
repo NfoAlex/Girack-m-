@@ -4,6 +4,54 @@ import { useMessageReadTime } from "./messageReadTime";
 
 import type message from "~/types/message";
 
+//履歴の長さ格納用(外では使わない)
+const historyLengths = new Map<string, number>();
+
+/**
+ * 履歴の総量が400以上あるなら多いものから削るように
+ * @addingLength 追加する履歴の長さ
+ * @excludingChannelId 勝手に削らせないための除外するチャンネルId
+ */
+const cleanHistory = (addingLength:number, excludingChannelId:string) => {
+  let totalLength = addingLength; //履歴全体の総量
+  let largestLength = 0; //一番長い履歴数
+  let largestChannelId = ""; //一番長い履歴数を持つチャンネルId
+
+  //ループして一番大きい履歴を調べる
+  for (const lengthMap of historyLengths) {
+    totalLength += lengthMap[1];
+    //もし除外するチャンネルIdを調べているならスキップ
+    if (lengthMap[0] === excludingChannelId) continue;
+    //今の最大数変数より多きれば変数を更新
+    if (lengthMap[1] > largestLength) {
+      largestLength = lengthMap[1];
+      largestChannelId = lengthMap[0];
+    }
+  }
+
+  console.log("history :: cleanHistory : 削るチャンネル->", {largestChannelId}, {largestLength}, {totalLength});
+
+  //もし総量が400未満なら停止
+  if (totalLength < 400) return;
+
+  //履歴の末端取得状況などを修正しながら履歴を削る
+  try {
+    //もし履歴の長さが３より上なら履歴の最後を持たないと設定
+    if (
+      useHistory()._History[largestChannelId].length > 3
+    ) {
+      useHistory()._Availability[largestChannelId].atTop = false;
+    }
+
+    //削る
+    useHistory()._History[largestChannelId].splice(3);
+    //長さ更新
+    historyLengths.set(largestChannelId, 3);
+
+    console.log("削った", useHistory()._Availability[largestChannelId].atTop);
+  } catch(e) {}
+}
+
 export const useHistory = defineStore("history", {
   state: () =>
     ({
@@ -198,10 +246,17 @@ export const useHistory = defineStore("history", {
       for (const msg of history) {
         this._History[channelId].push(msg);
       }
+
+      //履歴の長さ格納
+      historyLengths.set(channelId, this._History[channelId].length);
+      cleanHistory(history.length, channelId);
     },
 
     //履歴を挿入
     insertHistory(channelId: string, historyInserting: message[]) {
+      //履歴の数を計算して見ていない部分を削る
+      cleanHistory(historyInserting.length, channelId);
+
       //もし特定のチャンネル用の履歴JSONが空なら作ってそれを格納して終わる
       if (this._History[channelId] === undefined) {
         //空のを作る
@@ -210,6 +265,9 @@ export const useHistory = defineStore("history", {
         for (const msg of historyInserting) {
           this._History[channelId].push(msg);
         }
+
+        //履歴の長さ格納
+        historyLengths.set(channelId, this._History[channelId].length);
 
         return;
       }
@@ -265,6 +323,9 @@ export const useHistory = defineStore("history", {
           this._Availability[channelId].atEnd = false;
         }
       }
+
+      //履歴の長さ格納
+      historyLengths.set(channelId, this._History[channelId].length);
     },
 
     //履歴の位置データを格納
