@@ -129,6 +129,7 @@ export const useHistory = defineStore("history", {
         reaction: {},
         isEdited: false,
         fileId: [],
+        isSystemMessage: false
       };
       return blankMessage;
     },
