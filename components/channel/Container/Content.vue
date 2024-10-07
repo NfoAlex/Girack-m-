@@ -19,7 +19,7 @@ import {
 
 //スクロール位置取得用
 const ChannelContainerContent = ref<HTMLElement | null>(null);
-const { y, arrivedState } = useScroll(ChannelContainerContent);
+const { y } = useScroll(ChannelContainerContent);
 //ウィンドウのフォーカス取得用
 const windowFocused = useWindowFocus();
 
@@ -67,19 +67,12 @@ const fetchOlderHistory = () => {
     oldestMessageId = getHistoryFromChannel(props.channelInfo.channelId)[
       lengthOfHistory - 1
     ].messageId;
-    console.log(
-      "/channel/:id :: fetchOlderHistory : oldestMessageContent->",
-      getHistoryFromChannel(props.channelInfo.channelId)[lengthOfHistory - 1]
-        .content,
-    );
+    
+    //スクロールするメッセIdとして格納
+    messageIdToScroll.value = oldestMessageId;
   } catch (e) {
     return;
   }
-
-  console.log(
-    "/channel/:id :: fetchOlderHistory : oldestMessageId->",
-    oldestMessageId,
-  );
 
   //履歴を取得中であるとグローバルで設定
   getAppStatus.value.fetchingHistory = true;
@@ -426,7 +419,7 @@ watch(atLatestMessage, (newValue, oldValue) => {
 });
 
 // *************  履歴監視の取得状態監視  ************* //
-//履歴の更新を監視
+//履歴の更新を監視、スクロールする
 watch(
   getAppStatus,
   (newValue, oldValue) => {
@@ -434,17 +427,11 @@ watch(
       //console.log("/channel/:id :: watch(getHistory...) : 変更された?", newValue, oldValue);
 
       //履歴を取り終えたとき、履歴を取得した位置からスクロールする
-      if (displayDirection.value === "newer" && !newValue.fetchingHistory) {
+      if (!newValue.fetchingHistory) {
         //console.log("/channe/[id] :: watch(getAppStatus) : 最後->", getHistoryAvailability(props.channelInfo.channelId).atEnd);
         try {
-          //要素DOMオブジェクト取得
-          const el = document.getElementById(`msg${messageIdToScroll.value}`);
-          //要素がnullじゃないならその要素へスクロール
-          if (el !== null) {
-            document.getElementById("ChannelContainerContent")?.scrollTo({
-              top: el.getBoundingClientRect().top,
-            });
-          }
+          //履歴取得し始めた位置へスクロールさせる
+          document.getElementById(`msg${messageIdToScroll.value}`)?.scrollIntoView(true);
 
           //履歴取得時一番下なら新着削除
           if (y.value === 0) {
